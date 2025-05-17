@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JorkAI - Under Maintenance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        darkBg: '#181818',
+                        lightBg: '#FFFFFF'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'spin-slow': 'spin 4s linear infinite'
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        // Listen for changes in color scheme preference
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-lightBg dark:bg-darkBg transition-colors duration-300">
+    <div class="max-w-xl w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-colors duration-300">
+        <div class="relative p-6 sm:p-10 text-center">
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 w-40 h-40 opacity-5 dark:opacity-10">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="animate-spin-slow">
+                    <path fill="#5D5CDE" d="M40.8,-51.6C51.4,-42.2,57.6,-28.3,61.1,-13.6C64.7,1.2,65.6,16.7,59.5,28.9C53.3,41.1,40.1,49.9,25.6,56.4C11.2,62.9,-4.4,67,-19.1,64.1C-33.8,61.2,-47.6,51.3,-54.2,37.8C-60.8,24.3,-60.1,7.1,-57.4,-9C-54.7,-25.1,-49.9,-40.1,-39.7,-49.4C-29.5,-58.8,-14.7,-62.5,0.3,-62.9C15.4,-63.3,30.8,-60.3,40.8,-51.6Z" transform="translate(100 100)" />
+                </svg>
+            </div>
+            
+            <!-- Logo and Title -->
+            <div class="relative mb-6">
+                <h1 class="text-4xl sm:text-5xl font-bold text-primary mb-2 tracking-tight">
+                    Jork<span class="text-gray-800 dark:text-white">AI</span>
+                </h1>
+                <div class="w-16 h-1 bg-primary mx-auto rounded-full"></div>
+            </div>
+            
+            <!-- Maintenance Message -->
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-4">
+                Currently Under Maintenance
+            </h2>
+            
+            <!-- Description -->
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg">
+                We're making improvements to our language model platform. 
+                Please check back soon for an enhanced AI experience.
+            </p>
+            
+            <!-- Animation -->
+            <div class="flex justify-center mb-8">
+                <div class="relative w-24 h-24">
+                    <!-- Outer Circle -->
+                    <div class="absolute inset-0 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+                    
+                    <!-- Animated Circle -->
+                    <div class="absolute inset-0 border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                    
+                    <!-- Inner Circle with Pulsing AI Icon -->
+                    <div class="absolute inset-4 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary animate-pulse-slow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Info -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-6 text-sm text-gray-500 dark:text-gray-400">
+                <p>Our team is working hard to bring JorkAI back online.</p>
+                <p class="mt-2">Thank you for your patience!</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 text-center text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">
+            <p>© 2023 JorkAI. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
