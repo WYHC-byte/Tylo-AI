@@ -1161,6 +1161,98 @@
     margin-bottom: 0.5rem;
 }
 
+/* PWA 通知栏样式 */
+.pwa-notification {
+    background: linear-gradient(135deg, rgba(112, 0, 255, 0.05) 0%, rgba(255, 61, 255, 0.05) 100%);
+    border-bottom: 1px solid rgba(112, 0, 255, 0.1);
+    padding: 0.75rem 0;
+    position: relative;
+    z-index: 999;
+    margin-top: 80px;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+.notification-text {
+    font-size: 0.95rem;
+    color: var(--gray-700);
+}
+
+.notification-text strong {
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.notification-btn {
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    background: var(--gradient-primary);
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 30px;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 10px rgba(112, 0, 255, 0.2);
+}
+
+.notification-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(112, 0, 255, 0.3);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--gray-500);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.notification-close:hover {
+    color: var(--gray-700);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    .pwa-notification {
+        padding: 1rem 0;
+    }
+    
+    .notification-content {
+        text-align: center;
+    }
+    
+    .notification-text {
+        width: 100%;
+    }
+}
+
 @media (max-width: 768px) {
     .comparison-table th, 
     .comparison-table td {
@@ -1293,6 +1385,20 @@
             </nav>
         </div>
     </header>
+
+    <!-- PWA通知栏 -->
+<div class="pwa-notification" id="pwaNotification">
+    <div class="container">
+        <div class="notification-content">
+            <div class="notification-icon">🎉</div>
+            <div class="notification-text">
+                <strong>恭喜！</strong> JorkAI现已支持PWA技术，您可以将网站安装到主屏幕，获得更好的使用体验！
+            </div>
+            <a href="pwa.html" class="notification-btn">查看安装教程</a>
+            <button class="notification-close" id="closeNotification">×</button>
+        </div>
+    </div>
+</div>
     
     <!-- 主视觉区域 -->
     <section class="hero">
@@ -1688,7 +1794,7 @@
                         <li><a href="DeepSeek-API.html">DeepSeek APIKey 本地部署</a></li>
                         <li><a href="https://www.tenyun.ltd">腾云科技 Tenyun Tech</a></li>
                         <li><a href="donation.html">支持我们</a></li>
-                        <li><a href="#">更新日志</a></li>
+                        <li><a href="pwa.html">PWA渐进式网站APP</a></li>
                     </ul>
                 </div>
                 
@@ -1785,6 +1891,21 @@
                 mockup.style.transform = `perspective(1000px) rotateY(${-offsetX}deg) rotateX(${offsetY}deg) translateZ(20px)`;
             });
         });
+
+        // PWA通知栏关闭功能
+document.getElementById('closeNotification').addEventListener('click', function() {
+    document.getElementById('pwaNotification').style.display = 'none';
+    
+    // 可选: 存储到localStorage，避免用户再次访问时显示
+    localStorage.setItem('pwaNoteHidden', 'true');
+});
+
+// 检查是否需要显示PWA通知
+window.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('pwaNoteHidden')) {
+        document.getElementById('pwaNotification').style.display = 'none';
+    }
+});
     </script>
 </body>
 </html>
