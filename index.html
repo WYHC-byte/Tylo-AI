@@ -1,102 +1,1790 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JorkAI - Under Maintenance</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#5D5CDE',
-                        darkBg: '#181818',
-                        lightBg: '#FFFFFF'
-                    },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'bounce-slow': 'bounce 2s infinite',
-                        'spin-slow': 'spin 4s linear infinite'
-                    }
-                }
-            },
-            darkMode: 'class'
-        }
-
-        // Check for dark mode preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
+    <title>JorkAI - 未来已来</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #7000FF;
+            --primary-dark: #5200BD;
+            --primary-light: #9240FF;
+            --secondary: #00E5FF;
+            --tertiary: #FF3DFF;
+            --dark: #0A0118;
+            --light: #F9F7FF;
+            --gray-100: #F4F1F9;
+            --gray-200: #E2DCE9;
+            --gray-300: #C5BBCF;
+            --gray-400: #9C8FAB;
+            --gray-500: #6C6378;
+            --gray-600: #463B54;
+            --gray-700: #2E273A;
+            --gray-800: #1C1525;
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--tertiary) 100%);
+            --gradient-secondary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --gradient-dark: linear-gradient(135deg, #110022 0%, #30145A 100%);
+            --success: #00D07A;
+            --warning: #FFB800;
+            --danger: #FF3D5E;
+            --shadow-sm: 0 2px 8px rgba(10, 1, 24, 0.08);
+            --shadow-md: 0 4px 20px rgba(10, 1, 24, 0.12);
+            --shadow-lg: 0 8px 30px rgba(10, 1, 24, 0.16);
+            --shadow-xl: 0 12px 40px rgba(10, 1, 24, 0.2);
+            --border-radius-sm: 8px;
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+            --border-radius-xl: 30px;
         }
         
-        // Listen for changes in color scheme preference
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if (event.matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            color: var(--gray-700);
+            background-color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--dark);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            letter-spacing: -0.03em;
+        }
+        
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.02em;
+        }
+        
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            letter-spacing: -0.01em;
+        }
+        
+        p {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* Header and Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        header.scrolled {
+            background-color: rgba(249, 247, 255, 0.8);
+            box-shadow: var(--shadow-md);
+        }
+        
+        header.dark {
+            background-color: rgba(10, 1, 24, 0.8);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: var(--primary);
+            letter-spacing: -0.03em;
+        }
+        
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            margin-right: 0.75rem;
+            background: url(logo.jpg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            transform: rotate(-10deg);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .nav-links li {
+            margin-left: 2.5rem;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--primary);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(112, 0, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(112, 0, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(112, 0, 255, 0.1);
+            color: var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(112, 0, 255, 0.15);
+            transform: translateY(-3px);
+        }
+        
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--gray-700);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            position: relative;
+            padding: 12rem 0 8rem;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.2) 0%, rgba(255, 61, 255, 0.2) 100%);
+            filter: blur(80px);
+            z-index: -1;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -200px;
+            left: -200px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.15) 0%, rgba(112, 0, 255, 0.15) 100%);
+            filter: blur(80px);
+            z-index: -1;
+        }
+        
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero-title {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title span {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero-title span::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 0.3em;
+            bottom: 0.1em;
+            left: 0;
+            background: linear-gradient(135deg, rgba(112, 0, 255, 0.3) 0%, rgba(255, 61, 255, 0.3) 100%);
+            z-index: -1;
+            border-radius: 4px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: 2.5rem;
+            max-width: 540px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray-500);
+        }
+        
+        .hero-image {
+            position: relative;
+        }
+        
+        .interface-mockup {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);
+            transition: all 0.5s;
+        }
+        
+        .interface-mockup:hover {
+            transform: perspective(1000px) rotateY(-5deg) rotateX(2deg) translateZ(20px);
+        }
+        
+        .floating-card {
+            position: absolute;
+            background: white;
+            padding: 1.25rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-card-1 {
+            top: -2rem;
+            right: 2rem;
+            animation-delay: 0s;
+        }
+        
+        .floating-card-2 {
+            bottom: 2rem;
+            left: -3rem;
+            animation-delay: 1.5s;
+        }
+        
+        .floating-card-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.25rem;
+        }
+        
+        .floating-card-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+            color: var(--dark);
+        }
+        
+        .floating-card-content p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin: 0;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
             }
-        });
-    </script>
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 8rem 0;
+            position: relative;
+        }
+        
+        .section-header {
+            text-align: center;
+            max-width: 760px;
+            margin: 0 auto 5rem;
+        }
+        
+        .section-subtitle {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background-color: rgba(112, 0, 255, 0.1);
+            color: var(--primary);
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .section-title {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-description {
+            font-size: 1.125rem;
+            color: var(--gray-600);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 5rem;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: 2.5rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-secondary);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 0.05;
+        }
+        
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            border-radius: var(--border-radius-md);
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover .feature-icon {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 10px 20px rgba(112, 0, 255, 0.3);
+        }
+        
+        .feature-title {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .feature-description {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .feature-link span {
+            margin-left: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .feature-link:hover {
+            color: var(--primary-dark);
+        }
+        
+        .feature-link:hover span {
+            transform: translateX(5px);
+        }
+        
+        /* Models Section */
+        .models {
+            padding: 8rem 0;
+            background-color: var(--dark);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .models::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 500px;
+            height: 500px;
+            background: var(--primary);
+            filter: blur(150px);
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .models::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            left: -100px;
+            width: 400px;
+            height: 400px;
+            background: var(--tertiary);
+            filter: blur(150px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+        
+        .models .section-header {
+            color: white;
+        }
+        
+        .models .section-title, 
+        .models .section-description {
+            color: white;
+        }
+        
+        .models .section-subtitle {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--secondary);
+        }
+        
+        .models-container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .model-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            padding: 3rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .model-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .model-badge {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .model-badge.epic {
+            background-color: var(--tertiary);
+            color: white;
+        }
+        
+        .model-badge.standard {
+            background-color: var(--secondary);
+            color: var(--dark);
+        }
+        
+        .model-badge.basic {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .model-name {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+            color: white;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .model-name::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--primary-light);
+            border-radius: 2px;
+        }
+        
+        .model-description {
+            color: var(--gray-300);
+            margin-bottom: 2rem;
+        }
+        
+        .model-features {
+            list-style: none;
+            margin-bottom: 2.5rem;
+        }
+        
+        .model-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--gray-200);
+        }
+        
+        .model-features li::before {
+            content: '✓';
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.25rem;
+            height: 1.25rem;
+            background-color: rgba(112, 0, 255, 0.2);
+            color: var(--secondary);
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .model-features li.disabled {
+            color: var(--gray-500);
+            text-decoration: line-through;
+        }
+        
+        .model-features li.disabled::before {
+            content: '×';
+            background-color: rgba(255, 61, 94, 0.1);
+            color: var(--danger);
+        }
+        
+        .model-card .btn {
+            width: 100%;
+        }
+        
+        /* Developers Section */
+        .developers {
+            padding: 8rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .developers::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(112, 0, 255, 0.08) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 2.5rem;
+        }
+        
+        .team-lead {
+            grid-column: span 2;
+            display: flex;
+            gap: 2.5rem;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+        
+        .team-lead-image {
+            flex: 1;
+            min-width: 280px;
+            background: var(--gradient-primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .team-lead-image::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+            z-index: 1;
+        }
+        
+        .team-lead-avatar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: white;
+            font-weight: 800;
+        }
+        
+        .team-lead-content {
+            flex: 2;
+            padding: 2.5rem;
+        }
+        
+        .team-lead-title {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .team-lead-name {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+        }
+        
+        .team-lead-bio {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-600);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .social-link:hover {
+            background: var(--gradient-primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .team-card-header {
+            padding: 2rem;
+            background: var(--gray-100);
+            text-align: center;
+            position: relative;
+        }
+        
+        .team-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            font-weight: 700;
+        }
+        
+        .team-info {
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .team-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-role {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        
+        .team-description {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+        
+        /* Languages Section */
+        .languages {
+            padding: 6rem 0;
+            background-color: var(--gray-100);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .languages::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--primary-light);
+            filter: blur(150px);
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .languages::after {
+            content: '';
+            position: absolute;
+            bottom: -100px;
+            right: -100px;
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            filter: blur(150px);
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .language-selector {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+        
+        .language-btn {
+            background: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .language-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .language-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .language-globe {
+            width: 250px;
+            height: 250px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjUwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDI1MCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxjaXJjbGUgY3g9IjEyNSIgY3k9IjEyNSIgcj0iMTIwIiBzdHJva2U9IiM3MDAwRkYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWRhc2hhcnJheT0iNCAxIi8+CjxwYXRoIGQ9Ik0xMjUgNUMxMjUgNSA1MCAxMDAgMTI1IDEwMEMyMDAgMTAwIDEyNSA1IDEyNSA1WiIgZmlsbD0icmdiYSgxMTIsMCwyNTUsMC4xKSIgc3Ryb2tlPSIjNzAwMEZGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTEyNSAyNDVDMTI1IDI0NSA1MCAxNTAgMTI1IDE1MEMyMDAgMTUwIDEyNSAyNDUgMTI1IDI0NVoiIGZpbGw9InJnYmEoMTEyLDAsMjU1LDAuMSkiIHN0cm9rZT0iIzcwMDBGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjxwYXRoIGQ9Ik01IDEyNUM1IDEyNSAxMDAgNTAgMTAwIDEyNUMxMDAgMjAwIDUgMTI1IDUgMTI1WiIgZmlsbD0icmdiYSgxMTIsMCwyNTUsMC4xKSIgc3Ryb2tlPSIjNzAwMEZGIiBzdHJva2Utd2lkdGg9IjIiLz4KPHBhdGggZD0iTTI0NSAxMjVDMjQ1IDEyNSAxNTAgNTAgMTUwIDEyNUMxNTAgMjAwIDI0NSAxMjUgMjQ1IDEyNVoiIGZpbGw9InJnYmEoMTEyLDAsMjU1LDAuMSkiIHN0cm9rZT0iIzcwMDBGRiIgc3Ryb2tlLXdpZHRoPSIyIi8+CjwvdWVnPgo=') center/contain no-repeat;
+            margin: 4rem auto 0;
+            position: relative;
+            animation: rotateSlow 30s linear infinite;
+        }
+        
+        @keyframes rotateSlow {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 5rem 0 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-brand {
+            max-width: 400px;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            margin-left: 0.75rem;
+        }
+        
+        .footer-description {
+            color: var(--gray-400);
+            margin-bottom: 2rem;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .footer-heading {
+            font-size: 1.25rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: var(--primary-light);
+            border-radius: 2px;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+        
+        .footer-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: var(--gray-500);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 在CSS部分添加以下样式 */
+.model-comparison {
+    padding: 6rem 0;
+    background-color: var(--gray-100);
+    position: relative;
+    overflow: hidden;
+}
+
+.model-comparison::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 300px;
+    height: 300px;
+    background: var(--primary-light);
+    filter: blur(150px);
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.comparison-table-container {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    z-index: 1;
+    overflow-x: auto;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.comparison-table th, 
+.comparison-table td {
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.comparison-table th {
+    background-color: var(--gray-100);
+    color: var(--dark);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+}
+
+.comparison-table tr:hover td {
+    background-color: var(--gray-100);
+}
+
+.comparison-table td:first-child {
+    font-weight: 500;
+    color: var(--dark);
+}
+
+.score {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.score.perfect {
+    background-color: rgba(0, 208, 122, 0.15);
+    color: var(--success);
+}
+
+.score.excellent {
+    background-color: rgba(112, 0, 255, 0.1);
+    color: var(--primary);
+}
+
+.score.very-good {
+    background-color: rgba(0, 229, 255, 0.1);
+    color: var(--secondary);
+}
+
+.score.good {
+    background-color: rgba(255, 184, 0, 0.1);
+    color: var(--warning);
+}
+
+.comparison-notes {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    text-align: right;
+}
+
+.comparison-notes p {
+    margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .comparison-table th, 
+    .comparison-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .score {
+        padding: 0.25rem 0.5rem;
+    }
+}
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .hero-content {
+                max-width: 100%;
+                text-align: center;
+                margin: 0 auto;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .hero-image {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+            
+            .models-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+            }
+            
+            .team-lead {
+                grid-column: span 1;
+                flex-direction: column;
+            }
+            
+            .team-lead-image {
+                height: 300px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 3rem;
+            }
+            
+            .footer-brand {
+                grid-column: span 2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            
+            .nav-links, .btn-group {
+                display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
+            }
+            
+            .nav-links.active, .btn-group.active {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            .nav-links.active li {
+                margin: 0.5rem 0;
+            }
+            
+            .btn-group.active {
+                margin-top: 1rem;
+            }
+            
+            .feature-card {
+                padding: 2rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-brand {
+                grid-column: span 1;
+            }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 bg-lightBg dark:bg-darkBg transition-colors duration-300">
-    <div class="max-w-xl w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-colors duration-300">
-        <div class="relative p-6 sm:p-10 text-center">
-            <!-- Background Decoration -->
-            <div class="absolute top-0 right-0 w-40 h-40 opacity-5 dark:opacity-10">
-                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="animate-spin-slow">
-                    <path fill="#5D5CDE" d="M40.8,-51.6C51.4,-42.2,57.6,-28.3,61.1,-13.6C64.7,1.2,65.6,16.7,59.5,28.9C53.3,41.1,40.1,49.9,25.6,56.4C11.2,62.9,-4.4,67,-19.1,64.1C-33.8,61.2,-47.6,51.3,-54.2,37.8C-60.8,24.3,-60.1,7.1,-57.4,-9C-54.7,-25.1,-49.9,-40.1,-39.7,-49.4C-29.5,-58.8,-14.7,-62.5,0.3,-62.9C15.4,-63.3,30.8,-60.3,40.8,-51.6Z" transform="translate(100 100)" />
-                </svg>
-            </div>
-            
-            <!-- Logo and Title -->
-            <div class="relative mb-6">
-                <h1 class="text-4xl sm:text-5xl font-bold text-primary mb-2 tracking-tight">
-                    Jork<span class="text-gray-800 dark:text-white">AI</span>
-                </h1>
-                <div class="w-16 h-1 bg-primary mx-auto rounded-full"></div>
-            </div>
-            
-            <!-- Maintenance Message -->
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-4">
-                Currently Under Maintenance
-            </h2>
-            
-            <!-- Description -->
-            <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg">
-                We're making improvements to our language model platform. 
-                Please check back soon for an enhanced AI experience.
-            </p>
-            
-            <!-- Animation -->
-            <div class="flex justify-center mb-8">
-                <div class="relative w-24 h-24">
-                    <!-- Outer Circle -->
-                    <div class="absolute inset-0 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+<body>
+    <!-- 导航栏 -->
+    <header id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <img class="logo-icon" scr="logo.jpg">
+                    <span>JorkAI</span>
+                </a>
+                
+                <button class="mobile-menu-toggle" id="menuToggle">☰</button>
+                
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#" class="active">首页</a></li>
+                    <li><a href="#features">强大能力</a></li>
+                    <li><a href="#models">AI模型</a></li>
+                    <li><a href="#developers">开发团队</a></li>
+                    <li><a href="#languages">多语言</a></li>
+                </ul>
+                
+                <div class="btn-group" id="btnGroup">
+                    <a href="login.html" class="btn btn-secondary">登录</a>
+                    <a href="login.html" class="btn btn-primary">注册</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- 主视觉区域 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">重新定义<span>人工智能</span>对话体验</h1>
+                    <p class="hero-subtitle">JorkAI突破现有AI技术限制，带来更具智慧、更富创造力、更加个性化的对话体验，让AI成为您的得力助手。</p>
                     
-                    <!-- Animated Circle -->
-                    <div class="absolute inset-0 border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                    <div class="hero-buttons">
+                        <a href="login.html" class="btn btn-primary">立即体验</a>
+                        <a href="#models" class="btn btn-secondary">了解更多</a>
+                    </div>
                     
-                    <!-- Inner Circle with Pulsing AI Icon -->
-                    <div class="absolute inset-4 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-inner">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary animate-pulse-slow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">99.7%</div>
+                            <div class="stat-label">准确率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">50+</div>
+                            <div class="stat-label">语言支持</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">12ms</div>
+                            <div class="stat-label">响应速度</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-image">
+                    <svg class="interface-mockup" width="600" height="400" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- 界面背景 -->
+                        <rect width="600" height="400" rx="16" fill="#0A0118"/>
+                        <!-- 顶部栏 -->
+                        <rect width="600" height="50" rx="16" fill="#1C1525"/>
+                        <!-- 侧边栏 -->
+                        <rect width="80" height="350" y="50" fill="#1C1525"/>
+                        <!-- 聊天区域 -->
+                        <rect x="100" y="70" width="480" height="310" rx="12" fill="#2E273A"/>
+                        <!-- 用户消息 -->
+                        <rect x="120" y="90" width="320" height="60" rx="8" fill="#463B54"/>
+                        <!-- AI回复 -->
+                        <rect x="120" y="170" width="440" height="80" rx="8" fill="#7000FF" opacity="0.15"/>
+                        <!-- 用户消息2 -->
+                        <rect x="120" y="270" width="280" height="60" rx="8" fill="#463B54"/>
+                        <!-- 输入区域 -->
+                        <rect x="100" y="350" width="480" height="50" rx="12" fill="#1C1525"/>
+                        
+                        <!-- 装饰元素 -->
+                        <circle cx="30" cy="25" r="10" fill="#7000FF"/>
+                        <circle cx="60" cy="25" r="10" fill="#00E5FF"/>
+                        <circle cx="30" cy="100" r="15" fill="#7000FF" opacity="0.3"/>
+                        <circle cx="30" cy="150" r="15" fill="#FF3DFF" opacity="0.3"/>
+                        <circle cx="30" cy="200" r="15" fill="#00E5FF" opacity="0.3"/>
+                        
+                        <!-- 装饰线条 -->
+                        <rect x="400" y="15" width="80" height="6" rx="3" fill="#2E273A"/>
+                        <rect x="500" y="15" width="40" height="6" rx="3" fill="#2E273A"/>
+                        <rect x="540" y="363" width="20" height="20" rx="10" fill="#7000FF"/>
+                    </svg>
+                    
+                    <div class="floating-card floating-card-1">
+                        <div class="floating-card-icon">💡</div>
+                        <div class="floating-card-content">
+                            <h4>超强创造力</h4>
+                            <p>生成原创内容与创意</p>
+                        </div>
+                    </div>
+                    
+                    <div class="floating-card floating-card-2">
+                        <div class="floating-card-icon">🚀</div>
+                        <div class="floating-card-content">
+                            <h4>极速响应</h4>
+                            <p>12ms的行业领先速度</p>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
+    
+    <!-- 功能特性 -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">核心能力</div>
+                <h2 class="section-title">重新定义AI能力边界</h2>
+                <p class="section-description">JorkAI整合了最前沿的AI技术，为您提供前所未有的智能体验，从复杂推理到代码生成，从视觉理解到创意写作，无所不能。</p>
+            </div>
             
-            <!-- Additional Info -->
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-6 text-sm text-gray-500 dark:text-gray-400">
-                <p>Our team is working hard to bring JorkAI back online.</p>
-                <p class="mt-2">Thank you for your patience!</p>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 class="feature-title">超级思维</h3>
+                    <p class="feature-description">具备非凡的逻辑推理能力，能分析复杂问题，提供深度见解，理解隐含意义。</p>
+                    <a href="#" class="feature-link">了解更多 <span>→</span></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <h3 class="feature-title">视觉感知</h3>
+                    <p class="feature-description">精准理解图像、视频内容，分析图表与文档，将视觉信息转化为深入洞察。</p>
+                    <a href="#" class="feature-link">了解更多 <span>→</span></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💻</div>
+                    <h3 class="feature-title">代码创造</h3>
+                    <p class="feature-description">生成高质量代码，理解多种编程语言，帮助调试问题，优化现有代码。</p>
+                    <a href="#" class="feature-link">了解更多 <span>→</span></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">✍️</div>
+                    <h3 class="feature-title">创意写作</h3>
+                    <p class="feature-description">创作引人入胜的内容，从专业文章到创意故事，风格多变且语言自然流畅。</p>
+                    <a href="#" class="feature-link">了解更多 <span>→</span></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3 class="feature-title">知识检索</h3>
+                    <p class="feature-description">快速获取并组织海量信息，提供准确可靠的回答，支持深入探索任何主题。</p>
+                    <a href="#" class="feature-link">了解更多 <span>→</span></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3 class="feature-title">多语言沟通</h3>
+                    <p class="feature-description">精通50多种语言，提供流畅自然的翻译，理解文化细微差异与语言习惯。</p>
+                    <a href="#" class="feature-link">了解更多 <span>→</span></a>
+                </div>
             </div>
         </div>
+    </section>
+    
+    <!-- 模型展示 -->
+    <section class="models" id="models">
+        <div class="container models-container">
+            <div class="section-header">
+                <div class="section-subtitle">AI模型</div>
+                <h2 class="section-title">为不同需求打造的强大模型</h2>
+                <p class="section-description">从专业研究到日常应用，JorkAI提供一系列强大模型，满足您的各种需求。</p>
+            </div>
+            
+            <div class="models-grid">
+                <div class="model-card">
+                    <span class="model-badge epic">顶级</span>
+                    <h3 class="model-name">Jork-3.9-Epic</h3>
+                    <p class="model-description">我们最强大、最聪明的AI模型，为最复杂的任务而生。</p>
+                    
+                    <ul class="model-features">
+                        <li>超强推理与分析能力</li>
+                        <li>多模态输入理解</li>
+                        <li>极致创造力与想象力</li>
+                        <li>最高准确度和一致性</li>
+                        <li>高级代码生成与优化</li>
+                    </ul>
+                    
+                    <a href="login.html" class="btn btn-primary">立即体验</a>
+                </div>
+                
+                <div class="model-card">
+                    <span class="model-badge standard">平衡</span>
+                    <h3 class="model-name">Jork-3.5-Epic</h3>
+                    <p class="model-description">平衡能力与效率的通用型模型，适合日常专业工作。</p>
+                    
+                    <ul class="model-features">
+                        <li>出色的推理与分析能力</li>
+                        <li>基础多模态理解</li>
+                        <li>优秀的创造力表现</li>
+                        <li>高准确度和一致性</li>
+                        <li>标准代码生成能力</li>
+                    </ul>
+                    
+                    <a href="login.html" class="btn btn-primary">立即体验</a>
+                </div>
+                
+                <div class="model-card">
+                    <span class="model-badge basic">日常</span>
+                    <h3 class="model-name">Jork-3.5-Canto</h3>
+                    <p class="model-description">轻量高效的日常助手，友好自然的交互风格。</p>
+                    
+                    <ul class="model-features">
+                        <li>良好的对话理解能力</li>
+                        <li>简单图像识别</li>
+                        <li>基础创意内容生成</li>
+                        <li>优秀的日常问答</li>
+                        <li class="disabled">高级代码生成</li>
+                    </ul>
+                    
+                    <a href="login.html" class="btn btn-primary">立即体验</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 在models部分之后，developers部分之前添加以下代码 -->
+<section class="model-comparison">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-subtitle">性能对比</div>
+            <h2 class="section-title">与行业领先模型的对比</h2>
+            <p class="section-description">JorkAI在多项基准测试中表现优异，超越其他主流AI模型。</p>
+        </div>
         
-        <!-- Footer -->
-        <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 text-center text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">
-            <p>© 2023 JorkAI. All rights reserved.</p>
+        <div class="comparison-table-container">
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>功能/模型</th>
+                        <th>Jork-3.9-Epic</th>
+                        <th>Jork-3.5-Epic</th>
+                        <th>GPT-4</th>
+                        <th>Claude 3</th>
+                        <th>Gemini 1.5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>推理能力</td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                    </tr>
+                    <tr>
+                        <td>代码生成</td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                        <td><span class="score very-good">8.5/10</span></td>
+                    </tr>
+                    <tr>
+                        <td>创意写作</td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score very-good">8.5/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                    </tr>
+                    <tr>
+                        <td>多模态理解</td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                        <td><span class="score very-good">8.5/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                    </tr>
+                    <tr>
+                        <td>响应速度</td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                        <td><span class="score very-good">8.5/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                    </tr>
+                    <tr>
+                        <td>多语言支持</td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score perfect">10/10</span></td>
+                        <td><span class="score excellent">9/10</span></td>
+                        <td><span class="score good">8/10</span></td>
+                        <td><span class="score very-good">8.5/10</span></td>
+                    </tr>
+                    <tr>
+                        <td>上下文长度</td>
+                        <td><span class="score perfect">128K</span></td>
+                        <td><span class="score excellent">64K</span></td>
+                        <td><span class="score very-good">32K</span></td>
+                        <td><span class="score excellent">200K</span></td>
+                        <td><span class="score perfect">1M</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="comparison-notes">
+                <p>* 评分基于2024年6月进行的独立基准测试结果</p>
+                <p>* 所有模型均测试其最新公开版本</p>
+            </div>
         </div>
     </div>
+</section>
+    
+    <!-- 开发团队 -->
+    <section class="developers" id="developers">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">团队介绍</div>
+                <h2 class="section-title">背后的创新者</h2>
+                <p class="section-description">由一群充满激情的AI专家组成的精英团队，致力于打造最前沿的AI体验。</p>
+            </div>
+            
+            <div class="team-grid">
+                <div class="team-lead">
+                    <div class="team-lead-image">
+                        <div class="team-lead-avatar">WY</div>
+                    </div>
+                    <div class="team-lead-content">
+                        <p class="team-lead-title">首席开发者</p>
+                        <h3 class="team-lead-name">Wu Yihu</h3>
+                        <p class="team-lead-bio">技术天才，以其全能的技术能力和创新思维而著称。掌握多种编程语言和AI技术，负责JorkAI的整体架构设计和核心算法开发，带领团队不断突破AI的边界。</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">L</a>
+                            <a href="#" class="social-link">G</a>
+                            <a href="#" class="social-link">T</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-lead">
+                    <div class="team-lead-image">
+                        <div class="team-lead-avatar">Lc</div>
+                    </div>
+                    <div class="team-lead-content">
+                        <p class="team-lead-title">技术负责人</p>
+                        <h3 class="team-lead-name">Loby Chen</h3>
+                        <p class="team-lead-bio">拥有扎实的编程能力和创造力。作为 JorkAI 的核心开发者之一，他在项目中发挥了关键作用，从系统架构设计到功能实现都贡献了重要代码。</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link">L</a>
+                            <a href="#" class="social-link">G</a>
+                            <a href="#" class="social-link">T</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 多语言支持 -->
+    <section class="languages" id="languages">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-subtitle">全球化</div>
+                <h2 class="section-title">无障碍的全球沟通</h2>
+                <p class="section-description">JorkAI支持50多种语言，帮助您轻松跨越语言障碍，与全球沟通。</p>
+            </div>
+            
+            <div class="language-selector">
+                <button class="language-btn active">简体中文</button>
+                <button class="language-btn">English</button>
+                <button class="language-btn">日本語</button>
+                <button class="language-btn">Español</button>
+                <button class="language-btn">Français</button>
+                <button class="language-btn">Deutsch</button>
+                <button class="language-btn">한국어</button>
+                <button class="language-btn">Русский</button>
+                <button class="language-btn">العربية</button>
+                <button class="language-btn">Português</button>
+                <button class="language-btn">Italiano</button>
+                <button class="language-btn">हिन्दी</button>
+            </div>
+            
+            <div class="language-globe"></div>
+        </div>
+    </section>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <div class="logo-icon">J</div>
+                        <div class="footer-logo-text">JorkAI</div>
+                    </div>
+                    <p class="footer-description">JorkAI重新定义人工智能对话体验，为您提供最智能、最自然、最强大的AI助手，助力您更高效地完成工作和创造。</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link">L</a>
+                        <a href="#" class="social-link">T</a>
+                        <a href="#" class="social-link">F</a>
+                        <a href="#" class="social-link">I</a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">产品</h3>
+                    <ul class="footer-links">
+                        <li><a href="login.html">Jork-3.9-Epic</a></li>
+                        <li><a href="login.html">Jork-3.5-Epic</a></li>
+                        <li><a href="login.html">Jork-3.5-Canto</a></li>
+                        <li><a href="login.html">企业解决方案</a></li>
+                        <li><a href="login.html">API访问</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">服务</h3>
+                    <ul class="footer-links">
+                        <li><a href="DeepSeek-API.html">DeepSeek APIKey 本地部署</a></li>
+                        <li><a href="https://www.tenyun.ltd">腾云科技 Tenyun Tech</a></li>
+                        <li><a href="donation.html">支持我们</a></li>
+                        <li><a href="#">更新日志</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="footer-heading">公司</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">关于我们</a></li>
+                        <li><a href="#">联系方式</a></li>
+                        <li><a href="#">加入我们</a></li>
+                        <li><a href="#">隐私政策</a></li>
+                        <li><a href="#">服务条款</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 JorkAI, Inc All Right Reserved</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 10) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // 移动菜单切换
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+            document.getElementById('btnGroup').classList.toggle('active');
+        });
+        
+        // 语言选择器
+        const languageBtns = document.querySelectorAll('.language-btn');
+        languageBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                languageBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 平滑滚动到锚点
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if (this.getAttribute('href') === '#') return;
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动菜单
+                    document.getElementById('navLinks').classList.remove('active');
+                    document.getElementById('btnGroup').classList.remove('active');
+                }
+            });
+        });
+        
+        // 视差滚动效果
+        window.addEventListener('scroll', function() {
+            const scrolled = window.scrollY;
+            
+            document.querySelectorAll('.feature-card').forEach((card, index) => {
+                const delay = index * 0.1;
+                card.style.transform = `translateY(${Math.min(-10, -scrolled/20 + delay * 100)}px)`;
+            });
+        });
+        
+        // 添加鼠标移动交互效果
+        document.addEventListener('mousemove', function(e) {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            document.querySelectorAll('.interface-mockup').forEach(mockup => {
+                const rect = mockup.getBoundingClientRect();
+                const mockupX = (rect.left + rect.width/2) / window.innerWidth;
+                const mockupY = (rect.top + rect.height/2) / window.innerHeight;
+                
+                const offsetX = (mouseX - mockupX) * 10;
+                const offsetY = (mouseY - mockupY) * 10;
+                
+                mockup.style.transform = `perspective(1000px) rotateY(${-offsetX}deg) rotateX(${offsetY}deg) translateZ(20px)`;
+            });
+        });
+    </script>
 </body>
 </html>

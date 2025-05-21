@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支持 JorkAI - 让梦想照进现实</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"%3E%3Cpath fill="white" fill-opacity="0.05" d="M0 0h1000v1000H0z"/%3E%3Cpath fill="white" fill-opacity="0.03" d="M0 0h500v500H0z"/%3E%3C/svg%3E');
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .hero-content {
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); }
+        }
+        
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        
+        .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+        
+        .arrow-down {
+            width: 30px;
+            height: 30px;
+            border: 2px solid white;
+            border-top: none;
+            border-left: none;
+            transform: rotate(45deg);
+        }
+        
+        .main-content {
+            background: #f8f9fa;
+            padding: 80px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .story-section {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            margin-bottom: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+        
+        .story-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #555;
+            text-align: center;
+        }
+        
+        .donation-section {
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .donation-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #ffa500);
+        }
+        
+        .qr-container {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            display: inline-block;
+            margin-top: 30px;
+            position: relative;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .qr-code img {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+        }
+        
+        .qr-label {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .amount-suggestions {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .amount-btn {
+            padding: 12px 25px;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .amount-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+        
+        .thank-you {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 60px;
+            border-radius: 20px;
+            margin-top: 60px;
+            text-align: center;
+        }
+        
+        .thank-you h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .thank-you p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .tagline { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .story-section, .donation-section { padding: 40px 30px; }
+            .amount-suggestions { flex-direction: column; align-items: center; }
+            .features { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="logo">JorkAI</h1>
+            <p class="tagline">让AI触手可及，让梦想照进现实</p>
+            <p class="description">
+                嗨！我是JorkAI的创始人，一个来自北京、现在在香港读初二的学生。<br>
+                我有一个梦想，想要让AI技术帮助更多人，让世界变得更美好。
+            </p>
+        </div>
+        <div class="scroll-indicator">
+            <div class="arrow-down"></div>
+        </div>
+    </section>
+
+    <section class="main-content">
+        <div class="container">
+            <div class="story-section">
+                <h2 class="section-title">我们的故事 📖</h2>
+                <p class="story-text">
+                    作为一名初二学生，我深深相信技术应该为每个人服务。JorkAI不只是一个项目，
+                    更是我们想要构建一个更智能、更友好世界的梦想。虽然我们还很年轻，
+                    但我们有着满腔的热情和创新的想法。<br><br>
+                    每一份支持都像是给我们的梦想添加燃料，让我们能够继续前进，
+                    开发出更好的产品，服务更多的用户。
+                    正如我说的：在AI时代，我们不仅要创造智能，更要赋予其意义。
+                    JorkAI的使命就是将最前沿的AI技术转化为改变生活的力量。
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">创新驱动</h3>
+                    <p class="feature-desc">我们不断探索AI的边界，用创新的想法解决真实世界的问题</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3 class="feature-title">用户至上</h3>
+                    <p class="feature-desc">每一个产品都从用户需求出发，致力于提供最好的使用体验</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3 class="feature-title">开放共享</h3>
+                    <p class="feature-desc">我们相信知识和技术应该被分享，让更多人受益</p>
+                </div>
+            </div>
+
+            <div class="donation-section">
+                <h2 class="section-title">支持我们的梦想 💖</h2>
+                <p class="story-text">
+                    朋友，如果你认同我们的理念，想要支持一个年轻团队的梦想，
+                    我们将无比感激。你的每一份支持，无论大小，都是对我们最大的鼓励。
+                </p>
+                
+                <div class="amount-suggestions">
+                    <button class="amount-btn">☕ 一杯咖啡 ¥20</button>
+                    <button class="amount-btn">🍔 一顿饭 ¥50</button>
+                    <button class="amount-btn">📚 一本书 ¥100</button>
+                    <button class="amount-btn">💝 随心</button>
+                </div>
+
+                <div class="qr-container">
+                    <div class="qr-code">
+                        <img src="skm.jpg" alt="微信收款码" />
+                    </div>
+                    <p class="qr-label">扫描微信二维码支持我们</p>
+                </div>
+            </div>
+
+            <div class="thank-you">
+                <h3>感谢每一位支持者 🙏</h3>
+                <p>
+                    你们的支持不仅仅是资金上的帮助，更是对我们梦想的认可。
+                    每一份捐赠都会被用于产品开发、技术研究和团队成长。
+                    我们会定期分享进展，让你们看到你们的支持是如何化作现实的。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 添加一些交互效果
+        document.addEventListener('DOMContentLoaded', function() {
+            // 滚动效果
+            const hero = document.querySelector('.hero');
+            window.addEventListener('scroll', function() {
+                const scrolled = window.pageYOffset;
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            });
+
+            // 金额按钮点击效果
+            document.querySelectorAll('.amount-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // 移除其他按钮的选中状态
+                    document.querySelectorAll('.amount-btn').forEach(b => {
+                        b.style.background = 'transparent';
+                        b.style.color = '#667eea';
+                    });
+                    
+                    // 选中当前按钮
+                    this.style.background = '#667eea';
+                    this.style.color = 'white';
+                    
+                    // 添加音效反馈（如果需要）
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate(100);
+                    }
+                });
+            });
+
+            // 平滑滚动
+            document.querySelector('.scroll-indicator').addEventListener('click', function() {
+                document.querySelector('.main-content').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
