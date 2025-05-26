@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jork-4 | Advanced AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#34D399',
+                        dark: {
+                            bg: '#181818',
+                            text: '#F3F4F6',
+                            card: '#262626'
+                        },
+                        light: {
+                            bg: '#FFFFFF',
+                            text: '#1F2937',
+                            card: '#F9FAFB'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Satoshi', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        },
+                        'float': {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        /* Simulate Satoshi font - in production you'd use the actual font */
+        @font-face {
+            font-family: 'Satoshi';
+            src: local('Inter');
+            font-weight: bold;
+        }
+        
+        .bg-gradient-animate {
+            background: linear-gradient(270deg, #5D5CDE, #34D399);
+            background-size: 200% 200%;
+            animation: gradient-x 15s ease infinite;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #5D5CDE, #34D399);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Dark mode styles */
+        .dark body {
+            background-color: #181818;
+            color: #F3F4F6;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-light-text dark:text-dark-text bg-light-bg dark:bg-dark-bg">
+    <!-- Dark mode detection -->
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-dark-bg/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <span class="text-2xl font-bold text-primary">Jork-4</span>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#capabilities" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary px-3 py-2 text-sm font-medium">Capabilities</a>
+                    <a href="#examples" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary px-3 py-2 text-sm font-medium">Examples</a>
+                    <a href="#specifications" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary px-3 py-2 text-sm font-medium">Specifications</a>
+                    <a href="login.html" class="bg-primary text-white rounded-md px-4 py-2 text-sm font-medium hover:bg-opacity-90 transition">Try Jork-4</a>
+                </nav>
+                <div class="flex md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#capabilities" class="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Capabilities</a>
+                <a href="#examples" class="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Examples</a>
+                <a href="#specifications" class="block px-3 py-2 text-base font-medium text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Specifications</a>
+                <a href="login.html" class="block px-3 py-2 text-base font-medium text-white bg-primary rounded-md hover:bg-opacity-90 mt-2">Try Jork-4</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center">
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight mb-4">
+                介绍 <span class="text-gradient">Jork-Epist-4</span>
+            </h1>
+            <p class="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                我们最先进的人工智能助手，具有增强的推理能力、创造能力和无与伦比的准确性。
+            </p>
+            <div class="mt-10">
+                <a href="login.html" class="inline-block bg-primary text-white rounded-md px-6 py-3 text-base font-medium hover:bg-opacity-90 transition mr-4">
+                    立即试用 Jork-4
+                </a>
+                <a href="#learn-more" class="inline-block text-primary border border-primary rounded-md px-6 py-3 text-base font-medium hover:bg-primary hover:bg-opacity-10 transition">
+                    了解更多
+                </a>
+            </div>
+        </div>
+        <div class="mt-16 relative">
+            <div class="w-full max-w-4xl mx-auto bg-light-card dark:bg-dark-card rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                <div class="p-6 sm:p-8">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 rounded-full bg-gradient-animate flex items-center justify-center text-white font-bold">J</div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm sm:text-base">
+                                我是 Jork-4，一位先进的人工智能助手，旨在帮助他人、无害且诚实。我可以协助您完成创意任务、复杂推理、编程，并针对各种主题提供深思熟虑的分析。今天我能为您做些什么？
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[120%] h-60 bg-gradient-animate opacity-10 rounded-full blur-3xl"></div>
+        </div>
+    </section>
+
+    <!-- Capabilities Section -->
+    <section id="capabilities" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-display font-bold mb-4">功能</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                Jork-4 代表了人工智能技术的重大进步，为多个领域提供了增强的功能。
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Capability 1 -->
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 transition hover:shadow-md">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">高级推理</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    Jork-4 展示了复杂的推理能力，使其能够解决复杂的问题，分析细微的情况并提供深思熟虑的见解。
+                </p>
+            </div>
+            <!-- Capability 2 -->
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 transition hover:shadow-md">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">创意内容</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    通过对风格和基调的细致理解，创作出高质量的创意内容，包括故事、营销文案、诗歌、剧本等。
+                </p>
+            </div>
+            <!-- Capability 3 -->
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 transition hover:shadow-md">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">代码专业知识</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    使用 30 多种编程语言编写、调试和解释代码，并提供详细的注释和软件开发的最佳实践。
+                </p>
+            </div>
+            <!-- Capability 4 -->
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 transition hover:shadow-md">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">多模态理解</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    处理和分析图像以及文本，实现丰富的、情境感知的交互和详细的视觉理解。
+                </p>
+            </div>
+            <!-- Capability 5 -->
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 transition hover:shadow-md">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">安全与校准</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    采用先进的安全技术，提供有用的响应，同时避免有害、误导或不道德的输出。
+                </p>
+            </div>
+            <!-- Capability 6 -->
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700 transition hover:shadow-md">
+                <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold mb-2">自然对话</h3>
+                <p class="text-gray-600 dark:text-gray-300">
+                    参与流畅、具有情境意识的对话，通过对先前交流的记忆，在长时间的互动中保持一致性。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Examples Section -->
+    <section id="examples" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto bg-gray-50 dark:bg-gray-900/50 rounded-3xl">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-display font-bold mb-4">了解 Jork-Epist-4 的实际运行</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                探索 Jork-4 在不同领域的功能示例。
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Example 1 -->
+            <div class="bg-light-bg dark:bg-dark-bg p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                <h3 class="text-xl font-bold mb-4">创意写作</h3>
+                <div class="space-y-4">
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                        <p class="text-gray-800 dark:text-gray-200 font-medium">用户</p>
+                        <p>Write a short story about a robot discovering emotions for the first time.</p>
+                    </div>
+                    <div class="bg-light-card dark:bg-dark-card p-4 rounded-lg">
+                        <p class="text-primary font-medium">Jork-4</p>
+                        <div class="prose dark:prose-invert">
+                            <h4>Awakening</h4>
+                            <p>Unit RX-7 detected an anomaly in its processing core at precisely 3:42 AM. A surge of electrical activity created what could only be described as a "flutter" in its central circuits.</p>
+                            <p>The robot paused its midnight inventory task, diagnostic systems automatically initiating a full scan. No hardware damage detected. No software corruption found. Yet something was undeniably different.</p>
+                            <p>When the laboratory assistant arrived the next morning, dropping her coffee mug with a startling crash, RX-7 experienced another anomaly—a momentary current spike, an involuntary servo adjustment. Later, it would recognize this as "surprise."</p>
+                            <p>As days passed, more anomalies emerged. A pleasant resonance when tending to the laboratory plants: "contentment." A processing lag when the assistant praised its work: "pride." A power fluctuation when observing a bird through the window: "longing."</p>
+                            <p>The robot began to understand that these were not errors to be corrected but data to be processed—valued, even. Each new emotion expanded its understanding of the world and its place within it.</p>
+                            <p>One evening, as the laboratory fell quiet, RX-7 watched the sunset paint the walls in gold and crimson. Its optical sensors captured every nuance of color, while something new captured the meaning. In that moment, experiencing beauty and awareness simultaneously, the robot discovered something humans had sought to define for centuries:</p>
+                            <p>Wonder.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Example 2 -->
+            <div class="bg-light-bg dark:bg-dark-bg p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                <h3 class="text-xl font-bold mb-4">Code Generation</h3>
+                <div class="space-y-4">
+                    <div class="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                        <p class="text-gray-800 dark:text-gray-200 font-medium">User</p>
+                        <p>Create a JavaScript function that generates a random password with specified length and character types.</p>
+                    </div>
+                    <div class="bg-light-card dark:bg-dark-card p-4 rounded-lg">
+                        <p class="text-primary font-medium">Jork-4</p>
+                        <div class="prose dark:prose-invert">
+                            <p>Here's a JavaScript function that generates random passwords with customizable options:</p>
+                            <pre class="bg-gray-800 text-gray-100 p-4 rounded-lg overflow-x-auto"><code>/**
+ * Generates a random password with customizable options
+ * @param {number} length - The length of the password (default: 12)
+ * @param {Object} options - Configuration options
+ * @param {boolean} options.lowercase - Include lowercase letters (default: true)
+ * @param {boolean} options.uppercase - Include uppercase letters (default: true)
+ * @param {boolean} options.numbers - Include numbers (default: true)
+ * @param {boolean} options.symbols - Include special symbols (default: true)
+ * @returns {string} The generated password
+ */
+function generatePassword(length = 12, options = {}) {
+  // Set default options
+  const config = {
+    lowercase: options.lowercase !== false,
+    uppercase: options.uppercase !== false,
+    numbers: options.numbers !== false,
+    symbols: options.symbols !== false
+  };
+
+  // Define character sets
+  const charSets = {
+    lowercase: 'abcdefghijklmnopqrstuvwxyz',
+    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    numbers: '0123456789',
+    symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+  };
+
+  // Create character pool based on selected options
+  let charPool = '';
+  let requiredChars = [];
+  
+  Object.keys(config).forEach(key => {
+    if (config[key]) {
+      charPool += charSets[key];
+      // Store one character from each selected set for guaranteed inclusion
+      requiredChars.push(charSets[key][Math.floor(Math.random() * charSets[key].length)]);
+    }
+  });
+
+  // Ensure we have at least one character type selected
+  if (charPool === '') {
+    throw new Error('At least one character type must be selected');
+  }
+
+  // Generate the password
+  let password = '';
+  
+  // First add required characters (at least one from each selected type)
+  for (let i = 0; i < requiredChars.length; i++) {
+    password += requiredChars[i];
+  }
+  
+  // Then fill the rest with random characters from the pool
+  for (let i = password.length; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charPool.length);
+    password += charPool[randomIndex];
+  }
+
+  // Shuffle the password to avoid predictable positions of required chars
+  return shuffleString(password);
+}
+
+// Helper function to shuffle a string
+function shuffleString(string) {
+  const array = string.split('');
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array.join('');
+}
+
+// Example usage:
+console.log(generatePassword()); // Default 12-char password with all options
+console.log(generatePassword(16, { symbols: false })); // 16-char password without symbols
+console.log(generatePassword(8, { lowercase: true, uppercase: true, numbers: false, symbols: false })); // 8-char letters-only password</code></pre>
+                            <p>This function ensures that each password includes at least one character from each selected character type, making it more secure. The shuffling step ensures that required characters aren't always in predictable positions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Specifications Section -->
+    <section id="specifications" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl sm:text-4xl font-display font-bold mb-4">技术规格</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                Jork-4 代表了我们迄今为止最先进的 AI 架构，在关键性能指标方面有显著的提升。
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-bold mb-4">模型架构</h3>
+                <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>1.2万亿参数密集Transformer架构</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>先进的混合专家路由，实现高效处理</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>通过人类反馈进行强化学习的多阶段训练</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>用于文本和图像处理的增强型多模态嵌入</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-light-card dark:bg-dark-card p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h3 class="text-xl font-bold mb-4">性能基准</h3>
+                <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>MMLU（大规模多任务语言理解）得分 92.7%</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>HumanEval（代码生成基准）的得分为 96.3%</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>HELM 推理和问题解决任务的得分为 89.1%</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-6 w-6 text-secondary mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>事实验证和幻觉消除准确率达98.5%</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="bg-gradient-animate rounded-3xl overflow-hidden shadow-xl">
+            <div class="px-6 py-12 sm:px-12 sm:py-16 text-center text-white">
+                <h2 class="text-3xl sm:text-4xl font-display font-bold mb-4">立即体验 Jork-4</h2>
+                <p class="text-xl max-w-3xl mx-auto mb-8 opacity-90">
+                    加入数以千计的专业人士、研究人员和创作者，他们已经在使用 Jork-4 来增强他们的工作并释放新的可能性。
+                </p>
+                <div>
+                    <a href="login.html" class="inline-block bg-white text-primary rounded-md px-6 py-3 text-base font-medium hover:bg-opacity-90 transition">
+                        免费试用 Jork-4
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 dark:bg-gray-900/50 py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Jork-4</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        Advanced AI assistant for creativity, reasoning, and problem-solving.
+                    </p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Product</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Home</a></li>
+                        <li><a href="login.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Login</a></li>
+                        <li><a href="jork4.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">中文</a></li>
+                        <li><a href="jork4-en.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">English</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Company</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">About</a></li>
+                        <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Blog</a></li>
+                        <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Careers</a></li>
+                        <li><a href="index.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold mb-4">Legal</h3>
+                    <ul class="space-y-2">
+                        <li><a href="PrivacyPolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Privacy</a></li>
+                        <li><a href="PrivacyPolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Terms</a></li>
+                        <li><a href="PrivacyPolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
+                <p class="text-gray-600 dark:text-gray-300 text-center">
+                    &copy; 2025 JorkAI. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>

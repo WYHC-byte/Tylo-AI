@@ -1364,7 +1364,7 @@
         <div class="container">
             <nav class="navbar">
                 <a href="#" class="logo">
-                    <img class="logo-icon" scr="logo.jpg">
+                    <img class="logo-icon" src="logo.jpg">
                     <span>JorkAI</span>
                 </a>
                 
@@ -1392,9 +1392,9 @@
         <div class="notification-content">
             <div class="notification-icon">🎉</div>
             <div class="notification-text">
-                <strong>恭喜！</strong> JorkAI现已支持PWA技术，您可以将网站安装到主屏幕，获得更好的使用体验！
+                <strong>恭喜！</strong> JorkAI最新推出推理混合模型 Jork-Trex-4 和 Jork-Epist-4模型
             </div>
-            <a href="pwa.html" class="notification-btn">查看安装教程</a>
+            <a href="jork4.html" class="notification-btn">详情</a>
             <button class="notification-close" id="closeNotification">×</button>
         </div>
     </div>
@@ -1548,30 +1548,30 @@
             <div class="models-grid">
                 <div class="model-card">
                     <span class="model-badge epic">顶级</span>
-                    <h3 class="model-name">Jork-3.9-Epic</h3>
-                    <p class="model-description">我们最强大、最聪明的AI模型，为最复杂的任务而生。</p>
+                    <h3 class="model-name">Jork-Epist-4</h3>
+                    <p class="model-description">平衡能力与效率的新一代通用模型。适合各种专业和创意工作，您的全能AI助手！</p>
                     
                     <ul class="model-features">
                         <li>超强推理与分析能力</li>
                         <li>多模态输入理解</li>
                         <li>极致创造力与想象力</li>
                         <li>最高准确度和一致性</li>
-                        <li>高级代码生成与优化</li>
+                        <li>知识检索与整合</li>
                     </ul>
                     
                     <a href="login.html" class="btn btn-primary">立即体验</a>
                 </div>
                 
                 <div class="model-card">
-                    <span class="model-badge standard">平衡</span>
-                    <h3 class="model-name">Jork-3.5-Epic</h3>
-                    <p class="model-description">平衡能力与效率的通用型模型，适合日常专业工作。</p>
+                    <span class="model-badge standard">Code</span>
+                    <h3 class="model-name">Jork-Trex-4</h3>
+                    <p class="model-description">我们最新、最强大的代码生成专用模型，专为复杂编程任务而生。</p>
                     
                     <ul class="model-features">
                         <li>出色的推理与分析能力</li>
                         <li>基础多模态理解</li>
                         <li>优秀的创造力表现</li>
-                        <li>高准确度和一致性</li>
+                        <li>知识检索与整合</li>
                         <li>标准代码生成能力</li>
                     </ul>
                     
@@ -1580,7 +1580,7 @@
                 
                 <div class="model-card">
                     <span class="model-badge basic">日常</span>
-                    <h3 class="model-name">Jork-3.5-Canto</h3>
+                    <h3 class="model-name">Jork-mini-3.6</h3>
                     <p class="model-description">轻量高效的日常助手，友好自然的交互风格。</p>
                     
                     <ul class="model-features">
@@ -1602,8 +1602,8 @@
     <div class="container">
         <div class="section-header">
             <div class="section-subtitle">性能对比</div>
-            <h2 class="section-title">与行业领先模型的对比</h2>
-            <p class="section-description">JorkAI在多项基准测试中表现优异，超越其他主流AI模型。</p>
+            <h2 class="section-title">与JorkAI的模型比较</h2>
+            <p class="section-description">JorkAI在多项基准测试中表现优异，一代更比一代强</p>
         </div>
         
         <div class="comparison-table-container">
@@ -1611,11 +1611,11 @@
                 <thead>
                     <tr>
                         <th>功能/模型</th>
+                        <th>Jork-Epist-4</th>
+                        <th>Jork-Trex-4</th>
                         <th>Jork-3.9-Epic</th>
+                        <th>Jork-3.7-Epic</th>
                         <th>Jork-3.5-Epic</th>
-                        <th>GPT-4</th>
-                        <th>Claude 3</th>
-                        <th>Gemini 1.5</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1679,8 +1679,8 @@
             </table>
             
             <div class="comparison-notes">
-                <p>* 评分基于2024年6月进行的独立基准测试结果</p>
-                <p>* 所有模型均测试其最新公开版本</p>
+                <p>* 表格仅供参考，以您的实际体验为准！</p>
+                <p>* 最终解释权归 JorkAI 和 腾云科技 所有</p>
             </div>
         </div>
     </div>
@@ -1811,7 +1811,8 @@
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 JorkAI, Inc All Right Reserved</p>
+                <p>&copy; 2025 JorkAI, Inc | 腾云科技 Tenyun Tech , All Right Reserved
+                </p>
             </div>
         </div>
     </footer>
@@ -1907,5 +1908,6 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
     </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"9450d571094b109f","version":"2025.4.0-1-g37f21b1","r":1,"token":"9495a42da72746f9b35f3e1637ef3718","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
 </body>
 </html>

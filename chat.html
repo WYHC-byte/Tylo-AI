@@ -1,1087 +1,1423 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimal-ui">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="logo.png">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jork-3.7-Epic AI Assistant</title>
+    <title>JorkAI聊天界面</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            50: '#f0f0ff',
-                            100: '#e0e0ff',
-                            200: '#c2c1ff',
-                            300: '#a3a1ff',
-                            400: '#8583ff',
-                            500: '#6663ff',
-                            600: '#5D5CDE',
-                            700: '#4b4ab2',
-                            800: '#383786',
-                            900: '#252459',
-                        },
-                        dark: {
-                            100: '#d5d5d5',
-                            200: '#ababab',
-                            300: '#808080',
-                            400: '#565656',
-                            500: '#2b2b2b',
-                            600: '#232323',
-                            700: '#1a1a1a',
-                            800: '#121212',
-                            900: '#0a0a0a',
-                        },
-                    },
-                    animation: {
-                        'bounce-slow': 'bounce 2s infinite',
-                        'pulse-slow': 'pulse 3s infinite',
-                        'thinking': 'thinking 2s infinite',
-                    },
-                    keyframes: {
-                        thinking: {
-                            '0%, 100%': { opacity: '0.2' },
-                            '50%': { opacity: '1' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
     <style>
-        /* For WebKit browsers */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        html, body {
+            height: 100%;
+            overflow: hidden;
         }
         
-        ::-webkit-scrollbar-track {
-            background: transparent;
+        .sidebar {
+            transition: all 0.3s ease;
+            opacity: 1;
+        }
+        .sidebar.hidden {
+            transform: translateX(-100%);
+            opacity: 0;
         }
         
-        ::-webkit-scrollbar-thumb {
-            background-color: rgba(156, 163, 175, 0.5);
-            border-radius: 20px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(156, 163, 175, 0.7);
-        }
-
-        /* For Firefox */
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-        }
-
-        /* Global styles */
-        .dark body {
-            background-color: #181818;
-            color: #e5e5e5;
-        }
-
-        body {
-            background-color: #FFFFFF;
-            color: #1a1a1a;
-        }
-
-        .dot-typing {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: currentColor;
-            margin-right: 4px;
-            animation: thinking 1.5s infinite linear;
-        }
-
-        .dot-typing:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .dot-typing:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        /* Conversation styles */
-        .message-container {
-            padding: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .user-message {
-            background-color: #f9fafb;
-        }
-
-        .dark .user-message {
-            background-color: #1e1e1e;
-        }
-
-        .ai-message {
-            background-color: #ffffff;
-        }
-
-        .dark .ai-message {
-            background-color: #181818;
-        }
-
-        .message-content {
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        .message-content h1, .message-content h2, .message-content h3,
-        .message-content h4, .message-content h5, .message-content h6 {
-            font-weight: 700;
-            margin-top: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .message-content h1 {
-            font-size: 1.875rem;
-            line-height: 2.25rem;
-        }
-
-        .message-content h2 {
-            font-size: 1.5rem;
-            line-height: 2rem;
-        }
-
-        .message-content h3 {
-            font-size: 1.25rem;
-            line-height: 1.75rem;
-        }
-
-        .message-content p {
-            margin-bottom: 1rem;
-        }
-
-        .message-content ul, .message-content ol {
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-            margin-left: 1.25rem;
-        }
-
-        .message-content ul {
-            list-style-type: disc;
-        }
-
-        .message-content ol {
-            list-style-type: decimal;
-        }
-
-        .message-content li {
-            margin-bottom: 0.25rem;
-        }
-
-        .message-content pre {
-            background-color: #f3f4f6;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            overflow-x: auto;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .dark .message-content pre {
-            background-color: #2d2d2d;
-        }
-
-        .message-content code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 0.875rem;
-            color: #616161;
-            background-color: #f3f4f6;
-            padding: 0.1rem 0.3rem;
-            border-radius: 0.25rem;
-        }
-
-        .dark .message-content code {
-            color: #d4d4d4;
-            background-color: #2d2d2d;
-        }
-
-        .message-content blockquote {
-            border-left: 4px solid #e5e7eb;
-            padding-left: 1rem;
-            margin-left: 0;
-            margin-right: 0;
-            font-style: italic;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .dark .message-content blockquote {
-            border-left-color: #4b5563;
-        }
-
-        .message-content a {
-            color: #2563eb;
-            text-decoration: underline;
-        }
-
-        .dark .message-content a {
-            color: #3b82f6;
-        }
-
-        .message-content table {
-            width: 100%;
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-            border-collapse: collapse;
-        }
-
-        .message-content th, .message-content td {
-            border: 1px solid #e5e7eb;
-            padding: 0.5rem 0.75rem;
-            text-align: left;
-        }
-
-        .dark .message-content th, .dark .message-content td {
-            border-color: #4b5563;
-        }
-
-        .message-content th {
-            font-weight: 600;
-            background-color: #f9fafb;
-        }
-
-        .dark .message-content th {
-            background-color: #374151;
-        }
-
-        .message-content tr:nth-child(even) {
-            background-color: #f9fafb;
-        }
-
-        .dark .message-content tr:nth-child(even) {
-            background-color: #1f2937;
-        }
-
-        /* Citation styles */
-        .citation {
-            background-color: #f0f9ff;
-            border-left: 3px solid #3b82f6;
-            padding: 0.5rem 1rem;
-            margin: 0.5rem 0;
-            font-size: 0.9rem;
-        }
-
-        .dark .citation {
-            background-color: #172033;
-            border-left-color: #3b82f6;
-        }
-
-        /* Syntax highlighting */
-        .hljs {
-            display: block;
-            overflow-x: auto;
-            padding: 1rem;
-            border-radius: 0.375rem;
-        }
-
-        /* Thinking process visualization */
         .thinking-container {
-            background-color: #f9fafb;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 0.875rem;
-            overflow-x: auto;
+            border-left: 3px solid #5D5CDE;
+            padding-left: 1rem;
+            margin: 1rem 0;
             position: relative;
         }
-
-        .dark .thinking-container {
-            background-color: #2d2d2d;
-        }
-
+        
         .thinking-step {
-            margin-bottom: 0.75rem;
-            padding: 0.5rem;
-            border-left: 3px solid #5D5CDE;
-            animation: fadeIn 0.5s ease-in;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s forwards;
         }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        
+        .typing-animation::after {
+            content: "";
+            display: inline-block;
+            width: 0.5em;
+            animation: typing 1.5s infinite;
         }
-
-        /* Sidebar animation */
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
+        
+        /* Custom dropdown styling */
+        .custom-dropdown {
+            position: relative;
+            user-select: none;
         }
-
-        @keyframes slideOut {
-            from { transform: translateX(0); }
-            to { transform: translateX(-100%); }
-        }
-
-        .sidebar-show {
-            animation: slideIn 0.3s forwards;
-        }
-
-        .sidebar-hide {
-            animation: slideOut 0.3s forwards;
-        }
-
-        /* File upload styling */
-        .file-upload-container {
+        
+        .dropdown-selected {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            border: 2px dashed #d1d5db;
-            border-radius: 0.5rem;
-            padding: 1.5rem;
-            text-align: center;
+            justify-content: space-between;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
+            background-color: rgba(255, 255, 255, 0.8);
         }
-
-        .file-upload-container:hover {
+        
+        .dark .dropdown-selected {
+            background-color: rgba(31, 41, 55, 0.8);
+            border-color: #374151;
+            color: #e2e8f0;
+        }
+        
+        .dropdown-selected:hover {
             border-color: #5D5CDE;
         }
-
-        .dark .file-upload-container {
-            border-color: #4b5563;
-        }
-
-        .dark .file-upload-container:hover {
-            border-color: #5D5CDE;
-        }
-
-        /* News card styling */
-        .news-card {
+        
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 0.25rem;
             border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(-10px);
+            visibility: hidden;
+            transition: all 0.2s ease;
             overflow: hidden;
-            transition: all 0.3s ease;
-            background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-
-        .news-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        
+        .dark .dropdown-options {
+            background-color: #1F2937;
+            border-color: #374151;
         }
-
-        .dark .news-card {
-            background-color: #1e1e1e;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        
+        .dropdown-options.open {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
         }
-
-        .dark .news-card:hover {
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Chat history items */
-        .chat-history-item {
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #e5e7eb;
+        
+        .dropdown-option {
+            padding: 0.5rem 1rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
-
-        .chat-history-item:hover {
-            background-color: #f3f4f6;
+        
+        .dropdown-option:hover {
+            background-color: #EEF2FF;
         }
-
-        .dark .chat-history-item {
+        
+        .dark .dropdown-option:hover {
+            background-color: #374151;
+        }
+        
+        .dropdown-option.selected {
+            background-color: #EEF2FF;
+            color: #5D5CDE;
+        }
+        
+        .dark .dropdown-option.selected {
+            background-color: #2D3748;
+            color: #81E6D9;
+        }
+        
+        @keyframes typing {
+            0%, 100% { content: ""; }
+            25% { content: "."; }
+            50% { content: ".."; }
+            75% { content: "..."; }
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .code-block {
+            background-color: #f0f0f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow-x: auto;
+        }
+        
+        .dark .code-block {
+            background-color: #1E293B;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        
+        table, th, td {
+            border: 1px solid #e2e8f0;
+        }
+        
+        .dark table, .dark th, .dark td {
             border-color: #374151;
         }
-
-        .dark .chat-history-item:hover {
-            background-color: #1f2937;
+        
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
         }
-
-        .chat-history-item.active {
-            background-color: #e0e7ff;
-            border-left: 3px solid #6663ff;
+        
+        th {
+            background-color: #f8fafc;
         }
-
-        .dark .chat-history-item.active {
-            background-color: #272c36;
-            border-left: 3px solid #6663ff;
+        
+        .dark th {
+            background-color: #1E293B;
         }
-
-        /* Button animations */
-        .btn-hover-effect {
-            position: relative;
+        
+        .file-preview {
+            display: flex;
+            align-items: center;
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            max-width: 100%;
+        }
+        
+        .dark .file-preview {
+            background-color: #374151;
+        }
+        
+        .file-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            color: #5D5CDE;
+        }
+        
+        .file-info {
+            flex-grow: 1;
             overflow: hidden;
-            transition: all 0.3s ease;
+        }
+        
+        .file-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+        
+        .file-size {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .dark .file-size {
+            color: #9ca3af;
+        }
+        
+        .file-remove {
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+        
+        /* Chat history item styling */
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .chat-item:hover {
+            background-color: #f3f4f6;
+            border-left-color: #5D5CDE;
+        }
+        
+        .dark .chat-item:hover {
+            background-color: #374151;
+        }
+        
+        .chat-item-icon {
+            margin-right: 0.75rem;
+            color: #5D5CDE;
+        }
+        
+        .chat-item-content {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .chat-item-title {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .chat-item-time {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .dark .chat-item-time {
+            color: #9ca3af;
         }
 
-        .btn-hover-effect:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        .btn-hover-effect:hover:before {
-            transform: translateX(0);
-        }
-
-        /* Animation for streaming effect */
-        @keyframes blink {
-            0% { opacity: 0.2; }
-            50% { opacity: 1; }
-            100% { opacity: 0.2; }
-        }
-
-        .cursor-blink {
-            display: inline-block;
-            width: 0.5rem;
-            height: 1.25rem;
-            background-color: currentColor;
-            animation: blink 1s infinite;
-            margin-left: 2px;
-            vertical-align: middle;
-        }
-
-        /* Toast notification */
-        .toast {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            background-color: #4b5563;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.375rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            z-index: 50;
-            transition: all 0.3s ease;
-            transform: translateY(100%);
+        .chat-item-actions {
+            display: flex;
             opacity: 0;
+            transition: opacity 0.2s ease;
         }
 
-        .toast.show {
-            transform: translateY(0);
+        .chat-item:hover .chat-item-actions {
             opacity: 1;
         }
 
-        /* Media queries for responsiveness */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                max-width: 100%;
+        .chat-item-delete {
+            color: #ef4444;
+            cursor: pointer;
+            padding: 0.25rem;
+            margin-left: 0.5rem;
+        }
+        
+        .user-message-container {
+            background-color: #f3f4f6;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .dark .user-message-container {
+            background-color: #2d3748;
+        }
+        
+        /* Markdown typography improvements */
+        .markdown-content h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .dark .markdown-content h1 {
+            border-color: #4b5563;
+        }
+        
+        .markdown-content h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 1.4rem;
+            margin-bottom: 0.7rem;
+            padding-bottom: 0.2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .dark .markdown-content h2 {
+            border-color: #4b5563;
+        }
+        
+        .markdown-content h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-top: 1.3rem;
+            margin-bottom: 0.65rem;
+        }
+        
+        .markdown-content h4 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-top: 1.2rem;
+            margin-bottom: 0.6rem;
+        }
+        
+        .markdown-content h5 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-top: 1.1rem;
+            margin-bottom: 0.55rem;
+        }
+        
+        .markdown-content h6 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown-content p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .markdown-content ul, .markdown-content ol {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+        }
+        
+        .markdown-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 4px solid #e2e8f0;
+            padding-left: 1rem;
+            margin-left: 0;
+            margin-bottom: 1rem;
+            color: #4b5563;
+        }
+        
+        .dark .markdown-content blockquote {
+            border-color: #4b5563;
+            color: #9ca3af;
+        }
+        
+        /* Typing animation */
+        .ai-typing {
+            display: inline-block;
+            position: relative;
+            min-height: 20px;
+            width: 60px;
+        }
+        
+        .ai-typing::after {
+            content: "";
+            position: absolute;
+            width: 6px;
+            height: 16px;
+            background-color: #5D5CDE;
+            animation: typing-cursor 0.8s infinite;
+            margin-left: 4px;
+        }
+        
+        @keyframes typing-cursor {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        /* Quota warning */
+        .quota-warning {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .dark .quota-warning {
+            background-color: #78350f;
+            border-color: #f59e0b;
+            color: #fef3c7;
+        }
+        
+        .quota-warning-icon {
+            color: #f59e0b;
+            margin-right: 0.5rem;
+            font-size: 1.25rem;
+        }
+        
+        .current-chat-title {
+            margin-left: 1rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .dark\:bg-gray-900 {
+                background-color: #181818;
+            }
+            .dark\:text-white {
+                color: #FFFFFF;
+            }
+            .dark\:border-gray-700 {
+                border-color: #374151;
+            }
+            .dark\:bg-gray-800 {
+                background-color: #1F2937;
+            }
+            .dark\:hover\:bg-gray-700:hover {
+                background-color: #374151;
+            }
+            .dark\:bg-gray-700 {
+                background-color: #374151;
             }
         }
     </style>
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
 </head>
-<body class="min-h-screen">
-    <div id="app" class="flex flex-col min-h-screen">
-        <!-- Sidebar -->
-        <div id="sidebar" class="fixed top-0 left-0 h-full bg-white dark:bg-dark-700 w-64 shadow-lg transform -translate-x-full transition-transform duration-300 ease-in-out z-40 flex flex-col">
-            <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <span class="text-primary-600 dark:text-primary-400 text-xl font-bold">Jork</span>
-                    <span class="bg-green-500 h-2 w-2 rounded-full"></span>
-                </div>
-                <button id="closeSidebar" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            
-            <!-- Chat History -->
-            <div class="flex-1 overflow-y-auto">
-                <div class="p-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">聊天历史</h2>
-                    <div id="chat-history-list" class="space-y-1">
-                        <!-- Chat history items will be inserted here -->
-                        <div class="text-sm text-gray-500 dark:text-gray-400 p-2 text-center">
-                            没有聊天历史
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mt-auto p-4 border-t border-gray-200 dark:border-gray-700">
-                <button id="clear-history" class="w-full flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 dark:bg-red-900 dark:text-red-100 dark:hover:bg-red-800">
-                    <i class="fas fa-trash-alt mr-2"></i> 删除历史对话
-                </button>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex flex-col" style="background-color: #F9F9F9;">
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar hidden fixed left-0 top-0 h-full w-72 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-10">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h2 class="text-lg font-semibold">聊天历史</h2>
+            <button id="closeBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <button id="newChatBtn" class="w-full py-2 px-4 bg-orange-200 text-orange-600 rounded-lg hover:bg-orange-300 transition-colors flex items-center justify-center mb-4">
+                <i class="fas fa-plus mr-2"></i> 新建聊天
+            </button>
+        </div>
+        <div id="chatHistory" class="p-4 overflow-y-auto" style="max-height: calc(100vh - 130px);">
+            <div class="space-y-2">
+                <!-- Empty state message -->
+                <p id="emptyHistoryMessage" class="text-gray-500 dark:text-gray-400 text-sm">暂无聊天历史</p>
+                <!-- Chat history items will be dynamically added here -->
             </div>
         </div>
-        
-        <!-- Main content area -->
-        <div id="main-content" class="flex-1 transition-all duration-300 ease-in-out">
-            <!-- Header -->
-            <header class="bg-white dark:bg-dark-700 shadow-sm sticky top-0 z-10">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
-                    <div class="flex items-center space-x-4">
-                        <button id="toggleSidebar" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div class="flex items-center space-x-2">
-                            <span class="text-primary-600 dark:text-primary-400 text-xl font-bold">JorkAI</span>
-                            <span class="bg-green-500 h-2 w-2 rounded-full"></span>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <button id="toggle-dark-mode-header" class="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400">
-                            <i id="dark-mode-icon" class="fas fa-moon text-xl"></i>
-                        </button>
-                        <button id="btn-new-chat" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md shadow-sm">
-                            <i class="fas fa-plus mr-2"></i> 新的聊天
-                        </button>
-                    </div>
-                </div>
-            </header>
-            
-            <!-- Welcome screen -->
-            <div id="welcome-screen" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <div class="text-center">
-                    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">欢迎来到JorkAI</h1>
-                    <p id="greeting" class="text-xl text-gray-600 dark:text-gray-300 mb-8">...</p>
-                </div>
-                
-                <div class="mb-12">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">新闻</h2>
-                    <div id="trending-news" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- News cards will be inserted here -->
-                        <div class="news-card">
-                            <div class="p-4">
-                                <div class="animate-pulse">
-                                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="news-card">
-                            <div class="p-4">
-                                <div class="animate-pulse">
-                                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="news-card">
-                            <div class="p-4">
-                                <div class="animate-pulse">
-                                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
-                                    <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="mb-12">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-4">特点</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white dark:bg-dark-700 rounded-lg shadow-md p-6">
-                            <div class="text-primary-600 dark:text-primary-400 text-3xl mb-4">
-                                <i class="fas fa-globe"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">联网搜索</h3>
-                            <p class="text-gray-600 dark:text-gray-400">从网络访问实时信息以获取最新的答案。</p>
-                        </div>
-                        <div class="bg-white dark:bg-dark-700 rounded-lg shadow-md p-6">
-                            <div class="text-primary-600 dark:text-primary-400 text-3xl mb-4">
-                                <i class="fas fa-brain"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">深度思考</h3>
-                            <p class="text-gray-600 dark:text-gray-400">将人工智能的思维过程可视化，以进行复杂的推理和解决问题。</p>
-                        </div>
-                        <div class="bg-white dark:bg-dark-700 rounded-lg shadow-md p-6">
-                            <div class="text-primary-600 dark:text-primary-400 text-3xl mb-4">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">附件支持</h3>
-                            <p class="text-gray-600 dark:text-gray-400">通过丰富的输出功能生成代码、表格、格式化文本等。</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="text-center">
-                    <button id="start-conversation" class="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-md shadow-md text-lg">
-                        开始对话
-                    </button>
-                </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="flex flex-col h-screen">
+        <!-- Top bar -->
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex items-center">
+                <button id="sidebarToggle" class="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div id="currentChatTitle" class="current-chat-title hidden"></div>
             </div>
-            
-            <!-- Chat UI -->
-            <div id="chat-ui" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 hidden">
-                <div id="conversation-container" class="mb-4">
-                    <!-- Messages will be inserted here -->
-                </div>
-                
-                <!-- Attachment preview area -->
-                <div id="attachment-preview" class="mb-4 hidden">
-                    <div class="bg-gray-100 dark:bg-dark-600 rounded-lg p-3">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">附件</span>
-                            <button id="clear-attachments" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                <i class="fas fa-times"></i>
+            <div id="quotaContainer" class="flex items-center">
+                <span id="quotaCount" class="mr-2 text-sm font-medium"></span>
+            </div>
+        </div>
+
+        <!-- Chat area -->
+        <div id="chatContainer" class="flex-grow overflow-auto p-4">
+            <div class="max-w-4xl mx-auto">
+                <!-- Initial view -->
+                <div id="initialView" class="flex flex-col items-center justify-center mt-8">
+                    <div class="bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 flex items-center space-x-2 mb-4">
+                        <span class="text-gray-600 dark:text-gray-300">免费计划</span>
+                        <span>•</span>
+                        <a href="#" class="text-blue-500 hover:text-blue-600">升级</a>
+                    </div>
+                    <div class="text-3xl font-semibold mb-8 flex items-center">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9NAHBHbG_tj_AFFrJGCKAWEPDRtvFL28sug&s" alt="Logo" class="w-8 h-8 mr-2 rounded-full object-cover"> <span id="timeGreeting">准备就绪</span>
+                    </div>
+                    <div class="w-full max-w-2xl">
+                        <div id="quotaWarning" class="quota-warning hidden mb-4">
+                            <div class="flex items-center">
+                                <i class="fas fa-exclamation-triangle quota-warning-icon"></i>
+                                <span>您的提问机会即将用尽，还剩下 <strong>1</strong> 次提问机会。</span>
+                            </div>
+                            <a href="#" class="text-blue-600 dark:text-blue-400 font-medium">升级</a>
+                        </div>
+                        
+                        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4">
+                            <input id="userInput" type="text" placeholder="有什么可以帮助你的？" class="w-full p-2 focus:outline-none bg-transparent text-base">
+                            <div id="filePreviewArea" class="mt-2 hidden"></div>
+                            <div class="flex justify-between items-center mt-2">
+                                <div class="flex items-center">
+                                    <button id="uploadButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                    <button class="p-2 text-gray-400 ml-1">
+                                        <i class="fas fa-feather"></i>
+                                    </button>
+                                </div>
+                                <div class="flex items-center">
+                                    <div id="modelSelector" class="custom-dropdown mr-2">
+                                        <div class="dropdown-selected">
+                                            <span>Jork-Epist-4</span>
+                                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                        </div>
+                                        <div class="dropdown-options">
+                                            <div class="dropdown-option selected" data-value="Jork-Epist-4">Jork-Epist-4</div>
+                                            <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4</div>
+                                        </div>
+                                    </div>
+                                    <button id="sendButton" class="bg-orange-200 text-orange-600 p-2 rounded-md">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap justify-center space-x-2 mt-6">
+                            <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-pen mr-2"></i> 写作
+                            </button>
+                            <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-graduation-cap mr-2"></i> 学习
+                            </button>
+                            <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-code mr-2"></i> 编程
+                            </button>
+                            <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-coffee mr-2"></i> 生活问题
+                            </button>
+                            <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <i class="fas fa-lightbulb mr-2"></i> Jork的选择
                             </button>
                         </div>
-                        <div id="attachment-list" class="flex flex-wrap gap-2">
-                            <!-- Attachment previews will go here -->
-                        </div>
                     </div>
                 </div>
                 
-                <!-- Input area -->
-                <div class="bg-white dark:bg-dark-700 rounded-lg shadow-md p-4">
-                    <div class="flex items-start space-x-4">
-                        <div class="flex-1">
-                            <textarea id="message-input" rows="3" class="w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-dark-800 text-gray-900 dark:text-gray-100 resize-none" placeholder="Type your message here..."></textarea>
-                            
-                            <!-- Input actions -->
-                            <div class="flex justify-between items-center mt-2">
-                                <div class="flex space-x-2">
-                                    <label for="file-upload" class="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer">
-                                        <i class="fas fa-paperclip text-lg"></i>
-                                        <span class="ml-1 text-sm">附件</span>
-                                        <input id="file-upload" type="file" class="hidden" multiple>
-                                    </label>
-                                    <button id="toggle-web-search" class="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                        <i class="fas fa-globe text-lg"></i>
-                                        <span class="ml-1 text-sm">联网搜索</span>
-                                    </button>
-                                    <button id="toggle-deep-thinking" class="flex items-center text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                        <i class="fas fa-brain text-lg"></i>
-                                        <span class="ml-1 text-sm">深度思考</span>
-                                    </button>
+                <!-- Chat view (initially hidden) -->
+                <div id="chatView" class="hidden">
+                    <!-- Messages will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom input area (only visible in chat view) -->
+        <div id="bottomInputArea" class="hidden border-t border-gray-200 dark:border-gray-700 p-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                    <input id="replyInput" type="text" placeholder="回复 Jork..." class="w-full p-2 focus:outline-none bg-transparent text-base">
+                    <div id="replyFilePreviewArea" class="mt-2 hidden"></div>
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="flex items-center">
+                            <button id="replyUploadButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button id="webSearchButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md ml-1" title="联网搜索">
+                                <i class="fas fa-search"></i>
+                            </button>
+                            <button id="deepThinkingButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md ml-1" title="深度思考">
+                                <i class="fas fa-brain"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center">
+                            <div id="replyModelSelector" class="custom-dropdown mr-2">
+                                <div class="dropdown-selected">
+                                    <span>Jork-Epist-4</span>
+                                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
                                 </div>
-                                <div>
-                                    <button id="send-message" class="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed">
-                                        <i class="fas fa-paper-plane mr-2"></i> 发送
-                                    </button>
+                                <div class="dropdown-options">
+                                    <div class="dropdown-option selected" data-value="Jork-Epist-4">Jork-Epist-4</div>
+                                    <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4</div>
                                 </div>
                             </div>
+                            <button id="replySendButton" class="bg-orange-200 text-orange-600 p-2 rounded-md">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Toast notification -->
-    <div id="toast" class="toast">
-        这是一条通知
-    </div>
-    
+
+    <!-- File upload input (hidden) -->
+    <input type="file" id="fileInput" class="hidden">
+    <input type="file" id="replyFileInput" class="hidden">
+
     <script>
-        // App state
-        const appState = {
-            darkMode: window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
-            sidebarVisible: false,
-            attachments: [],
-            webSearchEnabled: false,
-            deepThinkingEnabled: false,
-            streamingEnabled: true,
-            conversations: [],
-            currentConversationId: null,
-            isWelcomeScreen: true,
-            isProcessing: false,
-            lastMessageId: 0,
-            selectedModel: 'jork-3.7-Epic-Reasoning',
-            apiKey: 'sk-e1ed90c2effc4415beeee85845f66d05',
-            mockNewsData: [
-                {
-                    title: "量子计算取得突破",
-                    summary: "科学家展示了一种新的量子计算技术，可以显著加速该领域的进步。",
-                    source: "Tech Innovations"
-                },
-                {
-                    title: "Global Climate Summit Results in New Agreements",
-                    summary: "World leaders have committed to more ambitious climate goals following intensive negotiations.",
-                    source: "Global News"
-                },
-                {
-                    title: "Claude3.7-Sonnet发布",
-                    summary: "Claude-3.7-Sonnet在哪些方面强势？",
-                    source: "AI Research Today"
-                },
-                {
-                    title: "Major Breakthrough in Renewable Energy Storage",
-                    summary: "Engineers announce new battery technology that could solve intermittency issues in renewable energy.",
-                    source: "Energy Weekly"
-                },
-                {
-                    title: "International Space Mission Discovers Evidence of Water on Distant Planet",
-                    summary: "Astronomical observations reveal strong indicators of water presence on an exoplanet 40 light years away.",
-                    source: "Space Exploration"
-                },
-                {
-                    title: "Global Economic Forum Predicts Growth Despite Challenges",
-                    summary: "Economic experts forecast moderate growth for the coming year despite ongoing supply chain issues.",
-                    source: "Financial Times"
-                }
-            ],
-            thinkingSteps: [
-                "Analyzing the query to identify key requirements...",
-                "Retrieving relevant information from my knowledge base...",
-                "Searching for up-to-date information on the internet...",
-                "Evaluating and comparing information from different sources...",
-                "Considering potential biases or limitations in the information...",
-                "Organizing the most relevant points in a coherent structure...",
-                "Formulating a comprehensive and balanced response...",
-                "Reviewing for accuracy, completeness, and clarity..."
-            ],
-            // Web search API configuration
-            searchEndpoint: "https://api.search.example.com/v1/search",
-            // DeepSeek API configuration
-            deepseekEndpoint: "https://api.deepseek.com/v1/chat/completions",
-            deepseekModels: {
-                "jork-3.7-Epic-Reasoning": "deepseek-chat",
-                "jork-3.5-Epic": "deepseek-chat"
+        // Beijing time-based greeting
+        function updateTimeGreeting() {
+            const now = new Date();
+            // Convert to Beijing time (UTC+8)
+            const beijingHour = (now.getUTCHours() + 8) % 24;
+            let greeting = "";
+            
+            if (beijingHour >= 5 && beijingHour < 12) {
+                greeting = "早上好，你今天早上有美好的梦想吗?";
+            } else if (beijingHour >= 12 && beijingHour < 14) {
+                greeting = "中午空气清新，叫你事事顺心!";
+            } else if (beijingHour >= 14 && beijingHour < 18) {
+                greeting = "下午茶时间到，要不要一起云干杯？";
+            } else if (beijingHour >= 18 && beijingHour < 22) {
+                greeting = "晚上好呀～忙了一天，快来这儿喘口气吧！";
+            } else {
+                greeting = "深夜了~偷偷告诉你，我们的服务器也会在深夜吃‘电子夜宵’🍕";
             }
-        };
+            
+            document.getElementById('timeGreeting').textContent = greeting;
+        }
         
-        // Utility functions
-        const utils = {
-            generateId: () => Math.random().toString(36).substring(2, 11),
+        updateTimeGreeting();
+        setInterval(updateTimeGreeting, 60000); // Update every minute
+        
+        // Quota system
+        function initQuotaSystem() {
+            const quotaKey = 'jiorkQuotaSystem';
             
-            formatDate: (date) => {
-                return new Intl.DateTimeFormat('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                }).format(date);
-            },
+            // Get current Beijing time
+            const now = new Date();
+            const beijingOffset = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+            const beijingTime = new Date(now.getTime() + beijingOffset);
             
-            formatTime: (date) => {
-                return new Intl.DateTimeFormat('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true
-                }).format(date);
-            },
+            // Reset hour is every 3 hours: 0, 3, 6, 9, 12, 15, 18, 21
+            const currentHour = beijingTime.getUTCHours();
+            const resetHour = Math.floor(currentHour / 3) * 3;
+            const nextResetHour = (resetHour + 3) % 24;
             
-            getBeijingTime: () => {
-                const options = {
-                    timeZone: 'Asia/Shanghai',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true
-                };
-                return new Intl.DateTimeFormat('en-US', options).format(new Date());
-            },
+            // Create reset time (next 3-hour mark)
+            const resetTime = new Date(beijingTime);
+            if (resetHour === currentHour) {
+                // If we're exactly at a reset hour, check if we need to reset
+                const currentMinute = beijingTime.getUTCMinutes();
+                const currentSecond = beijingTime.getUTCSeconds();
+                if (currentMinute > 0 || currentSecond > 0) {
+                    // Not exactly at the start of the hour, so reset at next 3-hour mark
+                    resetTime.setUTCHours(nextResetHour, 0, 0, 0);
+                } else {
+                    // Exactly at the start of a reset hour, quota should have been reset already
+                    resetTime.setUTCHours(nextResetHour, 0, 0, 0);
+                }
+            } else {
+                // Not at a reset hour, reset at next 3-hour mark
+                resetTime.setUTCHours(nextResetHour, 0, 0, 0);
+            }
             
-            getBeijingDate: () => {
-                const options = {
-                    timeZone: 'Asia/Shanghai',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    weekday: 'long'
-                };
-                return new Intl.DateTimeFormat('en-US', options).format(new Date());
-            },
+            let quota = {
+                remaining: 50,
+                resetTime: resetTime.getTime(),
+                lastCheck: now.getTime()
+            };
             
-            getGreeting: () => {
-                const beijingHour = new Date().toLocaleString('en-US', {
-                    timeZone: 'Asia/Shanghai',
-                    hour: 'numeric',
-                    hour12: false
+            // Try to get existing quota from localStorage
+            try {
+                const savedQuota = localStorage.getItem(quotaKey);
+                if (savedQuota) {
+                    const parsedQuota = JSON.parse(savedQuota);
+                    
+                    // Check if we need to reset the quota
+                    if (now.getTime() >= parsedQuota.resetTime) {
+                        // Reset quota
+                        quota.remaining = 50;
+                        quota.resetTime = resetTime.getTime();
+                    } else {
+                        // Use saved quota
+                        quota = parsedQuota;
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading quota:', e);
+            }
+            
+            // Save quota to localStorage
+            localStorage.setItem(quotaKey, JSON.stringify(quota));
+            
+            // Update UI
+            updateQuotaUI(quota.remaining);
+            
+            // Return functions to manage quota
+            return {
+                useQuestion: function() {
+                    // Get latest quota
+                    const currentQuota = JSON.parse(localStorage.getItem(quotaKey));
+                    
+                    // Check if we need to reset
+                    const currentTime = new Date().getTime();
+                    if (currentTime >= currentQuota.resetTime) {
+                        // Reset quota
+                        currentQuota.remaining = 50;
+                        
+                        // Calculate next reset time
+                        const newResetTime = new Date(currentTime + beijingOffset);
+                        const newCurrentHour = newResetTime.getUTCHours();
+                        const newResetHour = Math.floor(newCurrentHour / 3) * 3;
+                        const newNextResetHour = (newResetHour + 3) % 24;
+                        newResetTime.setUTCHours(newNextResetHour, 0, 0, 0);
+                        
+                        currentQuota.resetTime = newResetTime.getTime();
+                    }
+                    
+                    // Decrement quota if available
+                    if (currentQuota.remaining > 0) {
+                        currentQuota.remaining--;
+                        currentQuota.lastCheck = currentTime;
+                        
+                        // Save updated quota
+                        localStorage.setItem(quotaKey, JSON.stringify(currentQuota));
+                        
+                        // Update UI
+                        updateQuotaUI(currentQuota.remaining);
+                        
+                        return true;
+                    }
+                    
+                    // No quota available
+                    return false;
+                },
+                getRemaining: function() {
+                    // Get latest quota
+                    const currentQuota = JSON.parse(localStorage.getItem(quotaKey));
+                    
+                    // Check if we need to reset
+                    const currentTime = new Date().getTime();
+                    if (currentTime >= currentQuota.resetTime) {
+                        // Reset quota
+                        currentQuota.remaining = 50;
+                        
+                        // Calculate next reset time
+                        const newResetTime = new Date(currentTime + beijingOffset);
+                        const newCurrentHour = newResetTime.getUTCHours();
+                        const newResetHour = Math.floor(newCurrentHour / 3) * 3;
+                        const newNextResetHour = (newResetHour + 3) % 24;
+                        newResetTime.setUTCHours(newNextResetHour, 0, 0, 0);
+                        
+                        currentQuota.resetTime = newResetTime.getTime();
+                        
+                        // Save updated quota
+                        localStorage.setItem(quotaKey, JSON.stringify(currentQuota));
+                    }
+                    
+                    // Update UI
+                    updateQuotaUI(currentQuota.remaining);
+                    
+                    return currentQuota.remaining;
+                },
+                getResetTime: function() {
+                    const currentQuota = JSON.parse(localStorage.getItem(quotaKey));
+                    return new Date(currentQuota.resetTime);
+                }
+            };
+        }
+        
+        function updateQuotaUI(remaining) {
+            const quotaCount = document.getElementById('quotaCount');
+            const quotaWarning = document.getElementById('quotaWarning');
+            
+            // Update count display
+            quotaCount.textContent = `剩余提问次数: ${remaining}`;
+            
+            // Show warning if only 1 question remaining
+            if (remaining <= 1) {
+                quotaWarning.classList.remove('hidden');
+            } else {
+                quotaWarning.classList.add('hidden');
+            }
+        }
+        
+        // Initialize quota system
+        const quotaSystem = initQuotaSystem();
+        
+        // Custom dropdown functionality
+        function setupDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const selected = dropdown.querySelector('.dropdown-selected');
+            const options = dropdown.querySelector('.dropdown-options');
+            const optionElements = dropdown.querySelectorAll('.dropdown-option');
+            
+            selected.addEventListener('click', () => {
+                options.classList.toggle('open');
+            });
+            
+            optionElements.forEach(option => {
+                option.addEventListener('click', () => {
+                    // Update selected text
+                    selected.querySelector('span').textContent = option.textContent;
+                    
+                    // Update selected state
+                    optionElements.forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    option.classList.add('selected');
+                    
+                    // Close dropdown
+                    options.classList.remove('open');
+                });
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) {
+                    options.classList.remove('open');
+                }
+            });
+        }
+        
+        // Setup both dropdowns
+        setupDropdown('modelSelector');
+        setupDropdown('replyModelSelector');
+        
+        // Initialize chat history from localStorage (changed key name)
+        let chatHistory = [];
+        try {
+            const savedHistory = localStorage.getItem('jiorkChatApp2023');
+            if (savedHistory) {
+                chatHistory = JSON.parse(savedHistory);
+                updateChatHistorySidebar();
+            }
+        } catch (e) {
+            console.error('Error loading chat history:', e);
+        }
+        
+        // Format timestamp to readable date
+        function formatTimestamp(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.round(diffMs / 60000);
+            const diffHours = Math.round(diffMs / 3600000);
+            const diffDays = Math.round(diffMs / 86400000);
+            
+            if (diffMins < 1) return '刚刚';
+            if (diffMins < 60) return `${diffMins}分钟前`;
+            if (diffHours < 24) return `${diffHours}小时前`;
+            if (diffDays < 7) return `${diffDays}天前`;
+            
+            return `${date.getFullYear()}-${(date.getMonth()+1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        }
+        
+        function updateChatHistorySidebar() {
+            const historyContainer = document.getElementById('chatHistory');
+            const emptyMessage = document.getElementById('emptyHistoryMessage');
+            
+            if (chatHistory.length === 0) {
+                emptyMessage.classList.remove('hidden');
+                return;
+            }
+            
+            emptyMessage.classList.add('hidden');
+            
+            // Remove existing history items
+            const existingItems = historyContainer.querySelectorAll('.chat-item');
+            existingItems.forEach(item => item.remove());
+            
+            // Add history entries in reverse chronological order
+            chatHistory.slice().reverse().forEach((chat, index) => {
+                const originalIndex = chatHistory.length - 1 - index;
+                const chatItem = document.createElement('div');
+                chatItem.className = 'chat-item';
+                
+                const chatHtml = `
+                    <div class="chat-item-icon">
+                        <i class="fas fa-comment-dots"></i>
+                    </div>
+                    <div class="chat-item-content">
+                        <div class="chat-item-title">${chat.title || `对话 ${originalIndex + 1}`}</div>
+                        <div class="chat-item-time">${formatTimestamp(chat.timestamp)}</div>
+                    </div>
+                    <div class="chat-item-actions">
+                        <div class="chat-item-delete" data-index="${originalIndex}" title="删除对话">
+                            <i class="fas fa-trash-alt"></i>
+                        </div>
+                    </div>
+                `;
+                
+                chatItem.innerHTML = chatHtml;
+                chatItem.dataset.index = originalIndex;
+                
+                chatItem.addEventListener('click', (e) => {
+                    // Don't trigger chat load if delete button was clicked
+                    if (e.target.closest('.chat-item-delete')) {
+                        return;
+                    }
+                    
+                    loadChat(originalIndex);
+                    document.getElementById('sidebar').classList.add('hidden');
                 });
                 
-                const hour = parseInt(beijingHour);
+                // Add delete button handler
+                const deleteBtn = chatItem.querySelector('.chat-item-delete');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteChat(originalIndex);
+                });
                 
-                if (hour >= 5 && hour < 12) {
-                    return "Good morning!";
-                } else if (hour >= 12 && hour < 18) {
-                    return "Good afternoon!";
-                } else {
-                    return "Good evening!";
-                }
-            },
-            
-            showToast: (message, duration = 3000) => {
-                const toast = document.getElementById('toast');
-                toast.textContent = message;
-                toast.classList.add('show');
-                
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, duration);
-            },
-            
-            toggleDarkMode: () => {
-                appState.darkMode = !appState.darkMode;
-                document.documentElement.classList.toggle('dark', appState.darkMode);
-                
-                // Update toggle button
-                const toggleDarkMode = document.getElementById('toggle-dark-mode');
-                if (toggleDarkMode) {
-                    toggleDarkMode.checked = appState.darkMode;
-                }
-                
-                // Update icon
-                const darkModeIcon = document.getElementById('dark-mode-icon');
-                if (darkModeIcon) {
-                    darkModeIcon.className = appState.darkMode ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
-                }
-                
-                // Save preference
-                localStorage.setItem('jork3_dark_mode', appState.darkMode);
-            },
-            
-            toggleSidebar: () => {
-                const sidebar = document.getElementById('sidebar');
-                const mainContent = document.getElementById('main-content');
-                
-                if (appState.sidebarVisible) {
-                    sidebar.classList.remove('translate-x-0');
-                    sidebar.classList.add('-translate-x-full');
-                    mainContent.classList.remove('md:ml-64');
-                } else {
-                    sidebar.classList.remove('-translate-x-full');
-                    sidebar.classList.add('translate-x-0');
-                    mainContent.classList.add('md:ml-64');
-                }
-                
-                appState.sidebarVisible = !appState.sidebarVisible;
-            },
-            
-            generateMessageId: () => {
-                appState.lastMessageId++;
-                return `msg-${appState.lastMessageId}`;
-            },
-            
-            createConversation: () => {
-                const id = utils.generateId();
-                const newConversation = {
-                    id: id,
-                    title: 'New Conversation',
-                    messages: [],
-                    createdAt: new Date().toISOString()
-                };
-                
-                appState.conversations.push(newConversation);
-                appState.currentConversationId = id;
+                historyContainer.appendChild(chatItem);
+            });
+        }
+        
+        function deleteChat(index) {
+            if (confirm('确定要删除这个对话吗？')) {
+                // Remove chat from array
+                chatHistory.splice(index, 1);
                 
                 // Save to localStorage
-                localStorage.setItem('jork3_conversations', JSON.stringify(appState.conversations));
-                
-                // Update chat history in sidebar
-                uiManager.updateChatHistoryList();
-                
-                return newConversation;
-            },
-            
-            getCurrentConversation: () => {
-                return appState.conversations.find(conv => conv.id === appState.currentConversationId) || null;
-            },
-            
-            addMessageToConversation: (message) => {
-                const conversation = utils.getCurrentConversation();
-                if (conversation) {
-                    conversation.messages.push(message);
-                    
-                    // Update conversation title if this is the first user message
-                    if (conversation.messages.filter(msg => msg.role === 'user').length === 1 && message.role === 'user') {
-                        // Use the first ~25 chars of the message as the title
-                        conversation.title = message.content.substring(0, 25) + (message.content.length > 25 ? '...' : '');
-                    }
-                    
-                    // Save to localStorage
-                    localStorage.setItem('jork3_conversations', JSON.stringify(appState.conversations));
-                    
-                    // Update chat history in sidebar
-                    uiManager.updateChatHistoryList();
-                }
-            },
-            
-            clearConversations: () => {
-                appState.conversations = [];
-                appState.currentConversationId = null;
-                localStorage.removeItem('jork3_conversations');
-                
-                // Update chat history in sidebar
-                uiManager.updateChatHistoryList();
-            },
-            
-            sanitizeHTML: (html) => {
-                return DOMPurify.sanitize(html);
-            },
-            
-            renderMarkdown: (text) => {
-                return marked.parse(text);
-            },
-            
-            // Web search function
-            performWebSearch: async (query) => {
                 try {
-                    // In a real implementation, this would call an actual search API
-                    // For demonstration purposes, we'll simulate search results
-                    console.log("Performing web search for:", query);
+                    localStorage.setItem('jiorkChatApp2023', JSON.stringify(chatHistory));
+                    updateChatHistorySidebar();
                     
-                    // Simulate API call delay
-                    await new Promise(resolve => setTimeout(resolve, 1500));
-                    
-                    // Return mock search results based on query
-                    const mockResults = [
-                        {
-                            title: `Search results for: ${query}`,
-                            content: `This is simulated search content for "${query}". In a real implementation, this would contain actual search results from the web.`,
-                            url: "https://example.com/result1",
-                            source: "Example Source",
-                            date: new Date().toISOString()
-                        },
-                        {
-                            title: `More information about: ${query}`,
-                            content: `Additional information about "${query}" from a different source. This would typically contain excerpts from relevant web pages.`,
-                            url: "https://example.org/result2",
-                            source: "Another Source",
-                            date: new Date().toISOString()
-                        },
-                        {
-                            title: `Latest news on: ${query}`,
-                            content: `Recent developments related to "${query}". This is mockup content but would contain the latest information available online.`,
-                            url: "https://news.example.com/result3",
-                            source: "News Source",
-                            date: new Date().toISOString()
-                        }
-                    ];
-                    
-                    return mockResults;
-                } catch (error) {
-                    console.error("Web search error:", error);
-                    throw error;
+                    // If current chat was deleted, go back to initial view
+                    if (document.getElementById('chatView').classList.contains('hidden') === false) {
+                        document.getElementById('initialView').classList.remove('hidden');
+                        document.getElementById('chatView').classList.add('hidden');
+                        document.getElementById('bottomInputArea').classList.add('hidden');
+                        document.getElementById('currentChatTitle').classList.add('hidden');
+                    }
+                } catch (e) {
+                    console.error('Error saving chat history:', e);
                 }
-            },
+            }
+        }
+        
+        function loadChat(index) {
+            const chat = chatHistory[index];
+            if (!chat) return;
             
-            // Function to generate deep thinking steps
-            generateThinkingSteps: async (query) => {
-                try {
-                    // In a real implementation, this would call an API to generate thinking steps
-                    // For demonstration, we'll customize the steps based on the query
-                    console.log("Generating thinking steps for:", query);
-                    
-                    // Start with default steps
-                    let steps = [...appState.thinkingSteps];
-                    
-                    // Add query-specific customization
-                    if (query.toLowerCase().includes("history") || query.toLowerCase().includes("historical")) {
-                        steps.splice(2, 0, "Examining historical context and chronology of events...");
-                    }
-                    
-                    if (query.toLowerCase().includes("compare") || query.toLowerCase().includes("difference")) {
-                        steps.splice(3, 0, "Creating a structured comparison with key similarities and differences...");
-                    }
-                    
-                    if (query.toLowerCase().includes("code") || query.toLowerCase().includes("programming")) {
-                        steps.splice(2, 0, "Analyzing programming concepts and best practices...");
-                        steps.splice(4, 0, "Evaluating code efficiency and potential edge cases...");
-                    }
-                    
-                    // Simulate API call delay
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    return steps;
-                } catch (error) {
-                    console.error("Error generating thinking steps:", error);
-                    return appState.thinkingSteps; // Fallback to default steps
+            // Hide initial view and show chat view
+            document.getElementById('initialView').classList.add('hidden');
+            document.getElementById('chatView').classList.remove('hidden');
+            document.getElementById('bottomInputArea').classList.remove('hidden');
+            
+            // Update chat title in top bar
+            const currentChatTitle = document.getElementById('currentChatTitle');
+            currentChatTitle.textContent = chat.title || `对话 ${index + 1}`;
+            currentChatTitle.classList.remove('hidden');
+            
+            // Clear existing messages
+            const chatView = document.getElementById('chatView');
+            chatView.innerHTML = '';
+            
+            // Clear current messages array
+            currentMessages = [];
+            
+            // Add messages
+            chat.messages.forEach(msg => {
+                if (msg.role === 'user') {
+                    appendUserMessage(msg.content, null, msg.attachments);
+                } else if (msg.role === 'assistant') {
+                    appendAssistantMessage(msg.content, msg.thinking);
                 }
-            },
+            });
+        }
+        
+        // Generate chat title using DeepSeek API
+        async function generateChatTitle(message) {
+            try {
+                const apiKey = "sk-e1ed90c2effc4415beeee85845f66d05";
+                const apiUrl = "https://api.deepseek.com/v1/chat/completions";
+                
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            { 
+                                role: "system", 
+                                content: "你是一个帮助生成聊天标题的助手。请为以下聊天内容生成一个简短的标题（不超过15个字），只返回标题文本，不要加引号或其他解释。" 
+                            },
+                            { role: "user", content: message }
+                        ],
+                        temperature: 0.5,
+                        max_tokens: 25
+                    })
+                });
+                
+                const data = await response.json();
+                const title = data.choices[0].message.content.trim();
+                
+                // Limit title length if it's too long
+                return title.length > 20 ? title.substring(0, 20) + '...' : title;
+            } catch (e) {
+                console.error('Error generating title:', e);
+                // Fallback to using the first part of the message
+                return message.length > 15 ? message.substring(0, 15) + '...' : message;
+            }
+        }
+        
+        async function saveChat(messages) {
+            // Create a new chat entry if needed
+            if (chatHistory.length === 0 || chatHistory[chatHistory.length - 1].completed) {
+                const userMsg = messages[0].content;
+                
+                // Generate title using DeepSeek API
+                const title = await generateChatTitle(userMsg);
+                
+                chatHistory.push({
+                    title: title,
+                    timestamp: new Date().toISOString(),
+                    messages: messages,
+                    completed: false
+                });
+                
+                // Update chat title in UI
+                document.getElementById('currentChatTitle').textContent = title;
+                document.getElementById('currentChatTitle').classList.remove('hidden');
+            } else {
+                // Update the last chat
+                chatHistory[chatHistory.length - 1].messages = messages;
+                chatHistory[chatHistory.length - 1].timestamp = new Date().toISOString();
+            }
             
-            // DeepSeek API functions
-            callDeepSeekAPI: async (messages, options = {}) => {
-                try {
-                    const model = appState.deepseekModels[appState.selectedModel] || "deepseek-chat";
+            // Save to localStorage
+            try {
+                localStorage.setItem('jiorkChatApp2023', JSON.stringify(chatHistory));
+                updateChatHistorySidebar();
+            } catch (e) {
+                console.error('Error saving chat history:', e);
+            }
+        }
+        
+        // New chat button
+        document.getElementById('newChatBtn').addEventListener('click', function() {
+            // Mark current chat as completed
+            if (chatHistory.length > 0) {
+                chatHistory[chatHistory.length - 1].completed = true;
+                localStorage.setItem('jiorkChatApp2023', JSON.stringify(chatHistory));
+            }
+            
+            // Reset UI to initial state
+            document.getElementById('initialView').classList.remove('hidden');
+            document.getElementById('chatView').classList.add('hidden');
+            document.getElementById('bottomInputArea').classList.add('hidden');
+            document.getElementById('chatView').innerHTML = '';
+            document.getElementById('sidebar').classList.add('hidden');
+            document.getElementById('currentChatTitle').classList.add('hidden');
+            
+            // Clear current messages
+            currentMessages = [];
+            messageCounter = 0;
+        });
+        
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('hidden');
+            
+            // Hide chat title when sidebar is open
+            document.getElementById('currentChatTitle').classList.add('hidden');
+        });
+        
+        // Close sidebar with X button
+        document.getElementById('closeBtn').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.add('hidden');
+            
+            // Show chat title when sidebar is closed
+            if (document.getElementById('chatView').classList.contains('hidden') === false) {
+                document.getElementById('currentChatTitle').classList.remove('hidden');
+            }
+        });
+        
+        // File upload handling with visual preview
+        let uploadedFiles = {
+            main: [],
+            reply: []
+        };
+        
+        document.getElementById('uploadButton').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+        
+        document.getElementById('replyUploadButton').addEventListener('click', function() {
+            document.getElementById('replyFileInput').click();
+        });
+        
+        // Handle file uploads
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            handleFileUpload(e, 'main');
+        });
+        
+        document.getElementById('replyFileInput').addEventListener('change', function(e) {
+            handleFileUpload(e, 'reply');
+        });
+        
+        function handleFileUpload(e, target) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            // Add file to uploaded files array
+            uploadedFiles[target].push(file);
+            
+            // Show preview area
+            const previewArea = document.getElementById(target === 'main' ? 'filePreviewArea' : 'replyFilePreviewArea');
+            previewArea.classList.remove('hidden');
+            
+            // Create file preview
+            const filePreview = document.createElement('div');
+            filePreview.className = 'file-preview';
+            
+            // Format file size
+            const fileSize = formatFileSize(file.size);
+            
+            // Get file icon based on type
+            const fileIcon = getFileIcon(file.type);
+            
+            filePreview.innerHTML = `
+                <div class="file-icon">
+                    <i class="${fileIcon}"></i>
+                </div>
+                <div class="file-info">
+                    <div class="file-name">${file.name}</div>
+                    <div class="file-size">${fileSize}</div>
+                </div>
+                <div class="file-remove" data-target="${target}" data-index="${uploadedFiles[target].length - 1}">
+                    <i class="fas fa-times"></i>
+                </div>
+            `;
+            
+            previewArea.appendChild(filePreview);
+            
+            // Add event listener to remove button
+            const removeButton = filePreview.querySelector('.file-remove');
+            removeButton.addEventListener('click', function() {
+                const target = this.dataset.target;
+                const index = parseInt(this.dataset.index);
+                
+                // Remove file from array
+                uploadedFiles[target].splice(index, 1);
+                
+                // Remove preview element
+                this.closest('.file-preview').remove();
+                
+                // Hide preview area if empty
+                if (uploadedFiles[target].length === 0) {
+                    document.getElementById(target === 'main' ? 'filePreviewArea' : 'replyFilePreviewArea').classList.add('hidden');
+                }
+                
+                // Update indices for remaining remove buttons
+                const remainingButtons = document.querySelectorAll(`.file-remove[data-target="${target}"]`);
+                remainingButtons.forEach((btn, i) => {
+                    btn.dataset.index = i;
+                });
+            });
+            
+            // Reset file input to allow selecting the same file again
+            e.target.value = '';
+        }
+        
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            else return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+        
+        function getFileIcon(fileType) {
+            if (fileType.startsWith('image/')) return 'far fa-file-image';
+            else if (fileType.startsWith('video/')) return 'far fa-file-video';
+            else if (fileType.startsWith('audio/')) return 'far fa-file-audio';
+            else if (fileType.startsWith('text/')) return 'far fa-file-alt';
+            else if (fileType.includes('pdf')) return 'far fa-file-pdf';
+            else if (fileType.includes('word') || fileType.includes('document')) return 'far fa-file-word';
+            else if (fileType.includes('excel') || fileType.includes('sheet')) return 'far fa-file-excel';
+            else if (fileType.includes('powerpoint') || fileType.includes('presentation')) return 'far fa-file-powerpoint';
+            else if (fileType.includes('zip') || fileType.includes('compressed')) return 'far fa-file-archive';
+            else return 'far fa-file';
+        }
+        
+        // Messaging functionality
+        let currentMessages = [];
+        let messageCounter = 0;
+        
+        function appendUserMessage(message, dontSave = false, attachments = null) {
+            messageCounter++;
+            
+            const chatView = document.getElementById('chatView');
+            
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'user-message-container';
+            
+            const messageInner = document.createElement('div');
+            messageInner.className = 'flex items-center';
+            
+            const userBadge = document.createElement('div');
+            userBadge.className = 'mr-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-1 px-3 rounded-full font-medium text-sm';
+            userBadge.textContent = '用户';
+            
+            const messageText = document.createElement('div');
+            messageText.className = 'text-lg';
+            messageText.textContent = message;
+            
+            messageInner.appendChild(userBadge);
+            messageInner.appendChild(messageText);
+            messageContainer.appendChild(messageInner);
+            
+            chatView.appendChild(messageContainer);
+            
+            // Add file attachments if present
+            if (attachments && attachments.length > 0) {
+                const attachmentsContainer = document.createElement('div');
+                attachmentsContainer.className = 'ml-12 mb-4 flex flex-wrap gap-2';
+                
+                attachments.forEach(file => {
+                    const filePreview = document.createElement('div');
+                    filePreview.className = 'file-preview';
                     
-                    const requestBody = {
-                        model: model,
-                        messages: messages,
-                        temperature: options.temperature || 0.7,
-                        max_tokens: options.max_tokens || 4000,
-                        stream: options.stream || false
-                    };
+                    const fileIcon = getFileIcon(file.type);
+                    filePreview.innerHTML = `
+                        <div class="file-icon">
+                            <i class="${fileIcon}"></i>
+                        </div>
+                        <div class="file-info">
+                            <div class="file-name">${file.name}</div>
+                            <div class="file-size">${formatFileSize(file.size)}</div>
+                        </div>
+                    `;
                     
-                    // For streaming responses
-                    if (options.stream && options.onUpdate) {
-                        return await utils.streamDeepSeekResponse(requestBody, options.onUpdate, options.onComplete);
+                    attachmentsContainer.appendChild(filePreview);
+                });
+                
+                chatView.appendChild(attachmentsContainer);
+            }
+            
+            // Add to current messages if not explicitly skipped
+            if (!dontSave) {
+                const messageObj = {
+                    role: 'user',
+                    content: message
+                };
+                
+                // Add attachments if present
+                if (uploadedFiles.main.length > 0 || uploadedFiles.reply.length > 0) {
+                    const filesSource = messageContainer.closest('#chatView') ? uploadedFiles.main : uploadedFiles.reply;
+                    if (filesSource.length > 0) {
+                        messageObj.attachments = [...filesSource];
+                        
+                        // Clear the files array after adding to message
+                        filesSource.length = 0;
+                        
+                        // Hide preview areas
+                        document.getElementById('filePreviewArea').classList.add('hidden');
+                        document.getElementById('filePreviewArea').innerHTML = '';
+                        document.getElementById('replyFilePreviewArea').classList.add('hidden');
+                        document.getElementById('replyFilePreviewArea').innerHTML = '';
                     }
-                    
-                    // For non-streaming responses
-                    const response = await fetch(appState.deepseekEndpoint, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${appState.apiKey}`
-                        },
-                        body: JSON.stringify(requestBody)
+                }
+                
+                currentMessages.push(messageObj);
+                
+                // Save chat
+                saveChat(currentMessages);
+            }
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        // DeepSeek API integration
+        async function callDeepSeekAPI(message, model, isWebSearch = false, isDeepThinking = false, previousMessages = []) {
+            console.log("Calling DeepSeek API");
+            const apiKey = "sk-e1ed90c2effc4415beeee85845f66d05";
+            const apiUrl = "https://api.deepseek.com/v1/chat/completions";
+            
+            // Prepare messages array with context from previous messages
+            let messages = [];
+            
+            // Add system message based on the model and options
+            let systemMessage = "";
+            if (isWebSearch) {
+                systemMessage = "请通过联网搜索获取最新信息来回答问题。请包含你找到的信息来源。";
+            } else if (isDeepThinking) {
+                systemMessage = "请进行深度思考，分析问题的多个层面。请在回答前详细说明你的思考过程，分步骤列出你的推理过程。";
+            } else if (model === "Jork-Trax-4") {
+                systemMessage = "你是Jork-Trax-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个专业的编程助手，擅长提供高质量的代码和技术解决方案。";
+            } else {
+                systemMessage = "你是Jork-Epist-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个友好、专业的AI助手。你可以提供详细且有用的回答。";
+            }
+            
+            messages.push({ role: "system", content: systemMessage });
+            
+            // Add previous messages for context (up to 10 most recent messages)
+            if (previousMessages && previousMessages.length > 0) {
+                const contextMessages = previousMessages.slice(-10);
+                contextMessages.forEach(msg => {
+                    messages.push({
+                        role: msg.role,
+                        content: msg.content
                     });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(errorData.error?.message || `API error: ${response.status}`);
-                    }
-                    
-                    const data = await response.json();
-                    return data.choices[0].message.content;
-                } catch (error) {
-                    console.error("DeepSeek API Error:", error);
-                    throw error;
-                }
-            },
+                });
+            }
             
-            streamDeepSeekResponse: async (requestBody, onUpdate, onComplete) => {
-                try {
-                    const response = await fetch(appState.deepseekEndpoint, {
-                        method: 'POST',
+            // Add current user message
+            messages.push({ role: "user", content: message });
+            
+            try {
+                // For streaming
+                if (document.getElementById('streamingResponse')) {
+                    const response = await fetch(apiUrl, {
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${appState.apiKey}`
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${apiKey}`
                         },
-                        body: JSON.stringify({ ...requestBody, stream: true })
+                        body: JSON.stringify({
+                            model: model === "Jork-Trax-4" ? "deepseek-coder" : "deepseek-chat",
+                            messages: messages,
+                            temperature: 0.7,
+                            stream: true,
+                            max_tokens: isDeepThinking ? 4000 : 2000
+                        })
                     });
-                    
-                    if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({}));
-                        throw new Error(errorData.error?.message || `API error: ${response.status}`);
-                    }
                     
                     const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    let fullContent = '';
+                    const decoder = new TextDecoder("utf-8");
+                    let buffer = "";
+                    let fullResponse = "";
+                    let thinking = isDeepThinking ? [] : null;
                     
+                    const responseContent = document.getElementById('responseContent');
+                    
+                    // Process the stream
                     while (true) {
                         const { done, value } = await reader.read();
                         if (done) break;
                         
-                        const chunk = decoder.decode(value, { stream: true });
-                        const lines = chunk.split('\n').filter(line => line.trim() !== '');
+                        buffer += decoder.decode(value, { stream: true });
+                        
+                        // Process complete lines in the buffer
+                        let lines = buffer.split("\n");
+                        buffer = lines.pop() || ""; // Keep the last incomplete line in the buffer
                         
                         for (const line of lines) {
-                            if (line.startsWith('data: ')) {
-                                const data = line.slice(6);
-                                if (data === '[DONE]') {
-                                    if (onComplete) onComplete(fullContent);
-                                    return fullContent;
-                                }
+                            if (line.startsWith("data: ")) {
+                                const data = line.substring(6);
+                                if (data === "[DONE]") continue;
                                 
                                 try {
-                                    const parsed = JSON.parse(data);
-                                    if (parsed.choices && parsed.choices[0].delta.content) {
-                                        const content = parsed.choices[0].delta.content;
-                                        fullContent += content;
-                                        if (onUpdate) onUpdate(fullContent);
+                                    const parsedData = JSON.parse(data);
+                                    if (parsedData.choices && parsedData.choices[0].delta.content) {
+                                        const content = parsedData.choices[0].delta.content;
+                                        fullResponse += content;
+                                        
+                                        // If deep thinking, try to extract thinking steps
+                                        if (isDeepThinking && fullResponse.includes("思考步骤") && !fullResponse.includes("最终回答")) {
+                                            const thinkingMatch = fullResponse.match(/思考步骤 \d+[：:] (.*?)(?=思考步骤 \d+[：:]|$)/gs);
+                                            if (thinkingMatch) {
+                                                thinking = thinkingMatch.map(step => step.trim());
+                                            }
+                                        }
+                                        
+                                        // Update UI with the latest content
+                                        responseContent.innerHTML = marked.parse(fullResponse);
+                                        
+                                        // Process code blocks to add syntax highlighting
+                                        const codeBlocks = responseContent.querySelectorAll('pre');
+                                        codeBlocks.forEach(block => {
+                                            if (!block.classList.contains('code-block')) {
+                                                block.className = 'code-block relative';
+                                            }
+                                        });
+                                        
+                                        // Scroll to bottom
+                                        chatContainer.scrollTop = chatContainer.scrollHeight;
                                     }
                                 } catch (e) {
                                     console.error("Error parsing stream data:", e);
@@ -1090,921 +1426,408 @@
                         }
                     }
                     
-                    if (onComplete) onComplete(fullContent);
-                    return fullContent;
-                } catch (error) {
-                    console.error("DeepSeek API Stream Error:", error);
-                    throw error;
+                    return { content: fullResponse, thinking: thinking };
+                } else {
+                    // Non-streaming response
+                    const response = await fetch(apiUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: model === "Jork-Trax-4" ? "deepseek-coder" : "deepseek-chat",
+                            messages: messages,
+                            temperature: 0.7,
+                            stream: false,
+                            max_tokens: isDeepThinking ? 4000 : 2000
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    const content = data.choices[0].message.content;
+                    
+                    // Extract thinking steps if deep thinking was requested
+                    let thinking = null;
+                    if (isDeepThinking && content.includes("思考步骤")) {
+                        const thinkingMatch = content.match(/思考步骤 \d+[：:] (.*?)(?=思考步骤 \d+[：:]|$)/gs);
+                        if (thinkingMatch) {
+                            thinking = thinkingMatch.map(step => step.trim());
+                        }
+                    }
+                    
+                    return { content, thinking };
                 }
-            },
-            
-            // Prepare messages for DeepSeek API call
-            prepareMessagesForAPI: (includeContext = true, customInstructions = "") => {
-                const conversation = utils.getCurrentConversation();
-                if (!conversation) return [];
-                
-                // Start with a system message
-                const systemMessage = {
-                    role: 'system',
-                    content: "你是 Jork-3.9-Epic，由Tenyun Tech旗下的JorkAI开发（https://www.jorkai.cn）。你是一位乐于助人、富有创造力且知识渊博的 AI 助手。你擅长理解复杂的查询并提供富有洞察力且准确的答案。你擅长编码，物理等学科。你的知识截止日期为 2025 年 5 月。" + 
-                             (customInstructions ? " " + customInstructions : "")
+            } catch (error) {
+                console.error("DeepSeek API Error:", error);
+                return {
+                    content: `调用API时发生错误: ${error.message || '未知错误'}`,
+                    thinking: null
                 };
-                
-                const messages = [systemMessage];
-                
-                // Add conversation history
-                if (includeContext) {
-                    conversation.messages.forEach(msg => {
-                        messages.push({
-                            role: msg.role,
-                            content: msg.content
-                        });
-                    });
-                } else {
-                    // Just add the last user message
-                    const lastUserMessage = conversation.messages.filter(msg => msg.role === 'user').pop();
-                    if (lastUserMessage) {
-                        messages.push({
-                            role: 'user',
-                            content: lastUserMessage.content
-                        });
-                    }
-                }
-                
-                return messages;
             }
-        };
+        }
         
-        // UI Manager
-        const uiManager = {
-            init: () => {
-                // Initialize UI state
-                uiManager.loadSavedState();
-                uiManager.setupEventListeners();
-                uiManager.updateDarkModeUI();
-                uiManager.setupWelcomeScreen();
+        // Register handler for streaming responses with Poe API
+        if (window.Poe) {
+            window.Poe.registerHandler("streaming-handler", (result, context) => {
+                const streamingElement = document.getElementById('streamingResponse');
+                if (!streamingElement) return;
                 
-                // Render initial screen
-                if (appState.conversations.length > 0 && appState.currentConversationId) {
-                    uiManager.showChatUI();
-                    uiManager.renderCurrentConversation();
-                    uiManager.updateChatHistoryList();
-                } else {
-                    uiManager.showWelcomeScreen();
+                // Get the first response (there should only be one)
+                if (result.responses.length === 0) return;
+                
+                const msg = result.responses[0];
+                const responseContent = document.getElementById('responseContent');
+                
+                if (msg.status === "error") {
+                    responseContent.textContent = "Error: " + (msg.statusText || "Unknown error");
+                    responseContent.classList.add("error");
+                } else if (msg.status === "incomplete") {
+                    // Update with partial content while streaming
+                    responseContent.innerHTML = marked.parse(msg.content);
+                    
+                    // Process code blocks to add syntax highlighting
+                    const codeBlocks = responseContent.querySelectorAll('pre');
+                    codeBlocks.forEach(block => {
+                        block.className = 'code-block relative';
+                    });
+                } else if (msg.status === "complete") {
+                    // Finalize response
+                    finalizeStreamingResponse(msg.content);
                 }
-            },
+                
+                // Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
+        }
+        
+        function appendAssistantMessage(message, thinking = null) {
+            const chatView = document.getElementById('chatView');
             
-            loadSavedState: () => {
-                // Load dark mode preference
-                const savedDarkMode = localStorage.getItem('jork3_dark_mode');
-                if (savedDarkMode !== null) {
-                    appState.darkMode = savedDarkMode === 'true';
-                    document.documentElement.classList.toggle('dark', appState.darkMode);
-                } else {
-                    // If no saved preference, use system preference
-                    appState.darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-                    document.documentElement.classList.toggle('dark', appState.darkMode);
-                }
-                
-                // Load saved conversations
-                const savedConversations = localStorage.getItem('jork3_conversations');
-                if (savedConversations) {
-                    appState.conversations = JSON.parse(savedConversations);
-                    
-                    // Set current conversation to the most recent one
-                    if (appState.conversations.length > 0) {
-                        appState.conversations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                        appState.currentConversationId = appState.conversations[0].id;
-                    }
-                }
-                
-                // Load API key if saved
-                const savedAPIKey = localStorage.getItem('jork3_api_key');
-                if (savedAPIKey) {
-                    appState.apiKey = savedAPIKey;
-                }
-                
-                // Load feature preferences
-                const webSearchEnabled = localStorage.getItem('jork3_web_search');
-                if (webSearchEnabled !== null) {
-                    appState.webSearchEnabled = webSearchEnabled === 'true';
-                }
-                
-                const deepThinkingEnabled = localStorage.getItem('jork3_deep_thinking');
-                if (deepThinkingEnabled !== null) {
-                    appState.deepThinkingEnabled = deepThinkingEnabled === 'true';
-                }
-                
-                const streamingEnabled = localStorage.getItem('jork3_streaming');
-                if (streamingEnabled !== null) {
-                    appState.streamingEnabled = streamingEnabled === 'true';
-                }
-                
-                const selectedModel = localStorage.getItem('jork3_selected_model');
-                if (selectedModel) {
-                    appState.selectedModel = selectedModel;
-                }
-            },
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'mb-8';
             
-            setupEventListeners: () => {
-                // Dark mode toggle
-                const toggleDarkMode = document.getElementById('toggle-dark-mode');
-                if (toggleDarkMode) {
-                    toggleDarkMode.checked = appState.darkMode;
-                    toggleDarkMode.addEventListener('change', utils.toggleDarkMode);
-                }
+            // Display thinking process if provided
+            if (thinking) {
+                const thinkingContainer = document.createElement('div');
+                thinkingContainer.className = 'thinking-container mb-4';
                 
-                // Header dark mode toggle
-                const toggleDarkModeHeader = document.getElementById('toggle-dark-mode-header');
-                if (toggleDarkModeHeader) {
-                    toggleDarkModeHeader.addEventListener('click', utils.toggleDarkMode);
-                }
+                const thinkingHeader = document.createElement('div');
+                thinkingHeader.className = 'font-medium text-purple-600 dark:text-purple-400 mb-2';
+                thinkingHeader.textContent = '深度思考过程：';
                 
-                // Sidebar toggle
-                const toggleSidebar = document.getElementById('toggleSidebar');
-                if (toggleSidebar) {
-                    toggleSidebar.addEventListener('click', utils.toggleSidebar);
-                }
+                thinkingContainer.appendChild(thinkingHeader);
                 
-                // Close sidebar
-                const closeSidebar = document.getElementById('closeSidebar');
-                if (closeSidebar) {
-                    closeSidebar.addEventListener('click', utils.toggleSidebar);
-                }
+                thinking.forEach((step, index) => {
+                    const thinkingStep = document.createElement('div');
+                    thinkingStep.className = 'thinking-step text-sm text-gray-600 dark:text-gray-400';
+                    thinkingStep.style.animationDelay = `${index * 0.3}s`;
+                    thinkingStep.textContent = step;
+                    thinkingContainer.appendChild(thinkingStep);
+                });
                 
-                // Send message button
-                const sendMessageBtn = document.getElementById('send-message');
-                if (sendMessageBtn) {
-                    sendMessageBtn.addEventListener('click', uiManager.handleSendMessage);
-                }
+                messageContainer.appendChild(thinkingContainer);
+            }
+            
+            // Process the message for markdown
+            const markdownOutput = marked.parse(message);
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'markdown-content';
+            messageContent.innerHTML = markdownOutput;
+            
+            // Process code blocks to add copy buttons
+            const codeBlocks = messageContent.querySelectorAll('pre');
+            codeBlocks.forEach(block => {
+                block.className = 'code-block relative';
                 
-                // Message input
-                const messageInput = document.getElementById('message-input');
-                if (messageInput) {
-                    messageInput.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            uiManager.handleSendMessage();
-                        }
-                    });
-                }
+                const copyButton = document.createElement('button');
+                copyButton.className = 'copy-button text-xs';
+                copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                copyButton.title = '复制代码';
                 
-                // New chat button
-                const newChatBtn = document.getElementById('btn-new-chat');
-                if (newChatBtn) {
-                    newChatBtn.addEventListener('click', () => {
-                        utils.createConversation();
-                        uiManager.showChatUI();
-                        uiManager.renderCurrentConversation();
-                        document.getElementById('message-input').focus();
-                    });
-                }
-                
-                // Start conversation button on welcome screen
-                const startConversationBtn = document.getElementById('start-conversation');
-                if (startConversationBtn) {
-                    startConversationBtn.addEventListener('click', () => {
-                        utils.createConversation();
-                        uiManager.showChatUI();
-                        uiManager.renderCurrentConversation();
-                        document.getElementById('message-input').focus();
-                    });
-                }
-                
-                // Clear history button
-                const clearHistoryBtn = document.getElementById('clear-history');
-                if (clearHistoryBtn) {
-                    clearHistoryBtn.addEventListener('click', () => {
-                        if (confirm('Are you sure you want to clear all chat history? This cannot be undone.')) {
-                            utils.clearConversations();
-                            uiManager.showWelcomeScreen();
-                            utils.showToast('Chat history cleared');
-                        }
-                    });
-                }
-                
-                // File upload
-                const fileUpload = document.getElementById('file-upload');
-                if (fileUpload) {
-                    fileUpload.addEventListener('change', (e) => {
-                        if (e.target.files.length > 0) {
-                            for (let i = 0; i < e.target.files.length; i++) {
-                                const file = e.target.files[i];
-                                appState.attachments.push(file);
-                            }
-                            uiManager.updateAttachmentPreview();
-                        }
-                    });
-                }
-                
-                // Clear attachments
-                const clearAttachmentsBtn = document.getElementById('clear-attachments');
-                if (clearAttachmentsBtn) {
-                    clearAttachmentsBtn.addEventListener('click', () => {
-                        appState.attachments = [];
-                        uiManager.updateAttachmentPreview();
-                    });
-                }
-                
-                // Web search toggle
-                const toggleWebSearch = document.getElementById('toggle-web-search');
-                if (toggleWebSearch) {
-                    toggleWebSearch.classList.toggle('text-primary-600', appState.webSearchEnabled);
-                    
-                    toggleWebSearch.addEventListener('click', () => {
-                        appState.webSearchEnabled = !appState.webSearchEnabled;
-                        toggleWebSearch.classList.toggle('text-primary-600', appState.webSearchEnabled);
-                        localStorage.setItem('jork3_web_search', appState.webSearchEnabled);
-                        
-                        utils.showToast(`Web search ${appState.webSearchEnabled ? 'enabled' : 'disabled'}`);
-                    });
-                }
-                
-                // Deep thinking toggle
-                const toggleDeepThinking = document.getElementById('toggle-deep-thinking');
-                if (toggleDeepThinking) {
-                    toggleDeepThinking.classList.toggle('text-primary-600', appState.deepThinkingEnabled);
-                    
-                    toggleDeepThinking.addEventListener('click', () => {
-                        appState.deepThinkingEnabled = !appState.deepThinkingEnabled;
-                        toggleDeepThinking.classList.toggle('text-primary-600', appState.deepThinkingEnabled);
-                        localStorage.setItem('jork3_deep_thinking', appState.deepThinkingEnabled);
-                        
-                        utils.showToast(`Deep thinking ${appState.deepThinkingEnabled ? 'enabled' : 'disabled'}`);
-                    });
-                }
-                
-                // News cards click event
-                document.querySelectorAll('.news-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const titleElement = card.querySelector('.news-title');
-                        if (titleElement) {
-                            const title = titleElement.textContent;
-                            uiManager.handleNewsSelection(title);
-                        }
+                copyButton.addEventListener('click', () => {
+                    const code = block.querySelector('code')?.textContent || '';
+                    navigator.clipboard.writeText(code).then(() => {
+                        copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                        setTimeout(() => {
+                            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                        }, 2000);
                     });
                 });
-            },
+                
+                block.appendChild(copyButton);
+            });
             
-            updateDarkModeUI: () => {
-                // Update toggle button
-                const toggleDarkMode = document.getElementById('toggle-dark-mode');
-                if (toggleDarkMode) {
-                    toggleDarkMode.checked = appState.darkMode;
+            messageContainer.appendChild(messageContent);
+            
+            // Add the logo and response controls
+            const logoAndControls = document.createElement('div');
+            logoAndControls.className = 'flex justify-between items-center mb-8';
+            
+            const logoContainer = document.createElement('div');
+            logoContainer.className = 'flex items-center text-orange-400 mb-2';
+            
+            const disclaimer = document.createElement('div');
+            disclaimer.className = 'text-sm text-gray-500';
+            disclaimer.textContent = 'Jork可能会犯错，请核实回复内容。';
+            
+            const controlsContainer = document.createElement('div');
+            controlsContainer.className = 'flex items-center space-x-2';
+            
+            const copyButton = document.createElement('button');
+            copyButton.className = 'p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300';
+            copyButton.innerHTML = '<i class="far fa-clipboard"></i>';
+            
+            const thumbsUpButton = document.createElement('button');
+            thumbsUpButton.className = 'p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300';
+            thumbsUpButton.innerHTML = '<i class="far fa-thumbs-up"></i>';
+            
+            const thumbsDownButton = document.createElement('button');
+            thumbsDownButton.className = 'p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300';
+            thumbsDownButton.innerHTML = '<i class="far fa-thumbs-down"></i>';
+            
+            const regenerateButton = document.createElement('button');
+            regenerateButton.className = 'p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300';
+            regenerateButton.innerHTML = '<i class="fas fa-redo"></i>';
+            
+            controlsContainer.appendChild(copyButton);
+            controlsContainer.appendChild(thumbsUpButton);
+            controlsContainer.appendChild(thumbsDownButton);
+            controlsContainer.appendChild(regenerateButton);
+            
+            logoAndControls.appendChild(disclaimer);
+            logoAndControls.appendChild(controlsContainer);
+            
+            chatView.appendChild(messageContainer);
+            chatView.appendChild(logoAndControls);
+            
+            // Add to current messages
+            currentMessages.push({
+                role: 'assistant',
+                content: message,
+                thinking: thinking
+            });
+            
+            // Save chat
+            saveChat(currentMessages);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Set up copy button functionality
+            copyButton.addEventListener('click', () => {
+                navigator.clipboard.writeText(message).then(() => {
+                    copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyButton.innerHTML = '<i class="far fa-clipboard"></i>';
+                    }, 2000);
+                });
+            });
+            
+            // Set up regenerate button functionality
+            regenerateButton.addEventListener('click', () => {
+                // Remove the last assistant message from the UI
+                const messages = chatView.querySelectorAll('.mb-8');
+                if (messages.length >= 2) {
+                    messages[messages.length - 1].remove(); // Remove controls
+                    messages[messages.length - 2].remove(); // Remove message
                 }
                 
-                // Update icon
-                const darkModeIcon = document.getElementById('dark-mode-icon');
-                if (darkModeIcon) {
-                    darkModeIcon.className = appState.darkMode ? 'fas fa-sun text-xl' : 'fas fa-moon text-xl';
-                }
-            },
-            
-            setupWelcomeScreen: () => {
-                // Set greeting based on Beijing time
-                const greetingElement = document.getElementById('greeting');
-                if (greetingElement) {
-                    const greeting = utils.getGreeting();
-                    const beijingTime = utils.getBeijingTime();
-                    const beijingDate = utils.getBeijingDate();
-                    greetingElement.textContent = `${greeting} It's ${beijingDate}, ${beijingTime} in Beijing.`;
-                }
+                // Remove the last assistant message from the current messages array
+                currentMessages.pop();
                 
-                // Generate news cards
-                const trendingNewsContainer = document.getElementById('trending-news');
-                if (trendingNewsContainer) {
-                    trendingNewsContainer.innerHTML = '';
+                // Save updated chat history
+                saveChat(currentMessages);
+                
+                // Get the last user message
+                const lastUserMessage = currentMessages.filter(msg => msg.role === 'user').pop();
+                
+                if (lastUserMessage) {
+                    // Get the current model
+                    const model = getSelectedModel('replyModelSelector');
                     
-                    // Randomly select 3 news items
-                    const randomNews = [...appState.mockNewsData]
-                        .sort(() => 0.5 - Math.random())
-                        .slice(0, 3);
-                    
-                    randomNews.forEach(news => {
-                        const newsCard = document.createElement('div');
-                        newsCard.className = 'news-card cursor-pointer';
-                        newsCard.innerHTML = `
-                            <div class="p-4">
-                                <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2 news-title">${news.title}</h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">${news.summary}</p>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-xs text-gray-500 dark:text-gray-500">${news.source}</span>
-                                    <button class="text-primary-600 dark:text-primary-400 text-xs">Read more →</button>
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Add click event
-                        newsCard.addEventListener('click', () => {
-                            uiManager.handleNewsSelection(news.title);
+                    // Regenerate response
+                    appendStreamingResponse();
+                    callDeepSeekAPI(lastUserMessage.content, model, false, false, currentMessages.slice(0, -1))
+                        .then(response => {
+                            finalizeStreamingResponse(response.content, response.thinking);
+                        })
+                        .catch(error => {
+                            console.error('Error regenerating response:', error);
+                            finalizeStreamingResponse('抱歉，重新生成回答时发生错误，请重试。');
                         });
-                        
-                        trendingNewsContainer.appendChild(newsCard);
-                    });
                 }
-            },
-            
-            showWelcomeScreen: () => {
-                const welcomeScreen = document.getElementById('welcome-screen');
-                const chatUI = document.getElementById('chat-ui');
-                
-                if (welcomeScreen && chatUI) {
-                    welcomeScreen.classList.remove('hidden');
-                    chatUI.classList.add('hidden');
-                    appState.isWelcomeScreen = true;
-                }
-                
-                // Update welcome screen data
-                uiManager.setupWelcomeScreen();
-            },
-            
-            showChatUI: () => {
-                const welcomeScreen = document.getElementById('welcome-screen');
-                const chatUI = document.getElementById('chat-ui');
-                
-                if (welcomeScreen && chatUI) {
-                    welcomeScreen.classList.add('hidden');
-                    chatUI.classList.remove('hidden');
-                    appState.isWelcomeScreen = false;
-                }
-            },
-            
-            updateChatHistoryList: () => {
-                const chatHistoryList = document.getElementById('chat-history-list');
-                
-                if (chatHistoryList) {
-                    if (appState.conversations.length === 0) {
-                        chatHistoryList.innerHTML = `
-                            <div class="text-sm text-gray-500 dark:text-gray-400 p-2 text-center">
-                                没有聊天历史
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    chatHistoryList.innerHTML = '';
-                    
-                    // Sort conversations by date (newest first)
-                    const sortedConversations = [...appState.conversations]
-                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                    
-                    sortedConversations.forEach(conv => {
-                        const chatItem = document.createElement('div');
-                        chatItem.className = `chat-history-item ${conv.id === appState.currentConversationId ? 'active' : ''}`;
-                        chatItem.dataset.id = conv.id;
-                        
-                        // Format date
-                        const date = new Date(conv.createdAt);
-                        const formattedDate = date.toLocaleDateString();
-                        
-                        chatItem.innerHTML = `
-                            <div class="flex items-start">
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">${conv.title}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">${formattedDate}</p>
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Add click event
-                        chatItem.addEventListener('click', () => {
-                            appState.currentConversationId = conv.id;
-                            uiManager.renderCurrentConversation();
-                            uiManager.showChatUI();
-                            
-                            // Update active state in chat history
-                            document.querySelectorAll('.chat-history-item').forEach(item => {
-                                item.classList.toggle('active', item.dataset.id === conv.id);
-                            });
-                        });
-                        
-                        chatHistoryList.appendChild(chatItem);
-                    });
-                }
-            },
-            
-            renderCurrentConversation: () => {
-                const conversation = utils.getCurrentConversation();
-                const container = document.getElementById('conversation-container');
-                
-                if (container && conversation) {
-                    container.innerHTML = '';
-                    
-                    // Render all messages
-                    conversation.messages.forEach(message => {
-                        uiManager.appendMessageToUI(message);
-                    });
-                    
-                    // Scroll to bottom
-                    container.scrollTop = container.scrollHeight;
-                }
-            },
-            
-            updateAttachmentPreview: () => {
-                const attachmentPreview = document.getElementById('attachment-preview');
-                const attachmentList = document.getElementById('attachment-list');
-                
-                if (attachmentPreview && attachmentList) {
-                    if (appState.attachments.length > 0) {
-                        attachmentPreview.classList.remove('hidden');
-                        attachmentList.innerHTML = '';
-                        
-                        appState.attachments.forEach((file, index) => {
-                            const attachmentItem = document.createElement('div');
-                            attachmentItem.className = 'bg-white dark:bg-dark-800 rounded-md shadow-sm p-2 flex items-center';
-                            
-                            // Preview icon or thumbnail
-                            let previewHtml = '';
-                            if (file.type.startsWith('image/')) {
-                              const imgUrl = URL.createObjectURL(file);
-                                previewHtml = `<img src="${imgUrl}" class="h-10 w-10 object-cover rounded mr-2" alt="Preview">`;
-                            } else {
-                                previewHtml = `<i class="fas fa-file text-gray-500 text-xl mr-2"></i>`;
-                            }
-                            
-                            attachmentItem.innerHTML = `
-                                ${previewHtml}
-                                <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white truncate">${file.name}</p>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">${(file.size / 1024).toFixed(1)} KB</p>
-                                </div>
-                                <button class="remove-attachment ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200" data-index="${index}">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            `;
-                            
-                            attachmentList.appendChild(attachmentItem);
-                        });
-                        
-                        // Add event listeners to remove buttons
-                        document.querySelectorAll('.remove-attachment').forEach(btn => {
-                            btn.addEventListener('click', (e) => {
-                                const index = parseInt(e.currentTarget.getAttribute('data-index'));
-                                appState.attachments.splice(index, 1);
-                                uiManager.updateAttachmentPreview();
-                            });
-                        });
-                    } else {
-                        attachmentPreview.classList.add('hidden');
-                    }
-                }
-            },
-            
-            createMessageElement: (message) => {
-                const messageId = message.id || utils.generateMessageId();
-                const isUser = message.role === 'user';
-                
-                const messageElement = document.createElement('div');
-                messageElement.id = messageId;
-                messageElement.className = `message-container ${isUser ? 'user-message' : 'ai-message'} border-b border-gray-100 dark:border-gray-800`;
-                
-                let avatarHtml = '';
-                
-                if (isUser) {
-                    avatarHtml = `
-                        <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-600 dark:text-primary-400">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    `;
-                } else {
-                    avatarHtml = `
-                        <div class="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white">
-                            <i class="fas fa-robot"></i>
-                        </div>
-                    `;
-                }
-                
-                // Format the content based on message type
-                let contentHtml = '';
-                
-                if (isUser) {
-                    // User messages are displayed as plain text
-                    contentHtml = `<div class="message-content whitespace-pre-wrap">${message.content}</div>`;
-                } else {
-                    // AI messages are rendered as markdown
-                    contentHtml = `<div class="message-content">${utils.sanitizeHTML(utils.renderMarkdown(message.content))}</div>`;
-                }
-                
-                // Add attachments if any
-                let attachmentsHtml = '';
-                if (message.attachments && message.attachments.length > 0) {
-                    attachmentsHtml = `
-                        <div class="mt-2 space-y-2">
-                            ${message.attachments.map(attachment => {
-                                if (attachment.type.startsWith('image/')) {
-                                    return `<img src="${attachment.url}" class="max-w-full h-auto rounded" alt="Attachment">`;
-                                } else {
-                                    return `
-                                        <div class="flex items-center p-2 bg-gray-100 dark:bg-dark-600 rounded">
-                                            <i class="fas fa-file mr-2 text-gray-600 dark:text-gray-400"></i>
-                                            <span class="text-sm">${attachment.name}</span>
-                                        </div>
-                                    `;
-                                }
-                            }).join('')}
-                        </div>
-                    `;
-                }
-                
-                // Add citations if any
-                let citationsHtml = '';
-                if (!isUser && message.citations && message.citations.length > 0) {
-                    citationsHtml = `
-                        <div class="mt-3">
-                            <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sources:</div>
-                            ${message.citations.map((citation, index) => `
-                                <div class="citation mb-2">
-                                    <div class="flex items-start">
-                                        <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-1.5 py-0.5 rounded mr-2">${index + 1}</span>
-                                        <div>
-                                            <div class="text-sm font-medium">${citation.title}</div>
-                                            <a href="${citation.url}" target="_blank" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
-                                                ${citation.source} - ${new Date(citation.date).toLocaleDateString()}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-                
-                // Add thinking process if enabled and it's an AI message
-                let thinkingHtml = '';
-                if (!isUser && message.thinking && appState.deepThinkingEnabled) {
-                    thinkingHtml = `
-                        <div class="thinking-container mt-2">
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="font-medium text-gray-700 dark:text-gray-300">Thinking Process</span>
-                                <button class="toggle-thinking text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                                    <i class="fas fa-chevron-up"></i>
-                                </button>
-                            </div>
-                            <div class="thinking-content">
-                                ${message.thinking.map(step => `<div class="thinking-step">${step}</div>`).join('')}
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                messageElement.innerHTML = `
-                    <div class="flex space-x-4">
-                        ${avatarHtml}
-                        <div class="flex-1">
-                            <div class="flex items-center mb-1">
-                                <div class="font-medium text-gray-900 dark:text-white">${isUser ? 'You' : 'Jork-3'}</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 ml-2">${message.timestamp || utils.formatTime(new Date())}</div>
-                            </div>
-                            ${contentHtml}
-                            ${attachmentsHtml}
-                            ${citationsHtml}
-                            ${thinkingHtml}
-                        </div>
-                    </div>
-                `;
-                
-                // Add event listeners for thinking toggle if present
-                const toggleThinking = messageElement.querySelector('.toggle-thinking');
-                if (toggleThinking) {
-                    toggleThinking.addEventListener('click', () => {
-                        const thinkingContent = messageElement.querySelector('.thinking-content');
-                        const icon = toggleThinking.querySelector('i');
-                        
-                        if (thinkingContent.style.display === 'none') {
-                            thinkingContent.style.display = 'block';
-                            icon.className = 'fas fa-chevron-up';
-                        } else {
-                            thinkingContent.style.display = 'none';
-                            icon.className = 'fas fa-chevron-down';
-                        }
-                    });
-                }
-                
-                return messageElement;
-            },
-            
-            appendMessageToUI: (message) => {
-                const container = document.getElementById('conversation-container');
-                if (container) {
-                    const messageElement = uiManager.createMessageElement(message);
-                    container.appendChild(messageElement);
-                    
-                    // Scroll to bottom
-                    container.scrollTop = container.scrollHeight;
-                    
-                    // Highlight code blocks
-                    try {
-                        if (typeof hljs !== 'undefined') {
-                            messageElement.querySelectorAll('pre code').forEach((block) => {
-                                hljs.highlightElement(block);
-                            });
-                        }
-                    } catch (e) {
-                        console.error('Syntax highlighting error:', e);
-                    }
-                }
-            },
-            
-            updateMessageInUI: (messageId, content, isComplete = false, citations = null) => {
-                const messageElement = document.getElementById(messageId);
-                if (messageElement) {
-                    const contentElement = messageElement.querySelector('.message-content');
-                    if (contentElement) {
-                        // Render markdown and sanitize
-                        contentElement.innerHTML = utils.sanitizeHTML(utils.renderMarkdown(content));
-                        
-                        // Add cursor if still streaming
-                        if (!isComplete && appState.streamingEnabled) {
-                            const cursorElement = document.createElement('span');
-                            cursorElement.className = 'cursor-blink';
-                            contentElement.appendChild(cursorElement);
-                        }
-                        
-                        // Add citations if provided and complete
-                        if (isComplete && citations && citations.length > 0) {
-                            let citationsContainer = messageElement.querySelector('.citations-container');
-                            
-                            if (!citationsContainer) {
-                                citationsContainer = document.createElement('div');
-                                citationsContainer.className = 'citations-container mt-3';
-                                
-                                const citationsHtml = `
-                                    <div class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Sources:</div>
-                                    ${citations.map((citation, index) => `
-                                        <div class="citation mb-2">
-                                            <div class="flex items-start">
-                                                <span class="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-1.5 py-0.5 rounded mr-2">${index + 1}</span>
-                                                <div>
-                                                    <div class="text-sm font-medium">${citation.title}</div>
-                                                    <a href="${citation.url}" target="_blank" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">
-                                                        ${citation.source} - ${new Date(citation.date).toLocaleDateString()}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                `;
-                                
-                                citationsContainer.innerHTML = citationsHtml;
-                                
-                                // Insert after content
-                                const messageContentWrapper = contentElement.parentNode;
-                                messageContentWrapper.insertBefore(citationsContainer, contentElement.nextSibling);
-                            }
-                        }
-                        
-                        // Highlight code blocks
-                        try {
-                            if (typeof hljs !== 'undefined') {
-                                messageElement.querySelectorAll('pre code').forEach((block) => {
-                                    hljs.highlightElement(block);
-                                });
-                            }
-                        } catch (e) {
-                            console.error('Syntax highlighting error in updateMessageInUI:', e);
-                        }
-                        
-                        // Scroll to bottom
-                        const container = document.getElementById('conversation-container');
-                        if (container) {
-                            container.scrollTop = container.scrollHeight;
-                        }
-                    }
-                }
-            },
-            
-            createLoadingMessage: () => {
-                const messageId = utils.generateMessageId();
-                const message = {
-                    id: messageId,
-                    role: 'assistant',
-                    content: '<div class="flex items-center"><span class="dot-typing"></span><span class="dot-typing"></span><span class="dot-typing"></span></div>',
-                    timestamp: utils.formatTime(new Date())
-                };
-                
-                // Append to UI but don't add to conversation yet
-                uiManager.appendMessageToUI(message);
-                
-                return messageId;
-            },
-            
-            handleSendMessage: async () => {
-                const messageInput = document.getElementById('message-input');
-                const sendButton = document.getElementById('send-message');
-                
-                if (messageInput && sendButton && !appState.isProcessing) {
-                    const messageText = messageInput.value.trim();
-                    
-                    if (messageText === '' && appState.attachments.length === 0) {
-                        return;
-                    }
-                    
-                    // Disable input and button while processing
-                    appState.isProcessing = true;
-                    messageInput.disabled = true;
-                    sendButton.disabled = true;
-                    
-                    // Create user message
-                    const userMessage = {
-                        role: 'user',
-                        content: messageText,
-                        timestamp: utils.formatTime(new Date())
-                    };
-                    
-                    // Add attachments if any
-                    if (appState.attachments.length > 0) {
-                        userMessage.attachments = appState.attachments.map(file => {
-                            return {
-                                name: file.name,
-                                type: file.type,
-                                url: URL.createObjectURL(file)
-                            };
-                        });
-                    }
-                    
-                    // Add to conversation and UI
-                    utils.addMessageToConversation(userMessage);
-                    uiManager.appendMessageToUI(userMessage);
-                    
-                    // Clear input and attachments
-                    messageInput.value = '';
-                    appState.attachments = [];
-                    uiManager.updateAttachmentPreview();
-                    
-                    // Create loading message
-                    const loadingMessageId = uiManager.createLoadingMessage();
-                    
-                    try {
-                        let finalResponse = '';
-                        let searchResults = null;
-                        let thinkingSteps = null;
-                        
-                        // 1. Perform web search if enabled
-                        if (appState.webSearchEnabled) {
-                            try {
-                                searchResults = await utils.performWebSearch(messageText);
-                                console.log("Search results:", searchResults);
-                            } catch (error) {
-                                console.error("Web search failed:", error);
-                                // Continue without search results
-                            }
-                        }
-                        
-                        // 2. Generate thinking steps if enabled
-                        if (appState.deepThinkingEnabled) {
-                            try {
-                                thinkingSteps = await utils.generateThinkingSteps(messageText);
-                                console.log("Thinking steps:", thinkingSteps);
-                            } catch (error) {
-                                console.error("Generating thinking steps failed:", error);
-                                // Continue with default thinking steps
-                                thinkingSteps = [...appState.thinkingSteps];
-                            }
-                        }
-                        
-                        // 3. Prepare messages for API call
-                        let messages = utils.prepareMessagesForAPI();
-                        let customInstructions = '';
-                        
-                        // 4. Add web search results to prompt if available
-                        if (searchResults && searchResults.length > 0) {
-                            const searchResultsText = searchResults.map((result, index) => 
-                                `[${index + 1}] "${result.title}"\n${result.content}\nSource: ${result.source}\nURL: ${result.url}\nDate: ${new Date(result.date).toISOString()}`
-                            ).join('\n\n');
-                            
-                            customInstructions += `\nThe following search results were found for the user's query. Please use this information to provide an accurate and up-to-date response. When referencing these sources, please include citations: \n\n${searchResultsText}\n\n`;
-                            
-                            // Update system message with search results
-                            messages[0].content += customInstructions;
-                        }
-                        
-                        // 5. Call the API with streaming
-                        if (appState.streamingEnabled) {
-                            await utils.callDeepSeekAPI(messages, {
-                                stream: true,
-                                onUpdate: (content) => {
-                                    uiManager.updateMessageInUI(loadingMessageId, content);
-                                },
-                                onComplete: (content) => {
-                                    finalResponse = content;
-                                    
-                                    // Add citations to UI if search was used
-                                    if (searchResults && searchResults.length > 0) {
-                                        uiManager.updateMessageInUI(loadingMessageId, content, true, searchResults);
-                                    } else {
-                                        uiManager.updateMessageInUI(loadingMessageId, content, true);
-                                    }
-                                    
-                                    // Add to conversation
-                                    const aiMessage = {
-                                        role: 'assistant',
-                                        content: content,
-                                        timestamp: utils.formatTime(new Date())
-                                    };
-                                    
-                                    // Add thinking steps if deep thinking was enabled
-                                    if (appState.deepThinkingEnabled && thinkingSteps) {
-                                        aiMessage.thinking = thinkingSteps;
-                                    }
-                                    
-                                    // Add citations if search was used
-                                    if (searchResults && searchResults.length > 0) {
-                                        aiMessage.citations = searchResults;
-                                    }
-                                    
-                                    utils.addMessageToConversation(aiMessage);
-                                }
-                            });
-                        } else {
-                            // Non-streaming API call
-                            finalResponse = await utils.callDeepSeekAPI(messages, {
-                                temperature: 0.7,
-                                max_tokens: 4000
-                            });
-                            
-                            // Update the UI
-                            if (searchResults && searchResults.length > 0) {
-                                uiManager.updateMessageInUI(loadingMessageId, finalResponse, true, searchResults);
-                            } else {
-                                uiManager.updateMessageInUI(loadingMessageId, finalResponse, true);
-                            }
-                            
-                            // Add to conversation
-                            const aiMessage = {
-                                role: 'assistant',
-                                content: finalResponse,
-                                timestamp: utils.formatTime(new Date())
-                            };
-                            
-                            // Add thinking steps if deep thinking was enabled
-                            if (appState.deepThinkingEnabled && thinkingSteps) {
-                                aiMessage.thinking = thinkingSteps;
-                            }
-                            
-                            // Add citations if search was used
-                            if (searchResults && searchResults.length > 0) {
-                                aiMessage.citations = searchResults;
-                            }
-                            
-                            utils.addMessageToConversation(aiMessage);
-                        }
-                    } catch (error) {
-                        console.error("Error sending message:", error);
-                        
-                        // Update the loading message with error
-                        document.getElementById(loadingMessageId).remove();
-                        
-                        const errorMessage = {
-                            role: 'assistant',
-                            content: `Error: ${error.message || 'Failed to connect to DeepSeek API'}`,
-                            timestamp: utils.formatTime(new Date())
-                        };
-                        
-                        utils.addMessageToConversation(errorMessage);
-                        uiManager.appendMessageToUI(errorMessage);
-                        
-                        utils.showToast("Error: Failed to connect to DeepSeek API");
-                    } finally {
-                        // Re-enable input and button
-                        appState.isProcessing = false;
-                        messageInput.disabled = false;
-                        sendButton.disabled = false;
-                        messageInput.focus();
-                    }
-                }
-            },
-            
-            handleNewsSelection: (newsTitle) => {
-                // Create new conversation
-                utils.createConversation();
-                
-                // Show chat UI
-                uiManager.showChatUI();
-                
-                // Set the message input to a query about the news
-                const messageInput = document.getElementById('message-input');
-                if (messageInput) {
-                    messageInput.value = `Tell me more about "${newsTitle}" with the latest information.`;
-                    
-                    // Enable web search for news queries
-                    appState.webSearchEnabled = true;
-                    
-                    // Update UI for web search
-                    const toggleWebSearch = document.getElementById('toggle-web-search');
-                    if (toggleWebSearch) {
-                        toggleWebSearch.classList.add('text-primary-600');
-                    }
-                    
-                    // Focus the input
-                    messageInput.focus();
-                }
-            }
-        };
+            });
+        }
         
-        // Initialize the app when DOM is loaded
-        document.addEventListener('DOMContentLoaded', () => {
-            uiManager.init();
+        // Streaming response handling with typing effect
+        function appendStreamingResponse() {
+            const chatView = document.getElementById('chatView');
+            
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'mb-8';
+            messageContainer.id = 'streamingResponse';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'markdown-content';
+            messageContent.id = 'responseContent';
+            
+            // Add typing animation
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'ai-typing';
+            messageContent.appendChild(typingIndicator);
+            
+            messageContainer.appendChild(messageContent);
+            chatView.appendChild(messageContainer);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            return messageContent;
+        }
+        
+        function finalizeStreamingResponse(message, thinking = null) {
+            const streamingContainer = document.getElementById('streamingResponse');
+            if (!streamingContainer) return;
+            
+            // Remove the streaming container
+            streamingContainer.remove();
+            
+            // Append the full message
+            appendAssistantMessage(message, thinking);
+        }
+        
+        // Get selected model value
+        function getSelectedModel(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const selectedOption = dropdown.querySelector('.dropdown-option.selected');
+            return selectedOption.dataset.value;
+        }
+        
+        // Map Jork models to DeepSeek models
+        function mapModelToDeepSeekModel(jorkModel) {
+            if (jorkModel === "Jork-Trax-4") {
+                return "deepseek-coder";
+            } else {
+                return "deepseek-chat";
+            }
+        }
+        
+        // Send message handlers
+        async function sendMessage(input, isWebSearch = false, isDeepThinking = false) {
+            if (input.value.trim() === '') return;
+            
+            // Check if we have enough quota
+            if (!quotaSystem.useQuestion()) {
+                alert('您的免费提问次数已用完，请等待下一个重置周期或升级账户。');
+                return;
+            }
+            
+            const message = input.value.trim();
+            const jorkModel = (input.id === 'userInput') ? 
+                getSelectedModel('modelSelector') : 
+                getSelectedModel('replyModelSelector');
+            
+            // Hide initial view and show chat view
+            document.getElementById('initialView').classList.add('hidden');
+            document.getElementById('chatView').classList.remove('hidden');
+            document.getElementById('bottomInputArea').classList.remove('hidden');
+            
+            // Get file attachments
+            const filesSource = input.id === 'userInput' ? uploadedFiles.main : uploadedFiles.reply;
+            const fileAttachments = [...filesSource];
+            
+            // Append user message with attachments
+            appendUserMessage(message, false, fileAttachments);
+            
+            // Clear input and attachments
+            input.value = '';
+            filesSource.length = 0;
+            document.getElementById(input.id === 'userInput' ? 'filePreviewArea' : 'replyFilePreviewArea').classList.add('hidden');
+            document.getElementById(input.id === 'userInput' ? 'filePreviewArea' : 'replyFilePreviewArea').innerHTML = '';
+            
+            // Create streaming response container
+            appendStreamingResponse();
+            
+            try {
+                // Call DeepSeek API with previous messages for context
+                const response = await callDeepSeekAPI(message, jorkModel, isWebSearch, isDeepThinking, currentMessages);
+                
+                // Update the UI with the response
+                finalizeStreamingResponse(response.content, response.thinking);
+            } catch (error) {
+                console.error('Error calling API:', error);
+                // Update with error message
+                finalizeStreamingResponse(`抱歉，发生了错误：${error.message || '无法连接到服务'}`);
+            }
+        }
+        
+        // Send button handlers
+        document.getElementById('sendButton').addEventListener('click', function() {
+            sendMessage(document.getElementById('userInput'));
         });
+        
+        document.getElementById('replySendButton').addEventListener('click', function() {
+            sendMessage(document.getElementById('replyInput'));
+        });
+        
+        // Web search button
+        document.getElementById('webSearchButton').addEventListener('click', function() {
+            sendMessage(document.getElementById('replyInput'), true, false);
+        });
+        
+        // Deep thinking button
+        document.getElementById('deepThinkingButton').addEventListener('click', function() {
+            sendMessage(document.getElementById('replyInput'), false, true);
+        });
+        
+        // Enter key handlers
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey && this.value.trim() !== '') {
+                e.preventDefault();
+                sendMessage(this);
+            }
+        });
+        
+        document.getElementById('replyInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey && this.value.trim() !== '') {
+                e.preventDefault();
+                sendMessage(this);
+            }
+        });
+        
+        // Category button click handlers
+        document.querySelectorAll('.rounded-full').forEach(button => {
+            button.addEventListener('click', function() {
+                const category = this.textContent.trim();
+                let prompt = "";
+                
+                if (category.includes('写作')) {
+                    prompt = "我需要一些写作方面的帮助，可以给我一些写作技巧吗？";
+                } else if (category.includes('学习')) {
+                    prompt = "我想学习一个新技能，有什么高效的学习方法？";
+                } else if (category.includes('编程')) {
+                    prompt = "我是编程初学者，应该从哪种编程语言开始学习？";
+                } else if (category.includes('生活问题')) {
+                    prompt = "有什么提高日常生活效率的小技巧？";
+                } else if (category.includes('Jork的选择')) {
+                    const choices = [
+                        "人工智能的发展历史是怎样的？",
+                        "如何在工作中更有效地沟通？",
+                        "有哪些值得推荐的科普书籍？",
+                        "如何开始一个健康的生活方式？"
+                    ];
+                    prompt = choices[Math.floor(Math.random() * choices.length)];
+                }
+                
+                document.getElementById('userInput').value = prompt;
+                document.getElementById('sendButton').click();
+            });
+        });
+        
+        // Get references for easier access
+        const chatContainer = document.getElementById('chatContainer');
     </script>
 </body>
 </html>
