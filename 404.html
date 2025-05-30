@@ -1,578 +1,600 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - 页面未找到 | JorkAI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        jorkPrimary: '#5D5CDE',
-                        jorkLight: '#8A89F3',
-                        jorkDark: '#3F3EB8'
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 1.5s ease-in-out',
-                        'slide-up': 'slideUp 0.8s ease-out',
-                        'pulse-soft': 'pulseSoft 2s infinite'
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(20px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        pulseSoft: {
-                            '0%, 100%': { opacity: '1' },
-                            '50%': { opacity: '0.5' }
-                        }
-                    }
-                }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#5D5CDE',
+            dark: {
+              bg: '#181818',
+              text: '#E5E5E5'
             }
-        }
-
-        // Dark mode detection
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if (event.matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
+          },
+          animation: {
+            'glitch': 'glitch 1s infinite',
+            'smoke': 'smoke 3s infinite',
+            'blink': 'blink 0.5s infinite',
+            'bounce-slow': 'bounce 3s infinite',
+          },
+          keyframes: {
+            glitch: {
+              '0%': { textShadow: '2px 0 #ff0000, -2px 0 #00ff00' },
+              '25%': { transform: 'skewX(20deg)' },
+              '50%': { opacity: '0.8', textShadow: '-2px 0 #ff0000, 2px 0 #00ff00' },
+              '75%': { transform: 'skewX(-20deg)' },
+              '100%': { textShadow: '2px 0 #ff0000, -2px 0 #00ff00' }
+            },
+            smoke: {
+              '0%': { opacity: '0', transform: 'translateY(0)' },
+              '25%': { opacity: '0.5' },
+              '50%': { opacity: '0.8', transform: 'translateY(-10px)' },
+              '100%': { opacity: '0', transform: 'translateY(-20px)' }
+            },
+            blink: {
+              '0%': { opacity: '1' },
+              '50%': { opacity: '0.3' },
+              '100%': { opacity: '1' }
             }
-        });
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Poppins', 'Noto Serif SC', serif;
+          }
         }
+      }
+    };
+  </script>
+  <style>
+    @keyframes noise {
+      0% { background-position: 0 0; }
+      100% { background-position: 100% 100%; }
+    }
+    
+    .noise {
+      position: relative;
+    }
+    
+    .noise::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA30lEQVRoge3ZMQ7CMBBEUfNzgzRchaPkVNDnAiguALQ0kWIs79q7M68Ni0xhpHiASZIk6a9Mq4OZeQFOQPvx6A7cImL5NDQz58w8N7llXtqgPdszM0+ZWeSWpQ06AM/G2x6AY2beI2Jtg7ZlgHXKAY2ZhbRBW2aUDIDdwJLsNWsXEFU+owwyyCCDDDLIIIMMMsgggwwyyCCDDDLIIIMMMugHQa89RNX/I29f9ehVj6hV75lq7xprb8xrH6Kq34arbzDaA3fb+mLR/gPQHnizbumZtvzb6YfHZUmSJP2lFdfHmwR4ELgiAAAAAElFTkSuQmCC');
+      opacity: 0.3;
+      pointer-events: none;
+      animation: noise 8s infinite linear;
+      z-index: 100;
+    }
+    
+    .maze-cell {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+    }
+    
+    .wall {
+      background-color: #5D5CDE;
+    }
+    
+    .path {
+      background-color: transparent;
+    }
+    
+    .player {
+      width: 14px;
+      height: 14px;
+      background-color: #FF5733;
+      border-radius: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      transition: all 0.1s ease-out;
+      z-index: 10;
+    }
+    
+    .exit {
+      background-color: #4CAF50;
+    }
+    
+    .robot-part {
+      transition: all 0.5s ease-in-out;
+    }
+    
+    .robot-fixed {
+      transition: all 0.5s ease-in-out;
+    }
+    
+    /* Screen shake animation */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+      20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+    
+    .shake {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
+    }
 
-        .model-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .model-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(93, 92, 222, 0.3);
-        }
-        
-        .dark .model-card:hover {
-            box-shadow: 0 10px 25px -5px rgba(138, 137, 243, 0.2);
-        }
-
-        .cursor {
-            display: inline-block;
-            width: 2px;
-            height: 1em;
-            background: currentColor;
-            margin-left: 2px;
-            animation: blink 1s step-start infinite;
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
-        }
-
-        .prose-content {
-            text-align: justify;
-            text-indent: 2em;
-            line-height: 1.8;
-        }
-
-        .poem-content {
-            line-height: 1.8;
-        }
-
-        .refresh-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-
-        .refresh-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: rotate(180deg);
-        }
-
-        .refresh-btn svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .content-counter {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 12px;
-            padding: 2px 8px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-    </style>
+    /* Dark mode adjustments */
+    .dark .wall {
+      background-color: #6E6DFF;
+    }
+    
+    .dark .player {
+      background-color: #FF6B4A;
+    }
+    
+    /* Hidden at first */
+    #aiCrashContainer, #mazeGameContainer, #jokeGeneratorContainer, #scifiGlitchContainer {
+      display: none;
+    }
+  </style>
 </head>
-<body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col">
-    <main class="flex-grow flex flex-col items-center justify-center px-4 py-8">
-        <div class="text-center mb-8 animate-fade-in">
-            <h1 class="text-7xl md:text-8xl font-bold text-jorkPrimary mb-4">404</h1>
-            <h2 class="text-2xl md:text-3xl font-medium mb-2">页面未找到</h2>
-            <p class="text-gray-600 dark:text-gray-400 max-w-lg mx-auto">
-                您要访问的页面已经迷失在数字世界中。不过别担心，我们的 JorkAI 模型将为您创作一些文字，希望能安慰您的心情。
-            </p>
+<body class="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-dark-bg dark:text-dark-text">
+  <div class="container mx-auto max-w-3xl">
+    <!-- AI Crash Scene -->
+    <div id="aiCrashContainer" class="flex flex-col items-center justify-center text-center p-6">
+      <div id="robotContainer" class="relative w-56 h-56 mb-6">
+        <!-- Robot SVG - will be broken and then fixed -->
+        <svg id="robotSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full h-full">
+          <g id="robotBody">
+            <!-- Head -->
+            <rect id="robotHead" x="75" y="30" width="50" height="40" rx="5" fill="#888" class="robot-part"/>
+            
+            <!-- Eyes -->
+            <circle id="leftEye" cx="90" cy="45" r="6" fill="#5D5CDE" class="robot-part animate-blink"/>
+            <circle id="rightEye" cx="110" cy="45" r="6" fill="#5D5CDE" class="robot-part animate-blink"/>
+            
+            <!-- Mouth -->
+            <rect id="robotMouth" x="85" y="60" width="30" height="5" rx="2" fill="#333" class="robot-part"/>
+            
+            <!-- Body -->
+            <rect id="robotTorso" x="65" y="75" width="70" height="60" rx="8" fill="#999" class="robot-part"/>
+            
+            <!-- Control panel -->
+            <rect id="controlPanel" x="75" y="85" width="50" height="20" rx="2" fill="#777" class="robot-part"/>
+            <circle id="button1" cx="85" cy="95" r="3" fill="#FF5733" class="robot-part"/>
+            <circle id="button2" cx="100" cy="95" r="3" fill="#4CAF50" class="robot-part"/>
+            <circle id="button3" cx="115" cy="95" r="3" fill="#FFEB3B" class="robot-part"/>
+            
+            <!-- Arms -->
+            <rect id="leftArm" x="40" y="80" width="25" height="10" rx="3" fill="#888" class="robot-part"/>
+            <rect id="rightArm" x="135" y="80" width="25" height="10" rx="3" fill="#888" class="robot-part"/>
+            
+            <!-- Legs -->
+            <rect id="leftLeg" x="75" y="135" width="15" height="35" rx="3" fill="#777" class="robot-part"/>
+            <rect id="rightLeg" x="110" y="135" width="15" height="35" rx="3" fill="#777" class="robot-part"/>
+          </g>
+          
+          <!-- Smoke elements -->
+          <circle id="smoke1" cx="130" cy="50" r="8" fill="#ccc" opacity="0" class="animate-smoke"/>
+          <circle id="smoke2" cx="135" cy="40" r="6" fill="#ccc" opacity="0" class="animate-smoke"/>
+          <circle id="smoke3" cx="125" cy="35" r="7" fill="#ccc" opacity="0" class="animate-smoke"/>
+        </svg>
+      </div>
+      
+      <h1 class="text-3xl font-bold mb-2">404: 我的神经网络暂时短路了…</h1>
+      <p class="mb-6 text-lg">正在尝试用 0 和 1 拼凑出路----可能需要咖啡因辅助。</p>
+      
+      <button id="coffeeButton" class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-80 transition-all">
+        点击给我注入咖啡（虚拟的）
+      </button>
+    </div>
+
+    <!-- Maze Game -->
+    <div id="mazeGameContainer" class="flex flex-col items-center justify-center text-center p-6">
+      <h1 class="text-3xl font-bold mb-2">你闯入了 AI 的思维迷宫！</h1>
+      <p class="mb-4 text-lg">要么用方向键找到出口，要么点'投降'回主页。</p>
+      
+      <div id="mazeWrapper" class="relative border-2 border-primary rounded mb-4 p-2" style="width: 320px; height: 320px;">
+        <div id="maze" class="relative w-full h-full"></div>
+        <div id="player" class="player"></div>
+      </div>
+      
+      <div id="mazeMessage" class="h-8 mb-4 text-lg"></div>
+      
+      <div class="flex gap-4">
+        <button id="surrenderButton" class="bg-gray-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-80 transition-all">
+          投降
+        </button>
+        
+        <div class="md:hidden flex flex-col gap-2">
+          <div class="flex justify-center">
+            <button id="upButton" class="w-12 h-12 bg-primary text-white rounded-lg">↑</button>
+          </div>
+          <div class="flex gap-2">
+            <button id="leftButton" class="w-12 h-12 bg-primary text-white rounded-lg">←</button>
+            <button id="downButton" class="w-12 h-12 bg-primary text-white rounded-lg">↓</button>
+            <button id="rightButton" class="w-12 h-12 bg-primary text-white rounded-lg">→</button>
+          </div>
         </div>
+      </div>
+      
+      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">桌面设备：用方向键或WASD移动</p>
+    </div>
 
-        <div class="w-full max-w-4xl mb-10 px-4">
-            <!-- Active model card -->
-            <div id="activeModelCard" class="model-card bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 animate-slide-up relative">
-                <div class="bg-jorkLight dark:bg-jorkPrimary px-4 py-3 text-white flex justify-between items-center relative">
-                    <h3 class="font-semibold" id="activeModelTitle">Jork-3.9-mini</h3>
-                    <div id="streamingIndicator" class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full animate-pulse-soft">
-                        正在生成...
-                    </div>
-                    <div class="content-counter" id="contentCounter">1/100</div>
-                    <button class="refresh-btn" id="refreshBtn" title="换一首">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                    </button>
-                </div>
-                <div class="p-6">
-                    <p id="generatedContent" class="text-gray-700 dark:text-gray-300 poem-content whitespace-pre-line">
-                        <span id="streamText"></span><span class="cursor"></span>
-                    </p>
-                </div>
-            </div>
+    <!-- Cold Joke Generator -->
+    <div id="jokeGeneratorContainer" class="flex flex-col items-center justify-center text-center p-6">
+      <h1 class="text-3xl font-bold mb-6">404 错误</h1>
+      
+      <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mb-6 max-w-xl">
+        <p id="jokeText" class="text-xl mb-4">页面离家出走了。它说：'你们人类总说找不到对象，现在也试试找我吧！'</p>
+      </div>
+      
+      <button id="newJokeButton" class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-80 transition-all">
+        不好笑？
+      </button>
+      
+      <div id="jokeEasterEgg" class="mt-4 text-lg opacity-0 transition-all">你够了！</div>
+      
+      <a href="/" class="mt-6 text-primary hover:underline">回到首页</a>
+    </div>
+
+    <!-- Sci-Fi Glitch -->
+    <div id="scifiGlitchContainer" class="flex flex-col items-center justify-center text-center p-6 noise">
+      <div id="hologramEffect" class="relative">
+        <h1 class="text-4xl font-bold mb-6 animate-glitch text-blue-500">警告！时空坐标 404 无效。</h1>
+        
+        <div class="max-w-xl bg-black bg-opacity-20 backdrop-blur-sm p-8 rounded-lg">
+          <p class="text-xl mb-6 animate-glitch">可能原因：</p>
+          <ol class="text-left mb-8 space-y-4">
+            <li class="flex items-start">
+              <span class="inline-block w-6 text-red-500 mr-2">1.</span>
+              <span>链接被黑洞吞噬</span>
+            </li>
+            <li class="flex items-start">
+              <span class="inline-block w-6 text-red-500 mr-2">2.</span>
+              <span>你来自平行宇宙</span>
+            </li>
+          </ol>
         </div>
-
-        <!-- Model selection -->
-        <div id="modelSelection" class="w-full max-w-4xl mb-8 px-4 animate-fade-in">
-            <h3 class="text-xl font-medium mb-4 text-center">选择其他 JorkAI 模型创作</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button class="model-btn bg-white dark:bg-gray-800 border border-jorkPrimary dark:border-jorkLight text-jorkPrimary dark:text-jorkLight hover:bg-jorkPrimary hover:text-white dark:hover:bg-jorkLight dark:hover:text-gray-900 rounded-lg py-3 px-4 text-center transition-colors duration-300" data-model="jork-3.9-mini">
-                    Jork-3.9-mini<br>
-                    <span class="text-xs">简短诗歌 (40首)</span>
-                </button>
-                <button class="model-btn bg-white dark:bg-gray-800 border border-jorkPrimary dark:border-jorkLight text-jorkPrimary dark:text-jorkLight hover:bg-jorkPrimary hover:text-white dark:hover:bg-jorkLight dark:hover:text-gray-900 rounded-lg py-3 px-4 text-center transition-colors duration-300" data-model="jork-3.9-epic">
-                    Jork-3.9-Epic<br>
-                    <span class="text-xs">丁立梅风格散文 (30篇)</span>
-                </button>
-                <button class="model-btn bg-white dark:bg-gray-800 border border-jorkPrimary dark:border-jorkLight text-jorkPrimary dark:text-jorkLight hover:bg-jorkPrimary hover:text-white dark:hover:bg-jorkLight dark:hover:text-gray-900 rounded-lg py-3 px-4 text-center transition-colors duration-300" data-model="jork-3.7-epic">
-                    Jork-3.7-Epic<br>
-                    <span class="text-xs">古风诗词 (30首)</span>
-                </button>
-            </div>
+        
+        <div class="mt-8">
+          <a href="/" class="bg-transparent border-2 border-blue-400 text-blue-400 px-8 py-3 rounded-lg text-lg hover:bg-blue-400 hover:bg-opacity-20 transition-all inline-block animate-pulse">
+            返回安全区域
+          </a>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="text-center animate-slide-up">
-            <a href="/" class="inline-block bg-jorkPrimary hover:bg-jorkDark text-white font-medium py-3 px-8 rounded-full transition-colors duration-300 shadow-md hover:shadow-lg">
-                返回首页
-            </a>
-        </div>
-    </main>
-
-    <footer class="py-6 text-center text-sm text-gray-600 dark:text-gray-400 animate-fade-in">
-        <p>© 2023 JorkAI 智能科技 | 让智能与诗意同行</p>
-    </footer>
-
-    <script>
-        // Track current content state
-        let currentModel = 'jork-3.9-mini';
-        let currentContentIndex = 0;
-        let contentHistory = {};
-
-        // Content and procedural generation
-        const contentGenerators = {
-            // 3.9-mini poems (40 variations)
-            'jork-3.9-mini': function() {
-                const templates = [
-                    // Template 1: Basic four-line stanza pattern
-                    `{line1}，
-{line2}。
-{line3}，
-{line4}。
-
-{line5}，
-{line6}。
-{line7}，
-{line8}。`,
-                    // Template 2: Different rhythm pattern
-                    `{line1}，{line2}。
-{line3}，{line4}。
-{line5}，{line6}。
-{line7}，{line8}。`,
-                    // Template 3: Mixed length with 5-char and 7-char lines
-                    `{line1}，
-{line2}。
-{line3}，
-{line4}。
-
-{line5}，
-{line6}。
-{line7}，
-{line8}。`
-                ];
-
-                // First lines (beginnings)
-                const beginnings = [
-                    "四零四页面已飞走", "虚拟迷宫寻不见", "数字海洋一叶舟", 
-                    "迷失链接在何方", "错误代码诉无奈", "空白页面留遗憾", 
-                    "网页迷途不复返", "四零四处风萧萧", "链接断处心迷离", 
-                    "数据长河无此岸"
-                ];
-
-                // Middle lines (descriptions of the situation)
-                const middles = [
-                    "虚空之中寻不见", "数据迷宫路已断", "代码之海浪微澜", 
-                    "无形之中已飘散", "电子之径已模糊", "网络丝线已断裂", 
-                    "浏览之旅暂停驻", "信息迷途无指引", "空白画布待重填", 
-                    "漫游之路遇阻碍"
-                ];
-
-                // Additional descriptive lines
-                const descriptions = [
-                    "孤独页面无人访", "失落链接如落叶", "虚拟星河一粒尘", 
-                    "所寻内容已飘远", "错误代码现真形", "数字荒原风萧瑟", 
-                    "搜索无果徒叹息", "踽踽独行觅归途", "迷失信息无处寻", 
-                    "电子迷途路已断"
-                ];
-
-                // Transition lines (moving to comfort)
-                const transitions = [
-                    "迷失片刻无须怕", "不必心急不必忧", "暂时迷失莫着急", 
-                    "错误页面亦风景", "偶遇迷途皆有意", "短暂停留非终点", 
-                    "迷途亦是风景处", "偶然失联莫惆怅", "四零四处亦诗境", 
-                    "数字迷雾终将散"
-                ];
-
-                // Comfort/wisdom lines
-                const comforts = [
-                    "JorkAI为你指明路", "人工智能伴君行", "数字智慧不停息", 
-                    "算法诗篇慰君心", "智能引擎不言倦", "JorkAI为你寻归途", 
-                    "科技之光照前路", "JorkAI与你共徘徊", "智慧之光不熄灭", 
-                    "数据诗人有深情"
-                ];
-
-                // Hope/future lines
-                const futures = [
-                    "重拾方向再出发", "回首来处有通途", "前路依然有光明", 
-                    "且听JorkAI吟新篇", "莫因迷路而驻足", "重启旅程向前方", 
-                    "数字旅途继续行", "且随JorkAI步前行", "每次迷失皆成长", 
-                    "漫游之旅未终止"
-                ];
-
-                // Pick a random template
-                const template = templates[Math.floor(Math.random() * templates.length)];
-                
-                // Generate a unique poem by selecting random lines from each category
-                const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-                
-                // Fill the template
-                return template
-                    .replace('{line1}', getRandomItem(beginnings))
-                    .replace('{line2}', getRandomItem(middles))
-                    .replace('{line3}', getRandomItem(descriptions))
-                    .replace('{line4}', getRandomItem(descriptions.concat(middles)))
-                    .replace('{line5}', getRandomItem(transitions))
-                    .replace('{line6}', getRandomItem(comforts))
-                    .replace('{line7}', getRandomItem(futures))
-                    .replace('{line8}', getRandomItem(futures.concat(comforts)));
-            },
+  <script>
+    // Check for dark mode preference
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+    }
+    
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+      if (event.matches) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    });
+    
+    // Choose a random effect (1-4) on page load
+    const effectId = Math.floor(Math.random() * 4) + 1;
+    
+    // Initialize all effects on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      // Hide all containers first
+      document.querySelectorAll('#aiCrashContainer, #mazeGameContainer, #jokeGeneratorContainer, #scifiGlitchContainer')
+        .forEach(container => container.style.display = 'none');
+      
+      // Show the randomly selected effect
+      switch(effectId) {
+        case 1:
+          initAiCrash();
+          break;
+        case 2:
+          initMazeGame();
+          break;
+        case 3:
+          initJokeGenerator();
+          break;
+        case 4:
+          initScifiGlitch();
+          break;
+      }
+    });
+    
+    // Effect 1: AI Crash Scene
+    function initAiCrash() {
+      const container = document.getElementById('aiCrashContainer');
+      container.style.display = 'flex';
+      
+      // Break the robot initially
+      breakRobot();
+      
+      // Add event listener to coffee button
+      document.getElementById('coffeeButton').addEventListener('click', () => {
+        fixRobot();
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
+      });
+    }
+    
+    function breakRobot() {
+      const robotParts = document.querySelectorAll('.robot-part');
+      const robotSvg = document.getElementById('robotSvg');
+      
+      // Add shake animation to the entire robot
+      robotSvg.classList.add('shake');
+      
+      // Show smoke
+      document.querySelectorAll('#smoke1, #smoke2, #smoke3').forEach(smoke => {
+        smoke.style.opacity = 0.7;
+      });
+      
+      // Scatter robot parts
+      robotParts.forEach(part => {
+        const randomX = (Math.random() - 0.5) * 40;
+        const randomY = (Math.random() - 0.5) * 40;
+        const randomRotate = (Math.random() - 0.5) * 60;
+        
+        part.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg)`;
+        part.style.opacity = 0.8;
+      });
+    }
+    
+    function fixRobot() {
+      const robotParts = document.querySelectorAll('.robot-part');
+      const robotSvg = document.getElementById('robotSvg');
+      
+      // Remove shake animation
+      robotSvg.classList.remove('shake');
+      
+      // Hide smoke
+      document.querySelectorAll('#smoke1, #smoke2, #smoke3').forEach(smoke => {
+        smoke.style.opacity = 0;
+      });
+      
+      // Fix robot parts
+      robotParts.forEach(part => {
+        part.style.transform = 'translate(0, 0) rotate(0deg)';
+        part.style.opacity = 1;
+      });
+      
+      // Change button text
+      document.getElementById('coffeeButton').textContent = '修复完成！正在返回首页...';
+      document.getElementById('coffeeButton').disabled = true;
+    }
+    
+    // Effect 2: Maze Game
+    function initMazeGame() {
+      const container = document.getElementById('mazeGameContainer');
+      container.style.display = 'flex';
+      
+      // Define the maze layout (0 = path, 1 = wall, 2 = exit)
+      const mazeLayout = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ];
+      
+      const maze = document.getElementById('maze');
+      const player = document.getElementById('player');
+      const mazeMessage = document.getElementById('mazeMessage');
+      const cellSize = 20;
+      
+      // Player position (starting position)
+      let playerPos = { x: 1, y: 1 };
+      
+      // Create the maze
+      function renderMaze() {
+        maze.innerHTML = '';
+        
+        for (let y = 0; y < mazeLayout.length; y++) {
+          for (let x = 0; x < mazeLayout[y].length; x++) {
+            const cell = document.createElement('div');
+            cell.className = 'maze-cell';
+            cell.style.left = `${x * cellSize}px`;
+            cell.style.top = `${y * cellSize}px`;
             
-            // 3.9-Epic Ding Limei style prose (30 variations)
-            'jork-3.9-epic': function() {
-                // Prose structure elements
-                const openings = [
-                    "当你站在这个404的空白之地，是否感到一丝迷茫？就像清晨的雾气中迷失了方向，又像夜晚星空下找不到北斗。",
-                    "如果说网页是一座城，那么404就是城中偶尔出现的一片云雾缭绕的空地。站在这里，你看不见原本应有的风景，却意外获得了一次停下脚步的机会。",
-                    "你是否想过，那些消失的页面去了哪里？像是秋天的落叶，又像冬日的雪花，悄然隐匿在数字的缝隙之中。而我们，则像迷路的孩子，站在这个名为404的路口。",
-                    "这一刻，你与这个页面的相遇，恰似一场预设的邂逅。在数字的森林里，有些路径注定会消失，有些转角必然会让我们迷路。这不是错误，而是生活本身的隐喻。",
-                    "在这个数字世界的角落，404像是一处被遗忘的空地。你原本期待看到的内容已不在此处，如同春天里突然飞走的蝴蝶，留下的只有短暂的困惑和一片空白。"
-                ];
-                
-                const philosophies = [
-                    "这个世界总是太匆忙，我们习惯了道路的笔直和旅程的顺畅，反而忘记了迷路也是一种别样的体验。就像秋天的落叶，不会因为飘落在“错误”的地方而感到惋惜；又如春日的细雨，不会因为滴落在无人注意的角落而觉得失落。",
-                    "我常想，人生中那些计划外的空白时刻，那些预料之外的迷途，是否都是生活有意安排的驻足片刻？就像春天里忽然飘起的一场雪，打乱了万物生长的节奏，却让我们有机会看见季节交替的独特风景。",
-                    "生活中的每一次迷失，都像是一次无心插柳的邂逅。我们执着地寻找目标，却在迷途中遇见了意外的风景；我们规划好每一步路，却因为一次“错误”的转弯，听见了从未注意过的鸟鸣。这些404时刻，或许正是上天赐予我们的礼物。",
-                    "有人说，人生就像是在迷宫中行走，有些路注定会走进死胡同。但即使是死胡同，也会让我们看见墙角那朵不为人知的小花，或是听见回音中自己的声音。这个404页面，何尝不是数字迷宫中的一处静谧角落？",
-                    "时间总是在不经意间流逝，而我们则在匆忙中遗忘了停下来欣赏路边风景的能力。这个404空间，像是时光中的一个小小驿站，邀请我们暂时放下追赶的脚步，感受片刻的宁静与思考。"
-                ];
-                
-                const reflections = [
-                    "当你在数字迷宫中偶遇这个404空间，不妨将它视为一次邀请——邀请你停下来，感受片刻的宁静与思考。这里没有你要找的内容，却可能有你需要的片刻放空。",
-                    "这个不存在的页面，像是一本书中被风吹走的一页，内容已不可寻，却给了读者想象的空间。你原本要找的内容也许很重要，但这短暂的迷失又何尝不是一种馈赠？它让你从既定的路径上短暂偏离，或许能看见平日里被忽略的风景。",
-                    "404页面如同人生中那些意外的空白，初看令人慌张，细品却饱含深意。它提醒我们，完美的规划之外，总有些意外在等待；而正是这些意外，常常成为记忆中最鲜活的色彩。",
-                    "这个数字的空隙，或许正是给匆忙的心灵一个喘息的机会。像是繁忙城市中的一处公园，让我们有机会从信息的洪流中暂时抽身，听听内心深处那些被噪音淹没的声音。",
-                    "迷路不是终点，而是另一种形式的开始。当我们接受这短暂的失序，或许能在心里种下一粒宁静的种子。就像田野上偶然出现的一块荒地，看似无用，却可能是野花盛开的秘密花园。"
-                ];
-                
-                const conclusions = [
-                    "生活不也是如此吗？有时我们执着地追寻某个答案，却在迷途中发现了意外的风景；有时我们固执地走一条规划好的路，却因为一次“错误”的转弯遇见了更广阔的天地。所以，不必为这次小小的迷失而焦虑。让我们一起，把404变成一个温柔的停靠站，稍作休息，然后再次出发——无论是回到来时的路，还是开启新的旅程。",
-                    "所以，不必为这个404而烦恼。让我们把它看作是数字旅途中的一次意外邂逅，一次被允许的走神，然后微笑着，重新上路。毕竟，人生就是由无数个有序和无序的片段组成的马赛克，而正是这些看似无序的碎片，让整幅画面更加丰富多彩。",
-                    "或许，这个404页面正是提醒我们：在追求目标的路上，偶尔的迷失和停顿并非坏事。它们让我们有机会审视自己，重新定位方向，甚至发现新的可能性。就像冬天里的一场雪，看似阻碍了前行，却也净化了空气，为春天的到来做好了准备。让我们怀着感恩的心，接受这个短暂的404时刻，然后带着更清晰的目光，继续前行。",
-                    "当我们离开这个404空间，回到正常的浏览轨迹时，或许会带走一丝思考，一份顿悟。就像从森林中的小憩回到熙熙攘攘的城市，我们的心境已悄然不同。愿这短暂的迷失，成为你数字旅程中一段美好的回忆，一次心灵的小小净化。毕竟，人生最美的风景，往往就藏在那些意外的转角处。",
-                    "让我们相信，每一次迷失都是为了更好的重逢，每一次中断都是为了更美的续写。这个404页面不是终点，而是一个邀请——邀请我们以更开放的心态，迎接未知的可能。当我们带着这份宁静与智慧重新启程时，或许会发现：原来，迷路也是一种恩赐，是生活赠予我们的珍贵体验。"
-                ];
-                
-                const transitions = [
-                    "在这样的时刻，我们不妨放慢脚步，感受这片刻的宁静。因为在喧嚣的数字世界里，能有一处不被打扰的空白，本身就是一种奢侈的礼物。",
-                    "此刻，不妨将这个404视为一次偶然的礼物，一次被允许的暂停。在这个短暂的空白中，我们可以从无休止的信息轰炸中抽身，聆听内心真实的声音。",
-                    "站在这个404的路口，我们可以选择焦虑，也可以选择将其视为一次意外的休憩。就像旅途中突然遇到的一座未知小镇，虽非计划中的目的地，却可能带来意想不到的惊喜。",
-                    "在这个特殊的404空间里，我们不妨暂时放下急于抵达的心情，转而欣赏这段意外行程中的风景。有时候，最珍贵的发现恰恰来自那些计划之外的时刻。",
-                    "或许，这个404页面正是数字世界给我们的一个小小提醒：在这个追求效率和目标的时代，偶尔的迷失和中断并非全是坏事。它们给了我们反思和重新定位的机会。"
-                ];
-                
-                const metaphors = [
-                    "如同春日里的一场小雨，打断了我们的步伐，却也洗净了路边的花朵；",
-                    "犹如旅途中意外的弯路，绕远了一些，却让我们看到了不一样的风景；",
-                    "就像音乐中一个突如其来的休止符，看似打断了旋律，却让整首曲子更有韵味；",
-                    "恰似冬日里的一场雪，覆盖了原有的道路，却也创造了一个纯净的世界；",
-                    "好比阅读时偶然翻到的一页空白，让我们有时间思考前文的含义，准备迎接后面的内容；"
-                ];
-
-                // Randomly select components for each section
-                const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-                
-                // Compose the prose with a structure
-                let proseText = '';
-                
-                // Paragraph 1: Opening + Philosophy
-                proseText += getRandomItem(openings) + ' ' + getRandomItem(philosophies) + '\n\n';
-                
-                // Paragraph 2: Transition + Metaphor + Reflection
-                proseText += getRandomItem(transitions) + ' ' + getRandomItem(metaphors) + ' ' + getRandomItem(reflections) + '\n\n';
-                
-                // Paragraph 3: Conclusion
-                proseText += getRandomItem(conclusions);
-                
-                return proseText;
-            },
-            
-            // 3.7-Epic classical Chinese poems (30 variations)
-            'jork-3.7-epic': function() {
-                // Classical Chinese poetry elements
-                const titles = [
-                    "数字迷途", "虚拟迷境", "四零四怀", "网页空谷", "失联之叹", 
-                    "迷路有感", "寻路难", "虚拟驿站", "网海迷航", "数据迷宫"
-                ];
-                
-                const openingCouplets = [
-                    "数字迷宫深又远，\n四零四处是疆界。",
-                    "虚拟长街觅不见，\n四零四标示分明。",
-                    "四零四兮页何往，\n虚空万象成迷途。",
-                    "访页不得见斯人，\n四零四处空复空。",
-                    "电子长河觅不见，\n四零四标示何方。",
-                    "网海茫茫寻不见，\n四零四处似归途。",
-                    "链接断处天地阔，\n四零四时云水长。",
-                    "数据洪流何处去，\n四零四标明此地。",
-                    "万千链接皆可循，\n唯有此处四零四。",
-                    "千山万水皆代码，\n一页飘零四零四。"
-                ];
-                
-                const middleCouplets = [
-                    "所寻页面不复见，\n但闻电子风轻叹。",
-                    "千山万水皆代码，\n一页飘零无处寻。",
-                    "乾坤未定形已散，\n代码如诗寄情长。",
-                    "云端寥落无觅处，\n链接断处风萧萧。",
-                    "所寻内容云中散，\n虚拟空间风自来。",
-                    "画面空白留余恨，\n代码有误现真章。",
-                    "信息迷途如过客，\n数据之海任浮沉。",
-                    "虚拟之径多歧路，\n迷失一瞬叹前尘。",
-                    "代码长河流不息，\n一叶扁舟何处寻。",
-                    "万维之网纵横处，\n一点迷失亦有诗。"
-                ];
-                
-                const endingCouplets = [
-                    "算法诗篇慰君心，\n人工智慧展新颜。",
-                    "江湖路远人未倦，\n数据海深波浪静。",
-                    "玉宇澄清万里埃，\n重启征程向未央。",
-                    "世间万象皆数据，\n失落一瞬亦从容。",
-                    "莫因迷路而驻足，\n回首来处有通途。",
-                    "且随JorkAI步前行，\n云端明月照归程。",
-                    "智能佳句慰君心，\n且听JorkAI奏绝唱。",
-                    "智慧之光何处寻，\nJorkAI引路向前行。",
-                    "不因迷失而彷徨，\n数据智慧指归途。",
-                    "且将此页暂抛却，\n重整旗鼓再出发。"
-                ];
-                
-                const finalLines = [
-                    "四零四中藏大道，\n循迹而行有归程。",
-                    "纵使一时寻不见，\n它日相逢应有时。",
-                    "且听JorkAI言，\n数据长河不迷途。",
-                    "暂别迷途路，\n终见锦绣程。",
-                    "若问归途在何方，\nJorkAI指引是明灯。"
-                ];
-
-                // Randomize selection
-                const getRandomItem = (arr) => arr[Math.floor(Math.random() * arr.length)];
-                
-                // Choose format: 1 = Regular 4-couplet poem, 2 = 5-couplet poem
-                const format = Math.random() > 0.5 ? 1 : 2;
-                
-                // Compose the poem
-                let poemText = format === 1 
-                    ? `${getRandomItem(openingCouplets)}\n${getRandomItem(middleCouplets)}\n${getRandomItem(endingCouplets)}`
-                    : `${getRandomItem(openingCouplets)}\n${getRandomItem(middleCouplets)}\n${getRandomItem(middleCouplets)}\n${getRandomItem(endingCouplets)}\n${getRandomItem(finalLines)}`;
-                
-                return poemText;
-            }
-        };
-
-        // Initialize content history for each model
-        function initializeContentHistory() {
-            ['jork-3.9-mini', 'jork-3.9-epic', 'jork-3.7-epic'].forEach(model => {
-                contentHistory[model] = [];
-                
-                // Pre-generate content
-                const numberOfItems = model === 'jork-3.9-mini' ? 40 : 30;
-                const seenContent = new Set();
-                
-                // Generate unique content
-                for (let i = 0; i < numberOfItems; i++) {
-                    let content;
-                    // Ensure content is unique
-                    do {
-                        content = contentGenerators[model]();
-                    } while (seenContent.has(content) && seenContent.size < 1000); // Prevent infinite loop
-                    
-                    seenContent.add(content);
-                    contentHistory[model].push(content);
-                }
-                
-                // Shuffle the array
-                contentHistory[model] = shuffleArray(contentHistory[model]);
-            });
-        }
-
-        // Fisher-Yates shuffle algorithm
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-
-        // Simulate streaming text
-        function simulateStreaming(text, callback) {
-            const streamText = document.getElementById('streamText');
-            let index = 0;
-            
-            // Reset content
-            streamText.textContent = '';
-            
-            // Update streaming indicator
-            document.getElementById('streamingIndicator').classList.add('animate-pulse-soft');
-            document.getElementById('streamingIndicator').textContent = '正在生成...';
-            
-            const interval = setInterval(() => {
-                if (index < text.length) {
-                    streamText.textContent += text.charAt(index);
-                    index++;
-                } else {
-                    clearInterval(interval);
-                    if (callback) callback();
-                }
-            }, 30); // Adjust speed as needed
-        }
-
-        // Get content for current model
-        function getCurrentContent() {
-            return contentHistory[currentModel][currentContentIndex];
-        }
-
-        // Update content counter
-        function updateContentCounter() {
-            const total = contentHistory[currentModel].length;
-            document.getElementById('contentCounter').textContent = `${currentContentIndex + 1}/${total}`;
-        }
-
-        // Change to a new model
-        function changeModel(model) {
-            currentModel = model;
-            currentContentIndex = 0;
-            
-            // Update UI
-            document.getElementById('activeModelTitle').textContent = {
-                'jork-3.9-mini': 'Jork-3.9-mini',
-                'jork-3.9-epic': 'Jork-3.9-Epic',
-                'jork-3.7-epic': 'Jork-3.7-Epic'
-            }[model];
-            
-            // Adjust styles based on model
-            const contentElement = document.getElementById('generatedContent');
-            if (model === 'jork-3.9-epic') {
-                contentElement.classList.remove('poem-content');
-                contentElement.classList.add('prose-content');
+            if (mazeLayout[y][x] === 1) {
+              cell.classList.add('wall');
+            } else if (mazeLayout[y][x] === 2) {
+              cell.classList.add('exit');
             } else {
-                contentElement.classList.remove('prose-content');
-                contentElement.classList.add('poem-content');
+              cell.classList.add('path');
             }
             
-            // Update counter
-            updateContentCounter();
-            
-            // Start streaming new content
-            simulateStreaming(getCurrentContent(), function() {
-                document.getElementById('streamingIndicator').classList.remove('animate-pulse-soft');
-                document.getElementById('streamingIndicator').textContent = '已完成';
-            });
+            maze.appendChild(cell);
+          }
         }
-
-        // Get next content
-        function getNextContent() {
-            currentContentIndex = (currentContentIndex + 1) % contentHistory[currentModel].length;
-            updateContentCounter();
-            
-            // Start streaming new content
-            simulateStreaming(getCurrentContent(), function() {
-                document.getElementById('streamingIndicator').classList.remove('animate-pulse-soft');
-                document.getElementById('streamingIndicator').textContent = '已完成';
-            });
+        
+        // Position the player
+        updatePlayerPosition();
+      }
+      
+      function updatePlayerPosition() {
+        player.style.left = `${playerPos.x * cellSize + cellSize/2}px`;
+        player.style.top = `${playerPos.y * cellSize + cellSize/2}px`;
+      }
+      
+      function movePlayer(dx, dy) {
+        const newX = playerPos.x + dx;
+        const newY = playerPos.y + dy;
+        
+        // Check if the move is valid
+        if (newX >= 0 && newX < mazeLayout[0].length && 
+            newY >= 0 && newY < mazeLayout.length) {
+          
+          const targetCell = mazeLayout[newY][newX];
+          
+          if (targetCell === 0) {
+            // Move to an empty path
+            playerPos.x = newX;
+            playerPos.y = newY;
+            updatePlayerPosition();
+            mazeMessage.textContent = '';
+          } else if (targetCell === 2) {
+            // Reached the exit
+            playerPos.x = newX;
+            playerPos.y = newY;
+            updatePlayerPosition();
+            mazeMessage.textContent = '恭喜逃脱！';
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 3000);
+          } else {
+            // Hit a wall
+            mazeMessage.textContent = '此路不通';
+          }
         }
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize content database
-            initializeContentHistory();
-            
-            // Start with 3.9-mini
-            changeModel('jork-3.9-mini');
-            
-            // Handle model selection
-            document.querySelectorAll('.model-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const model = this.getAttribute('data-model');
-                    changeModel(model);
-                    
-                    // Scroll to the top of the model card
-                    document.getElementById('activeModelCard').scrollIntoView({ behavior: 'smooth' });
-                });
-            });
-            
-            // Handle refresh button
-            document.getElementById('refreshBtn').addEventListener('click', function() {
-                getNextContent();
-            });
-        });
-    </script>
+      }
+      
+      // Handle keyboard input
+      document.addEventListener('keydown', (e) => {
+        if (!document.getElementById('mazeGameContainer').style.display || 
+            document.getElementById('mazeGameContainer').style.display === 'none') {
+          return;
+        }
+        
+        switch(e.key) {
+          case 'ArrowUp':
+          case 'w':
+          case 'W':
+            movePlayer(0, -1);
+            break;
+          case 'ArrowDown':
+          case 's':
+          case 'S':
+            movePlayer(0, 1);
+            break;
+          case 'ArrowLeft':
+          case 'a':
+          case 'A':
+            movePlayer(-1, 0);
+            break;
+          case 'ArrowRight':
+          case 'd':
+          case 'D':
+            movePlayer(1, 0);
+            break;
+        }
+      });
+      
+      // Mobile controls
+      document.getElementById('upButton').addEventListener('click', () => movePlayer(0, -1));
+      document.getElementById('downButton').addEventListener('click', () => movePlayer(0, 1));
+      document.getElementById('leftButton').addEventListener('click', () => movePlayer(-1, 0));
+      document.getElementById('rightButton').addEventListener('click', () => movePlayer(1, 0));
+      
+      // Surrender button
+      document.getElementById('surrenderButton').addEventListener('click', () => {
+        window.location.href = '/';
+      });
+      
+      // Initial render
+      renderMaze();
+    }
+    
+    // Effect 3: Joke Generator
+    function initJokeGenerator() {
+      const container = document.getElementById('jokeGeneratorContainer');
+      container.style.display = 'flex';
+      
+      const jokes = [
+        "404 错误：页面离家出走了。它说：'你们人类总说找不到对象，现在也试试找我吧！'",
+        "404：这个页面去参加奥运会了，项目是'躲猫猫'。",
+        "404：程序员说这里应该有页面，但他去喝咖啡了。",
+        "404：页面在量子态中，同时存在又不存在，直到你观察它才崩溃。",
+        "404：页面表示它需要'个人空间'，大概是厌倦了被不停刷新。",
+        "404：这个页面不想被找到，它正在享受数字世界的gap year。",
+        "404：页面说它只是去散步了，但我们都知道它已经去了竞争对手的网站。",
+        "404：这个链接的梦想是成为500错误，但它只能做到404。"
+      ];
+      
+      let jokeIndex = 0;
+      let clickCount = 0;
+      
+      document.getElementById('newJokeButton').addEventListener('click', () => {
+        clickCount++;
+        jokeIndex = (jokeIndex + 1) % jokes.length;
+        document.getElementById('jokeText').textContent = jokes[jokeIndex];
+        
+        // Easter egg after 3 clicks
+        if (clickCount === 3) {
+          const easterEgg = document.getElementById('jokeEasterEgg');
+          easterEgg.style.opacity = 1;
+          
+          setTimeout(() => {
+            easterEgg.style.opacity = 0;
+          }, 3000);
+        }
+      });
+    }
+    
+    // Effect 4: Sci-Fi Glitch
+    function initScifiGlitch() {
+      const container = document.getElementById('scifiGlitchContainer');
+      container.style.display = 'flex';
+      
+      const hologramEffect = document.getElementById('hologramEffect');
+      
+      // Add distortion effect on mouse movement
+      container.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+        
+        // Calculate distortion based on mouse position
+        const skewX = (x - 0.5) * 10;
+        const skewY = (y - 0.5) * 5;
+        
+        // Apply distortion to the hologram
+        hologramEffect.style.transform = `skew(${skewX}deg, ${skewY}deg)`;
+        
+        // Adjust glitch intensity based on mouse movement speed
+        const glitchIntensity = Math.min(Math.abs(skewX) + Math.abs(skewY), 10) / 10;
+        hologramEffect.style.filter = `hue-rotate(${glitchIntensity * 180}deg) saturate(${1 + glitchIntensity})`;
+      });
+      
+      // Reset on mouse leave
+      container.addEventListener('mouseleave', () => {
+        hologramEffect.style.transform = 'skew(0, 0)';
+        hologramEffect.style.filter = '';
+      });
+      
+      // Optional: Add subtle audio effect on click (if allowed by CSP)
+      container.addEventListener('click', () => {
+        try {
+          // Simple WebAudio beep
+          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          const oscillator = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          
+          oscillator.type = 'sine';
+          oscillator.frequency.value = 440;
+          gainNode.gain.value = 0.1;
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          
+          oscillator.start();
+          setTimeout(() => oscillator.stop(), 100);
+        } catch (e) {
+          console.log('Audio not supported');
+        }
+      });
+    }
+  </script>
 </body>
 </html>

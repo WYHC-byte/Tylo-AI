@@ -496,99 +496,6 @@
             color: #fca5a5;
         }
         
-        /* Canvas container styles */
-        .canvas-container {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 50%;
-            height: 100%;
-            background-color: white;
-            border-left: 1px solid #e2e8f0;
-            z-index: 40;
-            display: flex;
-            flex-direction: column;
-            transform: translateX(100%);
-            transition: transform 0.3s ease;
-            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .dark .canvas-container {
-            background-color: #1F2937;
-            border-color: #374151;
-        }
-        
-        .canvas-container.active {
-            transform: translateX(0);
-        }
-        
-        .canvas-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .dark .canvas-header {
-            border-color: #374151;
-        }
-        
-        .canvas-content {
-            flex: 1;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .canvas-iframe {
-            flex: 1;
-            border: none;
-        }
-        
-        .canvas-editor {
-            height: 40%;
-            border-top: 1px solid #e2e8f0;
-            padding: 1rem;
-            font-family: monospace;
-            overflow: auto;
-            white-space: pre;
-            display: none;
-        }
-        
-        .dark .canvas-editor {
-            border-color: #374151;
-            background-color: #111827;
-            color: #e5e7eb;
-        }
-        
-        .canvas-controls {
-            display: flex;
-            justify-content: flex-end;
-            padding: 0.5rem 1rem;
-            border-top: 1px solid #e2e8f0;
-        }
-        
-        .dark .canvas-controls {
-            border-color: #374151;
-        }
-        
-        .canvas-toggle-editor {
-            margin-right: auto;
-        }
-        
-        /* Ask JorkAI button styling */
-        #askJorkButton {
-            background-color: #5D5CDE;
-            color: white;
-            transition: all 0.2s ease;
-            z-index: 9999;
-        }
-        
-        #askJorkButton:hover {
-            background-color: #4a49b1;
-        }
-        
         /* Dark mode support */
         @media (prefers-color-scheme: dark) {
             .dark\:bg-gray-900 {
@@ -809,124 +716,14 @@
         </div>
     </div>
     
-    <!-- Ask JorkAI button (positioned via JS) -->
+    <!-- Ask JorkAI button (hidden, positioned via JS) -->
     <div id="askJorkButton" class="fixed bg-orange-200 text-orange-600 px-3 py-1.5 rounded-full shadow-lg z-50 flex items-center cursor-pointer hover:bg-orange-300 transition-colors hidden">
         <i class="fas fa-question-circle mr-2"></i>提问JorkAI
     </div>
 
-    <!-- Canvas container (initially hidden) -->
-    <div id="canvasContainer" class="canvas-container">
-        <div class="canvas-header">
-            <h3 class="font-medium">Canvas 预览</h3>
-            <div class="flex space-x-2">
-                <button id="newTabButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    <i class="fas fa-external-link-alt"></i>
-                </button>
-                <button id="closeCanvasButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-        <div class="canvas-content">
-            <iframe id="canvasIframe" class="canvas-iframe" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms" allow="clipboard-write" allowfullscreen></iframe>
-            <div id="canvasEditor" class="canvas-editor"></div>
-        </div>
-        <div class="canvas-controls">
-            <button id="toggleEditorButton" class="canvas-toggle-editor px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                <i class="fas fa-code mr-1"></i>切换代码编辑器
-            </button>
-            <button id="runCodeButton" class="px-3 py-1 text-sm bg-orange-200 text-orange-600 rounded hover:bg-orange-300 transition-colors ml-2">
-                <i class="fas fa-play mr-1"></i>运行代码
-            </button>
-            <button id="updateCodeButton" class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors ml-2">
-                <i class="fas fa-save mr-1"></i>保存修改
-            </button>
-        </div>
-    </div>
-
     <script>
         // Canvas interaction functionality
-        let currentCanvasCode = '';
-        let canvasIsActive = false;
-        
         function setupCanvasInteraction() {
-            const canvasContainer = document.getElementById('canvasContainer');
-            const canvasIframe = document.getElementById('canvasIframe');
-            const canvasEditor = document.getElementById('canvasEditor');
-            const closeCanvasButton = document.getElementById('closeCanvasButton');
-            const toggleEditorButton = document.getElementById('toggleEditorButton');
-            const runCodeButton = document.getElementById('runCodeButton');
-            const updateCodeButton = document.getElementById('updateCodeButton');
-            const newTabButton = document.getElementById('newTabButton');
-            
-            // Close canvas
-            closeCanvasButton.addEventListener('click', () => {
-                canvasContainer.classList.remove('active');
-                canvasIsActive = false;
-            });
-            
-            // Toggle editor
-            toggleEditorButton.addEventListener('click', () => {
-                if (canvasEditor.style.display === 'block') {
-                    canvasEditor.style.display = 'none';
-                    canvasIframe.style.height = '100%';
-                } else {
-                    canvasEditor.style.display = 'block';
-                    canvasIframe.style.height = '60%';
-                    canvasEditor.textContent = currentCanvasCode;
-                }
-            });
-            
-            // Run code
-            runCodeButton.addEventListener('click', () => {
-                if (canvasEditor.style.display === 'block') {
-                    currentCanvasCode = canvasEditor.textContent;
-                }
-                updateCanvasFrame(currentCanvasCode);
-            });
-            
-            // Save code modifications
-            updateCodeButton.addEventListener('click', () => {
-                if (canvasEditor.style.display === 'block') {
-                    currentCanvasCode = canvasEditor.textContent;
-                    updateCanvasFrame(currentCanvasCode);
-                }
-            });
-            
-            // Open in new tab
-            newTabButton.addEventListener('click', () => {
-                const newTab = window.open('', '_blank');
-                newTab.document.write(currentCanvasCode);
-                newTab.document.close();
-            });
-            
-            // Process canvas tag in markdown content
-            document.addEventListener('DOMNodeInserted', (e) => {
-                if (e.target.classList && e.target.classList.contains('markdown-content')) {
-                    setTimeout(() => {
-                        processCanvasTags(e.target);
-                    }, 0);
-                }
-            });
-            
-            // Add event listener for text selection in canvas iframe
-            canvasIframe.addEventListener('load', () => {
-                try {
-                    const frameDoc = canvasIframe.contentDocument || canvasIframe.contentWindow.document;
-                    
-                    frameDoc.addEventListener('mouseup', function() {
-                        const selection = frameDoc.getSelection();
-                        if (selection.toString().trim().length > 0) {
-                            showAskButtonInCanvas(selection, canvasIframe);
-                        } else {
-                            hideAskButton();
-                        }
-                    });
-                } catch (e) {
-                    console.error('Error adding selection listener to iframe:', e);
-                }
-            });
-            
             // Create canvas button container for code blocks
             document.addEventListener('click', function(e) {
                 const codeBlock = e.target.closest('.code-block');
@@ -959,65 +756,12 @@
             });
         }
         
-        function processCanvasTags(contentEl) {
-            const canvasTags = contentEl.querySelectorAll('pre');
-            
-            canvasTags.forEach(preEl => {
-                const codeEl = preEl.querySelector('code');
-                if (!codeEl) return;
-                
-                const codeText = codeEl.textContent;
-                
-                // Check if the code block has HTML tags that indicate it should be in canvas
-                if (codeText.includes('<html') || codeText.includes('<!DOCTYPE html') || 
-                    codeText.includes('<body') || codeText.includes('<head')) {
-                    
-                    // Add a "Run in Canvas" button if it doesn't exist
-                    if (!preEl.querySelector('.canvas-run-button')) {
-                        preEl.classList.add('code-block', 'relative');
-                        
-                        const runButton = document.createElement('button');
-                        runButton.className = 'canvas-run-button bg-orange-200 text-orange-600 text-xs px-2 py-1 rounded hover:bg-orange-300 transition-colors absolute top-1 right-1';
-                        runButton.innerHTML = '<i class="fas fa-play mr-1"></i>在画布中运行';
-                        
-                        runButton.addEventListener('click', () => {
-                            openCodeInCanvas(codeText);
-                        });
-                        
-                        preEl.appendChild(runButton);
-                    }
-                }
-            });
-        }
-        
-        function showAskButtonInCanvas(selection, iframe) {
-            const askButton = document.getElementById('askJorkButton');
-            if (!askButton) return;
-            
-            const range = selection.getRangeAt(0);
-            const rect = range.getBoundingClientRect();
-            
-            // Get the iframe's position
-            const iframeRect = iframe.getBoundingClientRect();
-            
-            // Store the selected text in the button's data attribute
-            askButton.dataset.selectedText = selection.toString().trim();
-            
-            // Position the button near the selection, adjusted for the iframe's position
-            askButton.style.left = `${iframeRect.left + rect.right}px`;
-            askButton.style.top = `${iframeRect.top + rect.top - 40}px`;
-            askButton.classList.remove('hidden');
-        }
-        
         function showAskButton(selection) {
             const askButton = document.getElementById('askJorkButton');
             if (!askButton) return;
             
             const range = selection.getRangeAt(0);
             const rect = range.getBoundingClientRect();
-            
-            // Store the selected text in the button's data attribute
-            askButton.dataset.selectedText = selection.toString().trim();
             
             // Position the button near the selection
             askButton.style.left = `${rect.right}px`;
@@ -1033,51 +777,77 @@
         }
         
         function openCodeInCanvas(code) {
-            const canvasContainer = document.getElementById('canvasContainer');
-            const canvasIframe = document.getElementById('canvasIframe');
-            const canvasEditor = document.getElementById('canvasEditor');
+            // Create canvas container
+            const canvasContainer = document.createElement('div');
+            canvasContainer.id = 'canvasContainer';
+            canvasContainer.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center';
             
-            // Store the code
-            currentCanvasCode = code;
+            const canvasContent = document.createElement('div');
+            canvasContent.className = 'bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl h-3/4 flex flex-col relative';
             
-            // Reset editor display
-            canvasEditor.style.display = 'none';
-            canvasIframe.style.height = '100%';
+            // Canvas header
+            const canvasHeader = document.createElement('div');
+            canvasHeader.className = 'flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700';
             
-            // Set editor content
-            canvasEditor.textContent = code;
+            const canvasTitle = document.createElement('h3');
+            canvasTitle.className = 'font-medium';
+            canvasTitle.textContent = 'Canvas 预览';
             
-            // Update iframe
-            updateCanvasFrame(code);
+            const canvasControls = document.createElement('div');
+            canvasControls.className = 'flex space-x-2';
             
-            // Show canvas
-            canvasContainer.classList.add('active');
-            canvasIsActive = true;
-        }
-        
-        function updateCanvasFrame(code) {
-            const canvasIframe = document.getElementById('canvasIframe');
-            const frameDoc = canvasIframe.contentDocument || canvasIframe.contentWindow.document;
+            const newTabButton = document.createElement('button');
+            newTabButton.className = 'p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300';
+            newTabButton.innerHTML = '<i class="fas fa-external-link-alt"></i>';
+            newTabButton.title = '在新标签页中打开';
             
+            const closeButton = document.createElement('button');
+            closeButton.className = 'p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300';
+            closeButton.innerHTML = '<i class="fas fa-times"></i>';
+            closeButton.title = '关闭';
+            
+            canvasControls.appendChild(newTabButton);
+            canvasControls.appendChild(closeButton);
+            
+            canvasHeader.appendChild(canvasTitle);
+            canvasHeader.appendChild(canvasControls);
+            
+            // Canvas iframe
+            const canvasFrame = document.createElement('iframe');
+            canvasFrame.className = 'flex-grow w-full';
+            canvasFrame.sandbox = 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms';
+            canvasFrame.allow = 'clipboard-write';
+            canvasFrame.allowFullscreen = true;
+            
+            // Assemble canvas
+            canvasContent.appendChild(canvasHeader);
+            canvasContent.appendChild(canvasFrame);
+            canvasContainer.appendChild(canvasContent);
+            document.body.appendChild(canvasContainer);
+            
+            // Set content to iframe
+            const frameDoc = canvasFrame.contentDocument || canvasFrame.contentWindow.document;
             frameDoc.open();
             frameDoc.write(code);
             frameDoc.close();
             
-            // Add selection handler to iframe content
-            setTimeout(() => {
-                try {
-                    frameDoc.addEventListener('mouseup', function() {
-                        const selection = frameDoc.getSelection();
-                        if (selection.toString().trim().length > 0) {
-                            showAskButtonInCanvas(selection, canvasIframe);
-                        } else {
-                            hideAskButton();
-                        }
-                    });
-                } catch (e) {
-                    console.error('Error adding selection listener to iframe:', e);
+            // Event listeners
+            closeButton.addEventListener('click', function() {
+                canvasContainer.remove();
+            });
+            
+            newTabButton.addEventListener('click', function() {
+                const newTab = window.open('', '_blank');
+                newTab.document.write(code);
+                newTab.document.close();
+            });
+            
+            // Close on background click
+            canvasContainer.addEventListener('click', function(e) {
+                if (e.target === canvasContainer) {
+                    canvasContainer.remove();
                 }
-            }, 100);
+            });
         }
         
         // Beijing time-based greeting
@@ -1934,9 +1704,9 @@
             } else if (isDeepThinking) {
                 systemMessage = "请进行深度思考，分析问题的多个层面。请在回答前详细说明你的思考过程，分步骤列出你的推理过程。";
             } else if (model === "Jork-Trax-4") {
-                systemMessage = "你是Jork-Trax-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个专业的编程助手，擅长提供高质量的代码和技术解决方案。如果用户请求代码或需要运行代码，请将完整的HTML/CSS/JavaScript代码放在<canvas>标签内。在画布中，这样的代码可以直接在独立环境中执行。请确保提供完整且能立即运行的代码。";
+                systemMessage = "你是Jork-Trax-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个专业的编程助手，擅长提供高质量的代码和技术解决方案。";
             } else {
-                systemMessage = "你是Jork-Epist-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个友好、专业的AI助手。你可以提供详细且有用的回答。如果需要展示可运行的代码，请将完整的HTML/CSS/JavaScript代码放在<canvas>标签内，这样可以在画布中直接运行。";
+                systemMessage = "你是Jork-Epist-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个友好、专业的AI助手。你可以提供详细且有用的回答。";
             }
             
             messages.push({ role: "system", content: systemMessage });
@@ -2016,9 +1786,6 @@
                                             // Update UI with the latest content
                                             responseContent.innerHTML = marked.parse(fullResponse);
                                             
-                                            // Process code blocks and canvas tags
-                                            processCanvasTags(responseContent);
-                                            
                                             // Process code blocks to add syntax highlighting
                                             const codeBlocks = responseContent.querySelectorAll('pre');
                                             codeBlocks.forEach(block => {
@@ -2043,16 +1810,6 @@
                                 throw e;
                             }
                         }
-                    }
-                    
-                    // Check if response contains <canvas> tags and should open canvas
-                    if (fullResponse.includes('<canvas>') && fullResponse.includes('</canvas>')) {
-                        setTimeout(() => {
-                            const canvasContent = extractCanvasContent(fullResponse);
-                            if (canvasContent) {
-                                openCodeInCanvas(canvasContent);
-                            }
-                        }, 500);
                     }
                     
                     return { content: fullResponse, thinking: thinking };
@@ -2086,16 +1843,6 @@
                         }
                     }
                     
-                    // Check if response contains <canvas> tags and should open canvas
-                    if (content.includes('<canvas>') && content.includes('</canvas>')) {
-                        setTimeout(() => {
-                            const canvasContent = extractCanvasContent(content);
-                            if (canvasContent) {
-                                openCodeInCanvas(canvasContent);
-                            }
-                        }, 500);
-                    }
-                    
                     return { content, thinking };
                 }
             } catch (error) {
@@ -2114,18 +1861,6 @@
                     thinking: null
                 };
             }
-        }
-        
-        // Extract content between <canvas> tags
-        function extractCanvasContent(text) {
-            const canvasRegex = /<canvas>([\s\S]*?)<\/canvas>/;
-            const match = text.match(canvasRegex);
-            
-            if (match && match[1]) {
-                return match[1].trim();
-            }
-            
-            return null;
         }
         
         // Stop generation function
@@ -2205,9 +1940,6 @@
             messageContent.className = 'markdown-content';
             messageContent.innerHTML = markdownOutput;
             
-            // Process canvas tags
-            processCanvasTags(messageContent);
-            
             // Process code blocks to add copy buttons
             const codeBlocks = messageContent.querySelectorAll('pre');
             codeBlocks.forEach(block => {
@@ -2286,14 +2018,6 @@
             
             // Scroll to bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;
-            
-            // Check if message contains <canvas> tags and should open canvas
-            if (message.includes('<canvas>') && message.includes('</canvas>')) {
-                const canvasContent = extractCanvasContent(message);
-                if (canvasContent) {
-                    openCodeInCanvas(canvasContent);
-                }
-            }
             
             // Set up copy button functionality
             copyButton.addEventListener('click', () => {
@@ -2572,18 +2296,18 @@
         
         // Set up "Ask JorkAI" button
         document.getElementById('askJorkButton').addEventListener('click', function() {
-            const selectedText = this.dataset.selectedText;
+            const selectedText = window.getSelection().toString().trim();
             if (selectedText) {
+                // Set text in input field
+                const replyInput = document.getElementById('replyInput');
+                replyInput.value = `Jork，这段代码是什么意思？\n\n\`\`\`\n${selectedText}\n\`\`\``;
+                
                 // Make sure we're in chat view
                 if (document.getElementById('initialView').classList.contains('hidden') === false) {
                     document.getElementById('initialView').classList.add('hidden');
                     document.getElementById('chatView').classList.remove('hidden');
                     document.getElementById('bottomInputArea').classList.remove('hidden');
                 }
-                
-                // Set text in input field
-                const replyInput = document.getElementById('replyInput');
-                replyInput.value = `Jork，这段代码是什么意思？\n\n\`\`\`\n${selectedText}\n\`\`\``;
                 
                 // Send the message
                 document.getElementById('replySendButton').click();
