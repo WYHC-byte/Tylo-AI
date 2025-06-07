@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JorkAI-Aria ✨ 未来感AI助手</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        'primary-dark': '#4f46e5',
+                        'accent': '#f59e0b',
+                        'glass': 'rgba(255, 255, 255, 0.1)',
+                        'glass-dark': 'rgba(0, 0, 0, 0.2)'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .dark body {
+            background: #0f0f0f;
+        }
+        
+        /* JorkAI水印背景 */
+        .watermark-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .watermark-content {
+            text-align: center;
+            opacity: 0.05;
+            transform: rotate(-15deg);
+            user-select: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .dark .watermark-content {
+            opacity: 0.08;
+        }
+        
+        .watermark-logo {
+            font-size: 8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+        
+        .watermark-slogan {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #667eea;
+            letter-spacing: 0.2em;
+        }
+        
+        /* 动态背景粒子 */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        .dark .particle {
+            background: rgba(168, 85, 247, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.2; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.6; }
+        }
+        
+        /* 玻璃拟态效果 */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        
+        .dark .glass {
+            background: rgba(30, 30, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 侧边栏折叠动画 */
+        .sidebar-expanded {
+            width: 320px;
+        }
+        
+        .sidebar-collapsed {
+            width: 80px;
+        }
+        
+        .sidebar-transition {
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* 消息动画 */
+        .message-enter {
+            animation: messageSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes messageSlideIn {
+            0% {
+                transform: translateY(30px) scale(0.9);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* 渐变文字 */
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dark .gradient-text {
+            background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* 发光效果 */
+        .glow {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .glow:hover {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* 进度条华丽动画 */
+        .progress-bar {
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+            background-size: 200% 200%;
+            animation: gradientShift 1s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* 悬停效果 */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .hover-lift:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 打字机效果 */
+        .typing::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* 滚动条美化 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #f093fb);
+        }
+        
+        /* 发送按钮动画 */
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #f093fb 100%);
+            transform: scale(1.05);
+        }
+        
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* 图片展示动画 */
+        .image-reveal {
+            animation: imageReveal 0.8s ease-out;
+        }
+        
+        @keyframes imageReveal {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) rotate(5deg);
+                filter: blur(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+                filter: blur(0px);
+            }
+        }
+        
+        /* 神经网络背景动画 */
+        .neural-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.05;
+        }
+        
+        .neural-node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.6);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+        
+        .dark .neural-node {
+            background: rgba(168, 85, 247, 0.6);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+        }
+        
+        .neural-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+            animation: flow 6s linear infinite;
+        }
+        
+        .dark .neural-line {
+            background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.3), transparent);
+        }
+        
+        @keyframes flow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+        
+        /* 文字颜色适配 */
+        .text-adaptive {
+            color: #1f2937;
+        }
+        
+        .dark .text-adaptive {
+            color: #f9fafb;
+        }
+        
+        .text-adaptive-muted {
+            color: #6b7280;
+        }
+        
+        .dark .text-adaptive-muted {
+            color: #9ca3af;
+        }
+        
+        /* 自定义复选框样式 */
+        .custom-select {
+            position: relative;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            padding: 4px 25px 4px 10px;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+        
+        .dark .custom-select {
+            background: rgba(30, 30, 30, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            color: #f9fafb;
+        }
+        
+        .custom-select:hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(102, 126, 234, 0.4);
+        }
+        
+        .dark .custom-select:hover {
+            background: rgba(30, 30, 30, 0.8);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+        
+        .custom-select::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .dark .custom-select::after {
+            color: #9ca3af;
+        }
+        
+        .custom-select.open::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        
+        .select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            margin-top: 4px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .dark .select-dropdown {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        
+        .select-dropdown.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        
+        .select-option {
+            padding: 8px 10px;
+            color: #1f2937;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            font-size: 13px;
+        }
+        
+        .dark .select-option {
+            color: #f9fafb;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+        }
+        
+        .select-option:last-child {
+            border-bottom: none;
+        }
+        
+        .select-option:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .dark .select-option:hover {
+            background: rgba(168, 85, 247, 0.1);
+        }
+        
+        .select-option:first-child {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        
+        .select-option:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        
+        /* 图片查看器样式 */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 450px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(102, 126, 234, 0.2);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dark .image-viewer {
+            background: rgba(15, 15, 15, 0.95);
+            border-left: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        
+        .image-viewer.show {
+            transform: translateX(0);
+        }
+        
+        .image-viewer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+        }
+        
+        .image-viewer-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* 图片缩放和平移 */
+        .image-container {
+            transform-origin: center;
+            transition: transform 0.3s ease;
+            cursor: grab;
+        }
+        
+        .image-container:active {
+            cursor: grabbing;
+        }
+        
+        .image-container.zoomed {
+            cursor: move;
+        }
+        
+        /* 响应式图片查看器 */
+        @media (max-width: 768px) {
+            .image-viewer {
+                width: 100%;
+            }
+        }
+        
+        /* 加载骨架屏 */
+        .skeleton {
+            background: linear-gradient(90deg, 
+                rgba(102, 126, 234, 0.1) 25%, 
+                rgba(102, 126, 234, 0.2) 50%, 
+                rgba(102, 126, 234, 0.1) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+    </style>
+</head>
+<body class="text-adaptive font-inter overflow-hidden">
+    <!-- JorkAI水印背景 -->
+    <div class="watermark-bg">
+        <div class="watermark-content">
+            <div class="watermark-logo">JorkAI</div>
+            <div class="watermark-slogan">未来已来</div>
+        </div>
+    </div>
+    
+    <!-- 动态背景 -->
+    <div class="particles" id="particles"></div>
+    <div class="neural-bg" id="neuralBg"></div>
+    
+    <!-- 图片查看器遮罩 -->
+    <div id="imageViewerOverlay" class="image-viewer-overlay" onclick="closeImageViewer()"></div>
+    
+    <!-- 图片查看器 -->
+    <div id="imageViewer" class="image-viewer">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+            <h3 class="text-lg font-semibold gradient-text">图片预览</h3>
+            <button onclick="closeImageViewer()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-adaptive">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+        </div>
+        
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <div class="flex-1 relative overflow-hidden bg-gray-100 dark:bg-gray-800 m-4 rounded-lg">
+                <img id="viewerImage" class="w-full h-full object-contain image-container" alt="预览图片">
+                
+                <!-- 缩放控制 -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 glass rounded-full px-4 py-2">
+                    <button onclick="zoomOut()" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors text-adaptive">
+                        <i class="fas fa-minus text-sm"></i>
+                    </button>
+                    <span id="zoomLevel" class="text-sm font-medium text-adaptive">100%</span>
+                    <button onclick="zoomIn()" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors text-adaptive">
+                        <i class="fas fa-plus text-sm"></i>
+                    </button>
+                    <button onclick="resetZoom()" class="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors ml-2 text-adaptive">
+                        <i class="fas fa-expand-arrows-alt text-sm"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="p-4 space-y-3">
+                <button onclick="openImageInNewTab()" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-purple-600 text-white px-4 py-3 rounded-lg transition-all duration-300 hover-lift glow text-sm font-medium">
+                    <i class="fas fa-external-link-alt mr-2"></i>在新标签页打开
+                </button>
+                <button onclick="downloadCurrentImage()" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-emerald-600 hover:to-teal-600 text-white px-4 py-3 rounded-lg transition-all duration-300 hover-lift glow text-sm font-medium">
+                    <i class="fas fa-download mr-2"></i>下载图片
+                </button>
+                
+                <!-- 图片信息 -->
+                <div class="glass rounded-lg p-3 mt-4">
+                    <h4 class="text-sm font-medium mb-2 text-adaptive-muted">图片信息</h4>
+                    <div class="space-y-1 text-xs text-adaptive-muted">
+                        <div class="flex justify-between">
+                            <span>尺寸:</span>
+                            <span id="imageSize">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>生成时间:</span>
+                            <span id="imageTime">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 侧边栏遮罩 -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black bg-opacity-30 z-40 hidden lg:hidden backdrop-blur-sm" onclick="toggleSidebar()"></div>
+    
+    <!-- 侧边栏 -->
+    <div id="sidebar" class="fixed left-0 top-0 h-full glass z-50 sidebar-transition sidebar-expanded lg:sidebar-expanded">
+        <div class="flex flex-col h-full p-3">
+            <!-- 侧边栏头部 -->
+            <div class="mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 id="sidebarTitle" class="text-lg font-bold gradient-text transition-opacity duration-300">JorkAI-Aria</h2>
+                    <div class="flex items-center space-x-1">
+                        <button id="collapseSidebarBtn" class="hidden lg:block p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 text-adaptive">
+                            <i class="fas fa-bars text-sm"></i>
+                        </button>
+                        <button onclick="toggleSidebar()" class="lg:hidden p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 text-adaptive">
+                            <i class="fas fa-times text-sm"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="newChatBtn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-purple-600 hover:to-pink-600 text-white px-3 py-2 rounded-lg transition-all duration-300 hover-lift glow text-sm font-semibold">
+                    <i class="fas fa-plus mr-1"></i>
+                    <span id="newChatText">新的创作</span>
+                </button>
+            </div>
+            
+            <!-- 聊天历史 -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar">
+                <h3 id="historyTitle" class="text-xs font-semibold text-adaptive-muted mb-2 uppercase tracking-wider transition-opacity duration-300">创作历史</h3>
+                <div id="chatHistory" class="space-y-2">
+                    <!-- 历史对话列表 -->
+                </div>
+            </div>
+            
+            <!-- 底部信息 -->
+            <div class="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div id="sidebarFooter" class="text-xs text-adaptive-muted text-center transition-opacity duration-300">
+                    <p><i class="fas fa-palette mr-1"></i> AI创意无限</p>
+                    <p class="mt-1">Powered by JorkAI</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主内容区 -->
+    <div id="mainContent" class="flex flex-col h-screen relative z-10 transition-all duration-300" style="margin-left: 320px;">
+        <!-- 顶部栏 -->
+        <div class="glass border-b border-gray-200 dark:border-gray-700 p-2">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-300 text-adaptive">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h1 class="text-lg font-bold gradient-text">JorkAI-Aria</h1>
+                        <p class="text-adaptive-muted text-xs"><i class="fas fa-rocket mr-1"></i> AI图像生成助手</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-3">
+                    <div class="glass px-2 py-1 rounded-full">
+                        <i class="fas fa-palette mr-1 text-adaptive-muted"></i>
+                        <span class="text-xs text-adaptive">创作模式</span>
+                    </div>
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 进度条 -->
+        <div id="progressContainer" class="hidden h-1 bg-gray-200 dark:bg-gray-700">
+            <div id="progressBar" class="progress-bar h-full w-0 transition-all duration-300"></div>
+        </div>
+
+        <!-- 聊天消息区 -->
+        <div id="chatContainer" class="flex-1 overflow-y-auto custom-scrollbar">
+            <div id="messagesContainer" class="max-w-5xl mx-auto p-3 space-y-4">
+                <!-- 欢迎消息 -->
+                <div class="flex justify-start message-enter">
+                    <div class="max-w-md">
+                        <div class="glass rounded-xl rounded-bl-md p-3 hover-lift">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <div class="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+                                    <i class="fas fa-robot text-white"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-semibold gradient-text">JorkAI-Aria</span>
+                                    <p class="text-xs text-adaptive-muted">AI创意助手</p>
+                                </div>
+                            </div>
+                            <p class="text-adaptive leading-relaxed text-sm">
+                                <i class="fas fa-magic mr-1 text-indigo-500"></i> 欢迎来到未来！我是JorkAI-Aria，你的专属AI创意伙伴。
+                                <br><br>
+                                <i class="fas fa-palette mr-1 text-purple-500"></i> 描述你的想象，我将为你创造出令人惊叹的视觉艺术作品！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="glass border-t border-gray-200 dark:border-gray-700 p-3">
+            <div class="max-w-5xl mx-auto">
+                <!-- 选项栏 -->
+                <div class="flex flex-wrap items-center gap-2 mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-medium text-adaptive-muted"><i class="fas fa-expand-arrows-alt mr-1"></i> 比例:</span>
+                        <div class="relative">
+                            <div id="aspectRatioSelect" class="custom-select min-w-[90px]">
+                                <span id="aspectRatioValue">默认</span>
+                            </div>
+                            <div id="aspectRatioDropdown" class="select-dropdown">
+                                <div class="select-option" data-value="">默认</div>
+                                <div class="select-option" data-value="正方形">正方形 1:1</div>
+                                <div class="select-option" data-value="横版">横版 16:9</div>
+                                <div class="select-option" data-value="竖版">竖版 9:16</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-medium text-adaptive-muted"><i class="fas fa-palette mr-1"></i> 风格:</span>
+                        <div class="relative">
+                            <div id="artStyleSelect" class="custom-select min-w-[110px]">
+                                <span id="artStyleValue">默认</span>
+                            </div>
+                            <div id="artStyleDropdown" class="select-dropdown">
+                                <div class="select-option" data-value="">默认</div>
+                                <div class="select-option" data-value="中国风"><i class="fas fa-pagoda mr-1"></i> 中国风</div>
+                                <div class="select-option" data-value="写实风"><i class="fas fa-camera mr-1"></i> 写实风</div>
+                                <div class="select-option" data-value="卡通风"><i class="fas fa-laugh mr-1"></i> 卡通风</div>
+                                <div class="select-option" data-value="油画风"><i class="fas fa-paint-brush mr-1"></i> 油画风</div>
+                                <div class="select-option" data-value="水彩风"><i class="fas fa-tint mr-1"></i> 水彩风</div>
+                                <div class="select-option" data-value="赛博朋克"><i class="fas fa-robot mr-1"></i> 赛博朋克</div>
+                                <div class="select-option" data-value="未来主义"><i class="fas fa-rocket mr-1"></i> 未来主义</div>
+                                <div class="select-option" data-value="抽象艺术"><i class="fas fa-circle-notch mr-1"></i> 抽象艺术</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 输入栏 -->
+                <div class="flex items-end space-x-2">
+                    <div class="flex-1 relative">
+                        <textarea 
+                            id="messageInput" 
+                            rows="1" 
+                            placeholder="🎨 描述你的创意想象..." 
+                            class="w-full text-sm text-adaptive placeholder-gray-400 px-3 py-2 glass border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none max-h-20 transition-all duration-300"
+                            style="overflow-y: hidden;"
+                            maxlength="500"
+                        ></textarea>
+                        <div class="absolute bottom-1 right-1 text-xs text-adaptive-muted" id="charCount">0/500</div>
+                    </div>
+                    <button 
+                        id="sendBtn" 
+                        class="send-btn disabled:opacity-50 disabled:cursor-not-allowed text-white p-2 rounded-lg transition-all duration-300 glow min-w-[40px] h-[40px] flex items-center justify-center"
+                    >
+                        <i class="fas fa-paper-plane text-sm"></i>
+                    </button>
+                </div>
+                
+                <!-- 快捷提示 -->
+                <div class="mt-2 text-xs text-adaptive-muted text-center">
+                    <i class="fas fa-info-circle mr-1"></i> 按 Enter 发送 | Shift+Enter 换行 | JorkAI-Aria可能会犯错，请进行二次检查
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        const API_KEY = 'sk-9OiUODVwmax1pWQOu7tM40fYy2V2MKR7W2PxYNSPsKLStscK';
+        const API_BASE_URL = 'https://jeniya.cn';
+        
+        let currentChatId = Date.now().toString();
+        let chats = {};
+        let isGenerating = false;
+        let sidebarCollapsed = false;
+        let aspectRatioValue = '';
+        let artStyleValue = '';
+        let db;
+        let currentImageUrl = '';
+        let currentZoom = 1;
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let imageX = 0;
+        let imageY = 0;
+
+        // DOM元素
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const mainContent = document.getElementById('mainContent');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const chatHistory = document.getElementById('chatHistory');
+        const newChatBtn = document.getElementById('newChatBtn');
+        const chatContainer = document.getElementById('chatContainer');
+        const charCount = document.getElementById('charCount');
+        const collapseSidebarBtn = document.getElementById('collapseSidebarBtn');
+        const imageViewer = document.getElementById('imageViewer');
+        const imageViewerOverlay = document.getElementById('imageViewerOverlay');
+        const viewerImage = document.getElementById('viewerImage');
+        const zoomLevel = document.getElementById('zoomLevel');
+        const imageSize = document.getElementById('imageSize');
+        const imageTime = document.getElementById('imageTime');
+
+        // 初始化
+        initializeApp();
+        createParticles();
+        createNeuralNetwork();
+        initializeCustomSelects();
+        initializeStorage();
+        initializeImageViewer();
+
+        // 初始化图片查看器
+        function initializeImageViewer() {
+            viewerImage.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                if (e.deltaY < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            });
+
+            viewerImage.addEventListener('mousedown', (e) => {
+                if (currentZoom > 1) {
+                    isDragging = true;
+                    dragStartX = e.clientX - imageX;
+                    dragStartY = e.clientY - imageY;
+                    viewerImage.style.cursor = 'grabbing';
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    imageX = e.clientX - dragStartX;
+                    imageY = e.clientY - dragStartY;
+                    updateImageTransform();
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                viewerImage.style.cursor = currentZoom > 1 ? 'grab' : 'default';
+            });
+
+            viewerImage.addEventListener('touchstart', (e) => {
+                if (currentZoom > 1 && e.touches.length === 1) {
+                    isDragging = true;
+                    dragStartX = e.touches[0].clientX - imageX;
+                    dragStartY = e.touches[0].clientY - imageY;
+                }
+            });
+
+            viewerImage.addEventListener('touchmove', (e) => {
+                if (isDragging && e.touches.length === 1) {
+                    e.preventDefault();
+                    imageX = e.touches[0].clientX - dragStartX;
+                    imageY = e.touches[0].clientY - dragStartY;
+                    updateImageTransform();
+                }
+            });
+
+            viewerImage.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        }
+
+        function updateImageTransform() {
+            viewerImage.style.transform = `scale(${currentZoom}) translate(${imageX / currentZoom}px, ${imageY / currentZoom}px)`;
+        }
+
+        function zoomIn() {
+            if (currentZoom < 3) {
+                currentZoom = Math.min(currentZoom + 0.2, 3);
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > 0.5) {
+                currentZoom = Math.max(currentZoom - 0.2, 0.5);
+                updateZoom();
+            }
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            imageX = 0;
+            imageY = 0;
+            updateZoom();
+        }
+
+        function updateZoom() {
+            zoomLevel.textContent = Math.round(currentZoom * 100) + '%';
+            updateImageTransform();
+            viewerImage.style.cursor = currentZoom > 1 ? 'grab' : 'default';
+            
+            if (currentZoom > 1) {
+                viewerImage.classList.add('zoomed');
+            } else {
+                viewerImage.classList.remove('zoomed');
+            }
+        }
+
+        function openImageViewer(imageUrl, timestamp) {
+            currentImageUrl = imageUrl;
+            viewerImage.src = imageUrl;
+            
+            currentZoom = 1;
+            imageX = 0;
+            imageY = 0;
+            updateZoom();
+            
+            imageViewerOverlay.classList.add('show');
+            imageViewer.classList.add('show');
+            
+            const img = new Image();
+            img.onload = function() {
+                imageSize.textContent = `${this.naturalWidth} × ${this.naturalHeight}`;
+            };
+            img.src = imageUrl;
+            
+            imageTime.textContent = new Date(timestamp).toLocaleString('zh-CN');
+        }
+
+        function closeImageViewer() {
+            imageViewerOverlay.classList.remove('show');
+            imageViewer.classList.remove('show');
+        }
+
+        function openImageInNewTab() {
+            if (currentImageUrl) {
+                window.open(currentImageUrl, '_blank');
+            }
+        }
+
+        function downloadCurrentImage() {
+            if (currentImageUrl) {
+                downloadImage(currentImageUrl);
+            }
+        }
+
+        function initializeStorage() {
+            const request = indexedDB.open('JorkAI_ChatDB', 1);
+            
+            request.onerror = function() {
+                console.error('IndexedDB 打开失败，使用localStorage作为备选');
+                chats = JSON.parse(localStorage.getItem('jork_chats') || '{}');
+            };
+            
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                loadChatsFromDB();
+            };
+            
+            request.onupgradeneeded = function(event) {
+                db = event.target.result;
+                const objectStore = db.createObjectStore('chats', { keyPath: 'id' });
+                objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+            };
+        }
+
+        function loadChatsFromDB() {
+            if (!db) {
+                chats = JSON.parse(localStorage.getItem('jork_chats') || '{}');
+                loadChatHistory();
+                return;
+            }
+            
+            const transaction = db.transaction(['chats'], 'readonly');
+            const objectStore = transaction.objectStore('chats');
+            const request = objectStore.getAll();
+            
+            request.onsuccess = function(event) {
+                const chatArray = event.target.result;
+                chats = {};
+                chatArray.forEach(chat => {
+                    chats[chat.id] = chat;
+                });
+                loadChatHistory();
+                loadCurrentChat();
+            };
+        }
+
+        function saveChatToDB(chatData) {
+            if (!db) {
+                localStorage.setItem('jork_chats', JSON.stringify(chats));
+                return;
+            }
+            
+            const transaction = db.transaction(['chats'], 'readwrite');
+            const objectStore = transaction.objectStore('chats');
+            objectStore.put(chatData);
+        }
+
+        function initializeApp() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+                if (event.matches) {
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                }
+            });
+        }
+
+        function initializeCustomSelects() {
+            const aspectRatioSelect = document.getElementById('aspectRatioSelect');
+            const aspectRatioDropdown = document.getElementById('aspectRatioDropdown');
+            const aspectRatioValueSpan = document.getElementById('aspectRatioValue');
+            
+            const artStyleSelect = document.getElementById('artStyleSelect');
+            const artStyleDropdown = document.getElementById('artStyleDropdown');
+            const artStyleValueSpan = document.getElementById('artStyleValue');
+
+            aspectRatioSelect.addEventListener('click', (e) => {
+                e.stopPropagation();
+                aspectRatioSelect.classList.toggle('open');
+                aspectRatioDropdown.classList.toggle('show');
+                artStyleDropdown.classList.remove('show');
+                artStyleSelect.classList.remove('open');
+            });
+
+            aspectRatioDropdown.addEventListener('click', (e) => {
+                if (e.target.classList.contains('select-option')) {
+                    aspectRatioValue = e.target.dataset.value;
+                    aspectRatioValueSpan.textContent = e.target.textContent;
+                    aspectRatioDropdown.classList.remove('show');
+                    aspectRatioSelect.classList.remove('open');
+                }
+            });
+
+            artStyleSelect.addEventListener('click', (e) => {
+                e.stopPropagation();
+                artStyleSelect.classList.toggle('open');
+                artStyleDropdown.classList.toggle('show');
+                aspectRatioDropdown.classList.remove('show');
+                aspectRatioSelect.classList.remove('open');
+            });
+
+            artStyleDropdown.addEventListener('click', (e) => {
+                if (e.target.classList.contains('select-option')) {
+                    artStyleValue = e.target.dataset.value;
+                    artStyleValueSpan.innerHTML = e.target.innerHTML;
+                    artStyleDropdown.classList.remove('show');
+                    artStyleSelect.classList.remove('open');
+                }
+            });
+
+            document.addEventListener('click', () => {
+                aspectRatioDropdown.classList.remove('show');
+                aspectRatioSelect.classList.remove('open');
+                artStyleDropdown.classList.remove('show');
+                artStyleSelect.classList.remove('open');
+            });
+        }
+
+        collapseSidebarBtn.addEventListener('click', () => {
+            sidebarCollapsed = !sidebarCollapsed;
+            
+            if (sidebarCollapsed) {
+                sidebar.classList.remove('sidebar-expanded');
+                sidebar.classList.add('sidebar-collapsed');
+                mainContent.style.marginLeft = '80px';
+                
+                document.getElementById('sidebarTitle').style.opacity = '0';
+                document.getElementById('newChatText').style.opacity = '0';
+                document.getElementById('historyTitle').style.opacity = '0';
+                document.getElementById('sidebarFooter').style.opacity = '0';
+                
+                setTimeout(() => {
+                    document.getElementById('sidebarTitle').style.display = 'none';
+                    document.getElementById('newChatText').style.display = 'none';
+                    document.getElementById('historyTitle').style.display = 'none';
+                    document.getElementById('sidebarFooter').style.display = 'none';
+                }, 150);
+                
+            } else {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('sidebar-expanded');
+                mainContent.style.marginLeft = '320px';
+                
+                document.getElementById('sidebarTitle').style.display = 'block';
+                document.getElementById('newChatText').style.display = 'inline';
+                document.getElementById('historyTitle').style.display = 'block';
+                document.getElementById('sidebarFooter').style.display = 'block';
+                
+                setTimeout(() => {
+                    document.getElementById('sidebarTitle').style.opacity = '1';
+                    document.getElementById('newChatText').style.opacity = '1';
+                    document.getElementById('historyTitle').style.opacity = '1';
+                    document.getElementById('sidebarFooter').style.opacity = '1';
+                }, 150);
+            }
+        });
+
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        function createNeuralNetwork() {
+            const neuralBg = document.getElementById('neuralBg');
+            
+            for (let i = 0; i < 12; i++) {
+                const node = document.createElement('div');
+                node.className = 'neural-node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                node.style.animationDelay = Math.random() * 4 + 's';
+                neuralBg.appendChild(node);
+            }
+            
+            for (let i = 0; i < 6; i++) {
+                const line = document.createElement('div');
+                line.className = 'neural-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = Math.random() * 250 + 150 + 'px';
+                line.style.animationDelay = Math.random() * 6 + 's';
+                neuralBg.appendChild(line);
+            }
+        }
+
+        messageInput.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = `${count}/500`;
+            charCount.style.color = count > 450 ? '#ef4444' : (document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280');
+            
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 80) + 'px';
+        });
+
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function toggleSidebar() {
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            if (isOpen) {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            } else {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        newChatBtn.addEventListener('click', createNewChat);
+
+        async function sendMessage() {
+            const prompt = messageInput.value.trim();
+            if (!prompt || isGenerating || prompt.length > 500) return;
+
+            let fullPrompt = prompt;
+            
+            if (artStyleValue) {
+                fullPrompt += `，${artStyleValue}风格`;
+            }
+            if (aspectRatioValue) {
+                fullPrompt += `，${aspectRatioValue}比例`;
+            }
+
+            addMessage('user', prompt);
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            charCount.textContent = '0/500';
+
+            isGenerating = true;
+            sendBtn.disabled = true;
+            showOptimizedProgress();
+
+            const loadingId = addMessage('ai', '🎨 AI正在创作中...', true);
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+                const response = await fetch(`${API_BASE_URL}/v1/images/generations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'dall-e-3',
+                        prompt: fullPrompt,
+                        n: 1,
+                        size: '1024x1024',
+                        quality: 'standard'
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error?.message || `HTTP错误: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.data && data.data.length > 0) {
+                    removeMessage(loadingId);
+                    addImageMessage(data.data[0].url, fullPrompt);
+                } else {
+                    throw new Error('API返回数据格式错误');
+                }
+
+            } catch (error) {
+                console.error('Error:', error);
+                removeMessage(loadingId);
+                
+                if (error.name === 'AbortError') {
+                    addMessage('ai', `⏰ 生成超时，请稍后重试`, false, true);
+                } else {
+                    addMessage('ai', `😔 创作遇到了问题: ${error.message}`, false, true);
+                }
+            } finally {
+                isGenerating = false;
+                sendBtn.disabled = false;
+                hideProgress();
+                saveCurrentChat();
+            }
+        }
+
+        function showOptimizedProgress() {
+            progressContainer.classList.remove('hidden');
+            let progress = 0;
+            const phases = [
+                { target: 20, time: 500 },
+                { target: 45, time: 1000 },
+                { target: 70, time: 2000 },
+                { target: 90, time: 1000 }
+            ];
+            
+            let currentPhase = 0;
+            
+            function updateProgress() {
+                if (currentPhase >= phases.length) return;
+                
+                const phase = phases[currentPhase];
+                const startProgress = progress;
+                const increment = (phase.target - startProgress) / (phase.time / 100);
+                
+                const interval = setInterval(() => {
+                    progress += increment;
+                    progressBar.style.width = Math.min(progress, phase.target) + '%';
+                    
+                    if (progress >= phase.target) {
+                        clearInterval(interval);
+                        currentPhase++;
+                        if (currentPhase < phases.length) {
+                            updateProgress();
+                        }
+                    }
+                }, 100);
+            }
+            
+            updateProgress();
+        }
+
+        function addMessage(sender, content, isLoading = false, isError = false) {
+            const messageId = Date.now() + Math.random();
+            const isUser = sender === 'user';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex ${isUser ? 'justify-end' : 'justify-start'} message-enter`;
+            messageDiv.id = `message-${messageId}`;
+            
+            const bgClass = isUser ? 'bg-gradient-to-r from-indigo-500 to-purple-600' : 'glass';
+            const textClass = isUser ? 'text-white' : 'text-adaptive';
+            const roundingClass = isUser ? 'rounded-br-md' : 'rounded-bl-md';
+            const errorClass = isError ? 'border-red-400 bg-red-100 dark:bg-red-900 bg-opacity-50' : '';
+            const loadingClass = isLoading ? 'typing' : '';
+            
+            const avatar = isUser ? 
+                '<div class="w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center text-xs font-bold shadow-lg"><i class="fas fa-user text-white"></i></div>' :
+                '<div class="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold shadow-lg"><i class="fas fa-robot text-white"></i></div>';
+            
+            const name = isUser ? '你' : 'JorkAI-Aria';
+            const role = isUser ? '创意者' : 'AI助手';
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-md lg:max-w-lg">
+                    <div class="${bgClass} ${errorClass} rounded-xl ${roundingClass} p-3 hover-lift shadow-xl">
+                        ${!isUser ? `
+                            <div class="flex items-center space-x-2 mb-2">
+                                ${avatar}
+                                <div>
+                                    <span class="text-sm font-semibold ${isUser ? 'text-white' : 'gradient-text'}">${name}</span>
+                                    <p class="text-xs text-adaptive-muted">${role}</p>
+                                </div>
+                            </div>
+                        ` : ''}
+                        <p class="text-sm ${textClass} leading-relaxed ${loadingClass}">
+                            ${content}
+                        </p>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+            
+            return messageId;
+        }
+
+        function addImageMessage(imageUrl, prompt) {
+            const messageId = Date.now() + Math.random();
+            const timestamp = Date.now();
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'flex justify-start message-enter';
+            messageDiv.id = `message-${messageId}`;
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-lg lg:max-w-xl">
+                    <div class="glass rounded-xl rounded-bl-md p-3 hover-lift shadow-xl">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <div class="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+                                <i class="fas fa-robot text-white"></i>
+                            </div>
+                            <div>
+                                <span class="text-sm font-semibold gradient-text">JorkAI-Aria</span>
+                                <p class="text-xs text-adaptive-muted">AI艺术家</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="relative overflow-hidden rounded-lg shadow-2xl cursor-pointer" onclick="openImageViewer('${imageUrl}', ${timestamp})">
+                                <img src="${imageUrl}" alt="AI生成的艺术作品" class="w-full image-reveal hover:scale-105 transition-transform duration-300" loading="lazy">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black from-opacity-20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                    <i class="fas fa-expand text-white text-2xl"></i>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button onclick="regenerateImage('${prompt}')" class="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-orange-500 hover:to-red-500 text-white px-2 py-1 rounded-md transition-all duration-300 hover-lift text-xs font-medium shadow-lg">
+                                    <i class="fas fa-redo mr-1"></i>重新创作
+                                </button>
+                                <button onclick="shareImage('${imageUrl}')" class="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-rose-500 hover:to-red-500 text-white px-2 py-1 rounded-md transition-all duration-300 hover-lift text-xs font-medium shadow-lg">
+                                    <i class="fas fa-share mr-1"></i>分享
+                                </button>
+                            </div>
+                            <div class="text-xs text-adaptive-muted bg-gray-100 dark:bg-gray-800 bg-opacity-50 rounded-md p-2">
+                                <span class="font-medium"><i class="fas fa-quote-left mr-1"></i>提示词:</span> ${prompt}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function removeMessage(messageId) {
+            const element = document.getElementById(`message-${messageId}`);
+            if (element) {
+                element.style.animation = 'messageSlideOut 0.3s ease-in forwards';
+                setTimeout(() => element.remove(), 300);
+            }
+        }
+
+        async function downloadImage(imageUrl) {
+            try {
+                const response = await fetch(imageUrl);
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `jork-ai-masterpiece-${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+                
+                showNotification('🎉 艺术作品已保存！');
+            } catch (error) {
+                console.error('Download error:', error);
+                showNotification('😔 下载失败，请手动保存', 'error');
+            }
+        }
+
+        function regenerateImage(prompt) {
+            messageInput.value = prompt;
+            sendMessage();
+        }
+
+        function shareImage(imageUrl) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'JorkAI-Aria 创作的艺术品',
+                    text: '看看这个AI生成的作品！',
+                    url: imageUrl
+                });
+            } else {
+                navigator.clipboard.writeText(imageUrl).then(() => {
+                    showNotification('🔗 链接已复制！');
+                });
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 glass rounded-lg p-2 text-adaptive transition-all duration-300 transform translate-x-full ${type === 'error' ? 'border-red-400' : 'border-green-400'}`;
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2 text-sm">
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="text-adaptive-muted hover:text-adaptive">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        function hideProgress() {
+            progressBar.style.width = '100%';
+            setTimeout(() => {
+                progressContainer.classList.add('hidden');
+                progressBar.style.width = '0%';
+            }, 500);
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 100);
+        }
+
+        function createNewChat() {
+            saveCurrentChat();
+            currentChatId = Date.now().toString();
+            messagesContainer.innerHTML = `
+                <div class="flex justify-start message-enter">
+                    <div class="max-w-md">
+                        <div class="glass rounded-xl rounded-bl-md p-3 hover-lift">
+                            <div class="flex items-center space-x-2 mb-2">
+                                <div class="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-xs font-bold shadow-lg">
+                                    <i class="fas fa-robot text-white"></i>
+                                </div>
+                                <div>
+                                    <span class="text-sm font-semibold gradient-text">JorkAI-Aria</span>
+                                    <p class="text-xs text-adaptive-muted">AI创意助手</p>
+                                </div>
+                            </div>
+                            <p class="text-adaptive leading-relaxed text-sm">
+                                <i class="fas fa-magic mr-1 text-indigo-500"></i> 欢迎来到未来！我是JorkAI-Aria，你的专属AI创意伙伴。
+                                <br><br>
+                                <i class="fas fa-palette mr-1 text-purple-500"></i> 描述你的想象，我将为你创造出令人惊叹的视觉艺术作品！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            loadChatHistory();
+            if (window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+
+        function saveCurrentChat() {
+            const messages = Array.from(messagesContainer.children).map(msg => msg.outerHTML);
+            if (messages.length > 1) {
+                const chatData = {
+                    id: currentChatId,
+                    title: getFirstUserMessage() || '新的创作',
+                    messages: messages,
+                    timestamp: Date.now()
+                };
+                chats[currentChatId] = chatData;
+                saveChatToDB(chatData);
+            }
+        }
+
+        function loadCurrentChat() {
+            if (chats[currentChatId]) {
+                messagesContainer.innerHTML = chats[currentChatId].messages.join('');
+                scrollToBottom();
+            }
+        }
+
+        function loadChatHistory() {
+            const sortedChats = Object.values(chats).sort((a, b) => b.timestamp - a.timestamp);
+            const historyHTML = sortedChats.map(chat => {
+                const title = sidebarCollapsed ? '' : `
+                    <div class="text-sm font-semibold text-adaptive truncate mb-1">${chat.title}</div>
+                    <div class="text-xs text-adaptive-muted">
+                        <i class="fas fa-clock mr-1"></i> ${new Date(chat.timestamp).toLocaleDateString('zh-CN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                `;
+                
+                return `
+                    <div class="glass p-2 hover:bg-gray-100 dark:hover:bg-gray-700 hover:bg-opacity-50 rounded-lg cursor-pointer transition-all duration-300 hover-lift ${chat.id === currentChatId ? 'bg-gray-100 dark:bg-gray-700 bg-opacity-50' : ''}" onclick="loadChat('${chat.id}')" title="${sidebarCollapsed ? chat.title : ''}">
+                        ${sidebarCollapsed ? 
+                            '<div class="text-center"><i class="fas fa-image text-sm text-adaptive"></i></div>' : 
+                            title
+                        }
+                    </div>
+                `;
+            }).join('');
+            
+            chatHistory.innerHTML = historyHTML;
+        }
+
+        function loadChat(chatId) {
+            saveCurrentChat();
+            currentChatId = chatId;
+            loadCurrentChat();
+            loadChatHistory();
+            if (window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+
+        function getFirstUserMessage() {
+            const userMessages = messagesContainer.querySelectorAll('.justify-end');
+            if (userMessages.length > 0) {
+                const firstMessage = userMessages[0].querySelector('p');
+                return firstMessage ? firstMessage.textContent.substring(0, 15) + '...' : '新的创作';
+            }
+            return null;
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024 && !sidebarCollapsed) {
+                mainContent.style.marginLeft = '320px';
+            } else if (window.innerWidth >= 1024 && sidebarCollapsed) {
+                mainContent.style.marginLeft = '80px';
+            } else {
+                mainContent.style.marginLeft = '0';
+            }
+        });
+
+        window.addEventListener('beforeunload', saveCurrentChat);
+    </script>
+</body>
+</html>

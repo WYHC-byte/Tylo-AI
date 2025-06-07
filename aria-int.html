@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JorkAI-Aria | 下一代AI文生图模型</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .dark .gradient-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, 
+                rgba(103, 126, 234, 0.1) 0%, 
+                rgba(118, 75, 162, 0.1) 100%);
+        }
+        
+        .dark .hero-gradient {
+            background: linear-gradient(135deg, 
+                rgba(26, 26, 46, 0.8) 0%, 
+                rgba(22, 33, 62, 0.8) 50%, 
+                rgba(15, 52, 96, 0.8) 100%);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(20px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass-effect {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .floating {
+            animation: floating 6s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 1s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: particles 8s linear infinite;
+        }
+        
+        .dark .particle {
+            background: rgba(103, 126, 234, 0.6);
+        }
+        
+        @keyframes particles {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(103, 126, 234, 0.5);
+        }
+        
+        .dark .glow {
+            box-shadow: 0 0 30px rgba(103, 126, 234, 0.7);
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .feature-card:hover {
+            box-shadow: 0 20px 40px rgba(103, 126, 234, 0.2);
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(103, 126, 234, 0.4);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .demo-placeholder {
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            min-height: 200px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark .demo-placeholder {
+            background: linear-gradient(45deg, #2a2a2a, #1a1a1a);
+        }
+        
+        .demo-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white overflow-x-hidden">
+    <!-- 粒子背景 -->
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 w-full z-50 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="text-2xl font-bold text-gradient">JorkAI-Aria</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#features" class="hover:text-blue-500 transition-colors">特性</a>
+                    <a href="#demo" class="hover:text-blue-500 transition-colors">演示</a>
+                    <a href="login.html" class="hover:text-blue-500 transition-colors">免费开始</a>
+                    <a href="#contact" class="hover:text-blue-500 transition-colors">联系</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="min-h-screen flex items-center justify-center hero-gradient relative">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+            <div class="fade-in" style="animation-delay: 0.2s;">
+                <h1 class="text-6xl md:text-8xl font-bold mb-6">
+                    <span class="text-gradient">JorkAI</span>
+                    <br>
+                    <span class="text-gradient">Aria</span>
+                </h1>
+            </div>
+            
+            <div class="slide-up" style="animation-delay: 0.4s;">
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+                    革命性的AI文生图模型，将您的想象力转化为令人惊叹的视觉艺术作品
+                </p>
+            </div>
+            
+            <div class="slide-up" style="animation-delay: 0.6s;">
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button id="tryNowBtn" class="primary-btn text-white px-8 py-4 rounded-full font-semibold text-lg glow">
+                        立即体验
+                    </button>
+                    <button class="glass-effect px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:bg-opacity-20 transition-all">
+                        查看演示
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 浮动元素 -->
+            <div class="floating absolute top-20 left-10 w-20 h-20 bg-blue-500 rounded-full opacity-20"></div>
+            <div class="floating absolute bottom-20 right-10 w-16 h-16 bg-purple-500 rounded-full opacity-20" style="animation-delay: 2s;"></div>
+            <div class="floating absolute top-1/2 right-20 w-12 h-12 bg-pink-500 rounded-full opacity-20" style="animation-delay: 4s;"></div>
+        </div>
+    </section>
+
+    <!-- 特性展示 -->
+    <section id="features" class="py-20 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gradient mb-6">强大特性</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    JorkAI-Aria集成了最前沿的AI技术，为您提供无与伦比的图像生成体验
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card glass-effect rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl">🎨</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">超高画质</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        支持4K+分辨率输出，每个细节都精益求精，呈现摄影级别的图像质量
+                    </p>
+                </div>
+                
+                <div class="feature-card glass-effect rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl">⚡</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">极速生成</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        先进的优化算法，平均生成时间仅需3-5秒，让创意不再等待
+                    </p>
+                </div>
+                
+                <div class="feature-card glass-effect rounded-2xl p-8 text-center">
+                    <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-blue-600 rounded-full mx-auto mb-6 flex items-center justify-center">
+                        <span class="text-2xl">🧠</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">智能理解</h3>
+                    <p class="text-gray-600 dark:text-gray-300">
+                        深度语义理解，支持复杂的中文描述，准确捕捉您的创意意图
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 演示区域 -->
+    <section id="demo" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gradient mb-6">精彩演示</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    探索JorkAI-Aria的无限可能性
+                </p>
+            </div>
+            
+            <!-- 交互式演示 -->
+            <div class="glass-effect rounded-2xl p-8 mb-12">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold mb-4">实时体验</h3>
+                    <p class="text-gray-600 dark:text-gray-300">输入您的创意描述，见证AI的魔法</p>
+                </div>
+                
+                <div class="max-w-2xl mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <input 
+                            id="promptInput" 
+                            type="text" 
+                            placeholder="描述您想要生成的图像..." 
+                            class="flex-1 px-4 py-3 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                        <button 
+                            id="generateBtn" 
+                            class="primary-btn text-white px-6 py-3 rounded-full font-semibold whitespace-nowrap"
+                        >
+                            生成图像
+                        </button>
+                    </div>
+                    
+                    <div id="generationStatus" class="text-center text-gray-600 dark:text-gray-300 mb-4 hidden">
+                        <div class="inline-flex items-center">
+                            <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                            正在生成中...
+                        </div>
+                    </div>
+                    
+                    <div id="generatedImageContainer" class="hidden">
+                        <img id="generatedImage" class="w-full rounded-xl shadow-lg" alt="Generated Image">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 示例画廊 -->
+            <div class="demo-grid">
+                <div class="demo-placeholder rounded-xl flex items-center justify-center">
+                    <span class="text-gray-500 dark:text-gray-400 font-medium">示例图片 1</span>
+                </div>
+                <div class="demo-placeholder rounded-xl flex items-center justify-center">
+                    <span class="text-gray-500 dark:text-gray-400 font-medium">示例图片 2</span>
+                </div>
+                <div class="demo-placeholder rounded-xl flex items-center justify-center">
+                    <span class="text-gray-500 dark:text-gray-400 font-medium">示例图片 3</span>
+                </div>
+                <div class="demo-placeholder rounded-xl flex items-center justify-center">
+                    <span class="text-gray-500 dark:text-gray-400 font-medium">示例图片 4</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API文档 -->
+    <section id="api" class="py-20 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold text-gradient mb-6">开发者API</h2>
+                <p class="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                    强大而简洁的API接口，轻松集成到您的应用中
+                </p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">快速开始</h3>
+                    <div class="glass-effect rounded-xl p-6 mb-6">
+                        <pre class="text-sm text-gray-700 dark:text-gray-300 overflow-x-auto"><code>curl -X POST https://api.jorkai.com/v1/generate \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "一只可爱的橘猫在花园里玩耍",
+    "style": "realistic",
+    "resolution": "1024x1024"
+  }'</code></pre>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>RESTful API设计</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>支持多种编程语言</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>完整的错误处理</span>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                            <span>实时状态反馈</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-bold mb-6">技术规格</h3>
+                    <div class="space-y-6">
+                        <div class="glass-effect rounded-xl p-6">
+                            <h4 class="font-semibold mb-3">支持格式</h4>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div>• JPEG</div>
+                                <div>• PNG</div>
+                                <div>• WebP</div>
+                                <div>• SVG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-effect rounded-xl p-6">
+                            <h4 class="font-semibold mb-3">分辨率选项</h4>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div>• 512x512</div>
+                                <div>• 1024x1024</div>
+                                <div>• 2048x2048</div>
+                                <div>• 自定义</div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-effect rounded-xl p-6">
+                            <h4 class="font-semibold mb-3">风格预设</h4>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div>• 写实主义</div>
+                                <div>• 动漫风格</div>
+                                <div>• 水彩画</div>
+                                <div>• 抽象艺术</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="py-20">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold text-gradient mb-6">开始您的创意之旅</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                准备好体验下一代AI图像生成技术了吗？立即开始使用JorkAI-Aria
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <button class="primary-btn text-white px-8 py-4 rounded-full font-semibold text-lg glow">
+                    免费试用
+                </button>
+                <button class="glass-effect px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:bg-opacity-20 transition-all">
+                    查看定价
+                </button>
+            </div>
+            
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="text-2xl font-bold text-gradient">99.9%</div>
+                    <div class="text-gray-600 dark:text-gray-300">服务可用性</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-gradient">3秒</div>
+                    <div class="text-gray-600 dark:text-gray-300">平均生成时间</div>
+                </div>
+                <div>
+                    <div class="text-2xl font-bold text-gradient">100万+</div>
+                    <div class="text-gray-600 dark:text-gray-300">用户信赖</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-900 dark:bg-black text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="text-3xl font-bold text-gradient mb-4">JorkAI-Aria</div>
+                <p class="text-gray-400 mb-6">让AI重新定义视觉创作的边界</p>
+                <div class="flex justify-center space-x-6 text-sm text-gray-400">
+                    <a href="#" class="hover:text-white transition-colors">隐私政策</a>
+                    <a href="#" class="hover:text-white transition-colors">服务条款</a>
+                    <a href="#" class="hover:text-white transition-colors">技术支持</a>
+                    <a href="#" class="hover:text-white transition-colors">开发者文档</a>
+                </div>
+                <div class="mt-6 text-xs text-gray-500">
+                    © 2024 JorkAI. 保留所有权利。
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 深色模式检测
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // 粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = Math.random() * 8 + 8 + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 平滑滚动
+        function smoothScroll(target) {
+            const element = document.querySelector(target);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // 添加导航链接点击事件
+        document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                smoothScroll(link.getAttribute('href'));
+            });
+        });
+
+        // 图像生成功能
+        async function generateImage() {
+            const promptInput = document.getElementById('promptInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const generationStatus = document.getElementById('generationStatus');
+            const imageContainer = document.getElementById('generatedImageContainer');
+            const generatedImage = document.getElementById('generatedImage');
+            
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                alert('请输入图像描述');
+                return;
+            }
+            
+            // 显示加载状态
+            generateBtn.disabled = true;
+            generateBtn.textContent = '生成中...';
+            generationStatus.classList.remove('hidden');
+            imageContainer.classList.add('hidden');
+            
+            try {
+                // 使用 Poe API 生成图像
+                if (window.Poe && window.Poe.sendUserMessage) {
+                    // 注册响应处理器
+                    window.Poe.registerHandler("image-generation", (result) => {
+                        const msg = result.responses[0];
+                        
+                        if (msg.status === "error") {
+                            generationStatus.textContent = "生成失败: " + (msg.statusText || "未知错误");
+                            generationStatus.classList.add('text-red-500');
+                        } else if (msg.status === "complete") {
+                            generationStatus.classList.add('hidden');
+                            
+                            if (msg.attachments && msg.attachments.length > 0) {
+                                const imageAttachment = msg.attachments[0];
+                                generatedImage.src = imageAttachment.url;
+                                imageContainer.classList.remove('hidden');
+                            } else {
+                                generationStatus.textContent = "未生成图像";
+                                generationStatus.classList.remove('hidden');
+                                generationStatus.classList.add('text-yellow-500');
+                            }
+                        }
+                        
+                        // 重置按钮状态
+                        generateBtn.disabled = false;
+                        generateBtn.textContent = '生成图像';
+                    });
+                    
+                    // 发送生成请求
+                    await window.Poe.sendUserMessage(
+                        `@GPT-Image-1 ${prompt}`,
+                        {
+                            handler: "image-generation",
+                            stream: false,
+                            openChat: false
+                        }
+                    );
+                } else {
+                    throw new Error('Poe API 不可用');
+                }
+            } catch (error) {
+                console.error('图像生成错误:', error);
+                generationStatus.textContent = '生成失败，请稍后重试';
+                generationStatus.classList.add('text-red-500');
+                generationStatus.classList.remove('hidden');
+                
+                generateBtn.disabled = false;
+                generateBtn.textContent = '生成图像';
+            }
+        }
+
+        // 绑定生成按钮事件
+        document.getElementById('generateBtn').addEventListener('click', generateImage);
+        
+        // 回车键生成
+        document.getElementById('promptInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                generateImage();
+            }
+        });
+
+        // 体验按钮点击事件
+        document.getElementById('tryNowBtn').addEventListener('click', () => {
+            smoothScroll('#demo');
+        });
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            // 添加滚动动画观察器
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // 观察所有卡片元素
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'all 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

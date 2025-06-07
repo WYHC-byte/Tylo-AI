@@ -475,7 +475,7 @@
             background-color: white;
             border-radius: 0.5rem;
             padding: 1.5rem;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
@@ -589,6 +589,337 @@
             background-color: #4a49b1;
         }
         
+        /* Suggested follow-up questions */
+        .follow-up-questions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .follow-up-question {
+            background-color: #f3f4f6;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+        
+        .follow-up-question:hover {
+            background-color: #e5e7eb;
+            border-color: #d1d5db;
+        }
+        
+        .dark .follow-up-question {
+            background-color: #374151;
+            border-color: #4b5563;
+        }
+        
+        .dark .follow-up-question:hover {
+            background-color: #4b5563;
+            border-color: #6b7280;
+        }
+        
+        /* Thinking visualization */
+        .thinking-visualization {
+            background-color: #f9fafb;
+            border-left: 3px solid #5D5CDE;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        
+        .dark .thinking-visualization {
+            background-color: #111827;
+        }
+        
+        .thinking-step {
+            margin-bottom: 1rem;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .thinking-step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .thinking-step-header {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #5D5CDE;
+        }
+        
+        .dark .thinking-step-header {
+            color: #818cf8;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Style selector */
+        .style-selector {
+            position: relative;
+            min-width: 160px;
+        }
+        
+        .style-selector .dropdown-option {
+            display: flex;
+            align-items: center;
+        }
+        
+        .style-selector .dropdown-option i {
+            margin-right: 0.5rem;
+            width: 1rem;
+            text-align: center;
+        }
+        
+        /* Model badge styles */
+        .model-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.375rem;
+            margin-left: 0.5rem;
+        }
+        
+        .model-badge.epist {
+            background-color: #dbeafe;
+            color: #3b82f6;
+        }
+        
+        .dark .model-badge.epist {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+        
+        .model-badge.trax {
+            background-color: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .dark .model-badge.trax {
+            background-color: #14532d;
+            color: #86efac;
+        }
+
+        .model-badge.aria {
+            background-color: #fdf2f8;
+            color: #ec4899;
+        }
+        
+        .dark .model-badge.aria {
+            background-color: #831843;
+            color: #f9a8d4;
+        }
+        
+        /* Continue generation button */
+        .continue-generation {
+            background-color: #dbeafe;
+            color: #3b82f6;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .continue-generation:hover {
+            background-color: #bfdbfe;
+        }
+        
+        .dark .continue-generation {
+            background-color: #1e3a8a;
+            color: #93c5fd;
+        }
+        
+        .dark .continue-generation:hover {
+            background-color: #1e40af;
+        }
+
+        /* Generated image styling */
+        .generated-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .generated-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Image viewer styles */
+        .image-viewer-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background-color: white;
+            border-left: 1px solid #e2e8f0;
+            z-index: 40;
+            display: flex;
+            flex-direction: column;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dark .image-viewer-container {
+            background-color: #1F2937;
+            border-color: #374151;
+        }
+        
+        .image-viewer-container.active {
+            transform: translateX(0);
+        }
+        
+        .image-viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .dark .image-viewer-header {
+            border-color: #374151;
+        }
+        
+        .image-viewer-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            overflow: auto;
+        }
+
+        .image-viewer-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 0.5rem;
+        }
+        
+        .image-viewer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .dark .image-viewer-controls {
+            border-color: #374151;
+        }
+
+        /* Image generation progress styles */
+        .image-generation-progress {
+            background-color: #fdf2f8;
+            border: 1px solid #ec4899;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .dark .image-generation-progress {
+            background-color: #831843;
+            border-color: #ec4899;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #ec4899;
+        }
+
+        .dark .progress-header {
+            color: #f9a8d4;
+        }
+
+        .progress-icon {
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .progress-text {
+            color: #7c2d12;
+            line-height: 1.5;
+        }
+
+        .dark .progress-text {
+            color: #fed7aa;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background-color: #fce7f3;
+            border-radius: 2px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .dark .progress-bar {
+            background-color: #9d174d;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #ec4899;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            animation: progress-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes progress-pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Membership upgrade modal styles */
+        .qr-code-container {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .qr-code-image {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+        }
+
+        .dark .qr-code-image {
+            border-color: #374151;
+            background-color: #374151;
+            color: #9ca3af;
+        }
+        
         /* Dark mode support */
         @media (prefers-color-scheme: dark) {
             .dark\:bg-gray-900 {
@@ -670,10 +1001,10 @@
             <div class="max-w-4xl mx-auto">
                 <!-- Initial view -->
                 <div id="initialView" class="flex flex-col items-center justify-center mt-8">
-                    <div class="bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 flex items-center space-x-2 mb-4">
+                    <div id="planStatus" class="bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 flex items-center space-x-2 mb-4">
                         <span class="text-gray-600 dark:text-gray-300">免费计划</span>
                         <span>•</span>
-                        <a href="#" class="text-blue-500 hover:text-blue-600">升级</a>
+                        <a href="#" id="upgradeLink" class="text-blue-500 hover:text-blue-600">升级</a>
                     </div>
                     <div class="text-3xl font-semibold mb-8 flex items-center">
                         <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9NAHBHbG_tj_AFFrJGCKAWEPDRtvFL28sug&s" alt="Logo" class="w-8 h-8 mr-2 rounded-full object-cover"> <span id="timeGreeting">准备就绪</span>
@@ -695,9 +1026,25 @@
                                     <button id="uploadButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md">
                                         <i class="fas fa-plus"></i>
                                     </button>
-                                    <button class="p-2 text-gray-400 ml-1">
-                                        <i class="fas fa-feather"></i>
-                                    </button>
+                                    <div id="styleSelector" class="custom-dropdown style-selector">
+                                        <button class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 ml-1">
+                                            <i class="fas fa-feather"></i>
+                                        </button>
+                                        <div class="dropdown-options">
+                                            <div class="dropdown-option selected" data-value="normal">
+                                                <i class="fas fa-comment"></i>正常语气
+                                            </div>
+                                            <div class="dropdown-option" data-value="concise">
+                                                <i class="fas fa-list"></i>简洁语气
+                                            </div>
+                                            <div class="dropdown-option" data-value="formal">
+                                                <i class="fas fa-user-tie"></i>正式语气
+                                            </div>
+                                            <div class="dropdown-option" data-value="explanatory">
+                                                <i class="fas fa-chalkboard-teacher"></i>解释性语气
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="flex items-center">
                                     <div id="modelSelector" class="custom-dropdown mr-2">
@@ -707,7 +1054,8 @@
                                         </div>
                                         <div class="dropdown-options">
                                             <div class="dropdown-option selected" data-value="Jork-Epist-4">Jork-Epist-4</div>
-                                            <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4</div>
+                                            <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4 <span class="model-badge trax">深度思考</span></div>
+                                            <div class="dropdown-option" data-value="Aria">Aria <span class="model-badge aria">文生图</span></div>
                                         </div>
                                     </div>
                                     <button id="sendButton" class="bg-orange-200 text-orange-600 p-2 rounded-md">
@@ -754,12 +1102,25 @@
                             <button id="replyUploadButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md">
                                 <i class="fas fa-plus"></i>
                             </button>
-                            <button id="webSearchButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md ml-1" title="联网搜索">
-                                <i class="fas fa-search"></i>
-                            </button>
-                            <button id="deepThinkingButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 rounded-md ml-1" title="深度思考">
-                                <i class="fas fa-brain"></i>
-                            </button>
+                            <div id="replyStyleSelector" class="custom-dropdown style-selector">
+                                <button class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 ml-1">
+                                    <i class="fas fa-feather"></i>
+                                </button>
+                                <div class="dropdown-options">
+                                    <div class="dropdown-option selected" data-value="normal">
+                                        <i class="fas fa-comment"></i>正常语气
+                                    </div>
+                                    <div class="dropdown-option" data-value="concise">
+                                        <i class="fas fa-list"></i>简洁语气
+                                    </div>
+                                    <div class="dropdown-option" data-value="formal">
+                                        <i class="fas fa-user-tie"></i>正式语气
+                                    </div>
+                                    <div class="dropdown-option" data-value="explanatory">
+                                        <i class="fas fa-chalkboard-teacher"></i>解释性语气
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="flex items-center">
                             <div id="replyModelSelector" class="custom-dropdown mr-2">
@@ -769,7 +1130,8 @@
                                 </div>
                                 <div class="dropdown-options">
                                     <div class="dropdown-option selected" data-value="Jork-Epist-4">Jork-Epist-4</div>
-                                    <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4</div>
+                                    <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4 <span class="model-badge trax">深度思考</span></div>
+                                    <div class="dropdown-option" data-value="Aria">Aria <span class="model-badge aria">文生图</span></div>
                                 </div>
                             </div>
                             <button id="replySendButton" class="bg-orange-200 text-orange-600 p-2 rounded-md">
@@ -809,6 +1171,44 @@
         </div>
     </div>
     
+    <!-- Membership upgrade modal (hidden by default) -->
+    <div id="membershipModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium">升级到Pro计划</h3>
+                <button id="closeMembershipModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="qr-code-container">
+                <div class="qr-code-image">
+                    <img src="wd.jpg" alt="QR Code" class="w-full h-full object-cover rounded" />
+                </div>
+            </div>
+            
+            <p class="mb-4 text-center text-sm text-gray-600 dark:text-gray-400">扫描二维码或使用会员兑换码升级到Pro计划</p>
+            
+            <input id="membershipCodeInput" type="text" placeholder="输入会员兑换码" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md mb-4 bg-white dark:bg-gray-800 text-base">
+            
+            <div class="flex justify-end mb-4">
+                <button id="cancelMembershipBtn" class="px-4 py-2 mr-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
+                    取消
+                </button>
+                <button id="upgradeMembershipBtn" class="px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors">
+                    升级
+                </button>
+            </div>
+            
+            <div id="membershipResult" class="mt-3 text-center hidden"></div>
+            
+            <div class="text-xs text-gray-500 dark:text-gray-400 mt-4 space-y-1">
+                <p>继续，即表示您同意使用政策（<a href="PrivacyPolicy.html" class="text-blue-500 hover:underline">PrivacyPolicy.html</a>）。</p>
+                <p class="mt-2"><strong>注意：</strong>如果您注册后又变回了普通计划，那么这个情况通常是您注册时开启了无痕模式/注册后清理了历史记录。发生这种情况后，您可以再次使用您使用过的兑换码。但是当您处于Pro计划时，您无法使用您使用过的兑换码。</p>
+            </div>
+        </div>
+    </div>
+    
     <!-- Ask JorkAI button (positioned via JS) -->
     <div id="askJorkButton" class="fixed bg-orange-200 text-orange-600 px-3 py-1.5 rounded-full shadow-lg z-50 flex items-center cursor-pointer hover:bg-orange-300 transition-colors hidden">
         <i class="fas fa-question-circle mr-2"></i>提问JorkAI
@@ -840,6 +1240,29 @@
             </button>
             <button id="updateCodeButton" class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors ml-2">
                 <i class="fas fa-save mr-1"></i>保存修改
+            </button>
+        </div>
+    </div>
+
+    <!-- Image viewer container (initially hidden) -->
+    <div id="imageViewerContainer" class="image-viewer-container">
+        <div class="image-viewer-header">
+            <h3 class="font-medium">图片查看器</h3>
+            <div class="flex space-x-2">
+                <button id="closeImageViewerButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="image-viewer-content">
+            <img id="imageViewerImage" class="image-viewer-image" src="" alt="Generated Image">
+        </div>
+        <div class="image-viewer-controls">
+            <button id="openImageNewTabButton" class="px-4 py-2 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors">
+                <i class="fas fa-external-link-alt mr-2"></i>在新标签页打开
+            </button>
+            <button id="downloadImageButton" class="px-4 py-2 bg-green-100 text-green-600 rounded hover:bg-green-200 transition-colors">
+                <i class="fas fa-download mr-2"></i>下载图片
             </button>
         </div>
     </div>
@@ -957,6 +1380,49 @@
                     hideAskButton();
                 }
             });
+        }
+
+        // Image viewer functionality
+        function setupImageViewer() {
+            const imageViewerContainer = document.getElementById('imageViewerContainer');
+            const imageViewerImage = document.getElementById('imageViewerImage');
+            const closeImageViewerButton = document.getElementById('closeImageViewerButton');
+            const openImageNewTabButton = document.getElementById('openImageNewTabButton');
+            const downloadImageButton = document.getElementById('downloadImageButton');
+            
+            // Close image viewer
+            closeImageViewerButton.addEventListener('click', () => {
+                imageViewerContainer.classList.remove('active');
+            });
+            
+            // Open image in new tab
+            openImageNewTabButton.addEventListener('click', () => {
+                const imageUrl = imageViewerImage.src;
+                if (imageUrl) {
+                    window.open(imageUrl, '_blank');
+                }
+            });
+            
+            // Download image
+            downloadImageButton.addEventListener('click', () => {
+                const imageUrl = imageViewerImage.src;
+                if (imageUrl) {
+                    const link = document.createElement('a');
+                    link.href = imageUrl;
+                    link.download = 'generated-image.png';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            });
+        }
+
+        function openImageViewer(imageUrl) {
+            const imageViewerContainer = document.getElementById('imageViewerContainer');
+            const imageViewerImage = document.getElementById('imageViewerImage');
+            
+            imageViewerImage.src = imageUrl;
+            imageViewerContainer.classList.add('active');
         }
         
         function processCanvasTags(contentEl) {
@@ -1104,6 +1570,89 @@
         
         updateTimeGreeting();
         setInterval(updateTimeGreeting, 60000); // Update every minute
+        
+        // Membership system
+        function initMembershipSystem() {
+            const membershipKey = 'jiorkMembershipStatus';
+            
+            let membershipStatus = {
+                isPro: false,
+                membershipCode: null,
+                activatedAt: null
+            };
+            
+            // Try to get existing membership status from localStorage
+            try {
+                const savedMembership = localStorage.getItem(membershipKey);
+                if (savedMembership) {
+                    membershipStatus = JSON.parse(savedMembership);
+                }
+            } catch (e) {
+                console.error('Error loading membership status:', e);
+            }
+            
+            // Update UI based on membership status
+            updateMembershipUI(membershipStatus.isPro);
+            
+            return {
+                checkMembership: function() {
+                    return membershipStatus.isPro;
+                },
+                activateMembership: function(code) {
+                    const validMembershipCode = "9nM4aQ8uS3eT5yJ1oG3xY7p9L2vN6qR1tK8mZ4sD5wF0gH7jP2bV6";
+                    
+                    if (code !== validMembershipCode) {
+                        return { success: false, message: "无效的会员兑换码" };
+                    }
+                    
+                    // Check if already a Pro member
+                    if (membershipStatus.isPro) {
+                        return { success: false, message: "您已经是Pro用户，无法重复激活" };
+                    }
+                    
+                    // Activate membership
+                    membershipStatus.isPro = true;
+                    membershipStatus.membershipCode = code;
+                    membershipStatus.activatedAt = new Date().toISOString();
+                    
+                    // Save to localStorage
+                    localStorage.setItem(membershipKey, JSON.stringify(membershipStatus));
+                    
+                    // Update UI
+                    updateMembershipUI(true);
+                    
+                    return { success: true, message: "恭喜！成功升级到Pro计划！" };
+                }
+            };
+        }
+        
+        function updateMembershipUI(isPro) {
+            const planStatus = document.getElementById('planStatus');
+            
+            if (isPro) {
+                planStatus.innerHTML = '<span class="text-gradient bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent font-semibold">尊贵的Pro用户</span>';
+            } else {
+                planStatus.innerHTML = `
+                    <span class="text-gray-600 dark:text-gray-300">免费计划</span>
+                    <span>•</span>
+                    <a href="#" id="upgradeLink" class="text-blue-500 hover:text-blue-600">升级</a>
+                `;
+                
+                // Re-attach event listener for upgrade link
+                setTimeout(() => {
+                    const upgradeLink = document.getElementById('upgradeLink');
+                    if (upgradeLink) {
+                        upgradeLink.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            document.getElementById('membershipModal').classList.remove('hidden');
+                        });
+                    }
+                }, 0);
+            }
+        }
+        
+        // Initialize membership system
+        const membershipSystem = initMembershipSystem();
         
         // Points system
         function initPointsSystem() {
@@ -1399,23 +1948,77 @@
             }
         });
         
+        // Membership modal handlers
+        document.getElementById('closeMembershipModalBtn').addEventListener('click', function() {
+            document.getElementById('membershipModal').classList.add('hidden');
+            document.getElementById('membershipResult').classList.add('hidden');
+            document.getElementById('membershipCodeInput').value = '';
+        });
+        
+        document.getElementById('cancelMembershipBtn').addEventListener('click', function() {
+            document.getElementById('membershipModal').classList.add('hidden');
+            document.getElementById('membershipResult').classList.add('hidden');
+            document.getElementById('membershipCodeInput').value = '';
+        });
+        
+        document.getElementById('upgradeMembershipBtn').addEventListener('click', function() {
+            const codeInput = document.getElementById('membershipCodeInput');
+            const code = codeInput.value.trim();
+            const resultEl = document.getElementById('membershipResult');
+            
+            if (!code) {
+                resultEl.textContent = "请输入会员兑换码";
+                resultEl.className = "mt-3 text-center text-red-500";
+                resultEl.classList.remove('hidden');
+                return;
+            }
+            
+            const result = membershipSystem.activateMembership(code);
+            
+            resultEl.textContent = result.message;
+            resultEl.className = `mt-3 text-center ${result.success ? 'text-green-500' : 'text-red-500'}`;
+            resultEl.classList.remove('hidden');
+            
+            if (result.success) {
+                setTimeout(() => {
+                    document.getElementById('membershipModal').classList.add('hidden');
+                    resultEl.classList.add('hidden');
+                    codeInput.value = '';
+                }, 2000);
+            }
+        });
+        
         // Custom dropdown functionality
         function setupDropdown(dropdownId) {
             const dropdown = document.getElementById(dropdownId);
-            const selected = dropdown.querySelector('.dropdown-selected');
-            const options = dropdown.querySelector('.dropdown-options');
-            const optionElements = dropdown.querySelectorAll('.dropdown-option');
             
-            selected.addEventListener('click', () => {
-                options.classList.toggle('open');
-            });
+            if (!dropdown) return;
+            
+            let selected, options, optionElements;
+            
+            // Style selector has a different structure
+            if (dropdownId === 'styleSelector' || dropdownId === 'replyStyleSelector') {
+                selected = dropdown.querySelector('button');
+                options = dropdown.querySelector('.dropdown-options');
+                optionElements = dropdown.querySelectorAll('.dropdown-option');
+                
+                selected.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    options.classList.toggle('open');
+                });
+            } else {
+                selected = dropdown.querySelector('.dropdown-selected');
+                options = dropdown.querySelector('.dropdown-options');
+                optionElements = dropdown.querySelectorAll('.dropdown-option');
+                
+                selected.addEventListener('click', () => {
+                    options.classList.toggle('open');
+                });
+            }
             
             optionElements.forEach(option => {
                 option.addEventListener('click', () => {
-                    // Update selected text
-                    selected.querySelector('span').textContent = option.textContent;
-                    
-                    // Update selected state
+                    // Update selected state for all options
                     optionElements.forEach(opt => {
                         opt.classList.remove('selected');
                     });
@@ -1423,6 +2026,39 @@
                     
                     // Close dropdown
                     options.classList.remove('open');
+                    
+                    // For style selectors, update tooltip text
+                    if (dropdownId === 'styleSelector' || dropdownId === 'replyStyleSelector') {
+                        const styleName = option.textContent.trim();
+                        selected.setAttribute('title', styleName);
+                        
+                        // Check if Aria model is selected and update style options
+                        const modelDropdownId = dropdownId === 'styleSelector' ? 'modelSelector' : 'replyModelSelector';
+                        const selectedModel = getSelectedModel(modelDropdownId);
+                        
+                        if (selectedModel === 'Aria') {
+                            updateStyleOptionsForAria(dropdownId);
+                        }
+                    } else {
+                        // Update selected text for regular dropdowns
+                        let displayText = option.textContent.trim();
+                        // Remove the badge text if present
+                        if (displayText.includes('深度思考')) {
+                            displayText = displayText.split('深度思考')[0].trim();
+                        } else if (displayText.includes('文生图')) {
+                            displayText = displayText.split('文生图')[0].trim();
+                        }
+                        selected.querySelector('span').textContent = displayText;
+                        
+                        // Update style options if Aria is selected
+                        if (displayText === 'Aria') {
+                            const styleDropdownId = dropdownId === 'modelSelector' ? 'styleSelector' : 'replyStyleSelector';
+                            updateStyleOptionsForAria(styleDropdownId);
+                        } else {
+                            const styleDropdownId = dropdownId === 'modelSelector' ? 'styleSelector' : 'replyStyleSelector';
+                            updateStyleOptionsForText(styleDropdownId);
+                        }
+                    }
                 });
             });
             
@@ -1434,9 +2070,82 @@
             });
         }
         
-        // Setup both dropdowns
+        // Update style options for Aria model (image styles)
+        function updateStyleOptionsForAria(styleDropdownId) {
+            const styleDropdown = document.getElementById(styleDropdownId);
+            const options = styleDropdown.querySelector('.dropdown-options');
+            
+            options.innerHTML = `
+                <div class="dropdown-option selected" data-value="normal">
+                    <i class="fas fa-paint-brush"></i>默认风格
+                </div>
+                <div class="dropdown-option" data-value="chinese">
+                    <i class="fas fa-mountain"></i>国风
+                </div>
+                <div class="dropdown-option" data-value="realistic">
+                    <i class="fas fa-camera"></i>写实风
+                </div>
+                <div class="dropdown-option" data-value="anime">
+                    <i class="fas fa-star"></i>二次元
+                </div>
+                <div class="dropdown-option" data-value="watercolor">
+                    <i class="fas fa-palette"></i>水彩风
+                </div>
+            `;
+            
+            // Re-attach event listeners
+            const newOptions = options.querySelectorAll('.dropdown-option');
+            newOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    newOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    options.classList.remove('open');
+                    
+                    const styleName = option.textContent.trim();
+                    styleDropdown.querySelector('button').setAttribute('title', styleName);
+                });
+            });
+        }
+        
+        // Update style options for text models
+        function updateStyleOptionsForText(styleDropdownId) {
+            const styleDropdown = document.getElementById(styleDropdownId);
+            const options = styleDropdown.querySelector('.dropdown-options');
+            
+            options.innerHTML = `
+                <div class="dropdown-option selected" data-value="normal">
+                    <i class="fas fa-comment"></i>正常语气
+                </div>
+                <div class="dropdown-option" data-value="concise">
+                    <i class="fas fa-list"></i>简洁语气
+                </div>
+                <div class="dropdown-option" data-value="formal">
+                    <i class="fas fa-user-tie"></i>正式语气
+                </div>
+                <div class="dropdown-option" data-value="explanatory">
+                    <i class="fas fa-chalkboard-teacher"></i>解释性语气
+                </div>
+            `;
+            
+            // Re-attach event listeners
+            const newOptions = options.querySelectorAll('.dropdown-option');
+            newOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    newOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                    options.classList.remove('open');
+                    
+                    const styleName = option.textContent.trim();
+                    styleDropdown.querySelector('button').setAttribute('title', styleName);
+                });
+            });
+        }
+        
+        // Setup all dropdowns
         setupDropdown('modelSelector');
         setupDropdown('replyModelSelector');
+        setupDropdown('styleSelector');
+        setupDropdown('replyStyleSelector');
         
         // Initialize chat history from localStorage (changed key name)
         let chatHistory = [];
@@ -1595,9 +2304,11 @@
             // Add messages
             chat.messages.forEach(msg => {
                 if (msg.role === 'user') {
-                    appendUserMessage(msg.content, null, msg.attachments);
+                    appendUserMessage(msg.content, true, msg.attachments);
+                    currentMessages.push(msg);
                 } else if (msg.role === 'assistant') {
-                    appendAssistantMessage(msg.content, msg.thinking);
+                    appendAssistantMessage(msg.content, msg.thinking, true, msg.isImage, msg.imageUrl);
+                    currentMessages.push(msg);
                 }
             });
         }
@@ -1643,10 +2354,11 @@
         async function saveChat(messages) {
             // Create a new chat entry if needed
             if (chatHistory.length === 0 || chatHistory[chatHistory.length - 1].completed) {
-                const userMsg = messages[0].content;
+                // Get only the first user message for title generation
+                const firstUserMsg = messages.find(msg => msg.role === 'user')?.content || '';
                 
                 // Generate title using DeepSeek API
-                const title = await generateChatTitle(userMsg);
+                const title = await generateChatTitle(firstUserMsg);
                 
                 // Create a unique ID for this chat
                 const chatId = Date.now().toString();
@@ -1696,6 +2408,12 @@
             // Clear current messages
             currentMessages = [];
             messageCounter = 0;
+            
+            // Clear any ongoing generations
+            if (abortController) {
+                abortController.abort();
+                abortController = null;
+            }
         });
         
         // Toggle sidebar
@@ -1828,6 +2546,10 @@
         let currentMessages = [];
         let messageCounter = 0;
         let abortController = null;
+        let currentGenerationContext = null;
+        
+        // Store pregenerated follow-up questions (without answers)
+        let pregeneratedFollowUps = [];
         
         function appendUserMessage(message, dontSave = false, attachments = null) {
             messageCounter++;
@@ -1913,9 +2635,148 @@
             // Scroll to bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
+
+        // Image generation progress display
+        function showImageGenerationProgress(progressContainer, statusText, progressPercent = 0) {
+            progressContainer.innerHTML = `
+                <div class="progress-header">
+                    <i class="fas fa-magic progress-icon"></i>
+                    Aria正在生成图片...
+                </div>
+                <div class="progress-text">${statusText}</div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: ${progressPercent}%"></div>
+                </div>
+            `;
+        }
+
+        // Aria image generation API function with streaming updates
+        async function callAriaImageAPI(prompt, progressCallback, style = 'normal') {
+            const apiKey = "sk-9OiUODVwmax1pWQOu7tM40fYy2V2MKR7W2PxYNSPsKLStscK";
+            const apiUrl = "https://jeniya.cn/v1/images/generations";
+            
+            // Apply style modifications to the prompt
+            let enhancedPrompt = prompt;
+            
+            switch (style) {
+                case 'chinese':
+                    enhancedPrompt = `Chinese traditional style, ink painting, ${prompt}`;
+                    break;
+                case 'realistic':
+                    enhancedPrompt = `photorealistic, ultra detailed, high quality, ${prompt}`;
+                    break;
+                case 'anime':
+                    enhancedPrompt = `anime style, manga style, 2D illustration, ${prompt}`;
+                    break;
+                case 'watercolor':
+                    enhancedPrompt = `watercolor painting, soft colors, artistic, ${prompt}`;
+                    break;
+                default:
+                    // Keep original prompt for default style
+                    break;
+            }
+            
+            // Simulate progress updates for better UX
+            if (progressCallback) {
+                progressCallback("正在连接到图像生成服务...", 10);
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                progressCallback("正在分析您的提示词...", 25);
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                progressCallback("正在生成高质量图像...", 50);
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "dall-e-3",
+                        prompt: enhancedPrompt,
+                        n: 1,
+                        size: "1024x1024",
+                        quality: "standard"
+                    })
+                });
+                
+                if (progressCallback) {
+                    progressCallback("正在处理图像...", 75);
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    
+                    progressCallback("即将完成...", 90);
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                }
+                
+                const data = await response.json();
+                
+                if (progressCallback) {
+                    progressCallback("图像生成完成！", 100);
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                if (data.data && data.data.length > 0) {
+                    return {
+                        success: true,
+                        imageUrl: data.data[0].url,
+                        revisedPrompt: data.data[0].revised_prompt || enhancedPrompt
+                    };
+                } else {
+                    return {
+                        success: false,
+                        error: "No image generated"
+                    };
+                }
+            } catch (error) {
+                console.error("Aria Image API Error:", error);
+                return {
+                    success: false,
+                    error: error.message || "Unknown error"
+                };
+            }
+        }
+
+        // Summarize prompt using DeepSeek API for Aria
+        async function summarizePromptForAria(userPrompt) {
+            const apiKey = "sk-e1ed90c2effc4415beeee85845f66d05";
+            const apiUrl = "https://api.deepseek.com/v1/chat/completions";
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            { 
+                                role: "system", 
+                                content: "你是一个专业的图像生成提示词优化助手。用户会给你一个要求，请你把它转换成适合DALL-E 3的英文提示词。要求：1）只返回英文提示词，不要其他解释；2）提示词要详细、具体、富有创意；3）包含风格、颜色、构图等描述；4）不超过100个英文单词。" 
+                            },
+                            { role: "user", content: userPrompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 200
+                    })
+                });
+                
+                const data = await response.json();
+                return data.choices[0].message.content.trim();
+            } catch (error) {
+                console.error('Error summarizing prompt:', error);
+                // Fallback to original prompt
+                return userPrompt;
+            }
+        }
         
         // DeepSeek API integration
-        async function callDeepSeekAPI(message, model, isWebSearch = false, isDeepThinking = false, previousMessages = []) {
+        async function callDeepSeekAPI(message, model, previousMessages = [], stylePreference = 'normal', continueGeneration = false) {
             console.log("Calling DeepSeek API");
             const apiKey = "sk-e1ed90c2effc4415beeee85845f66d05";
             const apiUrl = "https://api.deepseek.com/v1/chat/completions";
@@ -1927,33 +2788,62 @@
             // Prepare messages array with context from previous messages
             let messages = [];
             
-            // Add system message based on the model and options
+            // Determine if deep thinking should be enabled based on model
+            const isDeepThinking = model === "Jork-Trax-4";
+            
+            // Add system message based on the model, options, and style preference
             let systemMessage = "";
-            if (isWebSearch) {
-                systemMessage = "请通过联网搜索获取最新信息来回答问题。请包含你找到的信息来源。";
-            } else if (isDeepThinking) {
-                systemMessage = "请进行深度思考，分析问题的多个层面。请在回答前详细说明你的思考过程，分步骤列出你的推理过程。";
-            } else if (model === "Jork-Trax-4") {
-                systemMessage = "你是Jork-Trax-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个专业的编程助手，擅长提供高质量的代码和技术解决方案。如果用户请求代码或需要运行代码，请将完整的HTML/CSS/JavaScript代码放在<canvas>标签内。在画布中，这样的代码可以直接在独立环境中执行。请确保提供完整且能立即运行的代码。";
+            
+            // First, determine the base system message based on model
+            if (model === "Jork-Trax-4") {
+                systemMessage = "你是Jork-Trax-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个专业的编程助手，擅长提供高质量的代码和技术解决方案。如果用户请求代码或需要运行代码，请将完整的HTML/CSS/JavaScript代码放在<canvas>标签内。在画布中，这样的代码可以直接在独立环境中执行。请确保提供完整且能立即运行的代码。请进行深度思考，分析问题的多个层面。请在回答前使用<thinking>标签详细说明你的思考过程，分步骤列出你的推理过程。格式如下：\n\n<thinking>\n思考步骤1：...\n思考步骤2：...\n思考步骤3：...\n</thinking>\n\n最终回答：...\n";
             } else {
                 systemMessage = "你是Jork-Epist-4，由Tenyun Tech （腾云科技）旗下 JorkAI开发的一个友好、专业的AI助手。你可以提供详细且有用的回答。如果需要展示可运行的代码，请将完整的HTML/CSS/JavaScript代码放在<canvas>标签内，这样可以在画布中直接运行。";
             }
             
-            messages.push({ role: "system", content: systemMessage });
-            
-            // Add previous messages for context (up to 10 most recent messages)
-            if (previousMessages && previousMessages.length > 0) {
-                const contextMessages = previousMessages.slice(-10);
-                contextMessages.forEach(msg => {
-                    messages.push({
-                        role: msg.role,
-                        content: msg.content
-                    });
-                });
+            // Now add style instructions
+            if (stylePreference === 'concise') {
+                systemMessage += "\n\n请使用简洁语气回复。直接提供关键信息，避免过多解释和冗长表达。以要点形式回答，删减不必要的词语，保持回复短小精悍。";
+            } else if (stylePreference === 'formal') {
+                systemMessage += "\n\n请使用正式语气回复。使用专业术语，避免俚语和口语化表达。保持语言的逻辑性和准确性，使用完整句子，适当引用相关来源或理论支持观点。";
+            } else if (stylePreference === 'explanatory') {
+                systemMessage += "\n\n请使用解释性语气回复。以教学的方式详细解释概念，分解复杂问题为更简单的部分。使用类比和示例帮助理解，解释你的思考过程，并提供背景信息使回答更全面。";
             }
             
-            // Add current user message
-            messages.push({ role: "user", content: message });
+            // Add token limit management to avoid responses being cut off
+            systemMessage += "\n\n请控制生成内容的长度。如果你预计你的回答会非常长，请在适当的地方停止，并提示可以继续生成。";
+            
+            // Add system message
+            messages.push({ role: "system", content: systemMessage });
+            
+            // If continuing generation, use the stored context
+            if (continueGeneration && currentGenerationContext) {
+                messages = currentGenerationContext.messages;
+                
+                // Add a message asking to continue from where it left off
+                messages.push({ role: "user", content: "请继续之前的回答，从你停止的地方继续生成。" });
+            } else {
+                // Add previous messages for context (up to 10 most recent messages)
+                if (previousMessages && previousMessages.length > 0) {
+                    const contextMessages = previousMessages.slice(-10);
+                    contextMessages.forEach(msg => {
+                        messages.push({
+                            role: msg.role,
+                            content: msg.content
+                        });
+                    });
+                }
+                
+                // Add current user message
+                messages.push({ role: "user", content: message });
+                
+                // Store context for potential continuation
+                currentGenerationContext = {
+                    messages: [...messages],
+                    model: model,
+                    stylePreference: stylePreference
+                };
+            }
             
             try {
                 // For streaming
@@ -1978,7 +2868,8 @@
                     const decoder = new TextDecoder("utf-8");
                     let buffer = "";
                     let fullResponse = "";
-                    let thinking = isDeepThinking ? [] : null;
+                    let thinking = null;
+                    let tokenLimitReached = false;
                     
                     const responseContent = document.getElementById('responseContent');
                     
@@ -2005,16 +2896,82 @@
                                             const content = parsedData.choices[0].delta.content;
                                             fullResponse += content;
                                             
-                                            // If deep thinking, try to extract thinking steps
-                                            if (isDeepThinking && fullResponse.includes("思考步骤") && !fullResponse.includes("最终回答")) {
-                                                const thinkingMatch = fullResponse.match(/思考步骤 \d+[：:] (.*?)(?=思考步骤 \d+[：:]|$)/gs);
+                                            // Check if token limit may have been reached
+                                            if (fullResponse.length > 15000 && !fullResponse.endsWith("...") && 
+                                                !fullResponse.includes("已达到生成限制") && 
+                                                !fullResponse.includes("To be continued")) {
+                                                tokenLimitReached = true;
+                                            }
+                                            
+                                            // Extract thinking content if deep thinking was requested
+                                            if (isDeepThinking && fullResponse.includes("<thinking>") && fullResponse.includes("</thinking>")) {
+                                                const thinkingMatch = fullResponse.match(/<thinking>([\s\S]*?)<\/thinking>/);
                                                 if (thinkingMatch) {
-                                                    thinking = thinkingMatch.map(step => step.trim());
+                                                    thinking = thinkingMatch[1].split('\n').filter(line => line.trim()).map(step => step.trim());
+                                                }
+                                            }
+                                            
+                                            // Process thinking tag for visualization
+                                            let displayContent = fullResponse;
+                                            
+                                            // If there's a thinking tag, parse it specially
+                                            if (fullResponse.includes("<thinking>") && !fullResponse.includes("</thinking>")) {
+                                                // Still in the thinking section, show it in a special way
+                                                const parts = fullResponse.split("<thinking>");
+                                                const beforeThinking = parts[0];
+                                                const thinkingContent = parts[1];
+                                                
+                                                // Create a more natural, conversational thinking visualization
+                                                displayContent = beforeThinking + `<div class="thinking-visualization">
+                                                    <div class="thinking-step-header">🧠 思考过程</div>
+                                                    <div class="thinking-step" style="line-height: 1.6; font-style: italic; color: #4b5563;">
+                                                        "${thinkingContent}"
+                                                    </div>
+                                                </div>`;
+                                            } else if (fullResponse.includes("<thinking>") && fullResponse.includes("</thinking>")) {
+                                                // Thinking is complete, extract and format as a more natural inner monologue
+                                                const thinkingMatch = fullResponse.match(/<thinking>([\s\S]*?)<\/thinking>/);
+                                                if (thinkingMatch) {
+                                                    // Instead of simple line breaks, look for natural paragraph breaks or period-based sentences
+                                                    const rawThinking = thinkingMatch[1];
+                                                    
+                                                    // Split by paragraphs or sentences ending with periods
+                                                    let thinkingSteps = [];
+                                                    
+                                                    // First try to split by paragraphs (double line breaks)
+                                                    if (rawThinking.includes("\n\n")) {
+                                                        thinkingSteps = rawThinking.split("\n\n").filter(p => p.trim());
+                                                    } 
+                                                    // Then try to split by single line breaks
+                                                    else if (rawThinking.includes("\n")) {
+                                                        thinkingSteps = rawThinking.split("\n").filter(p => p.trim());
+                                                    }
+                                                    // If no line breaks, try splitting by sentences
+                                                    else {
+                                                        // Use regex to split by periods followed by spaces or line breaks
+                                                        thinkingSteps = rawThinking.split(/\.(?=\s|$)/).filter(s => s.trim()).map(s => s.trim() + '.');
+                                                    }
+                                                    
+                                                    // Create HTML for thinking steps in a conversational, inner monologue style
+                                                    let thinkingHTML = '<div class="thinking-visualization">';
+                                                    thinkingHTML += '<div class="thinking-step-header">🧠 思考过程</div>';
+                                                    
+                                                    thinkingSteps.forEach((step, index) => {
+                                                        // Add quotation marks and styling to make it feel like an inner dialogue
+                                                        thinkingHTML += `<div class="thinking-step" style="line-height: 1.6; font-style: italic; color: #4b5563; margin-bottom: 0.8rem; animation-delay: ${index * 0.1}s;">
+                                                            "${step.trim()}"
+                                                        </div>`;
+                                                    });
+                                                    
+                                                    thinkingHTML += '</div>';
+                                                    
+                                                    // Replace the thinking tag in display content
+                                                    displayContent = fullResponse.replace(/<thinking>[\s\S]*?<\/thinking>/, thinkingHTML);
                                                 }
                                             }
                                             
                                             // Update UI with the latest content
-                                            responseContent.innerHTML = marked.parse(fullResponse);
+                                            responseContent.innerHTML = marked.parse(displayContent);
                                             
                                             // Process code blocks and canvas tags
                                             processCanvasTags(responseContent);
@@ -2055,7 +3012,19 @@
                         }, 500);
                     }
                     
-                    return { content: fullResponse, thinking: thinking };
+                    // Remove the thinking tags from the final response
+                    const cleanResponse = fullResponse.replace(/<thinking>[\s\S]*?<\/thinking>/, '');
+                    
+                    // If we think the token limit was reached, add a continuation button
+                    if (tokenLimitReached && !continueGeneration) {
+                        return { 
+                            content: cleanResponse, 
+                            thinking: thinking,
+                            tokenLimitReached: true
+                        };
+                    }
+                    
+                    return { content: cleanResponse, thinking: thinking };
                 } else {
                     // Non-streaming response
                     const response = await fetch(apiUrl, {
@@ -2079,10 +3048,10 @@
                     
                     // Extract thinking steps if deep thinking was requested
                     let thinking = null;
-                    if (isDeepThinking && content.includes("思考步骤")) {
-                        const thinkingMatch = content.match(/思考步骤 \d+[：:] (.*?)(?=思考步骤 \d+[：:]|$)/gs);
+                    if (isDeepThinking && content.includes("<thinking>") && content.includes("</thinking>")) {
+                        const thinkingMatch = content.match(/<thinking>([\s\S]*?)<\/thinking>/);
                         if (thinkingMatch) {
-                            thinking = thinkingMatch.map(step => step.trim());
+                            thinking = thinkingMatch[1].split('\n').filter(line => line.trim()).map(step => step.trim());
                         }
                     }
                     
@@ -2096,7 +3065,25 @@
                         }, 500);
                     }
                     
-                    return { content, thinking };
+                    // Remove thinking tags from the response
+                    const cleanContent = content.replace(/<thinking>[\s\S]*?<\/thinking>/, '');
+                    
+                    // Check if the token limit might have been reached
+                    const tokenLimitReached = 
+                        cleanContent.length > 15000 && 
+                        !cleanContent.endsWith("...") && 
+                        !cleanContent.includes("已达到生成限制") && 
+                        !cleanContent.includes("To be continued");
+                    
+                    if (tokenLimitReached && !continueGeneration) {
+                        return { 
+                            content: cleanContent, 
+                            thinking: thinking,
+                            tokenLimitReached: true
+                        };
+                    }
+                    
+                    return { content: cleanContent, thinking: thinking };
                 }
             } catch (error) {
                 if (error.name === 'AbortError') {
@@ -2113,6 +3100,64 @@
                     content: `调用API时发生错误: ${error.message || '未知错误'}`,
                     thinking: null
                 };
+            }
+        }
+        
+        // Generate potential follow-up questions only (no answers)
+        async function generateFollowUpQuestions(userMessage, assistantMessage, model = "deepseek-chat") {
+            const apiKey = "sk-e1ed90c2effc4415beeee85845f66d05";
+            const apiUrl = "https://api.deepseek.com/v1/chat/completions";
+            
+            try {
+                // Generate follow-up questions only
+                const questionsResponse = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [
+                            { 
+                                role: "system", 
+                                content: "你是一个帮助预测用户可能提出的后续问题的助手。基于当前对话，生成3个可能的后续问题。使用JSON格式返回，格式为：[\"问题1\", \"问题2\", \"问题3\"]。确保问题相关、自然且多样化。问题必须是提问句，以问号结尾。" 
+                            },
+                            { role: "user", content: `用户询问: ${userMessage}\n\nAI回答: ${assistantMessage}\n\n预测用户接下来可能问什么？生成3个合理的后续问题（仅返回JSON数组）。` }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 200
+                    })
+                });
+                
+                const questionsData = await questionsResponse.json();
+                let followUpQuestions;
+                
+                try {
+                    // Try to parse the response as JSON
+                    const content = questionsData.choices[0].message.content;
+                    followUpQuestions = JSON.parse(content);
+                } catch (e) {
+                    // If parsing fails, try to extract JSON from the response
+                    const content = questionsData.choices[0].message.content;
+                    const jsonMatch = content.match(/\[[\s\S]*?\]/);
+                    if (jsonMatch) {
+                        followUpQuestions = JSON.parse(jsonMatch[0]);
+                    } else {
+                        // If we still can't extract JSON, use a fallback
+                        followUpQuestions = [
+                            "有什么相关的建议吗？",
+                            "能详细解释一下吗？",
+                            "还有其他信息我应该知道的吗？"
+                        ];
+                    }
+                }
+                
+                // Return only the questions (no pre-generated answers)
+                return followUpQuestions.map(question => ({ question }));
+            } catch (error) {
+                console.error("Error generating follow-up questions:", error);
+                return [];
             }
         }
         
@@ -2170,79 +3215,104 @@
             });
         }
         
-        function appendAssistantMessage(message, thinking = null) {
+        function appendAssistantMessage(message, thinking = null, dontSave = false, isImage = false, imageUrl = null) {
             const chatView = document.getElementById('chatView');
             
             const messageContainer = document.createElement('div');
             messageContainer.className = 'mb-8';
             
             // Display thinking process if provided
-            if (thinking) {
+            if (thinking && thinking.length > 0) {
                 const thinkingContainer = document.createElement('div');
-                thinkingContainer.className = 'thinking-container mb-4';
+                thinkingContainer.className = 'thinking-visualization mb-4';
                 
                 const thinkingHeader = document.createElement('div');
-                thinkingHeader.className = 'font-medium text-purple-600 dark:text-purple-400 mb-2';
-                thinkingHeader.textContent = '深度思考过程：';
+                thinkingHeader.className = 'thinking-step-header';
+                thinkingHeader.textContent = '🧠 思考过程';
                 
                 thinkingContainer.appendChild(thinkingHeader);
                 
                 thinking.forEach((step, index) => {
                     const thinkingStep = document.createElement('div');
-                    thinkingStep.className = 'thinking-step text-sm text-gray-600 dark:text-gray-400';
-                    thinkingStep.style.animationDelay = `${index * 0.3}s`;
-                    thinkingStep.textContent = step;
+                    thinkingStep.className = 'thinking-step';
+                    thinkingStep.style.lineHeight = '1.6';
+                    thinkingStep.style.fontStyle = 'italic';
+                    thinkingStep.style.color = '#4b5563';
+                    thinkingStep.style.marginBottom = '0.8rem';
+                    thinkingStep.style.animationDelay = `${index * 0.1}s`;
+                    thinkingStep.textContent = `"${step}"`;
                     thinkingContainer.appendChild(thinkingStep);
                 });
                 
                 messageContainer.appendChild(thinkingContainer);
             }
-            
-            // Process the message for markdown
-            const markdownOutput = marked.parse(message);
-            
-            const messageContent = document.createElement('div');
-            messageContent.className = 'markdown-content';
-            messageContent.innerHTML = markdownOutput;
-            
-            // Process canvas tags
-            processCanvasTags(messageContent);
-            
-            // Process code blocks to add copy buttons
-            const codeBlocks = messageContent.querySelectorAll('pre');
-            codeBlocks.forEach(block => {
-                block.className = 'code-block relative';
+
+            // If this is an image response, display the image
+            if (isImage && imageUrl) {
+                const imageContainer = document.createElement('div');
+                imageContainer.className = 'mb-4';
                 
-                const copyButton = document.createElement('button');
-                copyButton.className = 'copy-button text-xs';
-                copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-                copyButton.title = '复制代码';
+                const generatedImage = document.createElement('img');
+                generatedImage.src = imageUrl;
+                generatedImage.className = 'generated-image';
+                generatedImage.alt = 'Generated Image';
                 
-                copyButton.addEventListener('click', () => {
-                    const code = block.querySelector('code')?.textContent || '';
-                    navigator.clipboard.writeText(code).then(() => {
-                        copyButton.innerHTML = '<i class="fas fa-check"></i>';
-                        setTimeout(() => {
-                            copyButton.innerHTML = '<i class="fas fa-copy"></i>';
-                        }, 2000);
-                    });
+                // Add click handler to open image viewer
+                generatedImage.addEventListener('click', () => {
+                    openImageViewer(imageUrl);
                 });
                 
-                block.appendChild(copyButton);
-            });
+                imageContainer.appendChild(generatedImage);
+                messageContainer.appendChild(imageContainer);
+            }
             
-            messageContainer.appendChild(messageContent);
+            // Process the message for markdown (if not image-only)
+            if (!isImage || message) {
+                const markdownOutput = marked.parse(message);
+                
+                const messageContent = document.createElement('div');
+                messageContent.className = 'markdown-content';
+                messageContent.innerHTML = markdownOutput;
+                
+                // Process canvas tags
+                processCanvasTags(messageContent);
+                
+                // Process code blocks to add copy buttons
+                const codeBlocks = messageContent.querySelectorAll('pre');
+                codeBlocks.forEach(block => {
+                    block.className = 'code-block relative';
+                    
+                    const copyButton = document.createElement('button');
+                    copyButton.className = 'copy-button text-xs';
+                    copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                    copyButton.title = '复制代码';
+                    
+                    copyButton.addEventListener('click', () => {
+                        const code = block.querySelector('code')?.textContent || '';
+                        navigator.clipboard.writeText(code).then(() => {
+                            copyButton.innerHTML = '<i class="fas fa-check"></i>';
+                            setTimeout(() => {
+                                copyButton.innerHTML = '<i class="fas fa-copy"></i>';
+                            }, 2000);
+                        });
+                    });
+                    
+                    block.appendChild(copyButton);
+                });
+                
+                messageContainer.appendChild(messageContent);
+            }
             
             // Add the logo and response controls
             const logoAndControls = document.createElement('div');
-            logoAndControls.className = 'flex justify-between items-center mb-8';
+            logoAndControls.className = 'flex justify-between items-center mb-4';
             
             const logoContainer = document.createElement('div');
             logoContainer.className = 'flex items-center text-orange-400 mb-2';
             
             const disclaimer = document.createElement('div');
             disclaimer.className = 'text-sm text-gray-500';
-            disclaimer.textContent = 'Jork可能会犯错，请核实回复内容。';
+            disclaimer.textContent = isImage ? 'Aria可能会犯错，请核实图像内容。' : 'Jork可能会犯错，请核实回复内容。';
             
             const controlsContainer = document.createElement('div');
             controlsContainer.className = 'flex items-center space-x-2';
@@ -2274,15 +3344,193 @@
             chatView.appendChild(messageContainer);
             chatView.appendChild(logoAndControls);
             
-            // Add to current messages
-            currentMessages.push({
-                role: 'assistant',
-                content: message,
-                thinking: thinking
-            });
+            // Add to current messages if not explicitly skipped
+            if (!dontSave) {
+                const messageObj = {
+                    role: 'assistant',
+                    content: message,
+                    thinking: thinking,
+                    isImage: isImage,
+                    imageUrl: imageUrl
+                };
+                
+                currentMessages.push(messageObj);
+                
+                // Save chat
+                saveChat(currentMessages);
+                
+                // Generate follow-up questions if there are at least 2 messages in the conversation and not an image response
+                if (currentMessages.length >= 2 && !isImage) {
+                    // Get the last user message
+                    const lastUserMessage = currentMessages.filter(msg => msg.role === 'user').pop().content;
+                    
+                    // Generate and display follow-up questions (questions only, no pre-generated answers)
+                    generateFollowUpQuestions(lastUserMessage, message).then(followUps => {
+                        if (followUps && followUps.length > 0) {
+                            // Store the generated follow-ups
+                            pregeneratedFollowUps = followUps;
+                            
+                            // Create container for follow-up questions
+                            const followUpContainer = document.createElement('div');
+                            followUpContainer.className = 'follow-up-questions mb-6';
+                            
+                            // Add title for follow-ups
+                            const followUpTitle = document.createElement('div');
+                            followUpTitle.className = 'text-sm text-gray-500 mb-2';
+                            followUpTitle.textContent = '您可能想问：';
+                            followUpContainer.appendChild(followUpTitle);
+                            
+                            // Create buttons for each follow-up question
+                            followUps.forEach((followUp, index) => {
+                                const followUpButton = document.createElement('button');
+                                followUpButton.className = 'follow-up-question mb-2';
+                                followUpButton.textContent = followUp.question;
+                                followUpButton.dataset.index = index;
+                                
+                                followUpButton.addEventListener('click', function() {
+                                    const index = parseInt(this.dataset.index);
+                                    const followUp = pregeneratedFollowUps[index];
+                                    
+                                    // Add user question to chat
+                                    appendUserMessage(followUp.question);
+                                    
+                                    // Generate a new response using the API since we don't have pre-generated answers
+                                    const model = getSelectedModel('replyModelSelector');
+                                    const style = getSelectedStyle('replyStyleSelector');
+                                    
+                                    // If Aria model is selected
+                                    if (model === 'Aria') {
+                                        // Create image generation progress container
+                                        const progressContainer = appendImageGenerationProgress();
+                                        
+                                        // Change send button to stop button
+                                        const sendButton = document.getElementById('replySendButton');
+                                        sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                                        sendButton.classList.add('stop-generation');
+                                        sendButton.onclick = stopGenerationAndRestore;
+                                        
+                                        // Process image generation with progress updates
+                                        summarizePromptForAria(followUp.question)
+                                            .then(optimizedPrompt => {
+                                                console.log('Optimized prompt for Aria:', optimizedPrompt);
+                                                return callAriaImageAPI(optimizedPrompt, (status, progress) => {
+                                                    showImageGenerationProgress(progressContainer, status, progress);
+                                                }, style);
+                                            })
+                                            .then(result => {
+                                                // Restore send button
+                                                restoreSendButton();
+                                                
+                                                // Remove progress container
+                                                progressContainer.remove();
+                                                
+                                                if (result.success) {
+                                                    const finalMessage = `我为您生成了一张图片：\n\n**原始提示：** ${followUp.question}\n\n**优化提示：** ${result.revisedPrompt}`;
+                                                    appendAssistantMessage(finalMessage, null, false, true, result.imageUrl);
+                                                } else {
+                                                    appendAssistantMessage(`抱歉，图片生成失败：${result.error}`);
+                                                }
+                                            })
+                                            .catch(error => {
+                                                // Restore send button
+                                                restoreSendButton();
+                                                
+                                                // Remove progress container
+                                                progressContainer.remove();
+                                                
+                                                console.error('Error generating image:', error);
+                                                appendAssistantMessage('抱歉，生成图片时发生错误，请重试。');
+                                            });
+                                    } else {
+                                        // Text generation models
+                                        appendStreamingResponse();
+                                        
+                                        // Change send button to stop button
+                                        const sendButton = document.getElementById('replySendButton');
+                                        sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                                        sendButton.classList.add('stop-generation');
+                                        sendButton.onclick = stopGenerationAndRestore;
+                                        
+                                        callDeepSeekAPI(followUp.question, model, currentMessages.slice(0, -1), style)
+                                            .then(response => {
+                                                // Restore send button
+                                                restoreSendButton();
+                                                
+                                                // Check if response was aborted
+                                                if (response.aborted) {
+                                                    finalizeStreamingResponse(response.content + "\n\n*生成已停止*");
+                                                } else {
+                                                    finalizeStreamingResponse(response.content, response.thinking);
+                                                }
+                                            })
+                                            .catch(error => {
+                                                // Restore send button
+                                                restoreSendButton();
+                                                
+                                                console.error('Error generating response:', error);
+                                                finalizeStreamingResponse('抱歉，生成回答时发生错误，请重试。');
+                                            });
+                                    }
+                                    
+                                    // Remove all follow-up questions after one is selected
+                                    document.querySelectorAll('.follow-up-questions').forEach(el => el.remove());
+                                });
+                                
+                                followUpContainer.appendChild(followUpButton);
+                            });
+                            
+                            chatView.appendChild(followUpContainer);
+                        }
+                    });
+                }
+            }
             
-            // Save chat
-            saveChat(currentMessages);
+            // Check if we need to add a "Continue Generation" button for token limit
+            if (message.tokenLimitReached) {
+                const continueButton = document.createElement('button');
+                continueButton.className = 'continue-generation';
+                continueButton.innerHTML = '<i class="fas fa-ellipsis-h mr-2"></i>继续生成';
+                continueButton.addEventListener('click', function() {
+                    // Remove this button
+                    this.remove();
+                    
+                    // Start a new streaming response
+                    appendStreamingResponse();
+                    
+                    // Get the current model and style
+                    const model = getSelectedModel('replyModelSelector');
+                    const style = getSelectedStyle('replyStyleSelector');
+                    
+                    // Change send button to stop button
+                    const sendButton = document.getElementById('replySendButton');
+                    sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                    sendButton.classList.add('stop-generation');
+                    sendButton.onclick = stopGenerationAndRestore;
+                    
+                    // Continue the generation
+                    callDeepSeekAPI('', model, [], style, true)
+                        .then(response => {
+                            // Restore send button
+                            restoreSendButton();
+                            
+                            // Check if response was aborted
+                            if (response.aborted) {
+                                finalizeStreamingResponse(response.content + "\n\n*生成已停止*");
+                            } else {
+                                finalizeStreamingResponse(response.content, response.thinking);
+                            }
+                        })
+                        .catch(error => {
+                            // Restore send button
+                            restoreSendButton();
+                            
+                            console.error('Error continuing generation:', error);
+                            finalizeStreamingResponse('抱歉，继续生成时发生错误，请重试。');
+                        });
+                });
+                
+                messageContainer.appendChild(continueButton);
+            }
             
             // Scroll to bottom
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -2297,7 +3545,8 @@
             
             // Set up copy button functionality
             copyButton.addEventListener('click', () => {
-                navigator.clipboard.writeText(message).then(() => {
+                const textToCopy = isImage ? (imageUrl || message) : message;
+                navigator.clipboard.writeText(textToCopy).then(() => {
                     copyButton.innerHTML = '<i class="fas fa-check"></i>';
                     setTimeout(() => {
                         copyButton.innerHTML = '<i class="far fa-clipboard"></i>';
@@ -2314,49 +3563,116 @@
                     messages[messages.length - 2].remove(); // Remove message
                 }
                 
-                // Remove the last assistant message from the current messages array
-                currentMessages.pop();
+                // Remove any follow-up questions
+                document.querySelectorAll('.follow-up-questions').forEach(el => el.remove());
                 
-                // Save updated chat history
-                saveChat(currentMessages);
+                // Remove the last assistant message from the current messages array
+                if (!dontSave) {
+                    currentMessages.pop();
+                    
+                    // Save updated chat history
+                    saveChat(currentMessages);
+                }
                 
                 // Get the last user message
                 const lastUserMessage = currentMessages.filter(msg => msg.role === 'user').pop();
                 
                 if (lastUserMessage) {
-                    // Get the current model
+                    // Get the current model and style
                     const model = getSelectedModel('replyModelSelector');
+                    const style = getSelectedStyle('replyStyleSelector');
                     
-                    // Regenerate response
-                    appendStreamingResponse();
-                    
-                    // Change send button to stop button
-                    const sendButton = document.getElementById('replySendButton');
-                    sendButton.innerHTML = '<i class="fas fa-stop"></i>';
-                    sendButton.classList.add('stop-generation');
-                    sendButton.onclick = stopGenerationAndRestore;
-                    
-                    callDeepSeekAPI(lastUserMessage.content, model, false, false, currentMessages.slice(0, -1))
-                        .then(response => {
-                            // Restore send button
-                            restoreSendButton();
-                            
-                            // Check if response was aborted
-                            if (response.aborted) {
-                                finalizeStreamingResponse(response.content + "\n\n*生成已停止*");
-                            } else {
-                                finalizeStreamingResponse(response.content, response.thinking);
-                            }
-                        })
-                        .catch(error => {
-                            // Restore send button
-                            restoreSendButton();
-                            
-                            console.error('Error regenerating response:', error);
-                            finalizeStreamingResponse('抱歉，重新生成回答时发生错误，请重试。');
-                        });
+                    // Regenerate response based on model type
+                    if (model === 'Aria') {
+                        // For Aria, regenerate image with streaming progress
+                        const progressContainer = appendImageGenerationProgress();
+                        
+                        // Change send button to stop button
+                        const sendButton = document.getElementById('replySendButton');
+                        sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                        sendButton.classList.add('stop-generation');
+                        sendButton.onclick = stopGenerationAndRestore;
+                        
+                        // Process image generation with progress updates
+                        summarizePromptForAria(lastUserMessage.content)
+                            .then(optimizedPrompt => {
+                                console.log('Optimized prompt for Aria:', optimizedPrompt);
+                                return callAriaImageAPI(optimizedPrompt, (status, progress) => {
+                                    showImageGenerationProgress(progressContainer, status, progress);
+                                }, style);
+                            })
+                            .then(result => {
+                                // Restore send button
+                                restoreSendButton();
+                                
+                                // Remove progress container
+                                progressContainer.remove();
+                                
+                                if (result.success) {
+                                    const finalMessage = `我为您重新生成了一张图片：\n\n**原始提示：** ${lastUserMessage.content}\n\n**优化提示：** ${result.revisedPrompt}`;
+                                    appendAssistantMessage(finalMessage, null, false, true, result.imageUrl);
+                                } else {
+                                    appendAssistantMessage(`抱歉，图片重新生成失败：${result.error}`);
+                                }
+                            })
+                            .catch(error => {
+                                // Restore send button
+                                restoreSendButton();
+                                
+                                // Remove progress container
+                                progressContainer.remove();
+                                
+                                console.error('Error regenerating image:', error);
+                                appendAssistantMessage('抱歉，重新生成图片时发生错误，请重试。');
+                            });
+                    } else {
+                        // For text models, regenerate text response
+                        appendStreamingResponse();
+                        
+                        // Change send button to stop button
+                        const sendButton = document.getElementById('replySendButton');
+                        sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                        sendButton.classList.add('stop-generation');
+                        sendButton.onclick = stopGenerationAndRestore;
+                        
+                        callDeepSeekAPI(lastUserMessage.content, model, currentMessages.slice(0, -1), style)
+                            .then(response => {
+                                // Restore send button
+                                restoreSendButton();
+                                
+                                // Check if response was aborted
+                                if (response.aborted) {
+                                    finalizeStreamingResponse(response.content + "\n\n*生成已停止*");
+                                } else {
+                                    finalizeStreamingResponse(response.content, response.thinking);
+                                }
+                            })
+                            .catch(error => {
+                                // Restore send button
+                                restoreSendButton();
+                                
+                                console.error('Error regenerating response:', error);
+                                finalizeStreamingResponse('抱歉，重新生成回答时发生错误，请重试。');
+                            });
+                    }
                 }
             });
+        }
+        
+        // Function to append image generation progress indicator
+        function appendImageGenerationProgress() {
+            const chatView = document.getElementById('chatView');
+            
+            const progressContainer = document.createElement('div');
+            progressContainer.className = 'image-generation-progress mb-4';
+            progressContainer.id = 'imageGenerationProgress';
+            
+            chatView.appendChild(progressContainer);
+            
+            // Scroll to bottom
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            return progressContainer;
         }
         
         // Streaming response handling with typing effect
@@ -2393,14 +3709,31 @@
             streamingContainer.remove();
             
             // Append the full message
-            appendAssistantMessage(message, thinking);
+            if (typeof message === 'object' && message.tokenLimitReached) {
+                // If token limit was reached, pass that info to the appendAssistantMessage function
+                appendAssistantMessage(message.content, thinking, false, true);
+            } else {
+                // Normal message
+                appendAssistantMessage(message, thinking);
+            }
         }
         
         // Get selected model value
         function getSelectedModel(dropdownId) {
             const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return "Jork-Epist-4";  // Default value
+            
             const selectedOption = dropdown.querySelector('.dropdown-option.selected');
-            return selectedOption.dataset.value;
+            return selectedOption ? selectedOption.dataset.value : "Jork-Epist-4";
+        }
+        
+        // Get selected style value
+        function getSelectedStyle(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return "normal";  // Default value
+            
+            const selectedOption = dropdown.querySelector('.dropdown-option.selected');
+            return selectedOption ? selectedOption.dataset.value : "normal";
         }
         
         // Map Jork models to DeepSeek models
@@ -2418,14 +3751,14 @@
             const replySendButton = document.getElementById('replySendButton');
             
             // Restore main send button
-            if (mainSendButton.classList.contains('stop-generation')) {
+            if (mainSendButton && mainSendButton.classList.contains('stop-generation')) {
                 mainSendButton.classList.remove('stop-generation');
                 mainSendButton.innerHTML = '<i class="fas fa-arrow-up"></i>';
                 mainSendButton.onclick = () => sendMessage(document.getElementById('userInput'));
             }
             
             // Restore reply send button
-            if (replySendButton.classList.contains('stop-generation')) {
+            if (replySendButton && replySendButton.classList.contains('stop-generation')) {
                 replySendButton.classList.remove('stop-generation');
                 replySendButton.innerHTML = '<i class="fas fa-arrow-up"></i>';
                 replySendButton.onclick = () => sendMessage(document.getElementById('replyInput'));
@@ -2439,7 +3772,7 @@
         }
         
         // Send message handlers
-        async function sendMessage(input, isWebSearch = false, isDeepThinking = false) {
+        async function sendMessage(input) {
             if (input.value.trim() === '') return;
             
             // Check if we have enough points
@@ -2452,6 +3785,11 @@
             const jorkModel = (input.id === 'userInput') ? 
                 getSelectedModel('modelSelector') : 
                 getSelectedModel('replyModelSelector');
+            
+            // Get selected style
+            const style = (input.id === 'userInput') ?
+                getSelectedStyle('styleSelector') :
+                getSelectedStyle('replyStyleSelector');
             
             // Hide initial view and show chat view
             document.getElementById('initialView').classList.add('hidden');
@@ -2471,39 +3809,102 @@
             document.getElementById(input.id === 'userInput' ? 'filePreviewArea' : 'replyFilePreviewArea').classList.add('hidden');
             document.getElementById(input.id === 'userInput' ? 'filePreviewArea' : 'replyFilePreviewArea').innerHTML = '';
             
-            // Create streaming response container
-            appendStreamingResponse();
-            
-            // Change send button to stop button
-            const sendButton = input.id === 'userInput' ? 
-                document.getElementById('sendButton') : 
-                document.getElementById('replySendButton');
-            
-            sendButton.innerHTML = '<i class="fas fa-stop"></i>';
-            sendButton.classList.add('stop-generation');
-            sendButton.onclick = stopGenerationAndRestore;
-            
-            try {
-                // Call DeepSeek API with previous messages for context
-                const response = await callDeepSeekAPI(message, jorkModel, isWebSearch, isDeepThinking, currentMessages);
+            // Check if model is Aria (image generation)
+            if (jorkModel === 'Aria') {
+                // Create image generation progress container
+                const progressContainer = appendImageGenerationProgress();
                 
-                // Restore send button
-                restoreSendButton();
+                // Change send button to stop button
+                const sendButton = input.id === 'userInput' ? 
+                    document.getElementById('sendButton') : 
+                    document.getElementById('replySendButton');
                 
-                // Check if response was aborted
-                if (response.aborted) {
-                    finalizeStreamingResponse(response.content + "\n\n*生成已停止*");
-                } else {
-                    // Update the UI with the response
-                    finalizeStreamingResponse(response.content, response.thinking);
+                sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                sendButton.classList.add('stop-generation');
+                sendButton.onclick = stopGenerationAndRestore;
+                
+                try {
+                    // First, use DeepSeek to optimize the prompt
+                    showImageGenerationProgress(progressContainer, "正在优化您的提示词...", 5);
+                    const optimizedPrompt = await summarizePromptForAria(message);
+                    console.log('Optimized prompt for Aria:', optimizedPrompt);
+                    
+                    // Then call Aria API with progress updates and style
+                    const result = await callAriaImageAPI(optimizedPrompt, (status, progress) => {
+                        showImageGenerationProgress(progressContainer, status, progress);
+                    }, style);
+                    
+                    // Restore send button
+                    restoreSendButton();
+                    
+                    // Remove progress container
+                    progressContainer.remove();
+                    
+                    if (result.success) {
+                        const finalMessage = `我为您生成了一张图片：\n\n**原始提示：** ${message}\n\n**优化提示：** ${result.revisedPrompt}`;
+                        
+                        // Add the text message and image together
+                        appendAssistantMessage(finalMessage, null, false, true, result.imageUrl);
+                    } else {
+                        appendAssistantMessage(`抱歉，图片生成失败：${result.error}`);
+                    }
+                } catch (error) {
+                    // Restore send button
+                    restoreSendButton();
+                    
+                    // Remove progress container
+                    progressContainer.remove();
+                    
+                    console.error('Error calling Aria API:', error);
+                    appendAssistantMessage(`抱歉，发生了错误：${error.message || '无法连接到图像生成服务'}`);
                 }
-            } catch (error) {
-                // Restore send button
-                restoreSendButton();
+            } else {
+                // Text generation models (Jork-Epist-4, Jork-Trax-4)
+                // Create streaming response container
+                appendStreamingResponse();
                 
-                console.error('Error calling API:', error);
-                // Update with error message
-                finalizeStreamingResponse(`抱歉，发生了错误：${error.message || '无法连接到服务'}`);
+                // Change send button to stop button
+                const sendButton = input.id === 'userInput' ? 
+                    document.getElementById('sendButton') : 
+                    document.getElementById('replySendButton');
+                
+                sendButton.innerHTML = '<i class="fas fa-stop"></i>';
+                sendButton.classList.add('stop-generation');
+                sendButton.onclick = stopGenerationAndRestore;
+                
+                try {
+                    // Call DeepSeek API with previous messages for context
+                    const response = await callDeepSeekAPI(
+                        message, 
+                        jorkModel,
+                        currentMessages,
+                        style
+                    );
+                    
+                    // Restore send button
+                    restoreSendButton();
+                    
+                    // Check if response was aborted
+                    if (response.aborted) {
+                        finalizeStreamingResponse(response.content + "\n\n*生成已停止*");
+                    } else if (response.tokenLimitReached) {
+                        // If token limit was reached, pass that information along
+                        finalizeStreamingResponse({
+                            content: response.content,
+                            tokenLimitReached: true
+                        }, response.thinking);
+                    } else {
+                        // Update the UI with the response
+                        finalizeStreamingResponse(response.content, response.thinking);
+                    }
+                } catch (error) {
+                    // Restore send button
+                    restoreSendButton();
+                    
+                    console.error('Error calling API:', error);
+                    // Update with error message
+                    finalizeStreamingResponse(`抱歉，发生了错误：${error.message || '无法连接到服务'}`);
+                }
             }
         }
         
@@ -2514,16 +3915,6 @@
         
         document.getElementById('replySendButton').addEventListener('click', function() {
             sendMessage(document.getElementById('replyInput'));
-        });
-        
-        // Web search button
-        document.getElementById('webSearchButton').addEventListener('click', function() {
-            sendMessage(document.getElementById('replyInput'), true, false);
-        });
-        
-        // Deep thinking button
-        document.getElementById('deepThinkingButton').addEventListener('click', function() {
-            sendMessage(document.getElementById('replyInput'), false, true);
         });
         
         // Enter key handlers
@@ -2593,8 +3984,9 @@
             }
         });
         
-        // Initialize canvas interaction
+        // Initialize canvas interaction and image viewer
         setupCanvasInteraction();
+        setupImageViewer();
         
         // Get references for easier access
         const chatContainer = document.getElementById('chatContainer');
