@@ -3,546 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JorkAI - Login</title>
-    <style>
-        :root {
-            --primary-color: #7856ff;
-            --text-color: #111827;
-            --background-color: #faf9f6;
-            --border-color: #e5e7eb;
-            --button-hover: #6a48ed;
-            --chat-bg: #f9fafb;
-            --user-bubble: #ede9fe;
-            --ai-bubble: #ffffff;
+    <title>JorkAI - Under Maintenance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        darkBg: '#181818',
+                        lightBg: '#FFFFFF'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'spin-slow': 'spin 4s linear infinite'
+                    }
+                }
+            },
+            darkMode: 'class'
+        }
+
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-        }
-        
-        .left-column {
-            flex: 1;
-            padding: 48px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .right-column {
-            flex: 1;
-            background-color: #f5f5f5;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-color);
-            text-decoration: none;
-            margin-bottom: 24px;
-        }
-        
-        .logo-icon {
-            color: var(--primary-color);
-            margin-right: 8px;
-        }
-        
-        h1 {
-            font-size: 48px;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-        
-        .subtitle {
-            font-size: 18px;
-            line-height: 1.5;
-            margin-bottom: 48px;
-            color: #4b5563;
-        }
-        
-        .login-form {
-            max-width: 400px;
-        }
-        
-        .login-options {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .google-btn, .email-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .google-btn {
-            background-color: white;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-        
-        .google-btn:hover {
-            background-color: #f9fafb;
-        }
-        
-        .google-icon {
-            margin-right: 12px;
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 24px 0;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .divider::before {
-            margin-right: 16px;
-        }
-        
-        .divider::after {
-            margin-left: 16px;
-        }
-        
-        .email-input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-size: 16px;
-            margin-bottom: 16px;
-        }
-        
-        .email-btn {
-            background-color: #111827;
-            color: white;
-            border: none;
-        }
-        
-        .email-btn:hover {
-            background-color: #1f2937;
-        }
-        
-        .privacy-notice {
-            margin-top: 24px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        
-        .privacy-link {
-            color: var(--text-color);
-            text-decoration: underline;
-        }
-        
-        /* Animation section */
-        .demo-container {
-            width: 100%;
-            height: 100%;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--chat-bg);
-            position: relative;
-        }
-        
-        .chat-window {
-            flex: 1;
-            overflow: hidden;
-            border-radius: 12px;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 24px;
-            position: relative;
-        }
-        
-        .chat-messages {
-            height: 100%;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            padding-bottom: 60px;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 16px;
-            border-radius: 12px;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .user-message {
-            align-self: flex-end;
-            background-color: var(--user-bubble);
-            color: var(--text-color);
-        }
-        
-        .ai-message {
-            align-self: flex-start;
-            background-color: var(--ai-bubble);
-            border: 1px solid var(--border-color);
-        }
-        
-        .message-content {
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        
-        .response-image {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            border-radius: 8px;
-            margin-top: 12px;
-            background-color: #f0f0f0;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        
-        .code-block {
-            background-color: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            font-family: monospace;
-            margin-top: 12px;
-            white-space: pre-wrap;
-            font-size: 14px;
-            color: #333;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        
-        .typing-indicator {
-            display: inline-block;
-            width: 20px;
-            height: 10px;
-            position: relative;
-        }
-        
-        .typing-indicator::after {
-            content: '...';
-            position: absolute;
-            animation: typingDots 1.5s infinite;
-        }
-        
-        @keyframes typingDots {
-            0% { content: '.'; }
-            33% { content: '..'; }
-            66% { content: '...'; }
-            100% { content: '.'; }
-        }
-        
-        .fade-out {
-            animation: fadeOut 0.5s ease forwards;
-        }
-        
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                height: auto;
+        // Listen for changes in color scheme preference
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
             }
-            
-            .left-column, .right-column {
-                padding: 24px;
-            }
-            
-            .right-column {
-                display: none;
-            }
-            
-            h1 {
-                font-size: 32px;
-            }
-        }
-    </style>
+        });
+    </script>
 </head>
-<body>
-    <div class="container">
-        <div class="left-column">
-            <a href="https://jorkai.cn" class="logo">
-                <span class="logo-icon">✦</span>
-                JorkAI
-            </a>
-            
-            <h1>你的想法，被放大了</h1>
-            <p class="subtitle">隐私优先的人工智能，帮助您自信地创造。</p>
-            
-            <div class="login-form">
-                <div class="login-options">
-                    <button class="google-btn">
-                        <svg class="google-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                            <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
-                            <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
-                            <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/>
-                            <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
-                        </svg>
-                        使用Google以继续
-                    </button>
-                    
-                    <div class="divider">或</div>
-                    
-                    <input type="email" class="email-input" placeholder="请键入您的个人或工作电邮">
-                    <input type="password" class="email-input" placeholder="请键入您的密码">
-                    <button class="email-btn">使用电邮以继续</button>
-                </div>
-                
-                <p class="privacy-notice">
-                    继续，即表示您承认 JorkAI 的<a href="PrivacyPolicy.html" class="privacy-link">隐私政策</a>.
-                </p>
+<body class="min-h-screen flex items-center justify-center p-4 bg-lightBg dark:bg-darkBg transition-colors duration-300">
+    <div class="max-w-xl w-full mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-colors duration-300">
+        <div class="relative p-6 sm:p-10 text-center">
+            <!-- Background Decoration -->
+            <div class="absolute top-0 right-0 w-40 h-40 opacity-5 dark:opacity-10">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" class="animate-spin-slow">
+                    <path fill="#5D5CDE" d="M40.8,-51.6C51.4,-42.2,57.6,-28.3,61.1,-13.6C64.7,1.2,65.6,16.7,59.5,28.9C53.3,41.1,40.1,49.9,25.6,56.4C11.2,62.9,-4.4,67,-19.1,64.1C-33.8,61.2,-47.6,51.3,-54.2,37.8C-60.8,24.3,-60.1,7.1,-57.4,-9C-54.7,-25.1,-49.9,-40.1,-39.7,-49.4C-29.5,-58.8,-14.7,-62.5,0.3,-62.9C15.4,-63.3,30.8,-60.3,40.8,-51.6Z" transform="translate(100 100)" />
+                </svg>
             </div>
-        </div>
-        
-        <div class="right-column">
-            <div class="demo-container">
-                <div class="chat-window">
-                    <div class="chat-messages" id="chatMessages">
-                        <!-- Chat messages will be added dynamically via JavaScript -->
+            
+            <!-- Logo and Title -->
+            <div class="relative mb-6">
+                <h1 class="text-4xl sm:text-5xl font-bold text-primary mb-2 tracking-tight">
+                    Jork<span class="text-gray-800 dark:text-white">AI</span>
+                </h1>
+                <div class="w-16 h-1 bg-primary mx-auto rounded-full"></div>
+            </div>
+            
+            <!-- Maintenance Message -->
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white mb-4">
+                Currently Under Maintenance
+            </h2>
+            
+            <!-- Description -->
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg">
+                We're making improvements to our language model platform. 
+                Please check back soon for an enhanced AI experience.
+            </p>
+            
+            <!-- Animation -->
+            <div class="flex justify-center mb-8">
+                <div class="relative w-24 h-24">
+                    <!-- Outer Circle -->
+                    <div class="absolute inset-0 border-4 border-gray-200 dark:border-gray-700 rounded-full"></div>
+                    
+                    <!-- Animated Circle -->
+                    <div class="absolute inset-0 border-4 border-t-primary border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+                    
+                    <!-- Inner Circle with Pulsing AI Icon -->
+                    <div class="absolute inset-4 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-inner">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary animate-pulse-slow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
                     </div>
                 </div>
             </div>
+            
+            <!-- Additional Info -->
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-6 text-sm text-gray-500 dark:text-gray-400">
+                <p>Our team is working hard to bring JorkAI back online.</p>
+                <p class="mt-2">Thank you for your patience!</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="bg-gray-50 dark:bg-gray-900 px-6 py-4 text-center text-gray-500 dark:text-gray-400 text-sm transition-colors duration-300">
+            <p>© 2023 JorkAI. All rights reserved.</p>
         </div>
     </div>
-
-    <script>
-        // Login functionality
-        function handleLogin() {
-            // Simulate login process
-            console.log('Login initiated...');
-            
-            // Here you would typically:
-            // 1. Send credentials to your backend
-            // 2. Handle authentication
-            // 3. Store session/tokens
-            
-            // For now, we'll just redirect to chat.html
-            window.location.href = 'chat.html';
-        }
-        
-        // Add event listeners for login buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const googleBtn = document.querySelector('.google-btn');
-            const emailBtn = document.querySelector('.email-btn');
-            const emailInput = document.querySelector('.email-input');
-            
-            // Google login button
-            googleBtn.addEventListener('click', function() {
-                handleLogin();
-            });
-            
-            // Email login button
-            emailBtn.addEventListener('click', function() {
-                const email = emailInput.value.trim();
-                if (email) {
-                    handleLogin();
-                } else {
-                    alert('Please enter an email address');
-                }
-            });
-            
-            // Handle Enter key in email input
-            emailInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    emailBtn.click();
-                }
-            });
-        });
-
-        // Demo conversation data
-        const conversations = [
-            {
-                user: "Create a report to analyze product usage and user feedback.",
-                ai: "Here's the report.",
-                hasImage: true,
-                imageName: "Customer Insights Report"
-            },
-            {
-                user: "帮我制作一个个人网站",
-                ai: "我很高兴能够为您制作一个个人网站。以下是一个简洁、现代的个人网站模板：",
-                hasCode: true,
-                code: `<!DOCTYPE html>\n<html lang="zh">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>个人网站</title>\n    <style>\n        /* 样式代码 */\n        body {\n            font-family: 'Segoe UI', sans-serif;\n            line-height: 1.6;\n            margin: 0;\n            color: #333;\n        }\n        /* 更多样式... */\n    </style>\n</head>\n<body>\n    <header>\n        <h1>您的名字</h1>\n        <p>网页开发者 | 设计师 | 创作者</p>\n    </header>\n    <!-- 更多内容... -->\n</body>\n</html>`
-            },
-            {
-                user: "Generate a logo for my coffee shop called 'Morning Brew'",
-                ai: "I've created a simple logo concept for your coffee shop 'Morning Brew'. Here it is:",
-                hasImage: true,
-                imageName: "Morning Brew Coffee Shop Logo"
-            }
-        ];
-
-        // Animation control
-        const chatMessages = document.getElementById('chatMessages');
-        let currentConversation = 0;
-        let animationState = 'idle';
-        
-        // Start the animation cycle
-        startAnimationCycle();
-        
-        function startAnimationCycle() {
-            if (animationState === 'idle') {
-                showNextConversation();
-            }
-        }
-        
-        function showNextConversation() {
-            animationState = 'running';
-            const conversation = conversations[currentConversation];
-            
-            // Clear previous messages with animation
-            if (chatMessages.children.length > 0) {
-                clearMessages(() => {
-                    // After clearing, show the next conversation
-                    addUserMessage(conversation.user);
-                    
-                    // Wait before showing AI response
-                    setTimeout(() => {
-                        addAiMessage(conversation);
-                        
-                        // Move to next conversation for next cycle
-                        currentConversation = (currentConversation + 1) % conversations.length;
-                        
-                        // Wait before starting next cycle
-                        setTimeout(() => {
-                            animationState = 'idle';
-                            startAnimationCycle();
-                        }, 5000);
-                    }, 1500);
-                });
-            } else {
-                // First run, no need to clear
-                addUserMessage(conversation.user);
-                
-                // Wait before showing AI response
-                setTimeout(() => {
-                    addAiMessage(conversation);
-                    
-                    // Move to next conversation for next cycle
-                    currentConversation = (currentConversation + 1) % conversations.length;
-                    
-                    // Wait before starting next cycle
-                    setTimeout(() => {
-                        animationState = 'idle';
-                        startAnimationCycle();
-                    }, 5000);
-                }, 1500);
-            }
-        }
-        
-        function clearMessages(callback) {
-            const messages = chatMessages.children;
-            if (messages.length === 0) {
-                callback();
-                return;
-            }
-            
-            // Add fade-out class to all messages
-            for (let i = 0; i < messages.length; i++) {
-                messages[i].classList.add('fade-out');
-            }
-            
-            // Wait for animation to complete
-            setTimeout(() => {
-                chatMessages.innerHTML = '';
-                callback();
-            }, 500);
-        }
-        
-        function addUserMessage(text) {
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message user-message';
-            
-            const contentElement = document.createElement('div');
-            contentElement.className = 'message-content';
-            contentElement.textContent = text;
-            
-            messageElement.appendChild(contentElement);
-            chatMessages.appendChild(messageElement);
-        }
-        
-        function addAiMessage(conversation) {
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message ai-message';
-            
-            const contentElement = document.createElement('div');
-            contentElement.className = 'message-content';
-            contentElement.textContent = conversation.ai;
-            
-            messageElement.appendChild(contentElement);
-            
-            // Add image if needed
-            if (conversation.hasImage) {
-                const imageElement = document.createElement('div');
-                imageElement.className = 'response-image';
-                imageElement.textContent = conversation.imageName;
-                messageElement.appendChild(imageElement);
-            }
-            
-            // Add code if needed
-            if (conversation.hasCode) {
-                const codeElement = document.createElement('pre');
-                codeElement.className = 'code-block';
-                codeElement.textContent = conversation.code;
-                messageElement.appendChild(codeElement);
-            }
-            
-            chatMessages.appendChild(messageElement);
-        }
-    </script>
 </body>
 </html>
