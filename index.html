@@ -1,548 +1,536 @@
 <!DOCTYPE html>
-<html lang="en">
+<!-- Last Published: Monday, 21 Jul 2025 15:13:14 GMT+0000 (Coordinated Universal Time)-->
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JorkAI - Login</title>
-    <style>
-        :root {
-            --primary-color: #7856ff;
-            --text-color: #111827;
-            --background-color: #faf9f6;
-            --border-color: #e5e7eb;
-            --button-hover: #6a48ed;
-            --chat-bg: #f9fafb;
-            --user-bubble: #ede9fe;
-            --ai-bubble: #ffffff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-        }
-        
-        .left-column {
-            flex: 1;
-            padding: 48px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .right-column {
-            flex: 1;
-            background-color: #f5f5f5;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-color);
-            text-decoration: none;
-            margin-bottom: 24px;
-        }
-        
-        .logo-icon {
-            color: var(--primary-color);
-            margin-right: 8px;
-        }
-        
-        h1 {
-            font-size: 48px;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-        
-        .subtitle {
-            font-size: 18px;
-            line-height: 1.5;
-            margin-bottom: 48px;
-            color: #4b5563;
-        }
-        
-        .login-form {
-            max-width: 400px;
-        }
-        
-        .login-options {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        
-        .google-btn, .email-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        
-        .google-btn {
-            background-color: white;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-        
-        .google-btn:hover {
-            background-color: #f9fafb;
-        }
-        
-        .google-icon {
-            margin-right: 12px;
-        }
-        
-        .divider {
-            display: flex;
-            align-items: center;
-            text-align: center;
-            margin: 24px 0;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        .divider::before, .divider::after {
-            content: '';
-            flex: 1;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .divider::before {
-            margin-right: 16px;
-        }
-        
-        .divider::after {
-            margin-left: 16px;
-        }
-        
-        .email-input {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            font-size: 16px;
-            margin-bottom: 16px;
-        }
-        
-        .email-btn {
-            background-color: #111827;
-            color: white;
-            border: none;
-        }
-        
-        .email-btn:hover {
-            background-color: #1f2937;
-        }
-        
-        .privacy-notice {
-            margin-top: 24px;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        
-        .privacy-link {
-            color: var(--text-color);
-            text-decoration: underline;
-        }
-        
-        /* Animation section */
-        .demo-container {
-            width: 100%;
-            height: 100%;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--chat-bg);
-            position: relative;
-        }
-        
-        .chat-window {
-            flex: 1;
-            overflow: hidden;
-            border-radius: 12px;
-            background-color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 24px;
-            position: relative;
-        }
-        
-        .chat-messages {
-            height: 100%;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            padding-bottom: 60px;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 16px;
-            border-radius: 12px;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .user-message {
-            align-self: flex-end;
-            background-color: var(--user-bubble);
-            color: var(--text-color);
-        }
-        
-        .ai-message {
-            align-self: flex-start;
-            background-color: var(--ai-bubble);
-            border: 1px solid var(--border-color);
-        }
-        
-        .message-content {
-            font-size: 15px;
-            line-height: 1.5;
-        }
-        
-        .response-image {
-            width: 100%;
-            max-width: 400px;
-            height: auto;
-            border-radius: 8px;
-            margin-top: 12px;
-            background-color: #f0f0f0;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #6b7280;
-        }
-        
-        .code-block {
-            background-color: #f8f9fa;
-            padding: 12px;
-            border-radius: 8px;
-            font-family: monospace;
-            margin-top: 12px;
-            white-space: pre-wrap;
-            font-size: 14px;
-            color: #333;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @keyframes typing {
-            from { width: 0 }
-            to { width: 100% }
-        }
-        
-        .typing-indicator {
-            display: inline-block;
-            width: 20px;
-            height: 10px;
-            position: relative;
-        }
-        
-        .typing-indicator::after {
-            content: '...';
-            position: absolute;
-            animation: typingDots 1.5s infinite;
-        }
-        
-        @keyframes typingDots {
-            0% { content: '.'; }
-            33% { content: '..'; }
-            66% { content: '...'; }
-            100% { content: '.'; }
-        }
-        
-        .fade-out {
-            animation: fadeOut 0.5s ease forwards;
-        }
-        
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                height: auto;
-            }
-            
-            .left-column, .right-column {
-                padding: 24px;
-            }
-            
-            .right-column {
-                display: none;
-            }
-            
-            h1 {
-                font-size: 32px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JorkAI - 深度搜索，智领未来</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind 配置 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'jork-blue': '#165DFF',
+            'jork-dark': '#0F172A',
+            'jork-light': '#3B82F6',
+            'jork-gray': '#1E293B',
+            'jork-accent': '#60A5FA'
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .search-grid {
+        background-size: 30px 30px;
+        background-image: 
+          linear-gradient(to right, rgba(22, 93, 255, 0.07) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(22, 93, 255, 0.07) 1px, transparent 1px);
+      }
+      .animate-float {
+        animation: float 8s ease-in-out infinite;
+      }
+      .animate-pulse-slow {
+        animation: pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .backdrop-blur-xl {
+        backdrop-filter: blur(24px);
+      }
+      .text-shadow {
+        text-shadow: 0 0 15px rgba(22, 93, 255, 0.5);
+      }
+      .video-container {
+        aspect-ratio: 16/9;
+      }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(2deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+  </style>
 </head>
-<body>
-    <div class="container">
-        <div class="left-column">
-            <a href="https://jorkai.cn" class="logo">
-                <span class="logo-icon">✦</span>
-                JorkAI
-            </a>
-            
-            <h1>你的想法，被放大了</h1>
-            <p class="subtitle">隐私优先的人工智能，帮助您自信地创造。</p>
-            
-            <div class="login-form">
-                <div class="login-options">
-                    <button class="google-btn">
-                        <svg class="google-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                            <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
-                            <path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7C7.96 41.07 15.4 46 24 46z"/>
-                            <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/>
-                            <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
-                        </svg>
-                        使用Google以继续
-                    </button>
-                    
-                    <div class="divider">或</div>
-                    
-                    <input type="email" class="email-input" placeholder="请键入您的个人或工作电邮">
-                    <input type="password" class="email-input" placeholder="请键入您的密码">
-                    <button class="email-btn">使用电邮以继续</button>
-                </div>
-                
-                <p class="privacy-notice">
-                    继续，即表示您承认 JorkAI 的<a href="PrivacyPolicy.html" class="privacy-link">隐私政策</a>.
-                </p>
-            </div>
+
+<body class="font-inter bg-jork-dark text-white overflow-x-hidden">
+  <!-- 导航栏 -->
+  <header id="navbar" class="fixed w-full z-50 transition-all duration-500">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-4">
+        <!-- Logo区域 -->
+        <div class="flex items-center">
+          <img src="logo.png" alt="JorkAI Logo" class="h-10">
         </div>
         
-        <div class="right-column">
-            <div class="demo-container">
-                <div class="chat-window">
-                    <div class="chat-messages" id="chatMessages">
-                        <!-- Chat messages will be added dynamically via JavaScript -->
-                    </div>
-                </div>
-            </div>
+        <!-- 桌面导航 -->
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#features" class="text-gray-300 hover:text-white transition-colors">特性</a>
+          <a href="#search" class="text-gray-300 hover:text-white transition-colors">深度搜索</a>
+          <a href="#video" class="text-gray-300 hover:text-white transition-colors">宣传片</a>
+          <a href="#about" class="text-gray-300 hover:text-white transition-colors">关于我们</a>
+        </nav>
+        
+        <div class="flex items-center space-x-4">
+          <a href="login.html" class="hidden sm:block px-5 py-2 rounded-full text-white border border-jork-blue/30 hover:border-jork-blue/60 transition-all">登录</a>
+          <a href="login.html" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-0.5 font-medium">开始探索</a>
+          
+          <!-- 移动端菜单按钮 -->
+          <button id="menu-toggle" class="md:hidden text-white focus:outline-none">
+            <i class="fa fa-bars text-2xl"></i>
+          </button>
         </div>
+      </div>
     </div>
+    
+    <!-- 移动端导航菜单 -->
+    <div id="mobile-menu" class="md:hidden hidden bg-jork-gray/95 backdrop-blur-xl border-t border-jork-blue/10">
+      <div class="container mx-auto px-4 py-4 space-y-3">
+        <a href="#features" class="block py-2 text-gray-300 hover:text-white transition-colors">特性</a>
+        <a href="#search" class="block py-2 text-gray-300 hover:text-white transition-colors">深度搜索</a>
+        <a href="#video" class="block py-2 text-gray-300 hover:text-white transition-colors">宣传片</a>
+        <a href="#about" class="block py-2 text-gray-300 hover:text-white transition-colors">关于我们</a>
+        <a href="login.html" class="block py-2 text-gray-300 hover:text-white transition-colors">登录</a>
+      </div>
+    </div>
+  </header>
 
-    <script>
-        // Login functionality
-        function handleLogin() {
-            // Simulate login process
-            console.log('Login initiated...');
-            
-            // Here you would typically:
-            // 1. Send credentials to your backend
-            // 2. Handle authentication
-            // 3. Store session/tokens
-            
-            // For now, we'll just redirect to chat.html
-            window.location.href = 'chat.html';
-        }
+  <!-- Hero区（全屏显示） -->
+  <section class="hero min-h-screen flex items-center justify-center relative overflow-hidden search-grid">
+    <!-- 粒子背景（模拟搜索网络） -->
+    <div id="particles-js" class="absolute inset-0 w-full h-full"></div>
+    
+    <!-- 装饰元素 -->
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-jork-blue/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+    <div class="absolute bottom-1/3 right-1/4 w-80 h-80 bg-jork-accent/10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
+    
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <div class="max-w-5xl mx-auto flex flex-col items-center">
         
-        // Add event listeners for login buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            const googleBtn = document.querySelector('.google-btn');
-            const emailBtn = document.querySelector('.email-btn');
-            const emailInput = document.querySelector('.email-input');
-            
-            // Google login button
-            googleBtn.addEventListener('click', function() {
-                handleLogin();
-            });
-            
-            // Email login button
-            emailBtn.addEventListener('click', function() {
-                const email = emailInput.value.trim();
-                if (email) {
-                    handleLogin();
-                } else {
-                    alert('Please enter an email address');
-                }
-            });
-            
-            // Handle Enter key in email input
-            emailInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    emailBtn.click();
-                }
-            });
-        });
+        <!-- 主标题（换行设计） -->
+        <h1 class="text-[clamp(2.5rem,7vw,4.5rem)] font-extrabold leading-tight mb-6">
+          不止于<br>
+          表面的<br>
+          <span class="bg-gradient-to-r from-jork-blue to-jork-accent text-gradient text-shadow">
+            深度搜索
+          </span>
+        </h1>
+        
+        <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+          JorkAI 穿透信息表层，直达知识核心，<br class="md:hidden">
+          让每一次探索都更精准、更深入。
+        </p>
+        
+        <!-- 行动号召 -->
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 w-full max-w-xl">
+          <a href="login.html" class="px-8 py-4 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white text-lg font-medium hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-1 duration-300">
+            立即体验
+          </a>
+          <a href="#video" class="px-8 py-4 rounded-full border border-jork-blue/30 text-white text-lg font-medium hover:border-jork-blue/60 transition-all flex items-center justify-center group">
+            <span>观看介绍</span>
+            <i class="fa fa-play-circle ml-2 group-hover:text-jork-blue transition-colors"></i>
+          </a>
+        </div>
+        
+        <!-- 信任标识 -->
+        <div class="mt-16 w-full">
+          <p class="text-gray-500 mb-6 text-sm uppercase tracking-wider">受到行业领导者的信赖</p>
+          <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70">
+            <div class="text-gray-400 text-xl font-semibold">科技前沿</div>
+            <div class="text-gray-400 text-xl font-semibold">知识研究院</div>
+            <div class="text-gray-400 text-xl font-semibold">全球数据</div>
+            <div class="text-gray-400 text-xl font-semibold">智慧企业</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 向下滚动指示 -->
+    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <a href="#features" class="text-gray-400 hover:text-white transition-colors">
+        <i class="fa fa-angle-down text-3xl"></i>
+      </a>
+    </div>
+  </section>
 
-        // Demo conversation data
-        const conversations = [
-            {
-                user: "Create a report to analyze product usage and user feedback.",
-                ai: "Here's the report.",
-                hasImage: true,
-                imageName: "Customer Insights Report"
+  <!-- 特性部分 -->
+  <section id="features" class="py-24 bg-jork-dark relative overflow-hidden">
+    <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-jork-blue/5 rounded-full filter blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <div class="inline-block px-4 py-2 rounded-full bg-jork-blue/10 text-jork-accent border border-jork-blue/20 text-sm font-medium mb-6">
+          核心优势
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">为什么选择 JorkAI 的深度搜索</h2>
+        <p class="text-xl text-gray-300">我们的AI技术突破传统搜索局限，带来更精准、更全面、更深入的信息获取体验</p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- 特性卡片 1 -->
+        <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-8 border border-jork-blue/10 hover:border-jork-blue/30 transition-all group hover:shadow-lg hover:shadow-jork-blue/5 transform hover:-translate-y-1 duration-300">
+          <div class="w-14 h-14 rounded-xl bg-jork-blue/20 flex items-center justify-center mb-6 group-hover:bg-jork-blue/30 transition-all">
+            <i class="fa fa-search-plus text-2xl text-jork-blue"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">多层级搜索</h3>
+          <p class="text-gray-400">穿透信息表层，深入多层级数据结构，挖掘隐藏在深处的关联知识和潜在信息。</p>
+        </div>
+        
+        <!-- 特性卡片 2 -->
+        <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-8 border border-jork-blue/10 hover:border-jork-blue/30 transition-all group hover:shadow-lg hover:shadow-jork-blue/5 transform hover:-translate-y-1 duration-300">
+          <div class="w-14 h-14 rounded-xl bg-jork-blue/20 flex items-center justify-center mb-6 group-hover:bg-jork-blue/30 transition-all">
+            <i class="fa fa-brain text-2xl text-jork-blue"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">语义理解</h3>
+          <p class="text-gray-400">基于上下文的深度语义分析，理解您的真实意图，而非简单匹配关键词，搜索更精准。</p>
+        </div>
+        
+        <!-- 特性卡片 3 -->
+        <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-8 border border-jork-blue/10 hover:border-jork-blue/30 transition-all group hover:shadow-lg hover:shadow-jork-blue/5 transform hover:-translate-y-1 duration-300">
+          <div class="w-14 h-14 rounded-xl bg-jork-blue/20 flex items-center justify-center mb-6 group-hover:bg-jork-blue/30 transition-all">
+            <i class="fa fa-sitemap text-2xl text-jork-blue"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-3">关联挖掘</h3>
+          <p class="text-gray-400">智能识别信息间的潜在关联，构建知识网络，呈现更全面的视角和更完整的图景。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 视频宣传片区域 -->
+<section id="video" class="py-24 bg-jork-gray/30 relative overflow-hidden">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-16">
+        <div class="inline-block px-4 py-2 rounded-full bg-jork-blue/10 text-jork-accent border border-jork-blue/20 text-sm font-medium mb-6">
+          了解更多
+        </div>
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">观看 JorkAI 宣传片</h2>
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto">深入了解 JorkAI 的技术原理、核心功能和应用场景</p>
+      </div>
+      
+      <!-- 视频与文字区域（3:5比例） -->
+      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
+        <!-- 左侧视频区域（3/5） -->
+        <div class="lg:col-span-3">
+          <div class="relative rounded-2xl overflow-hidden group video-container shadow-2xl shadow-jork-blue/10">
+            <!-- 视频元素（直接引用宣传片.mp4） -->
+            <video 
+              class="w-full h-full object-cover" 
+              poster="https://picsum.photos/id/1/1200/675"  
+              preload="metadata"
+            >
+              <source src="宣传片.mp4" type="video/mp4">  <!-- 此处放置您的视频文件路径 -->
+              您的浏览器不支持视频播放
+            </video>
+            
+            <!-- 自定义播放按钮（覆盖在视频上） -->
+            <div id="video-play-btn" class="absolute inset-0 flex items-center justify-center bg-jork-dark/40 backdrop-blur-sm group-hover:bg-jork-dark/30 transition-all cursor-pointer">
+              <div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30">
+                <i class="fa fa-play text-white text-2xl ml-1"></i>
+              </div>
+            </div>
+            
+            <!-- 视频时长 -->
+            <div class="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-jork-dark/70 backdrop-blur-sm text-white text-sm">
+              03:45  <!-- 替换为您的视频实际时长 -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- 右侧文字简介（2/5） -->
+        <div class="lg:col-span-2 space-y-6">
+          <h3 class="text-3xl md:text-4xl font-bold">探索信息的<br>全新维度</h3>
+          
+          <div class="space-y-4">
+            <p class="text-gray-300">JorkAI 不仅仅是一个搜索引擎，更是您探索知识、挖掘深度信息的智能伙伴。</p>
+            
+            <p class="text-gray-300">在这个信息爆炸的时代，我们帮助您过滤噪音，直达核心，发现隐藏在海量数据背后的关联与洞察。</p>
+            
+            <p class="text-gray-300">通过先进的人工智能算法和深度神经网络，JorkAI 能够理解复杂查询，提供多层级、多维度的搜索结果。</p>
+          </div>
+          
+          <div class="pt-4">
+            <a href="login.html" class="inline-flex items-center px-6 py-3.5 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white font-medium hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-0.5">
+              <span>亲身体验</span>
+              <i class="fa fa-arrow-right ml-2"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 视频控制脚本 -->
+  <script>
+    // 获取视频元素和播放按钮
+    const video = document.querySelector('video');
+    const playBtn = document.getElementById('video-play-btn');
+    
+    // 点击播放/暂停视频
+    playBtn.addEventListener('click', function() {
+      if (video.paused) {
+        video.play();
+        playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-pause text-white text-2xl"></i></div>';
+        playBtn.classList.remove('bg-jork-dark/40');
+      } else {
+        video.pause();
+        playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-play text-white text-2xl ml-1"></i></div>';
+      }
+    });
+    
+    // 视频结束时恢复播放按钮状态
+    video.addEventListener('ended', function() {
+      playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-play text-white text-2xl ml-1"></i></div>';
+    });
+  </script>
+
+  <!-- 行动召唤 -->
+  <section class="py-24 relative overflow-hidden">
+    <div class="absolute inset-0 search-grid"></div>
+    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-gradient-to-r from-jork-blue/10 to-jork-accent/10 rounded-full filter blur-3xl"></div>
+    
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-4xl mx-auto text-center">
+        <h2 class="text-4xl md:text-6xl font-bold mb-6">准备好体验深度搜索了吗？</h2>
+        <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">加入 JorkAI，开启信息探索的新维度，发现传统搜索无法触及的知识深度。</p>
+        
+        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+          <a href="login.html" class="px-8 py-4 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white text-lg font-medium text-center hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-1 duration-300">
+            登录并开始探索
+          </a>
+          <a href="login.html" class="px-8 py-4 rounded-full border border-jork-blue/30 text-white text-lg font-medium text-center hover:border-jork-blue/60 transition-all">
+            了解会员计划
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="bg-jork-gray/30 pt-16 pb-8 border-t border-jork-blue/10">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        <div class="lg:col-span-2">
+          <div class="flex items-center mb-6">
+            <img src="logo.png" alt="JorkAI Logo" class="h-10 mr-3">
+            <span class="text-2xl font-bold bg-gradient-to-r from-white to-jork-accent text-gradient">JorkAI</span>
+          </div>
+          <p class="text-gray-400 mb-6 max-w-md">JorkAI 致力于通过深度搜索技术，让每个人都能更高效、更深入地获取和理解信息，突破知识获取的边界。</p>
+          
+          <!-- 社交媒体链接 -->
+          <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
+              <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
+              <i class="fa fa-linkedin"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
+              <i class="fa fa-github"></i>
+            </a>
+            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
+              <i class="fa fa-envelope"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- 快速链接 -->
+        <div>
+          <h4 class="text-white font-bold mb-4">产品</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">深度搜索</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">智能分析</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">知识图谱</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">API 接口</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">定价方案</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-bold mb-4">资源</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">帮助中心</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">使用教程</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">案例研究</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">博客文章</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">开发者文档</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-white font-bold mb-4">公司</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">关于我们</a></li>
+            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">登录</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">联系我们</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">服务条款</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="mt-16 pt-8 border-t border-jork-blue/10 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2023 JorkAI. 保留所有权利。</p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">隐私政策</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">服务条款</a>
+          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">Cookie 政策</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // 导航栏滚动效果
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-jork-dark/90', 'backdrop-blur-xl', 'shadow-lg', 'shadow-jork-blue/5');
+      } else {
+        navbar.classList.remove('bg-jork-dark/90', 'backdrop-blur-xl', 'shadow-lg', 'shadow-jork-blue/5');
+      }
+    });
+    
+    // 移动端菜单切换
+    document.getElementById('menu-toggle').addEventListener('click', function() {
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenu.classList.toggle('hidden');
+    });
+    
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 100,
+            behavior: 'smooth'
+          });
+          
+          // 关闭移动菜单（如果打开）
+          document.getElementById('mobile-menu').classList.add('hidden');
+        }
+      });
+    });
+    
+    // 粒子背景初始化（模拟搜索网络）
+    document.addEventListener('DOMContentLoaded', function() {
+      particlesJS('particles-js', {
+        "particles": {
+          "number": {
+            "value": 100,
+            "density": {
+              "enable": true,
+              "value_area": 800
+            }
+          },
+          "color": {
+            "value": ["#165DFF", "#60A5FA"]
+          },
+          "shape": {
+            "type": "circle"
+          },
+          "opacity": {
+            "value": 0.3,
+            "random": true
+          },
+          "size": {
+            "value": 2,
+            "random": true
+          },
+          "line_linked": {
+            "enable": true,
+            "distance": 120,
+            "color": "#165DFF",
+            "opacity": 0.15,
+            "width": 1
+          },
+          "move": {
+            "enable": true,
+            "speed": 1,
+            "direction": "none",
+            "random": true,
+            "straight": false,
+            "out_mode": "out",
+            "bounce": false
+          }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": {
+            "onhover": {
+              "enable": true,
+              "mode": "grab"
             },
-            {
-                user: "帮我制作一个个人网站",
-                ai: "我很高兴能够为您制作一个个人网站。以下是一个简洁、现代的个人网站模板：",
-                hasCode: true,
-                code: `<!DOCTYPE html>\n<html lang="zh">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>个人网站</title>\n    <style>\n        /* 样式代码 */\n        body {\n            font-family: 'Segoe UI', sans-serif;\n            line-height: 1.6;\n            margin: 0;\n            color: #333;\n        }\n        /* 更多样式... */\n    </style>\n</head>\n<body>\n    <header>\n        <h1>您的名字</h1>\n        <p>网页开发者 | 设计师 | 创作者</p>\n    </header>\n    <!-- 更多内容... -->\n</body>\n</html>`
+            "onclick": {
+              "enable": true,
+              "mode": "push"
             },
-            {
-                user: "Generate a logo for my coffee shop called 'Morning Brew'",
-                ai: "I've created a simple logo concept for your coffee shop 'Morning Brew'. Here it is:",
-                hasImage: true,
-                imageName: "Morning Brew Coffee Shop Logo"
+            "resize": true
+          },
+          "modes": {
+            "grab": {
+              "distance": 140,
+              "line_linked": {
+                "opacity": 0.3
+              }
+            },
+            "push": {
+              "particles_nb": 4
             }
-        ];
-
-        // Animation control
-        const chatMessages = document.getElementById('chatMessages');
-        let currentConversation = 0;
-        let animationState = 'idle';
-        
-        // Start the animation cycle
-        startAnimationCycle();
-        
-        function startAnimationCycle() {
-            if (animationState === 'idle') {
-                showNextConversation();
-            }
+          }
+        },
+        "retina_detect": true
+      });
+    });
+    
+    // 滚动动画
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          entry.target.classList.remove('opacity-0', 'translate-y-10');
         }
-        
-        function showNextConversation() {
-            animationState = 'running';
-            const conversation = conversations[currentConversation];
-            
-            // Clear previous messages with animation
-            if (chatMessages.children.length > 0) {
-                clearMessages(() => {
-                    // After clearing, show the next conversation
-                    addUserMessage(conversation.user);
-                    
-                    // Wait before showing AI response
-                    setTimeout(() => {
-                        addAiMessage(conversation);
-                        
-                        // Move to next conversation for next cycle
-                        currentConversation = (currentConversation + 1) % conversations.length;
-                        
-                        // Wait before starting next cycle
-                        setTimeout(() => {
-                            animationState = 'idle';
-                            startAnimationCycle();
-                        }, 5000);
-                    }, 1500);
-                });
-            } else {
-                // First run, no need to clear
-                addUserMessage(conversation.user);
-                
-                // Wait before showing AI response
-                setTimeout(() => {
-                    addAiMessage(conversation);
-                    
-                    // Move to next conversation for next cycle
-                    currentConversation = (currentConversation + 1) % conversations.length;
-                    
-                    // Wait before starting next cycle
-                    setTimeout(() => {
-                        animationState = 'idle';
-                        startAnimationCycle();
-                    }, 5000);
-                }, 1500);
-            }
-        }
-        
-        function clearMessages(callback) {
-            const messages = chatMessages.children;
-            if (messages.length === 0) {
-                callback();
-                return;
-            }
-            
-            // Add fade-out class to all messages
-            for (let i = 0; i < messages.length; i++) {
-                messages[i].classList.add('fade-out');
-            }
-            
-            // Wait for animation to complete
-            setTimeout(() => {
-                chatMessages.innerHTML = '';
-                callback();
-            }, 500);
-        }
-        
-        function addUserMessage(text) {
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message user-message';
-            
-            const contentElement = document.createElement('div');
-            contentElement.className = 'message-content';
-            contentElement.textContent = text;
-            
-            messageElement.appendChild(contentElement);
-            chatMessages.appendChild(messageElement);
-        }
-        
-        function addAiMessage(conversation) {
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message ai-message';
-            
-            const contentElement = document.createElement('div');
-            contentElement.className = 'message-content';
-            contentElement.textContent = conversation.ai;
-            
-            messageElement.appendChild(contentElement);
-            
-            // Add image if needed
-            if (conversation.hasImage) {
-                const imageElement = document.createElement('div');
-                imageElement.className = 'response-image';
-                imageElement.textContent = conversation.imageName;
-                messageElement.appendChild(imageElement);
-            }
-            
-            // Add code if needed
-            if (conversation.hasCode) {
-                const codeElement = document.createElement('pre');
-                codeElement.className = 'code-block';
-                codeElement.textContent = conversation.code;
-                messageElement.appendChild(codeElement);
-            }
-            
-            chatMessages.appendChild(messageElement);
-        }
-    </script>
+      });
+    }, observerOptions);
+    
+    // 为特性卡片添加动画
+    document.querySelectorAll('.grid > div').forEach(item => {
+      item.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+      observer.observe(item);
+    });
+  </script>
 </body>
 </html>

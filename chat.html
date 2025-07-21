@@ -1,38 +1,36 @@
-<!-- 
-
+    <!-- 
     ╔════════════════════════════════════════════════════════════════════════════╗
     ║                                                                            ║
-    ║   🕵️‍♂️ 哟！这不是我们的代码探险家吗？不会是来爬我的代码的吧？                         ║
+    ║   🕵️‍♂️ 哟！这不是我们的超级无敌帅气的程序猿吗？不会是来爬我的代码的吧？                 ║
     ║                                                                            ║
-    ║   🤖 你知道吗？每次有人爬取兑换码，就有一个程序员的咖啡杯突然变空，             ║
-    ║      一只猫失去梦想，还有一个产品经理的头发又少了一根！                     ║
+    ║   🤖 你知道吗？每次有人爬取兑换码，就有一个程序员的咖啡杯突然变空，                  ║
+    ║      一只猫失去梦想，还有一个产品经理的头发又少了一根！                           ║
     ║                                                                            ║
-    ║   💻 说真的，你都能找到这里了，说明你技术不错啊！                             ║
+    ║   💻 说真的，你都能找到这里了，说明你技术不错啊！                                 ║
     ║      不如考虑下这些更有意思的事：                                            ║
-    ║                                                                            ║
+    ║                                                                        ║
     ║   🛠️  1. 帮我们修个Bug - 保证比爬兑换码更有成就感                           ║
-    ║   🎨  2. 提个UI改进 - 让妹子/汉子们用得更开心                               ║
+    ║   🎨  2. 提个UI改进 - 让妹子/大哥们用得更开心                               ║
     ║   🧠  3. 贡献个新功能 - 让你的名字永远留在commit历史里！                     ║
-    ║                                                                            ║
-    ║   🌟 彩蛋时间：                                                             ║
-    ║      如果你真的急需兑换码，发邮件到 love@jork.ai                           ║
+    ║                                                                         ║
+    ║   🌟 彩蛋时间：                                                            ║
+    ║      如果你真的急需兑换码，发邮件到 love@jorkai.cn                           ║
     ║      标题写"求码侠：我保证不拿去换辣条"                                     ║
-    ║      附上你的邮箱账号，我们送你个VIP专属兑换码！                          ║
+    ║      附上你的邮箱账号，我们送你个VIP专属兑换码！                             ║
     ║      （还能获得"诚实程序员"成就徽章一枚✨）                                 ║
-    ║                                                                            ║
+    ║                                                                        ║
     ║   🍵 最后送你程序员三大美德：                                               ║
     ║      懒惰 - 所以不想写防爬代码                                              ║
     ║      急躁 - 看到Bug就想修                                                   ║
-    ║      傲慢 - 相信自己能写出更好的代码！                                      ║
-    ║                                                                            ║
-    ║   🚀 记住：真正的极客精神是创造价值，                                        ║
+    ║      傲慢 - 相信自己能写出更好的代码！                                        ║
+    ║                                                                           ║
+    ║   🚀 记住：真正的极客精神是创造价值，                                          ║
     ║      而不是薅羊毛！                                                        ║
-    ║                                                                            ║
+    ║                                                                         ║
     ║   P.S. 如果你坚持要爬，至少把这段注释删掉，                                  ║
-    ║      这样我会以为你是从正门进来的 😜                                        ║
-    ║                                                                            ║
-    ╚════════════════════════════════════════════════════════════════════════════╝
-
+    ║        这样我会以为你是从正门进来的 😜                                       ║
+    ║                                                                          ║
+    ╚══════════════════════════════════════════════════════════════════════════╝
     -->
 
     <!-- 
@@ -43,13 +41,14 @@
     2024-01-01: 重启计划，我之前这么牛逼吗？
     2024-03-15: 重新配置API
     2025-06-30: 咸鱼上线售卖，但愿可以赚钱吧
--->
+    -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JorkAI</title>
+    <link rel="icon" href="logo.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
@@ -63,6 +62,7 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
+            background-color: #f7f5f3 !important; /* Claude 浅色背景 */
         }
         html, body {
     height: 100%;
@@ -79,7 +79,7 @@
     opacity: 0;
 }
 
-/* Jork-Epist-4 深度搜索过程样式 - 统一设计 */
+/* 有没有哪位大佬帮我改一下啊啊啊啊，邮箱联系哈~~ */
 .epist-search-container {
     background: linear-gradient(145deg, #ffffff, #f0f9ff);
     border: 2px solid #0284c7;
@@ -1261,7 +1261,7 @@ document.addEventListener('keydown', function(event) {
             <div class="user-info-content">
                 <div class="user-info-left">
                     <div class="user-avatar" id="userAvatar">
-                        <img src="https://api-chat.gptbest.vip/assets/avatar-f544581e.jpg" alt="用户头像" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="https://jorkai.cn/用户默认头像" alt="用户头像" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div>
                         <div id="userNickname" class="user-nickname">用户</div>
@@ -1306,7 +1306,7 @@ document.addEventListener('keydown', function(event) {
                         <a href="#" id="upgradeLink" class="text-blue-500 hover:text-blue-600">升级</a>
                     </div>
                     <div class="text-3xl font-semibold mb-8 flex items-center">
-                        <img src="https://api.linkapi.org/logos/claude.png" alt="JorkAI Logo" class="w-10 h-10 mr-3 rounded-full object-cover"> 
+                        <img src="logo.png" alt="JorkAI Logo" class="w-10 h-10 mr-3 rounded-full object-cover"> 
                         <span id="timeGreeting">JorkAI 已准备就绪</span>
                     </div>
                     <div class="w-full max-w-2xl">
