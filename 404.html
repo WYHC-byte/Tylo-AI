@@ -1,600 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>404 - Page Not Found</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            primary: '#5D5CDE',
-            dark: {
-              bg: '#181818',
-              text: '#E5E5E5'
-            }
-          },
-          animation: {
-            'glitch': 'glitch 1s infinite',
-            'smoke': 'smoke 3s infinite',
-            'blink': 'blink 0.5s infinite',
-            'bounce-slow': 'bounce 3s infinite',
-          },
-          keyframes: {
-            glitch: {
-              '0%': { textShadow: '2px 0 #ff0000, -2px 0 #00ff00' },
-              '25%': { transform: 'skewX(20deg)' },
-              '50%': { opacity: '0.8', textShadow: '-2px 0 #ff0000, 2px 0 #00ff00' },
-              '75%': { transform: 'skewX(-20deg)' },
-              '100%': { textShadow: '2px 0 #ff0000, -2px 0 #00ff00' }
-            },
-            smoke: {
-              '0%': { opacity: '0', transform: 'translateY(0)' },
-              '25%': { opacity: '0.5' },
-              '50%': { opacity: '0.8', transform: 'translateY(-10px)' },
-              '100%': { opacity: '0', transform: 'translateY(-20px)' }
-            },
-            blink: {
-              '0%': { opacity: '1' },
-              '50%': { opacity: '0.3' },
-              '100%': { opacity: '1' }
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 页面未找到</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      }
-    };
-  </script>
-  <style>
-    @keyframes noise {
-      0% { background-position: 0 0; }
-      100% { background-position: 100% 100%; }
-    }
-    
-    .noise {
-      position: relative;
-    }
-    
-    .noise::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA30lEQVRoge3ZMQ7CMBBEUfNzgzRchaPkVNDnAiguALQ0kWIs79q7M68Ni0xhpHiASZIk6a9Mq4OZeQFOQPvx6A7cImL5NDQz58w8N7llXtqgPdszM0+ZWeSWpQ06AM/G2x6AY2beI2Jtg7ZlgHXKAY2ZhbRBW2aUDIDdwJLsNWsXEFU+owwyyCCDDDLIIIMMMsgggwwyyCCDDDLIIIMMMugHQa89RNX/I29f9ehVj6hV75lq7xprb8xrH6Kq34arbzDaA3fb+mLR/gPQHnizbumZtvzb6YfHZUmSJP2lFdfHmwR4ELgiAAAAAElFTkSuQmCC');
-      opacity: 0.3;
-      pointer-events: none;
-      animation: noise 8s infinite linear;
-      z-index: 100;
-    }
-    
-    .maze-cell {
-      width: 20px;
-      height: 20px;
-      position: absolute;
-    }
-    
-    .wall {
-      background-color: #5D5CDE;
-    }
-    
-    .path {
-      background-color: transparent;
-    }
-    
-    .player {
-      width: 14px;
-      height: 14px;
-      background-color: #FF5733;
-      border-radius: 50%;
-      position: absolute;
-      transform: translate(-50%, -50%);
-      transition: all 0.1s ease-out;
-      z-index: 10;
-    }
-    
-    .exit {
-      background-color: #4CAF50;
-    }
-    
-    .robot-part {
-      transition: all 0.5s ease-in-out;
-    }
-    
-    .robot-fixed {
-      transition: all 0.5s ease-in-out;
-    }
-    
-    /* Screen shake animation */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-      20%, 40%, 60%, 80% { transform: translateX(5px); }
-    }
-    
-    .shake {
-      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) infinite;
-    }
-
-    /* Dark mode adjustments */
-    .dark .wall {
-      background-color: #6E6DFF;
-    }
-    
-    .dark .player {
-      background-color: #FF6B4A;
-    }
-    
-    /* Hidden at first */
-    #aiCrashContainer, #mazeGameContainer, #jokeGeneratorContainer, #scifiGlitchContainer {
-      display: none;
-    }
-  </style>
+        
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            color: #fff;
+            background: url('404.jpg') no-repeat center top;
+            background-size: 100% auto;
+            min-height: 100vh;
+            height: 200vh; /* 根据图片实际比例调整 */
+        }
+        
+        .fixed-content {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 5em;
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 15px;
+        }
+        
+        p {
+            font-size: 1.1em;
+            margin: 8px 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+            max-width: 90%;
+        }
+        
+        .mission {
+            font-size: 0.9em;
+            margin: 20px 0;
+            line-height: 1.6;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 12px;
+            border-radius: 8px;
+            max-width: 600px;
+        }
+        
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 160px;
+        }
+        
+        a:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            bottom: 30px;
+            animation: bounce 2s infinite;
+            font-size: 0.9em;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 bg-white dark:bg-dark-bg dark:text-dark-text">
-  <div class="container mx-auto max-w-3xl">
-    <!-- AI Crash Scene -->
-    <div id="aiCrashContainer" class="flex flex-col items-center justify-center text-center p-6">
-      <div id="robotContainer" class="relative w-56 h-56 mb-6">
-        <!-- Robot SVG - will be broken and then fixed -->
-        <svg id="robotSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="w-full h-full">
-          <g id="robotBody">
-            <!-- Head -->
-            <rect id="robotHead" x="75" y="30" width="50" height="40" rx="5" fill="#888" class="robot-part"/>
-            
-            <!-- Eyes -->
-            <circle id="leftEye" cx="90" cy="45" r="6" fill="#5D5CDE" class="robot-part animate-blink"/>
-            <circle id="rightEye" cx="110" cy="45" r="6" fill="#5D5CDE" class="robot-part animate-blink"/>
-            
-            <!-- Mouth -->
-            <rect id="robotMouth" x="85" y="60" width="30" height="5" rx="2" fill="#333" class="robot-part"/>
-            
-            <!-- Body -->
-            <rect id="robotTorso" x="65" y="75" width="70" height="60" rx="8" fill="#999" class="robot-part"/>
-            
-            <!-- Control panel -->
-            <rect id="controlPanel" x="75" y="85" width="50" height="20" rx="2" fill="#777" class="robot-part"/>
-            <circle id="button1" cx="85" cy="95" r="3" fill="#FF5733" class="robot-part"/>
-            <circle id="button2" cx="100" cy="95" r="3" fill="#4CAF50" class="robot-part"/>
-            <circle id="button3" cx="115" cy="95" r="3" fill="#FFEB3B" class="robot-part"/>
-            
-            <!-- Arms -->
-            <rect id="leftArm" x="40" y="80" width="25" height="10" rx="3" fill="#888" class="robot-part"/>
-            <rect id="rightArm" x="135" y="80" width="25" height="10" rx="3" fill="#888" class="robot-part"/>
-            
-            <!-- Legs -->
-            <rect id="leftLeg" x="75" y="135" width="15" height="35" rx="3" fill="#777" class="robot-part"/>
-            <rect id="rightLeg" x="110" y="135" width="15" height="35" rx="3" fill="#777" class="robot-part"/>
-          </g>
-          
-          <!-- Smoke elements -->
-          <circle id="smoke1" cx="130" cy="50" r="8" fill="#ccc" opacity="0" class="animate-smoke"/>
-          <circle id="smoke2" cx="135" cy="40" r="6" fill="#ccc" opacity="0" class="animate-smoke"/>
-          <circle id="smoke3" cx="125" cy="35" r="7" fill="#ccc" opacity="0" class="animate-smoke"/>
-        </svg>
-      </div>
-      
-      <h1 class="text-3xl font-bold mb-2">404: 我的神经网络暂时短路了…</h1>
-      <p class="mb-6 text-lg">正在尝试用 0 和 1 拼凑出路----可能需要咖啡因辅助。</p>
-      
-      <button id="coffeeButton" class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-80 transition-all">
-        点击给我注入咖啡（虚拟的）
-      </button>
-    </div>
-
-    <!-- Maze Game -->
-    <div id="mazeGameContainer" class="flex flex-col items-center justify-center text-center p-6">
-      <h1 class="text-3xl font-bold mb-2">你闯入了 AI 的思维迷宫！</h1>
-      <p class="mb-4 text-lg">要么用方向键找到出口，要么点'投降'回主页。</p>
-      
-      <div id="mazeWrapper" class="relative border-2 border-primary rounded mb-4 p-2" style="width: 320px; height: 320px;">
-        <div id="maze" class="relative w-full h-full"></div>
-        <div id="player" class="player"></div>
-      </div>
-      
-      <div id="mazeMessage" class="h-8 mb-4 text-lg"></div>
-      
-      <div class="flex gap-4">
-        <button id="surrenderButton" class="bg-gray-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-80 transition-all">
-          投降
-        </button>
+<body>
+    <div class="fixed-content">
+        <h1>404</h1>
+        <p>抱歉，您访问的页面不存在</p>
+        <p>请滚动查看背景中的失踪儿童信息</p>
         
-        <div class="md:hidden flex flex-col gap-2">
-          <div class="flex justify-center">
-            <button id="upButton" class="w-12 h-12 bg-primary text-white rounded-lg">↑</button>
-          </div>
-          <div class="flex gap-2">
-            <button id="leftButton" class="w-12 h-12 bg-primary text-white rounded-lg">←</button>
-            <button id="downButton" class="w-12 h-12 bg-primary text-white rounded-lg">↓</button>
-            <button id="rightButton" class="w-12 h-12 bg-primary text-white rounded-lg">→</button>
-          </div>
-        </div>
-      </div>
-      
-      <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">桌面设备：用方向键或WASD移动</p>
-    </div>
-
-    <!-- Cold Joke Generator -->
-    <div id="jokeGeneratorContainer" class="flex flex-col items-center justify-center text-center p-6">
-      <h1 class="text-3xl font-bold mb-6">404 错误</h1>
-      
-      <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg mb-6 max-w-xl">
-        <p id="jokeText" class="text-xl mb-4">页面离家出走了。它说：'你们人类总说找不到对象，现在也试试找我吧！'</p>
-      </div>
-      
-      <button id="newJokeButton" class="bg-primary text-white px-6 py-3 rounded-lg text-lg hover:bg-opacity-80 transition-all">
-        不好笑？
-      </button>
-      
-      <div id="jokeEasterEgg" class="mt-4 text-lg opacity-0 transition-all">你够了！</div>
-      
-      <a href="/" class="mt-6 text-primary hover:underline">回到首页</a>
-    </div>
-
-    <!-- Sci-Fi Glitch -->
-    <div id="scifiGlitchContainer" class="flex flex-col items-center justify-center text-center p-6 noise">
-      <div id="hologramEffect" class="relative">
-        <h1 class="text-4xl font-bold mb-6 animate-glitch text-blue-500">警告！时空坐标 404 无效。</h1>
-        
-        <div class="max-w-xl bg-black bg-opacity-20 backdrop-blur-sm p-8 rounded-lg">
-          <p class="text-xl mb-6 animate-glitch">可能原因：</p>
-          <ol class="text-left mb-8 space-y-4">
-            <li class="flex items-start">
-              <span class="inline-block w-6 text-red-500 mr-2">1.</span>
-              <span>链接被黑洞吞噬</span>
-            </li>
-            <li class="flex items-start">
-              <span class="inline-block w-6 text-red-500 mr-2">2.</span>
-              <span>你来自平行宇宙</span>
-            </li>
-          </ol>
+        <div class="mission">
+            JorkAI 一直致力于"用户为本，科技向善"的号召，<br>
+            自发组织成立开展404公益计划、无障碍产品推动等，<br>
+            结合产品与技术平台，持续开展公益帮扶行动。
         </div>
         
-        <div class="mt-8">
-          <a href="/" class="bg-transparent border-2 border-blue-400 text-blue-400 px-8 py-3 rounded-lg text-lg hover:bg-blue-400 hover:bg-opacity-20 transition-all inline-block animate-pulse">
-            返回安全区域
-          </a>
+        <div class="buttons">
+            <a onclick="window.history.back()">返回上一页</a>
+            <a href="https://www.baobeihuijia.com/" target="_blank">帮助寻人</a>
         </div>
-      </div>
+        
+        <div class="scroll-hint">
+            ↓ 滑动查看背景信息 ↓
+        </div>
     </div>
-  </div>
-
-  <script>
-    // Check for dark mode preference
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      document.documentElement.classList.add('dark');
-    }
     
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-      if (event.matches) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    });
-    
-    // Choose a random effect (1-4) on page load
-    const effectId = Math.floor(Math.random() * 4) + 1;
-    
-    // Initialize all effects on DOM load
-    document.addEventListener('DOMContentLoaded', () => {
-      // Hide all containers first
-      document.querySelectorAll('#aiCrashContainer, #mazeGameContainer, #jokeGeneratorContainer, #scifiGlitchContainer')
-        .forEach(container => container.style.display = 'none');
-      
-      // Show the randomly selected effect
-      switch(effectId) {
-        case 1:
-          initAiCrash();
-          break;
-        case 2:
-          initMazeGame();
-          break;
-        case 3:
-          initJokeGenerator();
-          break;
-        case 4:
-          initScifiGlitch();
-          break;
-      }
-    });
-    
-    // Effect 1: AI Crash Scene
-    function initAiCrash() {
-      const container = document.getElementById('aiCrashContainer');
-      container.style.display = 'flex';
-      
-      // Break the robot initially
-      breakRobot();
-      
-      // Add event listener to coffee button
-      document.getElementById('coffeeButton').addEventListener('click', () => {
-        fixRobot();
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1500);
-      });
-    }
-    
-    function breakRobot() {
-      const robotParts = document.querySelectorAll('.robot-part');
-      const robotSvg = document.getElementById('robotSvg');
-      
-      // Add shake animation to the entire robot
-      robotSvg.classList.add('shake');
-      
-      // Show smoke
-      document.querySelectorAll('#smoke1, #smoke2, #smoke3').forEach(smoke => {
-        smoke.style.opacity = 0.7;
-      });
-      
-      // Scatter robot parts
-      robotParts.forEach(part => {
-        const randomX = (Math.random() - 0.5) * 40;
-        const randomY = (Math.random() - 0.5) * 40;
-        const randomRotate = (Math.random() - 0.5) * 60;
-        
-        part.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg)`;
-        part.style.opacity = 0.8;
-      });
-    }
-    
-    function fixRobot() {
-      const robotParts = document.querySelectorAll('.robot-part');
-      const robotSvg = document.getElementById('robotSvg');
-      
-      // Remove shake animation
-      robotSvg.classList.remove('shake');
-      
-      // Hide smoke
-      document.querySelectorAll('#smoke1, #smoke2, #smoke3').forEach(smoke => {
-        smoke.style.opacity = 0;
-      });
-      
-      // Fix robot parts
-      robotParts.forEach(part => {
-        part.style.transform = 'translate(0, 0) rotate(0deg)';
-        part.style.opacity = 1;
-      });
-      
-      // Change button text
-      document.getElementById('coffeeButton').textContent = '修复完成！正在返回首页...';
-      document.getElementById('coffeeButton').disabled = true;
-    }
-    
-    // Effect 2: Maze Game
-    function initMazeGame() {
-      const container = document.getElementById('mazeGameContainer');
-      container.style.display = 'flex';
-      
-      // Define the maze layout (0 = path, 1 = wall, 2 = exit)
-      const mazeLayout = [
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1],
-        [1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1],
-        [1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1],
-        [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1],
-        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-      ];
-      
-      const maze = document.getElementById('maze');
-      const player = document.getElementById('player');
-      const mazeMessage = document.getElementById('mazeMessage');
-      const cellSize = 20;
-      
-      // Player position (starting position)
-      let playerPos = { x: 1, y: 1 };
-      
-      // Create the maze
-      function renderMaze() {
-        maze.innerHTML = '';
-        
-        for (let y = 0; y < mazeLayout.length; y++) {
-          for (let x = 0; x < mazeLayout[y].length; x++) {
-            const cell = document.createElement('div');
-            cell.className = 'maze-cell';
-            cell.style.left = `${x * cellSize}px`;
-            cell.style.top = `${y * cellSize}px`;
-            
-            if (mazeLayout[y][x] === 1) {
-              cell.classList.add('wall');
-            } else if (mazeLayout[y][x] === 2) {
-              cell.classList.add('exit');
-            } else {
-              cell.classList.add('path');
+    <script>
+        // 返回上一页的备用方案
+        document.querySelector('a[onclick]').addEventListener('click', function(e) {
+            if(window.history.length <= 1) {
+                e.preventDefault();
+                window.location.href = '/'; // 如果无历史记录则返回首页
             }
-            
-            maze.appendChild(cell);
-          }
-        }
-        
-        // Position the player
-        updatePlayerPosition();
-      }
-      
-      function updatePlayerPosition() {
-        player.style.left = `${playerPos.x * cellSize + cellSize/2}px`;
-        player.style.top = `${playerPos.y * cellSize + cellSize/2}px`;
-      }
-      
-      function movePlayer(dx, dy) {
-        const newX = playerPos.x + dx;
-        const newY = playerPos.y + dy;
-        
-        // Check if the move is valid
-        if (newX >= 0 && newX < mazeLayout[0].length && 
-            newY >= 0 && newY < mazeLayout.length) {
-          
-          const targetCell = mazeLayout[newY][newX];
-          
-          if (targetCell === 0) {
-            // Move to an empty path
-            playerPos.x = newX;
-            playerPos.y = newY;
-            updatePlayerPosition();
-            mazeMessage.textContent = '';
-          } else if (targetCell === 2) {
-            // Reached the exit
-            playerPos.x = newX;
-            playerPos.y = newY;
-            updatePlayerPosition();
-            mazeMessage.textContent = '恭喜逃脱！';
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 3000);
-          } else {
-            // Hit a wall
-            mazeMessage.textContent = '此路不通';
-          }
-        }
-      }
-      
-      // Handle keyboard input
-      document.addEventListener('keydown', (e) => {
-        if (!document.getElementById('mazeGameContainer').style.display || 
-            document.getElementById('mazeGameContainer').style.display === 'none') {
-          return;
-        }
-        
-        switch(e.key) {
-          case 'ArrowUp':
-          case 'w':
-          case 'W':
-            movePlayer(0, -1);
-            break;
-          case 'ArrowDown':
-          case 's':
-          case 'S':
-            movePlayer(0, 1);
-            break;
-          case 'ArrowLeft':
-          case 'a':
-          case 'A':
-            movePlayer(-1, 0);
-            break;
-          case 'ArrowRight':
-          case 'd':
-          case 'D':
-            movePlayer(1, 0);
-            break;
-        }
-      });
-      
-      // Mobile controls
-      document.getElementById('upButton').addEventListener('click', () => movePlayer(0, -1));
-      document.getElementById('downButton').addEventListener('click', () => movePlayer(0, 1));
-      document.getElementById('leftButton').addEventListener('click', () => movePlayer(-1, 0));
-      document.getElementById('rightButton').addEventListener('click', () => movePlayer(1, 0));
-      
-      // Surrender button
-      document.getElementById('surrenderButton').addEventListener('click', () => {
-        window.location.href = '/';
-      });
-      
-      // Initial render
-      renderMaze();
-    }
-    
-    // Effect 3: Joke Generator
-    function initJokeGenerator() {
-      const container = document.getElementById('jokeGeneratorContainer');
-      container.style.display = 'flex';
-      
-      const jokes = [
-        "404 错误：页面离家出走了。它说：'你们人类总说找不到对象，现在也试试找我吧！'",
-        "404：这个页面去参加奥运会了，项目是'躲猫猫'。",
-        "404：程序员说这里应该有页面，但他去喝咖啡了。",
-        "404：页面在量子态中，同时存在又不存在，直到你观察它才崩溃。",
-        "404：页面表示它需要'个人空间'，大概是厌倦了被不停刷新。",
-        "404：这个页面不想被找到，它正在享受数字世界的gap year。",
-        "404：页面说它只是去散步了，但我们都知道它已经去了竞争对手的网站。",
-        "404：这个链接的梦想是成为500错误，但它只能做到404。"
-      ];
-      
-      let jokeIndex = 0;
-      let clickCount = 0;
-      
-      document.getElementById('newJokeButton').addEventListener('click', () => {
-        clickCount++;
-        jokeIndex = (jokeIndex + 1) % jokes.length;
-        document.getElementById('jokeText').textContent = jokes[jokeIndex];
-        
-        // Easter egg after 3 clicks
-        if (clickCount === 3) {
-          const easterEgg = document.getElementById('jokeEasterEgg');
-          easterEgg.style.opacity = 1;
-          
-          setTimeout(() => {
-            easterEgg.style.opacity = 0;
-          }, 3000);
-        }
-      });
-    }
-    
-    // Effect 4: Sci-Fi Glitch
-    function initScifiGlitch() {
-      const container = document.getElementById('scifiGlitchContainer');
-      container.style.display = 'flex';
-      
-      const hologramEffect = document.getElementById('hologramEffect');
-      
-      // Add distortion effect on mouse movement
-      container.addEventListener('mousemove', (e) => {
-        const x = e.clientX / window.innerWidth;
-        const y = e.clientY / window.innerHeight;
-        
-        // Calculate distortion based on mouse position
-        const skewX = (x - 0.5) * 10;
-        const skewY = (y - 0.5) * 5;
-        
-        // Apply distortion to the hologram
-        hologramEffect.style.transform = `skew(${skewX}deg, ${skewY}deg)`;
-        
-        // Adjust glitch intensity based on mouse movement speed
-        const glitchIntensity = Math.min(Math.abs(skewX) + Math.abs(skewY), 10) / 10;
-        hologramEffect.style.filter = `hue-rotate(${glitchIntensity * 180}deg) saturate(${1 + glitchIntensity})`;
-      });
-      
-      // Reset on mouse leave
-      container.addEventListener('mouseleave', () => {
-        hologramEffect.style.transform = 'skew(0, 0)';
-        hologramEffect.style.filter = '';
-      });
-      
-      // Optional: Add subtle audio effect on click (if allowed by CSP)
-      container.addEventListener('click', () => {
-        try {
-          // Simple WebAudio beep
-          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          const oscillator = audioCtx.createOscillator();
-          const gainNode = audioCtx.createGain();
-          
-          oscillator.type = 'sine';
-          oscillator.frequency.value = 440;
-          gainNode.gain.value = 0.1;
-          
-          oscillator.connect(gainNode);
-          gainNode.connect(audioCtx.destination);
-          
-          oscillator.start();
-          setTimeout(() => oscillator.stop(), 100);
-        } catch (e) {
-          console.log('Audio not supported');
-        }
-      });
-    }
-  </script>
+        });
+    </script>
 </body>
 </html>
