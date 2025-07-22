@@ -239,7 +239,7 @@
               poster="https://picsum.photos/id/1/1200/675"  
               preload="metadata"
             >
-              <source src="宣传片.mp4" type="video/mp4">  <!-- 此处放置您的视频文件路径 -->
+              <source src="chinese.mp4" type="video/mp4">  <!-- 此处放置您的视频文件路径 -->
               您的浏览器不支持视频播放
             </video>
             
@@ -298,9 +298,9 @@
       }
     });
     
-    // 视频结束时恢复播放按钮状态
     video.addEventListener('ended', function() {
       playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-play text-white text-2xl ml-1"></i></div>';
+      playBtn.classList.remove('hidden'); // 重新显示播放按钮
     });
   </script>
 
