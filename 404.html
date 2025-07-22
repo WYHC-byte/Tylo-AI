@@ -3,130 +3,643 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>404 - 页面未找到</title>
+    <title>404 - 页面未找到 | 404公益计划</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
-        body {
-            font-family: "Microsoft YaHei", sans-serif;
-            color: #fff;
-            background: url('404.jpg') no-repeat center top;
-            background-size: 100% auto;
-            min-height: 100vh;
-            height: 200vh; /* 根据图片实际比例调整 */
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warm-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --shadow-dark: rgba(0, 0, 0, 0.3);
+            --shadow-light: rgba(255, 255, 255, 0.1);
         }
-        
-        .fixed-content {
-            position: fixed;
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #0f0f23 100%);
+            position: relative;
+            cursor: default;
+        }
+
+        /* 动态背景粒子效果 */
+        .particles {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* 背景图片容器 - 可上下滑动 */
+        .background-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            height: 300vh; /* 增加高度支持上下滑动 */
+            background-image: url('404.jpg');
+            background-size: contain;
+            background-position: center top;
+            background-repeat: no-repeat;
+            cursor: grab;
+            user-select: none;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(0.7) contrast(1.1);
+            z-index: 1;
+        }
+
+        .background-container:active {
+            cursor: grabbing;
+        }
+
+        /* 渐变遮罩 */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                radial-gradient(ellipse at top, rgba(102, 126, 234, 0.15) 0%, transparent 70%),
+                radial-gradient(ellipse at bottom, rgba(245, 87, 108, 0.15) 0%, transparent 70%),
+                linear-gradient(180deg, 
+                    rgba(0, 0, 0, 0.2) 0%, 
+                    rgba(0, 0, 0, 0.05) 50%, 
+                    rgba(0, 0, 0, 0.3) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* 主要内容容器 */
+        .content {
+            position: relative;
+            z-index: 3;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-between;
+            padding: 40px;
+            pointer-events: none;
+        }
+
+        /* 顶部区域 */
+        .header {
             text-align: center;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 10;
-            padding: 20px;
+            animation: slideInDown 1s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
-        h1 {
-            font-size: 5em;
-            color: #ff6b6b;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 15px;
+
+        .error-code {
+            font-size: 12rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 50px rgba(102, 126, 234, 0.5);
+            line-height: 0.9;
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite alternate;
+            letter-spacing: -0.05em;
         }
-        
-        p {
-            font-size: 1.1em;
-            margin: 8px 0;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            max-width: 90%;
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.7));
+            }
+            to {
+                filter: drop-shadow(0 0 40px rgba(102, 126, 234, 1));
+            }
         }
-        
-        .mission {
-            font-size: 0.9em;
-            margin: 20px 0;
-            line-height: 1.6;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 12px;
-            border-radius: 8px;
-            max-width: 600px;
+
+        .error-message {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: var(--text-secondary);
+            text-shadow: 0 2px 20px var(--shadow-dark);
+            margin-bottom: 30px;
+            letter-spacing: 0.02em;
         }
-        
-        .buttons {
-            margin-top: 25px;
+
+        /* 公益信息区域 - 玻璃拟态设计 */
+        .charity-info {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 40px 0;
+            text-align: center;
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 8px 32px var(--shadow-dark),
+                inset 0 1px 0 var(--shadow-light);
+            pointer-events: auto;
+            animation: slideInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .charity-info::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: rotate 8s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .charity-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--warm-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(250, 112, 154, 0.5);
+            letter-spacing: -0.02em;
+        }
+
+        .charity-description {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            font-weight: 400;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px var(--shadow-dark);
+        }
+
+        .charity-note {
+            color: #ffd93d;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-style: italic;
+            text-shadow: 0 2px 10px rgba(255, 217, 61, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* 底部操作区域 */
+        .footer {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
-            gap: 15px;
+            gap: 30px;
+            flex-wrap: wrap;
+            pointer-events: auto;
+            animation: slideInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both;
         }
-        
-        a {
-            display: inline-block;
-            padding: 12px 25px;
-            background: #ff6b6b;
-            color: white;
+
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.3s;
-            min-width: 160px;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            letter-spacing: 0.02em;
         }
-        
-        a:hover {
-            background: #ff5252;
-            transform: translateY(-2px);
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
-        
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 
+                0 8px 32px rgba(102, 126, 234, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-gradient);
+            color: white;
+            box-shadow: 
+                0 8px 32px rgba(245, 87, 108, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        /* 滑动提示 */
         .scroll-hint {
             position: absolute;
-            bottom: 30px;
-            animation: bounce 2s infinite;
-            font-size: 0.9em;
+            top: 50%;
+            right: 30px;
+            transform: translateY(-50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            color: var(--text-secondary);
+            padding: 15px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            z-index: 4;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px var(--shadow-dark);
+            animation: slideInRight 1s cubic-bezier(0.4, 0, 0.2, 1) 1s both, breathe 3s ease-in-out infinite 2s;
+            pointer-events: none;
         }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+
+        @keyframes breathe {
+            0%, 100% { 
+                opacity: 0.7; 
+                transform: translateY(-50%) scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: translateY(-50%) scale(1.05);
+            }
+        }
+
+        /* 动画关键帧 */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateY(-50%) translateX(50px);
+            }
+            to {
+                opacity: 0.7;
+                transform: translateY(-50%) translateX(0);
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .error-code {
+                font-size: 8rem;
+            }
+            
+            .error-message {
+                font-size: 1.4rem;
+            }
+            
+            .charity-title {
+                font-size: 2rem;
+            }
+            
+            .charity-description {
+                font-size: 1.1rem;
+            }
+            
+            .charity-info {
+                padding: 30px 20px;
+            }
+            
+            .footer {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
+            
+            .scroll-hint {
+                right: 15px;
+                font-size: 0.85rem;
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 6rem;
+            }
+            
+            .charity-title {
+                font-size: 1.8rem;
+            }
+            
+            .charity-description {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="fixed-content">
-        <h1>404</h1>
-        <p>抱歉，您访问的页面不存在</p>
-        <p>请滚动查看背景中的失踪儿童信息</p>
-        
-        <div class="mission">
-            JorkAI 一直致力于"用户为本，科技向善"的号召，<br>
-            自发组织成立开展404公益计划、无障碍产品推动等，<br>
-            结合产品与技术平台，持续开展公益帮扶行动。
+    <!-- 动态粒子背景 -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- 可滑动背景 -->
+    <div class="background-container" id="background"></div>
+    
+    <!-- 渐变遮罩 -->
+    <div class="overlay"></div>
+    
+    <!-- 主要内容 -->
+    <div class="content">
+        <div class="header">
+            <div class="error-code">404</div>
+            <div class="error-message">抱歉，您访问的页面不存在</div>
         </div>
         
-        <div class="buttons">
-            <a onclick="window.history.back()">返回上一页</a>
-            <a href="https://www.baobeihuijia.com/" target="_blank">帮助寻人</a>
+        <div class="charity-info">
+            <div class="charity-title">🧡 404公益计划 🧡</div>
+            <div class="charity-description">
+                每一个迷路的页面，都可能帮助一个迷路的孩子回家<br>
+                请上下拖动背景图片查看完整的失踪儿童信息
+            </div>
+            <div class="charity-note">
+                如果您有任何线索，请联系相关部门或公益组织
+            </div>
         </div>
         
-        <div class="scroll-hint">
-            ↓ 滑动查看背景信息 ↓
+        <div class="footer">
+            <a href="index.html" class="btn btn-primary">
+                🏠 返回首页
+            </a>
+            <a href="#" onclick="history.back(); return false;" class="btn btn-secondary">
+                ⬅️ 返回上页
+            </a>
         </div>
     </div>
     
+    <!-- 滑动提示 -->
+    <div class="scroll-hint">
+        上下拖动查看更多 ↕️
+    </div>
+
     <script>
-        // 返回上一页的备用方案
-        document.querySelector('a[onclick]').addEventListener('click', function(e) {
-            if(window.history.length <= 1) {
+        // 创建动态粒子背景
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // 随机大小和位置
+                const size = Math.random() * 4 + 1;
+                const left = Math.random() * 100;
+                const animationDelay = Math.random() * 20;
+                const animationDuration = Math.random() * 10 + 15;
+                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = left + '%';
+                particle.style.animationDelay = animationDelay + 's';
+                particle.style.animationDuration = animationDuration + 's';
+                
+                particles.appendChild(particle);
+            }
+        }
+
+        // 背景图片上下拖拽功能
+        const background = document.getElementById('background');
+        let isDragging = false;
+        let startY, currentTransformY = 0, startTransformY = 0;
+        
+        // 鼠标事件
+        background.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startY = e.clientY;
+            background.style.transition = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaY = e.clientY - startY;
+            currentTransformY = startTransformY + deltaY;
+            
+            // 限制拖拽范围（背景图片高度是300vh，可视区域是100vh，所以可以移动200vh）
+            const maxY = window.innerHeight; // 向上最多移动一个屏幕高度
+            const minY = -window.innerHeight; // 向下最多移动一个屏幕高度
+            
+            currentTransformY = Math.max(minY, Math.min(maxY, currentTransformY));
+            
+            background.style.transform = `translateX(-50%) translateY(${currentTransformY}px)`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                startTransformY = currentTransformY;
+                background.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            }
+        });
+
+        // 触摸事件（移动端支持）
+        background.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            const touch = e.touches[0];
+            startY = touch.clientY;
+            background.style.transition = 'none';
+            e.preventDefault();
+        });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            
+            const touch = e.touches[0];
+            const deltaY = touch.clientY - startY;
+            currentTransformY = startTransformY + deltaY;
+            
+            // 限制拖拽范围
+            const maxY = window.innerHeight;
+            const minY = -window.innerHeight;
+            
+            currentTransformY = Math.max(minY, Math.min(maxY, currentTransformY));
+            
+            background.style.transform = `translateX(-50%) translateY(${currentTransformY}px)`;
+            e.preventDefault();
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (isDragging) {
+                isDragging = false;
+                startTransformY = currentTransformY;
+                background.style.transition = 'transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            }
+        });
+
+        // 防止页面默认滚动
+        document.addEventListener('touchmove', (e) => {
+            if (isDragging) {
                 e.preventDefault();
-                window.location.href = '/'; // 如果无历史记录则返回首页
+            }
+        }, { passive: false });
+
+        // 鼠标滚轮支持
+        document.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            const deltaY = e.deltaY * 0.5;
+            currentTransformY -= deltaY;
+            
+            // 限制范围
+            const maxY = window.innerHeight;
+            const minY = -window.innerHeight;
+            
+            currentTransformY = Math.max(minY, Math.min(maxY, currentTransformY));
+            startTransformY = currentTransformY;
+            
+            background.style.transform = `translateX(-50%) translateY(${currentTransformY}px)`;
+        }, { passive: false });
+
+        // 自动隐藏滑动提示
+        setTimeout(() => {
+            const hint = document.querySelector('.scroll-hint');
+            if (hint) {
+                hint.style.transition = 'opacity 0.5s ease-out';
+                hint.style.opacity = '0';
+                setTimeout(() => hint.remove(), 500);
+            }
+        }, 5000);
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            
+            // 添加页面加载动画
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease-in';
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // 键盘快捷键支持
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    currentTransformY += 50;
+                    currentTransformY = Math.min(window.innerHeight, currentTransformY);
+                    startTransformY = currentTransformY;
+                    background.style.transform = `translateX(-50%) translateY(${currentTransformY}px)`;
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    currentTransformY -= 50;
+                    currentTransformY = Math.max(-window.innerHeight, currentTransformY);
+                    startTransformY = currentTransformY;
+                    background.style.transform = `translateX(-50%) translateY(${currentTransformY}px)`;
+                    break;
+                case 'Home':
+                    e.preventDefault();
+                    window.location.href = 'index.html';
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    history.back();
+                    break;
             }
         });
     </script>
