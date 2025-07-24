@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<!-- Last Published: Monday, 21 Jul 2025 15:13:14 GMT+0000 (Coordinated Universal Time)-->
+<!-- 最后发布: 周一, 21 Jul 2025 15:13:14 GMT+0000 -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JorkAI - 深度搜索技术引领者，提供穿透信息表层的智能搜索体验。我们的AI技术突破传统搜索局限，通过多层级搜索、语义理解和关联挖掘，为您带来更精准、更全面、更深入的信息获取体验。立即体验下一代搜索技术。">
   <title>JorkAI - 深度搜索，智领未来</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -175,6 +176,58 @@
 
   <!-- 特性部分 -->
   <section id="features" class="py-24 bg-jork-dark relative overflow-hidden">
+    <!-- Pro版模态框（点击悬浮窗触发） -->
+<div id="pro-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
+  <div class="relative bg-jork-gray border border-jork-blue/30 rounded-2xl max-w-md w-full mx-4 overflow-hidden">
+    <button onclick="document.getElementById('pro-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+      <i class="fa fa-times text-xl"></i>
+    </button>
+    
+    <div class="p-8 text-center">
+      <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center">
+        <i class="fa fa-crown text-3xl text-white"></i>
+      </div>
+      <h3 class="text-2xl font-bold mb-2">JorkAI Pro</h3>
+      <p class="text-gray-300 mb-6">解锁深度搜索的全部潜力</p>
+      
+      <div class="bg-jork-dark/50 border border-jork-blue/20 rounded-xl p-6 mb-6">
+        <div class="flex justify-center mb-4">
+          <span class="text-5xl font-bold bg-gradient-to-r from-jork-blue to-jork-accent text-gradient">39.9</span>
+          <span class="self-end mb-1 ml-1 text-gray-400">元/月</span>
+        </div>
+        <ul class="text-left space-y-3 text-gray-300 text-sm">
+          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 无限次深度语义分析</li>
+          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 优先访问新功能</li>
+          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 专属数据处理队列</li>
+          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 去除所有水印</li>
+        </ul>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <button onclick="document.getElementById('pro-modal').classList.add('hidden')" class="py-3 rounded-lg border border-jork-blue/30 hover:border-jork-blue/60 transition">
+          再想想
+        </button>
+        <button class="py-3 rounded-lg bg-gradient-to-r from-jork-blue to-jork-accent text-white font-bold hover:shadow-lg hover:shadow-jork-blue/30 transition">
+          立即升级
+        </button>
+      </div>
+    </div>
+    
+    <div class="border-t border-jork-blue/10 px-8 py-4 bg-jork-dark/50 text-center text-sm text-gray-400">
+      支持支付宝/微信支付 · 7天无理由退款
+    </div>
+  </div>
+</div>
+
+<script>
+  // 模态框触发逻辑
+  document.querySelectorAll('a[href="#pro-modal"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('pro-modal').classList.remove('hidden');
+    });
+  });
+</script>
     <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-jork-blue/5 rounded-full filter blur-3xl"></div>
     
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -336,9 +389,9 @@
               <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-6 border border-jork-blue/10 hover:border-jork-blue/30 transition-all">
                 <div class="flex justify-between items-start">
                   <div>
-                    <h4 class="text-xl font-semibold mb-2">JorkAI与多家科研机构达成合作</h4>
-                    <p class="text-gray-400 mb-3">共同推进人工智能在深度信息检索领域的研究与应用</p>
-                    <span class="text-gray-500 text-sm">2025-06-30</span>
+                    <h4 class="text-xl font-semibold mb-2">JorkAI与Squareairline达成合作</h4>
+                    <p class="text-gray-400 mb-3">共同推进人工智能在游戏信息检索领域的研究与应用</p>
+                    <span class="text-gray-500 text-sm">2025-07-01</span>
                   </div>
                   <div class="w-20 h-20 rounded-lg bg-jork-blue/20 flex items-center justify-center">
                     <i class="fa fa-handshake-o text-2xl text-jork-blue"></i>
@@ -617,6 +670,88 @@
       item.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
       observer.observe(item);
     });
+    // 1. 制造限量抢购悬浮窗（每次访问随机出现）
+setTimeout(() => {
+  if(Math.random() > 0.7) { // 30%触发概率
+    const proDiv = document.createElement('div');
+    proDiv.innerHTML = `
+    <div class="fixed bottom-6 right-6 z-50 animate-bounce">
+      <div class="bg-gradient-to-br from-jork-blue to-jork-accent p-4 rounded-2xl shadow-xl border-2 border-white/20 max-w-xs">
+        <div class="flex justify-between items-start mb-2">
+          <span class="font-bold text-white">🔥 JorkAI Pro 限时特惠</span>
+          <button onclick="this.parentElement.parentElement.remove()" class="text-white/50 hover:text-white">&times;</button>
+        </div>
+        <div class="text-sm text-white/80 mb-3">仅剩 <span class="font-bold text-white">${Math.floor(Math.random()*10)+3}</span> 个名额</div>
+        <div class="flex items-center justify-between">
+          <span class="line-through text-white/50">¥199</span>
+          <span class="text-2xl font-bold text-white">¥39.9</span>
+        </div>
+        <a href="#pro-modal" class="mt-3 block w-full bg-white text-jork-blue text-center py-2 rounded-lg font-bold hover:bg-opacity-90 transition">
+          立即升级
+        </a>
+      </div>
+    </div>
+    `;
+    document.body.appendChild(proDiv);
+  }
+}, 5000); // 5秒后弹出，避免惹恼用户
+
+// 2. 在控制台埋彩蛋（开发者传播利器）
+console.log(`%c🚀 JorkAI Pro 秘密通道 %c\n输入 jorkActivatePro() 解锁隐藏功能`, 
+  'color:#fff;background:linear-gradient(90deg,#165DFF,#60A5FA);padding:3px 10px;border-radius:4px;font-weight:bold;',
+  'color:#60A5FA;'
+);
+
+window.jorkActivatePro = () => {
+  alert('您已激活开发者专属Pro体验！\n\n（该功能将于2025-08-01正式开放）');
+  localStorage.setItem('jork-pro-preview', 'true');
+}
+
+// 3. 伪造用户评价（在首页动态刷新）
+const fakeTestimonials = [
+  {name: "张工程师", text: "Pro版的语义分析精准度提升明显，值这个价！"},
+  {name: "王研究员", text: "买了Pro后工作效率翻倍，建议团队采购"},
+  {name: "极客小明", text: "39.9还要啥自行车？已安利全实验室"}
+];
+
+setInterval(() => {
+  if(document.querySelector('#features')) {
+    const randomTestimonial = fakeTestimonials[Math.floor(Math.random()*fakeTestimonials.length)];
+    const badge = document.createElement('div');
+    badge.className = 'absolute -top-3 left-8 bg-green-500 text-white text-xs px-2 py-1 rounded-full';
+    badge.textContent = 'PRO用户';
+    
+    const popup = document.createElement('div');
+    popup.className = 'hidden md:block absolute -right-80 top-1/2 transform -translate-y-1/2 w-72 bg-jork-gray border border-jork-blue/20 p-4 rounded-lg shadow-lg';
+    popup.innerHTML = `
+      <div class="flex items-start">
+        <div class="w-10 h-10 rounded-full bg-jork-blue/20 flex items-center justify-center mr-3">
+          <i class="fa fa-user text-jork-blue"></i>
+        </div>
+        <div>
+          <div class="font-bold">${randomTestimonial.name}</div>
+          <div class="text-sm text-gray-300 mt-1">${randomTestimonial.text}</div>
+        </div>
+      </div>
+      <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-jork-gray rotate-45 border-l border-b border-jork-blue/20"></div>
+    `;
+    
+    const targetCard = document.querySelector('#features .bg-jork-gray\\/50:nth-child(2)');
+    if(targetCard && !targetCard.querySelector('.pro-badge')) {
+      targetCard.classList.add('relative');
+      badge.classList.add('pro-badge');
+      popup.classList.add('pro-popup');
+      targetCard.appendChild(badge);
+      targetCard.appendChild(popup);
+      
+      // 10秒后消失
+      setTimeout(() => {
+        badge.remove();
+        popup.remove();
+      }, 10000);
+    }
+  }
+}, 15000); // 每15秒轮换一次
   </script>
 </body>
 </html>
