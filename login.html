@@ -578,7 +578,7 @@
                             
                             // 重定向到聊天页面
                             setTimeout(() => {
-                                window.location.href = '/chat.html';
+                                window.location.href = 'chat.html';  // 相对路径
                             }, 1500);
                         }
                     } else {
@@ -594,7 +594,7 @@
                     }
                     
                     setTimeout(() => {
-                        window.location.href = '/chat.html';
+                        window.location.href = 'chat.html';  // 相对路径
                     }, 1000);
                 }
             } catch (error) {
@@ -698,7 +698,7 @@
                 // User is logged in, redirect to chat
                 showSuccess('您已登录，正在跳转...');
                 setTimeout(() => {
-                    window.location.href = '/chat.html';
+                    window.location.href = 'chat.html';  // 相对路径
                 }, 1000);
             }
         });
@@ -709,7 +709,7 @@
             if (event === 'SIGNED_IN' && session) {
                 // Ensure we're not already redirecting
                 if (!window.location.href.includes('/chat.html')) {
-                    window.location.href = '/chat.html';
+                    window.location.href = 'chat.html';  // 相对路径
                 }
             }
         });

@@ -370,6 +370,65 @@
         }
 
         /* 加载动画 */
+        .thinking-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #000;
+            border-radius: 50%;
+            animation: thinking-pulse 1.5s ease-in-out infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes thinking-pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        /* 完成动画 - 对钩 */
+        .complete-check {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            position: relative;
+            opacity: 0;
+            animation: fadeInScale 0.4s ease-out forwards;
+        }
+
+        .complete-check::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* 思考容器样式 */
+        .thinking-container {
+            padding: 1rem;
+            text-align: center;
+            animation: fadeInUp 0.3s ease-out;
+        }
         .loading {
             display: inline-block;
             width: 20px;
@@ -609,35 +668,124 @@
             background: #999;
         }
 
-        /* 体验按钮样式 */
+        /* 行动号召区块 */
+        .cta-section {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .cta-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
         .cta-button {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
+            padding: 1rem 2.5rem;
             border-radius: 50px;
+            text-decoration: none;
             font-weight: 600;
             font-size: 1.125rem;
             transition: all 0.3s ease;
-            margin-top: 2rem;
+            display: inline-block;
+        }
+
+        .cta-button.primary {
+            background: #000;
+            color: #fff;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .cta-button:hover {
+        .cta-button.primary:hover {
             background: #333;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .cta-button i {
-            margin-left: 0.5rem;
+        .cta-button.secondary {
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
         }
 
-        .hero-cta {
-            text-align: center;
-            margin-top: 3rem;
-            animation: fadeInUp 1s ease-out 0.6s both;
+        .cta-button.secondary:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .cta-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .cta-feature i {
+            color: #4CAF50;
+            font-size: 1.2rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-button {
+                width: 200px;
+            }
+            
+            .cta-features {
+                grid-template-columns: 1fr;
+                text-align: left;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
@@ -668,12 +816,6 @@
 
             <!-- 输入框 -->
             <div class="input-container">
-                <div class="hero-cta">
-                    <a href="login.html" class="cta-button">
-                        现在开始体验
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
                 <input type="text" class="chat-input" id="chatInput" placeholder="向我提问任何事情..." maxlength="2000">
                 <button class="send-button" id="sendButton">
                     <i class="fas fa-paper-plane"></i>
@@ -736,6 +878,409 @@
         </div>
     </section>
 
+
+    <!-- 客户案例展示 -->
+    <section class="customer-showcase">
+        <div class="showcase-container">
+            <div class="showcase-header">
+                <h2>受到世界上最创新型公司的信任</h2>
+                <p>JorkAI支持这些生态接入，简化您的使用流程</p>
+            </div>
+            
+            <div class="logo-slider-wrapper">
+                <div class="logo-slider">
+                    <!-- 第一组logo -->
+                    <div class="logo-track">
+                        <div class="logo-item">
+                            <img src="hncheer.jpg" alt="湖南琦尔公司" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-placeholder" style="display: none;">
+                                <span>湖南琦尔</span>
+                            </div>
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Tencent_Cloud_logo.svg" alt="腾讯云">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
+                        </div>
+                    </div>
+                    
+                    <!-- 第二组logo（复制用于无缝循环） -->
+                    <div class="logo-track">
+                        <div class="logo-item">
+                            <img src="hncheer.jpg" alt="湖南琦尔公司" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="logo-placeholder" style="display: none;">
+                                <span>湖南琦尔</span>
+                            </div>
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Tencent_Cloud_logo.svg" alt="腾讯云">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+                        </div>
+                        <div class="logo-item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="showcase-stats">
+                <div class="showcase-stat">
+                    <div class="stat-value">50+</div>
+                    <div class="stat-desc">企业客户</div>
+                </div>
+                <div class="showcase-stat">
+                    <div class="stat-value">1k+</div>
+                    <div class="stat-desc">活跃用户</div>
+                </div>
+                <div class="showcase-stat">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-desc">服务可用性</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CSS样式 -->
+    <style>
+    /* 客户案例展示版块 */
+    .customer-showcase {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        position: relative;
+        overflow: hidden;
+        padding: 4rem 2rem;
+    }
+
+    .customer-showcase::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(circle at 30% 50%, rgba(0,0,0,0.02) 0%, transparent 70%),
+                    radial-gradient(circle at 70% 50%, rgba(0,0,0,0.02) 0%, transparent 70%);
+        pointer-events: none;
+    }
+
+    .showcase-container {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+
+    .showcase-header {
+        text-align: center;
+        margin-bottom: 4rem;
+        animation: fadeInDown 1s ease-out;
+    }
+
+    .showcase-header h2 {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
+
+    .showcase-header p {
+        font-size: 1.25rem;
+        color: #666;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Logo滑动容器 */
+    .logo-slider-wrapper {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        margin: 4rem 0;
+        padding: 2rem 0;
+    }
+
+    .logo-slider-wrapper::before,
+    .logo-slider-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100px;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .logo-slider-wrapper::before {
+        left: 0;
+        background: linear-gradient(to right, #fafafa 0%, transparent 100%);
+    }
+
+    .logo-slider-wrapper::after {
+        right: 0;
+        background: linear-gradient(to left, #fafafa 0%, transparent 100%);
+    }
+
+    .logo-slider {
+        display: flex;
+        animation: slideLeft 30s linear infinite;
+    }
+
+    .logo-track {
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+        padding: 0 2rem;
+    }
+
+    .logo-item {
+        flex-shrink: 0;
+        width: 180px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        transition: all 0.3s ease;
+    }
+
+    .logo-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .logo-item img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        filter: grayscale(100%);
+        opacity: 0.7;
+        transition: all 0.3s ease;
+    }
+
+    .logo-item:hover img {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+
+    /* Logo占位符（当图片加载失败时显示） */
+    .logo-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f0f0f0;
+        border-radius: 8px;
+        color: #666;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    /* 滑动动画 */
+    @keyframes slideLeft {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* 展示统计数据 */
+    .showcase-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3rem;
+        max-width: 800px;
+        margin: 4rem auto 0;
+        text-align: center;
+    }
+
+    .showcase-stat {
+        animation: fadeInUp 1s ease-out;
+        animation-fill-mode: both;
+    }
+
+    .showcase-stat:nth-child(1) { animation-delay: 0.2s; }
+    .showcase-stat:nth-child(2) { animation-delay: 0.4s; }
+    .showcase-stat:nth-child(3) { animation-delay: 0.6s; }
+
+    .stat-value {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-desc {
+        font-size: 1.125rem;
+        color: #666;
+        font-weight: 500;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+        .showcase-header h2 {
+            font-size: 2.5rem;
+        }
+        
+        .logo-track {
+            gap: 3rem;
+        }
+        
+        .logo-item {
+            width: 150px;
+            height: 70px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .customer-showcase {
+            min-height: auto;
+            padding: 4rem 1rem;
+        }
+        
+        .showcase-header h2 {
+            font-size: 2rem;
+        }
+        
+        .showcase-header p {
+            font-size: 1.1rem;
+        }
+        
+        .logo-item {
+            width: 120px;
+            height: 60px;
+            padding: 1rem;
+        }
+        
+        .logo-track {
+            gap: 2rem;
+        }
+        
+        .showcase-stats {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+        }
+        
+        /* 减慢移动端的滑动速度 */
+        .logo-slider {
+            animation-duration: 40s;
+        }
+    }
+
+    /* 暂停动画（用户悬停时） */
+    .logo-slider:hover {
+        animation-play-state: paused;
+    }
+
+    /* 深色模式支持（可选） */
+    @media (prefers-color-scheme: dark) {
+        .customer-showcase {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+        }
+        
+        .showcase-header h2 {
+            color: #fff;
+        }
+        
+        .showcase-header p {
+            color: #aaa;
+        }
+        
+        .logo-item {
+            background: #2a2a2a;
+            border: 1px solid #333;
+        }
+        
+        .logo-item img {
+            filter: grayscale(100%) invert(1);
+        }
+        
+        .logo-item:hover img {
+            filter: grayscale(0%) invert(0);
+        }
+        
+        .stat-value {
+            color: #fff;
+        }
+        
+        .stat-desc {
+            color: #aaa;
+        }
+        
+        .logo-slider-wrapper::before {
+            background: linear-gradient(to right, #1a1a1a 0%, transparent 100%);
+        }
+        
+        .logo-slider-wrapper::after {
+            background: linear-gradient(to left, #1a1a1a 0%, transparent 100%);
+        }
+    }
+    </style>
+
+    <!-- 行动号召区块 -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>准备开始体验JorkAI的强大功能？</h2>
+            <p>立即注册，解锁更多高级功能，享受个性化AI服务体验</p>
+            <div class="cta-buttons">
+                <a href="login.html" class="cta-button primary">立即登录</a>
+                <a href="login.html" class="cta-button secondary">免费注册</a>
+            </div>
+            <div class="cta-features">
+                <div class="cta-feature">
+                    <i class="fas fa-brain"></i>
+                    <span>AI个性化记忆功能</span>
+                </div>
+                <div class="cta-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>高级模型访问</span>
+                </div>
+                <div class="cta-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>优先响应速度</span>
+                </div>
+                <div class="cta-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>历史记录保存</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 页脚 -->
     <footer class="footer">
         <div class="footer-container">
@@ -767,7 +1312,7 @@
                 <div class="footer-section">
                     <h3>联系我们</h3>
                     <ul class="footer-links">
-                        <li><a href="mailto:contact@jorkai.com">inffo@jorkai.cn</a></li>
+                        <li><a href="mailto:contact@jorkai.com">info@jorkai.cn</a></li>
                         <li><a href="suppots.html">在线客服</a></li>
                         <li><a href="#">帮助中心</a></li>
                         <li><a href="#">开发者社区</a></li>
@@ -824,12 +1369,6 @@
                 // 切换到聊天模式
                 this.hero.classList.add('chat-mode');
 
-                // 隐藏体验按钮
-                const ctaButton = document.querySelector('.hero-cta');
-                if (ctaButton) {
-                    ctaButton.style.display = 'none';
-                }
-
                 // 添加用户消息
                 this.addMessage('user', message);
                 this.messages.push({ role: 'user', content: message });
@@ -874,15 +1413,27 @@
                     const reader = response.body.getReader();
                     const decoder = new TextDecoder();
                     
+                    // 创建思考动画容器
+                    const thinkingDiv = document.createElement('div');
+                    thinkingDiv.className = 'message ai';
+                    thinkingDiv.innerHTML = '<div class="thinking-container"><div class="thinking-dot"></div></div>';
+                    this.chatMessages.appendChild(thinkingDiv);
+                    this.scrollToBottom();
+
+                    // 延迟创建真正的消息容器
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
                     // 创建AI消息容器
                     const messageDiv = document.createElement('div');
                     messageDiv.className = 'message ai';
-                    
+
                     const bubbleDiv = document.createElement('div');
-                    bubbleDiv.className = 'message-bubble typing-indicator';
-                    
+                    bubbleDiv.className = 'message-bubble';
+
                     messageDiv.appendChild(bubbleDiv);
-                    this.chatMessages.appendChild(messageDiv);
+
+                    // 替换思考动画为真实消息
+                    thinkingDiv.replaceWith(messageDiv);
                     this.scrollToBottom();
 
                     let aiResponse = '';
@@ -918,6 +1469,16 @@
                     }
 
                     // 移除打字指示器
+                    // 显示完成动画
+                    const checkDiv = document.createElement('div');
+                    checkDiv.className = 'thinking-container';
+                    checkDiv.innerHTML = '<div class="complete-check"></div>';
+                    messageDiv.insertBefore(checkDiv, bubbleDiv);
+
+                    // 1秒后隐藏对钩
+                    setTimeout(() => {
+                        checkDiv.style.display = 'none';
+                    }, 1000);
                     bubbleDiv.classList.remove('typing-indicator');
                     
                     // 处理Markdown格式
