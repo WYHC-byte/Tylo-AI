@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI记忆功能说明 - JorkAI</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { background-color: #F9F9F9; }
+        .dark { background-color: #1F2937; }
+        .memory-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+        .dark .memory-card {
+            background: #2D3748;
+        }
+        .memory-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        .personality-card-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .personality-card-demo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen">
+    <!-- 顶部导航 -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <img src="logo.png" alt="JorkAI" class="w-8 h-8 mr-3 rounded-full">
+                    <h1 class="text-xl font-semibold">AI记忆功能说明</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <a href="chat.html" class="text-blue-600 hover:text-blue-700">
+                        <i class="fas fa-arrow-left mr-2"></i>返回主页
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 如何控制记忆 -->
+        <div class="memory-card mb-8">
+            <h2 class="text-2xl font-bold mb-6 flex items-center">
+                <i class="fas fa-sliders-h mr-3 text-purple-500"></i>
+                如何控制您的记忆数据？
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <i class="fas fa-toggle-on text-3xl text-blue-500 mb-3"></i>
+                    <h4 class="font-semibold mb-2">开关控制</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        设置 → AI记忆功能<br>一键开启或关闭
+                    </p>
+                </div>
+                
+                <div class="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <i class="fas fa-eye text-3xl text-green-500 mb-3"></i>
+                    <h4 class="font-semibold mb-2">查看记忆</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        实时查看所有<br>已保存的记忆
+                    </p>
+                </div>
+                
+                <div class="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <i class="fas fa-trash-alt text-3xl text-red-500 mb-3"></i>
+                    <h4 class="font-semibold mb-2">删除记忆</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        逐条删除或<br>一键清空所有
+                    </p>
+                </div>
+                
+                <div class="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <i class="fas fa-download text-3xl text-purple-500 mb-3"></i>
+                    <h4 class="font-semibold mb-2">导出数据</h4>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        下载您的所有<br>记忆数据备份
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <p class="text-sm">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    <strong>提示：</strong>清除浏览器缓存会删除所有记忆数据，建议定期导出备份。
+                </p>
+            </div>
+        </div>
+
+        <!-- 人格分析功能 -->
+        <div class="memory-card mb-8">
+            <h2 class="text-2xl font-bold mb-6 flex items-center">
+                <i class="fas fa-id-card mr-3 text-pink-500"></i>
+                AI人格分析功能
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-semibold mb-4">什么是人格分析？</h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-4">
+                        基于您与AI的对话历史和记忆数据，生成一份独特的「人格卡片」，
+                        展现AI眼中的您。这是一种有趣的互动方式，让您从AI的视角了解自己。
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-start">
+                            <i class="fas fa-sparkles text-yellow-500 mr-3 mt-1"></i>
+                            <div>
+                                <p class="font-medium">趣味性质</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    仅供娱乐参考，不是专业心理评估
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-lock text-green-500 mr-3 mt-1"></i>
+                            <div>
+                                <p class="font-medium">隐私保护</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    分析结果仅在本地生成，不会分享给第三方
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-share-alt text-blue-500 mr-3 mt-1"></i>
+                            <div>
+                                <p class="font-medium">可分享</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    可导出为图片，与朋友分享您的独特人格卡
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-semibold mb-4">人格卡片示例</h3>
+                    <div class="personality-card-demo">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-user-circle text-4xl mb-2"></i>
+                            <h4 class="text-xl font-bold">您的人格卡</h4>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div>
+                                <p class="font-semibold mb-1">🏷️ 性格标签</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-white/20 px-2 py-1 rounded">好奇心强</span>
+                                    <span class="bg-white/20 px-2 py-1 rounded">创意思维</span>
+                                    <span class="bg-white/20 px-2 py-1 rounded">终身学习者</span>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="font-semibold mb-1">💬 人格画像</p>
+                                <p class="text-xs opacity-90">
+                                    一个充满好奇心的探索者，总是对新事物保持开放态度...
+                                </p>
+                            </div>
+                            <div>
+                                <p class="font-semibold mb-1">✨ 独特之处</p>
+                                <p class="text-xs opacity-90">
+                                    善于将复杂问题简单化，有独特的思考角度...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 常见问题 -->
+        <div class="memory-card mb-8">
+            <h2 class="text-2xl font-bold mb-6 flex items-center">
+                <i class="fas fa-question-circle mr-3 text-orange-500"></i>
+                常见问题
+            </h2>
+            
+            <div class="space-y-4">
+                <details class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg cursor-pointer">
+                    <summary class="font-semibold flex items-center justify-between">
+                        记忆数据会被上传到服务器吗？
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        不会。所有记忆数据都存储在您的浏览器localStorage中，我们的服务器无法访问这些数据。
+                        只有在生成回复时，相关记忆会作为上下文发送给AI模型，但不会被永久保存。
+                    </p>
+                </details>
+                
+                <details class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg cursor-pointer">
+                    <summary class="font-semibold flex items-center justify-between">
+                        如何确保记忆的准确性？
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        AI会通过DeepSeek模型分析对话内容的重要性，只记录明确的个人信息和偏好。
+                        如果发现记忆有误，您可以随时在设置中查看并删除错误的记忆。
+                    </p>
+                </details>
+                
+                <details class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg cursor-pointer">
+                    <summary class="font-semibold flex items-center justify-between">
+                        关闭记忆功能后，已有的记忆会怎样？
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        关闭记忆功能只是停止新记忆的生成，已保存的记忆仍会保留。
+                        如果您想完全清除，需要手动点击"清除所有记忆"按钮。
+                    </p>
+                </details>
+                
+                <details class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg cursor-pointer">
+                    <summary class="font-semibold flex items-center justify-between">
+                        记忆数据会占用多少存储空间？
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        系统最多保存50条记忆，每条记忆通常不超过1KB，总计不会超过50KB。
+                        当存储空间不足时，系统会自动清理最旧的记忆。
+                    </p>
+                </details>
+                
+                <details class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg cursor-pointer">
+                    <summary class="font-semibold flex items-center justify-between">
+                        换设备或浏览器后记忆还在吗？
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <p class="mt-3 text-gray-600 dark:text-gray-400">
+                        记忆数据与浏览器绑定，换设备或浏览器后需要重新积累。
+                        建议定期导出重要的记忆数据进行备份。
+                    </p>
+                </details>
+            </div>
+        </div>
+
+        <!-- 隐私承诺 -->
+        <div class="bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-2xl p-8 text-center">
+            <i class="fas fa-shield-alt text-5xl mb-4"></i>
+            <h2 class="text-2xl font-bold mb-4">我们的隐私承诺</h2>
+            <div class="max-w-2xl mx-auto space-y-3">
+                <p class="flex items-center justify-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    您的记忆数据完全由您控制
+                </p>
+                <p class="flex items-center justify-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    不会用于广告或商业目的
+                </p>
+                <p class="flex items-center justify-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    不会分享给任何第三方
+                </p>
+                <p class="flex items-center justify-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    随时可以完全删除所有数据
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-6xl mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-sm text-gray-600 dark:text-gray-400">
+                    © 2024 JorkAI. All rights reserved.
+                </div>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="privacy.html" class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600">隐私政策</a>
+                    <a href="terms.html" class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600">服务条款</a>
+                    <a href="cookie-policy.html" class="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600">Cookie政策</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 深色模式切换
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        });
+
+        // 初始化深色模式
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+
+        // 展开/收起动画
+        document.querySelectorAll('details').forEach(detail => {
+            detail.addEventListener('toggle', function() {
+                if (this.open) {
+                    this.querySelector('i.fa-chevron-down').style.transform = 'rotate(180deg)';
+                } else {
+                    this.querySelector('i.fa-chevron-down').style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

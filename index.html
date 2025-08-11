@@ -1,757 +1,1107 @@
 <!DOCTYPE html>
-<!-- 最后发布: 周一, 21 Jul 2025 15:13:14 GMT+0000 -->
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="JorkAI - 深度搜索技术引领者，提供穿透信息表层的智能搜索体验。我们的AI技术突破传统搜索局限，通过多层级搜索、语义理解和关联挖掘，为您带来更精准、更全面、更深入的信息获取体验。立即体验下一代搜索技术。">
-  <title>JorkAI - 深度搜索，智领未来</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind 配置 -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'jork-blue': '#165DFF',
-            'jork-dark': '#0F172A',
-            'jork-light': '#3B82F6',
-            'jork-gray': '#1E293B',
-            'jork-accent': '#60A5FA'
-          },
-          fontFamily: {
-            inter: ['Inter', 'sans-serif'],
-          },
-        },
-      }
-    }
-  </script>
-  
-  <style type="text/tailwindcss">
-    @layer utilities {
-      .content-auto {
-        content-visibility: auto;
-      }
-      .text-gradient {
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .search-grid {
-        background-size: 30px 30px;
-        background-image: 
-          linear-gradient(to right, rgba(22, 93, 255, 0.07) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(22, 93, 255, 0.07) 1px, transparent 1px);
-      }
-      .animate-float {
-        animation: float 8s ease-in-out infinite;
-      }
-      .animate-pulse-slow {
-        animation: pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-      }
-      .backdrop-blur-xl {
-        backdrop-filter: blur(24px);
-      }
-      .text-shadow {
-        text-shadow: 0 0 15px rgba(22, 93, 255, 0.5);
-      }
-      .video-container {
-        aspect-ratio: 16/9;
-      }
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JorkAI - 智能AI助手</title>
+    <meta name="description" content="JorkAI - 下一代智能AI助手，支持多模态交互，流式对话">
     
-    @keyframes float {
-      0% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(2deg); }
-      100% { transform: translateY(0px) rotate(0deg); }
-    }
-  </style>
+    <!-- 外部图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        /* 动画定义 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #eee;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #000;
+        }
+
+        /* 主视觉区域 - 全屏 */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #fff;
+            transition: all 0.5s ease;
+        }
+
+        .hero.chat-mode {
+            align-items: flex-start;
+            padding-top: 120px;
+        }
+
+        .hero-content {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 2rem;
+            transition: all 0.5s ease;
+        }
+
+        /* 输入框容器 */
+        .input-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            transition: all 0.5s ease;
+        }
+
+        .hero.chat-mode .input-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 800px;
+            z-index: 100;
+        }
+
+        .chat-input {
+            width: 100%;
+            padding: 1.5rem 4rem 1.5rem 2rem;
+            border: 2px solid #eee;
+            border-radius: 25px;
+            font-size: 1.125rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #fff;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input:focus {
+            border-color: #000;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .send-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .send-button:hover {
+            background: #333;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .send-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: translateY(-50%);
+        }
+
+        /* 聊天消息区域 */
+        .chat-messages {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            max-height: calc(100vh - 300px);
+            overflow-y: auto;
+        }
+
+        .hero.chat-mode .chat-messages {
+            display: block;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .message {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.ai {
+            text-align: left;
+        }
+
+        .message-bubble {
+            display: inline-block;
+            max-width: 80%;
+            padding: 1.25rem 1.75rem;
+            border-radius: 20px;
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        .message.user .message-bubble {
+            background: #000;
+            color: #fff;
+        }
+
+        .message.ai .message-bubble {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #eee;
+        }
+
+        /* AI消息内容格式化样式 */
+        .message.ai .message-bubble h1,
+        .message.ai .message-bubble h2,
+        .message.ai .message-bubble h3,
+        .message.ai .message-bubble h4,
+        .message.ai .message-bubble h5,
+        .message.ai .message-bubble h6 {
+            color: #000;
+            margin: 1rem 0 0.5rem 0;
+            font-weight: 600;
+        }
+
+        .message.ai .message-bubble h1 { font-size: 1.5rem; }
+        .message.ai .message-bubble h2 { font-size: 1.3rem; }
+        .message.ai .message-bubble h3 { font-size: 1.1rem; }
+        
+        .message.ai .message-bubble p {
+            margin: 0.5rem 0;
+            line-height: 1.6;
+        }
+
+        .message.ai .message-bubble ul,
+        .message.ai .message-bubble ol {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .message.ai .message-bubble li {
+            margin: 0.25rem 0;
+        }
+
+        .message.ai .message-bubble blockquote {
+            border-left: 3px solid #000;
+            margin: 1rem 0;
+            padding-left: 1rem;
+            font-style: italic;
+            color: #666;
+        }
+
+        .message.ai .message-bubble code {
+            background: #f1f3f4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #d73a49;
+        }
+
+        .message.ai .message-bubble pre {
+            background: #f8f9fa;
+            border: 1px solid #e1e4e8;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .message.ai .message-bubble pre code {
+            background: none;
+            padding: 0;
+            color: #333;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .code-header {
+            background: #e1e4e8;
+            padding: 0.5rem 1rem;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.8rem;
+            color: #666;
+            border-bottom: 1px solid #d1d5da;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            margin: -1rem -1rem 0.5rem -1rem;
+        }
+
+        .message.ai .message-bubble table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+
+        .message.ai .message-bubble th,
+        .message.ai .message-bubble td {
+            border: 1px solid #e1e4e8;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .message.ai .message-bubble th {
+            background: #f6f8fa;
+            font-weight: 600;
+            color: #000;
+        }
+
+        .message.ai .message-bubble tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .message.ai .message-bubble strong {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .message.ai .message-bubble em {
+            font-style: italic;
+            color: #666;
+        }
+
+        .message.ai .message-bubble hr {
+            border: none;
+            border-top: 1px solid #e1e4e8;
+            margin: 1rem 0;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 流式输出动画 */
+        .typing-indicator::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* 功能版块 */
+        .sections {
+            padding: 4rem 2rem;
+            background: #fff;
+        }
+
+        .section {
+            max-width: 1200px;
+            margin: 0 auto 6rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .section p {
+            font-size: 1.125rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #fff;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: #000;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #000;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* 统计数据 */
+        .stats {
+            background: #f8f9fa;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .stats-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+        }
+
+        .stat-item {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: #000;
+            color: #fff;
+            padding: 3rem 2rem 2rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .chat-input {
+                padding: 1.25rem 3.5rem 1.25rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .send-button {
+                width: 40px;
+                height: 40px;
+                right: 6px;
+            }
+
+            .hero.chat-mode .input-container {
+                max-width: calc(100% - 2rem);
+                margin: 0 1rem;
+            }
+
+            .chat-messages {
+                padding: 0 1rem;
+            }
+
+            .section h2 {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* 滚动条样式 */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #999;
+        }
+
+        /* 体验按钮样式 */
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background: #333;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-button i {
+            margin-left: 0.5rem;
+        }
+
+        .hero-cta {
+            text-align: center;
+            margin-top: 3rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+    </style>
 </head>
 
-<body class="font-inter bg-jork-dark text-white overflow-x-hidden">
-  <!-- 导航栏 -->
-  <header id="navbar" class="fixed w-full z-50 transition-all duration-500">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-4">
-        <!-- Logo区域 -->
-        <div class="flex items-center">
-          <img src="logo.png" alt="JorkAI Logo" class="h-10">
-        </div>
-        
-        <!-- 桌面导航 -->
-        <nav class="hidden md:flex items-center space-x-8">
-          <a href="#features" class="text-gray-300 hover:text-white transition-colors">特性</a>
-          <a href="#search" class="text-gray-300 hover:text-white transition-colors">深度搜索</a>
-          <a href="#video" class="text-gray-300 hover:text-white transition-colors">宣传片</a>
-          <a href="#about" class="text-gray-300 hover:text-white transition-colors">关于我们</a>
-        </nav>
-        
-        <div class="flex items-center space-x-4">
-          <a href="en.html" class="hidden sm:block px-5 py-2 rounded-full text-white border border-jork-blue/30 hover:border-jork-blue/60 transition-all">English | 英文</a>
-          <a href="login.html" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-0.5 font-medium">开始探索</a>
-          
-          <!-- 移动端菜单按钮 -->
-          <button id="menu-toggle" class="md:hidden text-white focus:outline-none">
-            <i class="fa fa-bars text-2xl"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 移动端导航菜单 -->
-    <div id="mobile-menu" class="md:hidden hidden bg-jork-gray/95 backdrop-blur-xl border-t border-jork-blue/10">
-      <div class="container mx-auto px-4 py-4 space-y-3">
-        <a href="#features" class="block py-2 text-gray-300 hover:text-white transition-colors">特性</a>
-        <a href="#search" class="block py-2 text-gray-300 hover:text-white transition-colors">深度搜索</a>
-        <a href="#video" class="block py-2 text-gray-300 hover:text-white transition-colors">宣传片</a>
-        <a href="#about" class="block py-2 text-gray-300 hover:text-white transition-colors">关于我们</a>
-        <a href="login.html" class="block py-2 text-gray-300 hover:text-white transition-colors">登录</a>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero区（全屏显示） -->
-  <section class="hero min-h-screen flex items-center justify-center relative overflow-hidden search-grid">
-    <!-- 粒子背景（模拟搜索网络） -->
-    <div id="particles-js" class="absolute inset-0 w-full h-full"></div>
-    
-    <!-- 装饰元素 -->
-    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-jork-blue/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
-    <div class="absolute bottom-1/3 right-1/4 w-80 h-80 bg-jork-accent/10 rounded-full filter blur-3xl animate-pulse-slow" style="animation-delay: 2s;"></div>
-    
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-      <div class="max-w-5xl mx-auto flex flex-col items-center">
-        
-        <!-- 主标题（换行设计） -->
-        <h1 class="text-[clamp(2.5rem,7vw,4.5rem)] font-extrabold leading-tight mb-6">
-          不止于<br>
-          表面的<br>
-          <span class="bg-gradient-to-r from-jork-blue to-jork-accent text-gradient text-shadow">
-            深度搜索
-          </span>
-        </h1>
-        
-        <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
-          JorkAI 穿透信息表层，直达知识核心，<br class="md:hidden">
-          让每一次探索都更精准、更深入。
-        </p>
-        
-        <!-- 行动号召 -->
-        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6 w-full max-w-xl">
-          <a href="login.html" class="px-8 py-4 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white text-lg font-medium hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-1 duration-300">
-            立即体验
-          </a>
-          <a href="#video" class="px-8 py-4 rounded-full border border-jork-blue/30 text-white text-lg font-medium hover:border-jork-blue/60 transition-all flex items-center justify-center group">
-            <span>观看介绍</span>
-            <i class="fa fa-play-circle ml-2 group-hover:text-jork-blue transition-colors"></i>
-          </a>
-        </div>
-        
-        <!-- 信任标识 -->
-        <div class="mt-16 w-full">
-          <p class="text-gray-500 mb-6 text-sm uppercase tracking-wider">受到行业领导者的信赖</p>
-          <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70">
-            <div class="text-gray-400 text-xl font-semibold">科技前沿</div>
-            <div class="text-gray-400 text-xl font-semibold">知识研究院</div>
-            <div class="text-gray-400 text-xl font-semibold">全球数据</div>
-            <div class="text-gray-400 text-xl font-semibold">智慧企业</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 向下滚动指示 -->
-    <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
-      <a href="#features" class="text-gray-400 hover:text-white transition-colors">
-        <i class="fa fa-angle-down text-3xl"></i>
-      </a>
-    </div>
-  </section>
-
-  <!-- 特性部分 -->
-  <section id="features" class="py-24 bg-jork-dark relative overflow-hidden">
-    <!-- Pro版模态框（点击悬浮窗触发） -->
-<div id="pro-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm">
-  <div class="relative bg-jork-gray border border-jork-blue/30 rounded-2xl max-w-md w-full mx-4 overflow-hidden">
-    <button onclick="document.getElementById('pro-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-      <i class="fa fa-times text-xl"></i>
-    </button>
-    
-    <div class="p-8 text-center">
-      <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center">
-        <i class="fa fa-crown text-3xl text-white"></i>
-      </div>
-      <h3 class="text-2xl font-bold mb-2">JorkAI Pro</h3>
-      <p class="text-gray-300 mb-6">解锁深度搜索的全部潜力</p>
-      
-      <div class="bg-jork-dark/50 border border-jork-blue/20 rounded-xl p-6 mb-6">
-        <div class="flex justify-center mb-4">
-          <span class="text-5xl font-bold bg-gradient-to-r from-jork-blue to-jork-accent text-gradient">39.9</span>
-          <span class="self-end mb-1 ml-1 text-gray-400">元/月</span>
-        </div>
-        <ul class="text-left space-y-3 text-gray-300 text-sm">
-          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 无限次深度语义分析</li>
-          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 优先访问新功能</li>
-          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 专属数据处理队列</li>
-          <li class="flex items-center"><i class="fa fa-check-circle text-jork-blue mr-2"></i> 去除所有水印</li>
-        </ul>
-      </div>
-      
-      <div class="grid grid-cols-2 gap-4">
-        <button onclick="document.getElementById('pro-modal').classList.add('hidden')" class="py-3 rounded-lg border border-jork-blue/30 hover:border-jork-blue/60 transition">
-          再想想
-        </button>
-        <button class="py-3 rounded-lg bg-gradient-to-r from-jork-blue to-jork-accent text-white font-bold hover:shadow-lg hover:shadow-jork-blue/30 transition">
-          立即升级
-        </button>
-      </div>
-    </div>
-    
-    <div class="border-t border-jork-blue/10 px-8 py-4 bg-jork-dark/50 text-center text-sm text-gray-400">
-      支持支付宝/微信支付 · 7天无理由退款
-    </div>
-  </div>
-</div>
-
-<script>
-  // 模态框触发逻辑
-  document.querySelectorAll('a[href="#pro-modal"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      document.getElementById('pro-modal').classList.remove('hidden');
-    });
-  });
-</script>
-    <div class="absolute top-0 right-0 w-1/3 h-1/3 bg-jork-blue/5 rounded-full filter blur-3xl"></div>
-    
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <div class="inline-block px-4 py-2 rounded-full bg-jork-blue/10 text-jork-accent border border-jork-blue/20 text-sm font-medium mb-6">
-          核心优势
-        </div>
-        <h2 class="text-4xl md:text-5xl font-bold mb-6">为什么选择 JorkAI 的深度搜索</h2>
-        <p class="text-xl text-gray-300">我们的AI技术突破传统搜索局限，带来更精准、更全面、更深入的信息获取体验</p>
-      </div>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- 特性卡片 1 -->
-        <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-8 border border-jork-blue/10 hover:border-jork-blue/30 transition-all group hover:shadow-lg hover:shadow-jork-blue/5 transform hover:-translate-y-1 duration-300">
-          <div class="w-14 h-14 rounded-xl bg-jork-blue/20 flex items-center justify-center mb-6 group-hover:bg-jork-blue/30 transition-all">
-            <i class="fa fa-search-plus text-2xl text-jork-blue"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-3">多层级搜索</h3>
-          <p class="text-gray-400">穿透信息表层，深入多层级数据结构，挖掘隐藏在深处的关联知识和潜在信息。</p>
-        </div>
-        
-        <!-- 特性卡片 2 -->
-        <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-8 border border-jork-blue/10 hover:border-jork-blue/30 transition-all group hover:shadow-lg hover:shadow-jork-blue/5 transform hover:-translate-y-1 duration-300">
-          <div class="w-14 h-14 rounded-xl bg-jork-blue/20 flex items-center justify-center mb-6 group-hover:bg-jork-blue/30 transition-all">
-            <i class="fa fa-brain text-2xl text-jork-blue"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-3">语义理解</h3>
-          <p class="text-gray-400">基于上下文的深度语义分析，理解您的真实意图，而非简单匹配关键词，搜索更精准。</p>
-        </div>
-        
-        <!-- 特性卡片 3 -->
-        <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-8 border border-jork-blue/10 hover:border-jork-blue/30 transition-all group hover:shadow-lg hover:shadow-jork-blue/5 transform hover:-translate-y-1 duration-300">
-          <div class="w-14 h-14 rounded-xl bg-jork-blue/20 flex items-center justify-center mb-6 group-hover:bg-jork-blue/30 transition-all">
-            <i class="fa fa-sitemap text-2xl text-jork-blue"></i>
-          </div>
-          <h3 class="text-2xl font-bold mb-3">关联挖掘</h3>
-          <p class="text-gray-400">智能识别信息间的潜在关联，构建知识网络，呈现更全面的视角和更完整的图景。</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 视频宣传片区域 -->
-<section id="video" class="py-24 bg-jork-gray/30 relative overflow-hidden">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="text-center mb-16">
-        <div class="inline-block px-4 py-2 rounded-full bg-jork-blue/10 text-jork-accent border border-jork-blue/20 text-sm font-medium mb-6">
-          了解更多
-        </div>
-        <h2 class="text-4xl md:text-5xl font-bold mb-6">观看 JorkAI 宣传片</h2>
-        <p class="text-xl text-gray-300 max-w-2xl mx-auto">深入了解 JorkAI 的技术原理、核心功能和应用场景</p>
-      </div>
-      
-      <!-- 视频与文字区域（3:5比例） -->
-      <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center">
-        <!-- 左侧视频区域（3/5） -->
-        <div class="lg:col-span-3">
-          <div class="relative rounded-2xl overflow-hidden group video-container shadow-2xl shadow-jork-blue/10">
-            <!-- 视频元素（直接引用宣传片.mp4） -->
-            <video 
-              class="w-full h-full object-cover" 
-              poster="https://picsum.photos/id/1/1200/675"  
-              preload="metadata"
-            >
-              <source src="chinese.mp4" type="video/mp4">  <!-- 此处放置您的视频文件路径 -->
-              您的浏览器不支持视频播放
-            </video>
-            
-            <!-- 自定义播放按钮（覆盖在视频上） -->
-            <div id="video-play-btn" class="absolute inset-0 flex items-center justify-center bg-jork-dark/40 backdrop-blur-sm group-hover:bg-jork-dark/30 transition-all cursor-pointer">
-              <div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30">
-                <i class="fa fa-play text-white text-2xl ml-1"></i>
-              </div>
-            </div>
-            
-            <!-- 视频时长 -->
-            <div class="absolute bottom-4 right-4 px-3 py-1 rounded-full bg-jork-dark/70 backdrop-blur-sm text-white text-sm">
-              03:45  <!-- 替换为您的视频实际时长 -->
-            </div>
-          </div>
-        </div>
-        
-        <!-- 右侧文字简介（2/5） -->
-        <div class="lg:col-span-2 space-y-6">
-          <h3 class="text-3xl md:text-4xl font-bold">探索信息的<br>全新维度</h3>
-          
-          <div class="space-y-4">
-            <p class="text-gray-300">JorkAI 不仅仅是一个搜索引擎，更是您探索知识、挖掘深度信息的智能伙伴。</p>
-            
-            <p class="text-gray-300">在这个信息爆炸的时代，我们帮助您过滤噪音，直达核心，发现隐藏在海量数据背后的关联与洞察。</p>
-            
-            <p class="text-gray-300">通过先进的人工智能算法和深度神经网络，JorkAI 能够理解复杂查询，提供多层级、多维度的搜索结果。</p>
-          </div>
-          
-          <div class="pt-4">
-            <a href="login.html" class="inline-flex items-center px-6 py-3.5 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white font-medium hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-0.5">
-              <span>亲身体验</span>
-              <i class="fa fa-arrow-right ml-2"></i>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="JorkAI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <i class="fas fa-ai" style="display: none;"></i>
+                JorkAI
             </a>
-          </div>
+            <ul class="nav-links">
+                <li><a href="#features">功能</a></li>
+                <li><a href="#about">关于</a></li>
+                <li><a href="#stats">数据</a></li>
+                <li><a href="#contact">联系</a></li>
+            </ul>
         </div>
-      </div>
-    </div>
-  </section>
-  
-  <!-- 视频控制脚本 -->
-  <script>
-    // 获取视频元素和播放按钮
-    const video = document.querySelector('video');
-    const playBtn = document.getElementById('video-play-btn');
-    
-    // 点击播放/暂停视频
-    playBtn.addEventListener('click', function() {
-      if (video.paused) {
-        video.play();
-        playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-pause text-white text-2xl"></i></div>';
-        playBtn.classList.remove('bg-jork-dark/40');
-      } else {
-        video.pause();
-        playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-play text-white text-2xl ml-1"></i></div>';
-      }
-    });
-    
-    video.addEventListener('ended', function() {
-      playBtn.innerHTML = '<div class="w-20 h-20 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent flex items-center justify-center transform group-hover:scale-110 transition-transform shadow-lg shadow-jork-blue/30"><i class="fa fa-play text-white text-2xl ml-1"></i></div>';
-      playBtn.classList.remove('hidden'); // 重新显示播放按钮
-    });
-  </script>
+    </nav>
 
-    <!-- 新闻与公益板块 -->
-    <section class="py-24 bg-jork-dark relative overflow-hidden">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="text-center max-w-3xl mx-auto mb-16">
-          <div class="inline-block px-4 py-2 rounded-full bg-jork-blue/10 text-jork-accent border border-jork-blue/20 text-sm font-medium mb-6">
-            最新动态
-          </div>
-          <h2 class="text-4xl md:text-5xl font-bold mb-6">新闻资讯与公益计划</h2>
-          <p class="text-xl text-gray-300">了解JorkAI的最新动态及我们的社会责任项目</p>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <!-- 新闻列表 -->
-          <div class="lg:col-span-2">
-            <h3 class="text-2xl font-bold mb-6">最新新闻</h3>
-            <div class="space-y-6">
-              <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-6 border border-jork-blue/10 hover:border-jork-blue/30 transition-all">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h4 class="text-xl font-semibold mb-2">JorkAI发布全新深度搜索算法</h4>
-                    <p class="text-gray-400 mb-3">新一代算法将信息处理速度提升30%，关联分析准确率提高至92%</p>
-                    <span class="text-gray-500 text-sm">2025-07-15</span>
-                  </div>
-                  <div class="w-20 h-20 rounded-lg bg-jork-blue/20 flex items-center justify-center">
-                    <i class="fa fa-newspaper-o text-2xl text-jork-blue"></i>
-                  </div>
+    <!-- 主视觉区域 -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <!-- 聊天消息区域 -->
+            <div class="chat-messages" id="chatMessages"></div>
+
+            <!-- 输入框 -->
+            <div class="input-container">
+                <div class="hero-cta">
+                    <a href="login.html" class="cta-button">
+                        现在开始体验
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-              </div>
-              
-              <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-6 border border-jork-blue/10 hover:border-jork-blue/30 transition-all">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h4 class="text-xl font-semibold mb-2">JorkAI与Squareairline达成合作</h4>
-                    <p class="text-gray-400 mb-3">共同推进人工智能在游戏信息检索领域的研究与应用</p>
-                    <span class="text-gray-500 text-sm">2025-07-01</span>
-                  </div>
-                  <div class="w-20 h-20 rounded-lg bg-jork-blue/20 flex items-center justify-center">
-                    <i class="fa fa-handshake-o text-2xl text-jork-blue"></i>
-                  </div>
-                </div>
-              </div>
+                <input type="text" class="chat-input" id="chatInput" placeholder="向我提问任何事情..." maxlength="2000">
+                <button class="send-button" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
-          </div>
-          
-          <!-- 404公益计划 -->
-          <div class="lg:col-span-1">
-            <h3 class="text-2xl font-bold mb-6">404公益计划</h3>
-            <div class="bg-jork-gray/50 backdrop-blur-sm rounded-2xl p-6 border border-jork-blue/10 h-full">
-              <div class="w-full h-48 rounded-xl bg-jork-blue/10 mb-6 flex items-center justify-center">
-                <i class="fa fa-heart text-5xl text-jork-accent"></i>
-              </div>
-              <p class="text-gray-300 mb-4">
-                JorkAI推出"404公益计划"，当用户访问不存在的页面时，我们将展示失踪儿童信息，帮助寻找走失的孩子。
-              </p>
-              <p class="text-gray-300 mb-6">
-                每一次404错误页面的访问，都可能为一个家庭带来希望。我们希望通过技术的力量，让更多失踪儿童早日回到父母身边。
-              </p>
-              <a href="404.html" class="inline-flex items-center text-jork-accent hover:text-jork-blue transition-colors">
-                <span>了解更多</span>
-                <i class="fa fa-arrow-right ml-2"></i>
-              </a>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
 
-  <!-- 行动召唤 -->
-  <section class="py-24 relative overflow-hidden">
-    <div class="absolute inset-0 search-grid"></div>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-gradient-to-r from-jork-blue/10 to-jork-accent/10 rounded-full filter blur-3xl"></div>
-    
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-4xl md:text-6xl font-bold mb-6">准备好体验深度搜索了吗？</h2>
-        <p class="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">加入 JorkAI，开启信息探索的新维度，发现传统搜索无法触及的知识深度。</p>
-        
-        <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <a href="login.html" class="px-8 py-4 rounded-full bg-gradient-to-r from-jork-blue to-jork-accent text-white text-lg font-medium text-center hover:shadow-lg hover:shadow-jork-blue/30 transition-all transform hover:-translate-y-1 duration-300">
-            登录并开始探索
-          </a>
-          <a href="login.html" class="px-8 py-4 rounded-full border border-jork-blue/30 text-white text-lg font-medium text-center hover:border-jork-blue/60 transition-all">
-            了解会员计划
-          </a>
+    <!-- 功能特性 -->
+    <section class="sections" id="features">
+        <div class="section">
+            <div class="section-header">
+                <h2>强大的AI能力</h2>
+                <p>集成最先进的AI技术，为你提供全方位的智能服务体验</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>智能对话</h3>
+                    <p>支持自然语言理解，流畅的多轮对话，让AI真正理解你的需求</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI记忆</h3>
+                    <p>先进的记忆能力，可以精准分析你的特点和性格，回答个性化</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>代码助手</h3>
+                    <p>专业的编程辅助，支持多种编程语言，代码解释和优化建议</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <h3>文档处理</h3>
+                    <p>智能文档分析，内容总结，格式转换，让文档处理更高效</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>数据分析</h3>
+                    <p>强大的数据洞察能力，图表生成，趋势分析，辅助决策制定</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h3>多语言支持</h3>
+                    <p>支持全球多种语言，实时翻译，跨语言交流无障碍</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 页脚 -->
-  <footer class="bg-jork-gray/30 pt-16 pb-8 border-t border-jork-blue/10">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
-        <div class="lg:col-span-2">
-          <div class="flex items-center mb-6">
-            <img src="logo.png" alt="JorkAI Logo" class="h-10 mr-3">
-            <span class="text-2xl font-bold bg-gradient-to-r from-white to-jork-accent text-gradient">JorkAI</span>
-          </div>
-          <p class="text-gray-400 mb-6 max-w-md">JorkAI 致力于通过深度搜索技术，让每个人都能更高效、更深入地获取和理解信息，突破知识获取的边界。</p>
-          
-          <!-- 社交媒体链接 -->
-          <div class="flex space-x-4">
-            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
-              <i class="fa fa-twitter"></i>
-            </a>
-            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
-              <i class="fa fa-linkedin"></i>
-            </a>
-            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
-              <i class="fa fa-github"></i>
-            </a>
-            <a href="#" class="w-10 h-10 rounded-full bg-jork-dark flex items-center justify-center text-gray-400 hover:text-white hover:bg-jork-blue/20 transition-all">
-              <i class="fa fa-envelope"></i>
-            </a>
-          </div>
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>JorkAI</h3>
+                    <p style="color: #ccc; line-height: 1.6;">
+                        致力于为用户提供最智能、最安全、最便捷的AI服务体验。我们相信AI将改变世界，让生活更美好。
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>产品</h3>
+                    <ul class="footer-links">
+                        <li><a href="login.html">AI对话</a></li>
+                        <li><a href="login.html">图像理解</a></li>
+                        <li><a href="login.html">代码助手</a></li>
+                        <li><a href="login.html">API服务</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>隐私与条款</h3>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">隐私政策</a></li>
+                        <li><a href="terms.html">服务条款</a></li>
+                        <li><a href="cookie-policy.html">Cookie政策</a></li>
+                        <li><a href="memory-guide.html">记忆指南</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:contact@jorkai.com">inffo@jorkai.cn</a></li>
+                        <li><a href="suppots.html">在线客服</a></li>
+                        <li><a href="#">帮助中心</a></li>
+                        <li><a href="#">开发者社区</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 JorkAI. All rights reserved. | <a href="https://beian.miit.gov.cn" style="color: #999;">备案号：京ICP备2025138440号-1</a></p>
+            </div>
         </div>
-        
-        <!-- 快速链接 -->
-        <div>
-          <h4 class="text-white font-bold mb-4">产品</h4>
-          <ul class="space-y-3">
-            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">深度搜索</a></li>
-            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">智能分析</a></li>
-            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">知识图谱</a></li>
-            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">API 接口</a></li>
-            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">定价方案</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 class="text-white font-bold mb-4">资源</h4>
-          <ul class="space-y-3">
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">帮助中心</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">使用教程</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">案例研究</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">博客文章</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">开发者文档</a></li>
-          </ul>
-        </div>
-        
-        <div>
-          <h4 class="text-white font-bold mb-4">公司</h4>
-          <ul class="space-y-3">
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">关于我们</a></li>
-            <li><a href="login.html" class="text-gray-400 hover:text-white transition-colors">登录</a></li>
-            <li><a href="en.html" class="text-gray-400 hover:text-white transition-colors">English | 英文</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">隐私政策</a></li>
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors">服务条款</a></li>
-          </ul>
-        </div>
-      </div>
+    </footer>
 
-      <!-- 新增备案信息和防诈骗内容 -->
-      <div class="mt-12 pt-8 border-t border-jork-blue/10 text-center text-gray-400 text-sm">
-        <div class="mb-4">
-          <p class="mb-2">互联网信息服务备案：<a href="https://beian.miit.gov.cn/" target="_blank" class="text-jork-accent hover:underline">备案中</a></p>
-          <p class="mb-2">公安机关备案号：<a href="http://www.beian.gov.cn/" target="_blank" class="text-jork-accent hover:underline">备案中</a></p>
-        </div>
-        
-        <div class="mb-4">
-          <p class="font-medium text-gray-300 mb-2">防诈骗提示：</p>
-          <p>请提高警惕，防范网络诈骗。本平台不会以任何名义要求用户转账汇款或索要银行卡信息。</p>
-        </div>
-        
-        <div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
-          <a href="https://www.12377.cn/" target="_blank" class="hover:text-jork-accent transition-colors">网络违法和不良信息举报中心</a>
-          <a href="tel:110" class="hover:text-jork-accent transition-colors">报警电话：110</a>
-          <a href="tel:96110" class="hover:text-jork-accent transition-colors">反诈劝阻专线：96110</a>
-        </div>
-      </div>
-      
-      <div class="mt-8 pt-8 border-t border-jork-blue/10 flex flex-col md:flex-row justify-between items-center">
-        <p class="text-gray-500 text-sm mb-4 md:mb-0">© 2025 JorkAI. All Right Reserved</p>
-        <div class="flex space-x-6">
-          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">隐私政策</a>
-          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">服务条款</a>
-          <a href="#" class="text-gray-500 hover:text-gray-300 text-sm transition-colors">Cookie 政策</a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- JavaScript -->
-  <script>
-    // 导航栏滚动效果
-    window.addEventListener('scroll', function() {
-      const navbar = document.getElementById('navbar');
-      if (window.scrollY > 50) {
-        navbar.classList.add('bg-jork-dark/90', 'backdrop-blur-xl', 'shadow-lg', 'shadow-jork-blue/5');
-      } else {
-        navbar.classList.remove('bg-jork-dark/90', 'backdrop-blur-xl', 'shadow-lg', 'shadow-jork-blue/5');
-      }
-    });
-    
-    // 移动端菜单切换
-    document.getElementById('menu-toggle').addEventListener('click', function() {
-      const mobileMenu = document.getElementById('mobile-menu');
-      mobileMenu.classList.toggle('hidden');
-    });
-    
-    // 平滑滚动
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 100,
-            behavior: 'smooth'
-          });
-          
-          // 关闭移动菜单（如果打开）
-          document.getElementById('mobile-menu').classList.add('hidden');
-        }
-      });
-    });
-    
-    // 粒子背景初始化（模拟搜索网络）
-    document.addEventListener('DOMContentLoaded', function() {
-      particlesJS('particles-js', {
-        "particles": {
-          "number": {
-            "value": 100,
-            "density": {
-              "enable": true,
-              "value_area": 800
+    <script>
+        // 聊天功能
+        class ChatInterface {
+            constructor() {
+                this.messages = [
+                    {
+                        role: 'system',
+                        content: '你是JorkAI，一个智能、友好、专业的AI助手。你具有以下特点：\n1. 你的名字是JorkAI\n2. 你支持多模态交互，可以理解文本、图片等\n3. 你具有上下文记忆能力，能够记住对话历史\n4. 你会以友好、专业的方式回答用户问题\n5. 当用户问起你的身份时，请介绍自己是JorkAI\n6. 你致力于为用户提供最好的AI服务体验\n请始终保持友好、专业的态度，并在适当的时候提及你是JorkAI。'
+                    }
+                ];
+                this.isLoading = false;
+                this.apiKey = 'sk-e1ed90c2effc4415beeee85845f66d05';
+                this.apiUrl = 'https://api.deepseek.com/chat/completions';
+                this.init();
             }
-          },
-          "color": {
-            "value": ["#165DFF", "#60A5FA"]
-          },
-          "shape": {
-            "type": "circle"
-          },
-          "opacity": {
-            "value": 0.3,
-            "random": true
-          },
-          "size": {
-            "value": 2,
-            "random": true
-          },
-          "line_linked": {
-            "enable": true,
-            "distance": 120,
-            "color": "#165DFF",
-            "opacity": 0.15,
-            "width": 1
-          },
-          "move": {
-            "enable": true,
-            "speed": 1,
-            "direction": "none",
-            "random": true,
-            "straight": false,
-            "out_mode": "out",
-            "bounce": false
-          }
-        },
-        "interactivity": {
-          "detect_on": "canvas",
-          "events": {
-            "onhover": {
-              "enable": true,
-              "mode": "grab"
-            },
-            "onclick": {
-              "enable": true,
-              "mode": "push"
-            },
-            "resize": true
-          },
-          "modes": {
-            "grab": {
-              "distance": 140,
-              "line_linked": {
-                "opacity": 0.3
-              }
-            },
-            "push": {
-              "particles_nb": 4
+
+            init() {
+                this.chatInput = document.getElementById('chatInput');
+                this.sendButton = document.getElementById('sendButton');
+                this.chatMessages = document.getElementById('chatMessages');
+                this.hero = document.getElementById('hero');
+
+                this.chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                this.sendButton.addEventListener('click', () => {
+                    this.sendMessage();
+                });
+
+                // 自动聚焦输入框
+                this.chatInput.focus();
             }
-          }
-        },
-        "retina_detect": true
-      });
-    });
-    
-    // 滚动动画
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('opacity-100', 'translate-y-0');
-          entry.target.classList.remove('opacity-0', 'translate-y-10');
+
+            async sendMessage() {
+                const message = this.chatInput.value.trim();
+                if (!message || this.isLoading) return;
+
+                // 切换到聊天模式
+                this.hero.classList.add('chat-mode');
+
+                // 隐藏体验按钮
+                const ctaButton = document.querySelector('.hero-cta');
+                if (ctaButton) {
+                    ctaButton.style.display = 'none';
+                }
+
+                // 添加用户消息
+                this.addMessage('user', message);
+                this.messages.push({ role: 'user', content: message });
+                
+                this.chatInput.value = '';
+                this.setLoading(true);
+
+                try {
+                    // 调用DeepSeek API
+                    await this.callDeepSeekAPI();
+                } catch (error) {
+                    this.addMessage('ai', '抱歉，我遇到了一些技术问题。请检查网络连接或稍后再试。');
+                    console.error('DeepSeek API Error:', error);
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            async callDeepSeekAPI() {
+                try {
+                    const response = await fetch(this.apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'deepseek-chat',
+                            messages: this.messages,
+                            stream: true,
+                            max_tokens: 8192,
+                            temperature: 0.7,
+                            top_p: 0.9
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API请求失败: ${response.status} ${response.statusText}`);
+                    }
+
+                    // 处理流式响应
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    
+                    // 创建AI消息容器
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message ai';
+                    
+                    const bubbleDiv = document.createElement('div');
+                    bubbleDiv.className = 'message-bubble typing-indicator';
+                    
+                    messageDiv.appendChild(bubbleDiv);
+                    this.chatMessages.appendChild(messageDiv);
+                    this.scrollToBottom();
+
+                    let aiResponse = '';
+                    let buffer = '';
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        buffer += decoder.decode(value, { stream: true });
+                        const lines = buffer.split('\n');
+                        buffer = lines.pop(); // 保留不完整的行
+
+                        for (const line of lines) {
+                            if (line.trim() === '') continue;
+                            if (line.startsWith('data: ')) {
+                                const data = line.slice(6);
+                                if (data === '[DONE]') continue;
+                                
+                                try {
+                                    const json = JSON.parse(data);
+                                    const content = json.choices?.[0]?.delta?.content;
+                                    if (content) {
+                                        aiResponse += content;
+                                        bubbleDiv.textContent = aiResponse;
+                                        this.scrollToBottom();
+                                    }
+                                } catch (e) {
+                                    console.warn('解析JSON失败:', e);
+                                }
+                            }
+                        }
+                    }
+
+                    // 移除打字指示器
+                    bubbleDiv.classList.remove('typing-indicator');
+                    
+                    // 处理Markdown格式
+                    if (aiResponse) {
+                        bubbleDiv.innerHTML = this.formatMarkdown(aiResponse);
+                        this.messages.push({ role: 'assistant', content: aiResponse });
+                    }
+
+                } catch (error) {
+                    console.error('DeepSeek API调用失败:', error);
+                    throw error;
+                }
+            }
+
+            addMessage(sender, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.className = 'message-bubble';
+                bubbleDiv.textContent = text;
+                
+                messageDiv.appendChild(bubbleDiv);
+                this.chatMessages.appendChild(messageDiv);
+                this.scrollToBottom();
+            }
+
+            setLoading(loading) {
+                this.isLoading = loading;
+                this.sendButton.disabled = loading;
+                
+                if (loading) {
+                    this.sendButton.innerHTML = '<div class="loading"></div>';
+                } else {
+                    this.sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+                }
+            }
+
+            scrollToBottom() {
+                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
+            }
+
+            // Markdown格式化函数
+            formatMarkdown(text) {
+                // 转义HTML
+                text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                
+                // 代码块处理
+                text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                    const language = lang || 'text';
+                    return `<pre><div class="code-header">${language}</div><code>${code.trim()}</code></pre>`;
+                });
+                
+                // 行内代码
+                text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+                
+                // 标题
+                text = text.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+                text = text.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+                text = text.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+                
+                // 加粗和斜体
+                text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+                text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+                
+                // 分割线
+                text = text.replace(/^---$/gm, '<hr>');
+                
+                // 引用
+                text = text.replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>');
+                
+                // 无序列表
+                text = text.replace(/^\* (.*)$/gm, '<li>$1</li>');
+                text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+                
+                // 有序列表
+                text = text.replace(/^\d+\. (.*)$/gm, '<li>$1</li>');
+                
+                // 表格处理（简单的表格格式）
+                const tableRegex = /(\|[^|\n]+\|[^|\n]*\n)+/g;
+                text = text.replace(tableRegex, (match) => {
+                    const rows = match.trim().split('\n');
+                    let tableHTML = '<table>';
+                    
+                    rows.forEach((row, index) => {
+                        const cells = row.split('|').filter(cell => cell.trim());
+                        const tag = index === 0 ? 'th' : 'td';
+                        
+                        if (index === 1 && row.includes('---')) return; // 跳过分隔行
+                        
+                        tableHTML += '<tr>';
+                        cells.forEach(cell => {
+                            tableHTML += `<${tag}>${cell.trim()}</${tag}>`;
+                        });
+                        tableHTML += '</tr>';
+                    });
+                    
+                    tableHTML += '</table>';
+                    return tableHTML;
+                });
+                
+                // 段落处理
+                text = text.replace(/\n\n/g, '</p><p>');
+                text = '<p>' + text + '</p>';
+                
+                // 清理多余的空段落
+                text = text.replace(/<p><\/p>/g, '');
+                text = text.replace(/<p>\s*<\/p>/g, '');
+                
+                return text;
+            }
         }
-      });
-    }, observerOptions);
-    
-    // 为特性卡片添加动画
-    document.querySelectorAll('.grid > div').forEach(item => {
-      item.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
-      observer.observe(item);
-    });
-    // 1. 制造限量抢购悬浮窗（每次访问随机出现）
-setTimeout(() => {
-  if(Math.random() > 0.7) { // 30%触发概率
-    const proDiv = document.createElement('div');
-    proDiv.innerHTML = `
-    <div class="fixed bottom-6 right-6 z-50 animate-bounce">
-      <div class="bg-gradient-to-br from-jork-blue to-jork-accent p-4 rounded-2xl shadow-xl border-2 border-white/20 max-w-xs">
-        <div class="flex justify-between items-start mb-2">
-          <span class="font-bold text-white">🔥 JorkAI Pro 限时特惠</span>
-          <button onclick="this.parentElement.parentElement.remove()" class="text-white/50 hover:text-white">&times;</button>
-        </div>
-        <div class="text-sm text-white/80 mb-3">仅剩 <span class="font-bold text-white">${Math.floor(Math.random()*10)+3}</span> 个名额</div>
-        <div class="flex items-center justify-between">
-          <span class="line-through text-white/50">¥199</span>
-          <span class="text-2xl font-bold text-white">¥39.9</span>
-        </div>
-        <a href="#pro-modal" class="mt-3 block w-full bg-white text-jork-blue text-center py-2 rounded-lg font-bold hover:bg-opacity-90 transition">
-          立即升级
-        </a>
-      </div>
-    </div>
-    `;
-    document.body.appendChild(proDiv);
-  }
-}, 5000); // 5秒后弹出，避免惹恼用户
 
-// 2. 在控制台埋彩蛋（开发者传播利器）
-console.log(`%c🚀 JorkAI Pro 秘密通道 %c\n输入 jorkActivatePro() 解锁隐藏功能`, 
-  'color:#fff;background:linear-gradient(90deg,#165DFF,#60A5FA);padding:3px 10px;border-radius:4px;font-weight:bold;',
-  'color:#60A5FA;'
-);
+        // 初始化聊天界面
+        document.addEventListener('DOMContentLoaded', () => {
+            new ChatInterface();
+        });
 
-window.jorkActivatePro = () => {
-  alert('您已激活开发者专属Pro体验！\n\n（该功能将于2025-08-01正式开放）');
-  localStorage.setItem('jork-pro-preview', 'true');
-}
+        // 导航栏滚动效果
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
 
-// 3. 伪造用户评价（在首页动态刷新）
-const fakeTestimonials = [
-  {name: "张工程师", text: "Pro版的语义分析精准度提升明显，值这个价！"},
-  {name: "王研究员", text: "买了Pro后工作效率翻倍，建议团队采购"},
-  {name: "极客小明", text: "39.9还要啥自行车？已安利全实验室"}
-];
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
 
-setInterval(() => {
-  if(document.querySelector('#features')) {
-    const randomTestimonial = fakeTestimonials[Math.floor(Math.random()*fakeTestimonials.length)];
-    const badge = document.createElement('div');
-    badge.className = 'absolute -top-3 left-8 bg-green-500 text-white text-xs px-2 py-1 rounded-full';
-    badge.textContent = 'PRO用户';
-    
-    const popup = document.createElement('div');
-    popup.className = 'hidden md:block absolute -right-80 top-1/2 transform -translate-y-1/2 w-72 bg-jork-gray border border-jork-blue/20 p-4 rounded-lg shadow-lg';
-    popup.innerHTML = `
-      <div class="flex items-start">
-        <div class="w-10 h-10 rounded-full bg-jork-blue/20 flex items-center justify-center mr-3">
-          <i class="fa fa-user text-jork-blue"></i>
-        </div>
-        <div>
-          <div class="font-bold">${randomTestimonial.name}</div>
-          <div class="text-sm text-gray-300 mt-1">${randomTestimonial.text}</div>
-        </div>
-      </div>
-      <div class="absolute -left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-jork-gray rotate-45 border-l border-b border-jork-blue/20"></div>
-    `;
-    
-    const targetCard = document.querySelector('#features .bg-jork-gray\\/50:nth-child(2)');
-    if(targetCard && !targetCard.querySelector('.pro-badge')) {
-      targetCard.classList.add('relative');
-      badge.classList.add('pro-badge');
-      popup.classList.add('pro-popup');
-      targetCard.appendChild(badge);
-      targetCard.appendChild(popup);
-      
-      // 10秒后消失
-      setTimeout(() => {
-        badge.remove();
-        popup.remove();
-      }, 10000);
-    }
-  }
-}, 15000); // 每15秒轮换一次
-  </script>
+        // 统计数字动画
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statNumbers = entry.target.querySelectorAll('.stat-number');
+                    statNumbers.forEach(stat => {
+                        animateNumber(stat);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+
+        function animateNumber(element) {
+            const text = element.textContent;
+            const number = parseInt(text.replace(/[^\d]/g, ''));
+            const suffix = text.replace(/[\d]/g, '');
+            
+            if (isNaN(number)) return;
+            
+            let current = 0;
+            const increment = number / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= number) {
+                    current = number;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current) + suffix;
+            }, 20);
+        }
+    </script>
 </body>
 </html>

@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JorkAI 管理后台</title>
+    <link rel="icon" href="logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* 动画效果 */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-slideIn {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        /* 渐变背景 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        /* 玻璃态效果 */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* 加载动画 */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 表格悬停效果 */
+        .table-hover-effect:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        
+        /* 侧边栏项目激活状态 */
+        .sidebar-item-active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.2) 0%, transparent 100%);
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 登录页面 -->
+    <div id="loginPage" class="fixed inset-0 gradient-bg flex items-center justify-center z-50">
+        <div class="glass-effect p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4 animate-slideIn">
+            <div class="text-center mb-8">
+                <i class="fas fa-shield-alt text-6xl text-white mb-4"></i>
+                <h1 class="text-3xl font-bold text-white">管理员登录</h1>
+                <p class="text-white/80 mt-2">JorkAI 后台管理系统</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <div>
+                    <label class="block text-white text-sm font-medium mb-2">用户名</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
+                        <input type="text" id="username" 
+                               class="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-white/60"
+                               placeholder="请输入用户名" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-white text-sm font-medium mb-2">密码</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60"></i>
+                        <input type="password" id="password" 
+                               class="w-full pl-10 pr-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-white/60"
+                               placeholder="请输入密码" required>
+                    </div>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full py-3 bg-white text-purple-600 rounded-lg font-semibold hover:bg-white/90 transition-all transform hover:scale-105">
+                    <i class="fas fa-sign-in-alt mr-2"></i>登录系统
+                </button>
+            </form>
+            
+            <div id="loginError" class="mt-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-white text-sm hidden">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span id="errorMessage">用户名或密码错误</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="mainApp" class="hidden">
+        <!-- 顶部导航栏 -->
+        <nav class="bg-white shadow-lg fixed top-0 left-0 right-0 z-40">
+            <div class="px-4 py-3 flex items-center justify-between">
+                <div class="flex items-center">
+                    <button id="sidebarToggle" class="text-gray-600 hover:text-gray-800 mr-4">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-bold gradient-bg bg-clip-text text-transparent">
+                        JorkAI 管理后台
+                    </h1>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="text-sm text-gray-600">
+                        <i class="fas fa-user-circle mr-2"></i>
+                        <span id="adminName">管理员 EVAN</span>
+                    </div>
+                    <button id="logoutBtn" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 侧边栏 -->
+        <aside id="sidebar" class="fixed left-0 top-16 bottom-0 w-64 bg-gray-900 text-white overflow-y-auto transition-transform transform">
+            <div class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors sidebar-item-active" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt mr-3"></i>
+                            <span>数据概览</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors" data-section="users">
+                            <i class="fas fa-users mr-3"></i>
+                            <span>用户管理</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors" data-section="chats">
+                            <i class="fas fa-comments mr-3"></i>
+                            <span>对话记录</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors" data-section="memories">
+                            <i class="fas fa-brain mr-3"></i>
+                            <span>AI记忆</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors" data-section="achievements">
+                            <i class="fas fa-trophy mr-3"></i>
+                            <span>成就系统</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors" data-section="stats">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            <span>统计分析</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="sidebar-item flex items-center p-3 rounded-lg hover:bg-gray-800 transition-colors" data-section="settings">
+                            <i class="fas fa-cog mr-3"></i>
+                            <span>系统设置</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main id="mainContent" class="ml-64 mt-16 p-6 transition-all">
+            <!-- 数据概览 -->
+            <section id="dashboard" class="content-section">
+                <h2 class="text-2xl font-bold mb-6">数据概览</h2>
+                
+                <!-- 统计卡片 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">总用户数</p>
+                                <p class="text-3xl font-bold text-gray-800" id="totalUsers">-</p>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up"></i> +12.5%
+                                </p>
+                            </div>
+                            <div class="bg-blue-100 p-4 rounded-full">
+                                <i class="fas fa-users text-blue-500 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">今日活跃</p>
+                                <p class="text-3xl font-bold text-gray-800" id="activeToday">-</p>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up"></i> +8.3%
+                                </p>
+                            </div>
+                            <div class="bg-green-100 p-4 rounded-full">
+                                <i class="fas fa-chart-line text-green-500 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">总对话数</p>
+                                <p class="text-3xl font-bold text-gray-800" id="totalChats">-</p>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up"></i> +23.1%
+                                </p>
+                            </div>
+                            <div class="bg-purple-100 p-4 rounded-full">
+                                <i class="fas fa-comments text-purple-500 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-500 text-sm">Pro用户</p>
+                                <p class="text-3xl font-bold text-gray-800" id="proUsers">-</p>
+                                <p class="text-green-500 text-sm mt-1">
+                                    <i class="fas fa-arrow-up"></i> +15.7%
+                                </p>
+                            </div>
+                            <div class="bg-yellow-100 p-4 rounded-full">
+                                <i class="fas fa-crown text-yellow-500 text-2xl"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 图表区域 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">用户增长趋势</h3>
+                        <canvas id="userGrowthChart" height="200"></canvas>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">每日活跃用户</h3>
+                        <canvas id="dailyActiveChart" height="200"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 用户管理 -->
+            <section id="users" class="content-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">用户管理</h2>
+                    <button class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-lg hover:shadow-lg transition-all transform hover:scale-105" onclick="showAddUserModal()">
+                        <i class="fas fa-plus mr-2"></i>添加用户
+                    </button>
+                </div>
+
+                <!-- 搜索和筛选 -->
+                <div class="bg-white rounded-xl shadow-lg p-4 mb-6">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <input type="text" id="userSearch" placeholder="搜索用户..." 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                        </div>
+                        <select id="userFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                            <option value="all">所有用户</option>
+                            <option value="pro">Pro用户</option>
+                            <option value="free">免费用户</option>
+                        </select>
+                        <button onclick="loadUsers()" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+                            <i class="fas fa-search mr-2"></i>搜索
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 用户表格 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">用户信息</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">邮箱</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">计划</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">等级</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">积分</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">注册时间</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- 用户数据将动态插入这里 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 分页 -->
+                    <div class="px-6 py-4 bg-gray-50 flex justify-between items-center">
+                        <div class="text-sm text-gray-700">
+                            显示 <span id="userStartIndex">1</span> 到 <span id="userEndIndex">10</span> 条，共 <span id="userTotalCount">0</span> 条
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="changeUserPage(-1)" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button onclick="changeUserPage(1)" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 对话记录 -->
+            <section id="chats" class="content-section hidden">
+                <h2 class="text-2xl font-bold mb-6">对话记录管理</h2>
+                
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-4 border-b">
+                        <input type="text" id="chatSearch" placeholder="搜索对话内容..." 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                    </div>
+                    
+                    <div id="chatsList" class="divide-y divide-gray-200 max-h-96 overflow-y-auto">
+                        <!-- 对话列表将动态插入这里 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI记忆 -->
+            <section id="memories" class="content-section hidden">
+                <h2 class="text-2xl font-bold mb-6">AI记忆管理</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">记忆统计</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">总记忆数</span>
+                                <span class="text-2xl font-bold" id="totalMemories">0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">金句数量</span>
+                                <span class="text-2xl font-bold" id="totalQuotes">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">最新记忆</h3>
+                        <div id="recentMemories" class="space-y-2 max-h-64 overflow-y-auto">
+                            <!-- 最新记忆将动态插入这里 -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 成就系统 -->
+            <section id="achievements" class="content-section hidden">
+                <h2 class="text-2xl font-bold mb-6">成就系统管理</h2>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="achievementsList">
+                        <!-- 成就列表将动态插入这里 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 统计分析 -->
+            <section id="stats" class="content-section hidden">
+                <h2 class="text-2xl font-bold mb-6">统计分析</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">模型使用分布</h3>
+                        <canvas id="modelUsageChart"></canvas>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">用户活跃时段</h3>
+                        <canvas id="activityHeatmap"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 系统设置 -->
+            <section id="settings" class="content-section hidden">
+                <h2 class="text-2xl font-bold mb-6">系统设置</h2>
+                
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">数据库连接</h3>
+                            <div class="bg-green-100 text-green-800 px-4 py-2 rounded-lg">
+                                <i class="fas fa-check-circle mr-2"></i>
+                                Supabase 连接正常
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-3">系统维护</h3>
+                            <div class="flex space-x-4">
+                                <button class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600">
+                                    <i class="fas fa-sync mr-2"></i>刷新缓存
+                                </button>
+                                <button class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600">
+                                    <i class="fas fa-database mr-2"></i>备份数据
+                                </button>
+                                <button class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600">
+                                    <i class="fas fa-trash mr-2"></i>清理日志
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 用户编辑模态框 -->
+    <div id="userModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-90vh overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold" id="userModalTitle">编辑用户</h3>
+                <button onclick="closeUserModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="userForm" class="space-y-4">
+                <input type="hidden" id="userId" value="">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">昵称</label>
+                        <input type="text" id="userNickname" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+                        <input type="email" id="userEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">用户计划</label>
+                        <select id="userPlan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                            <option value="free">免费用户</option>
+                            <option value="pro">Pro用户</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">等级</label>
+                        <input type="number" id="userLevel" min="1" max="10" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">积分</label>
+                        <input type="number" id="userPoints" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">经验值</label>
+                        <input type="number" id="userExp" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">头像URL</label>
+                    <input type="text" id="userAvatar" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-purple-500">
+                </div>
+                
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" onclick="closeUserModal()" class="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
+                        取消
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg">
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 加载遮罩 -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        // Supabase 配置
+        const supabaseUrl = 'https://gjyycwhzldgkjpccutsd.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqeXljd2h6bGRna2pwY2N1dHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2OTQzNjMsImV4cCI6MjA3MDI3MDM2M30.UgLuisEG0zRwUZqsa3IYqRbPie3OifPqY2qJuSq0s2g';
+        const { createClient } = window.supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        // 全局变量
+        let currentPage = 1;
+        const pageSize = 10;
+        let charts = {};
+
+        // 登录功能
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'EVAN' && password === '110131') {
+                document.getElementById('loginPage').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                
+                // 初始化应用
+                initializeApp();
+            } else {
+                document.getElementById('loginError').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('loginError').classList.add('hidden');
+                }, 3000);
+            }
+        });
+
+        // 退出登录
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (confirm('确定要退出登录吗？')) {
+                location.reload();
+            }
+        });
+
+        // 侧边栏切换
+        document.getElementById('sidebarToggle').addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.toggle('-translate-x-full');
+            mainContent.classList.toggle('ml-64');
+            mainContent.classList.toggle('ml-0');
+        });
+
+        // 侧边栏导航
+        document.querySelectorAll('.sidebar-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // 更新激活状态
+                document.querySelectorAll('.sidebar-item').forEach(i => {
+                    i.classList.remove('sidebar-item-active');
+                });
+                item.classList.add('sidebar-item-active');
+                
+                // 显示对应内容
+                const section = item.dataset.section;
+                document.querySelectorAll('.content-section').forEach(s => {
+                    s.classList.add('hidden');
+                });
+                document.getElementById(section).classList.remove('hidden');
+                
+                // 加载对应数据
+                loadSectionData(section);
+            });
+        });
+
+        // 初始化应用
+        async function initializeApp() {
+            showLoading();
+            
+            try {
+                // 加载仪表板数据
+                await loadDashboardData();
+                
+                // 初始化图表
+                initializeCharts();
+            } catch (error) {
+                console.error('初始化失败:', error);
+                showNotification('初始化失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 加载仪表板数据
+        async function loadDashboardData() {
+            try {
+                // 获取用户总数
+                const { count: totalUsers } = await supabaseClient
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                document.getElementById('totalUsers').textContent = totalUsers || 0;
+                
+                // 获取今日活跃用户
+                const today = new Date().toISOString().split('T')[0];
+                const { count: activeToday } = await supabaseClient
+                    .from('users')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('last_seen_at', today);
+                document.getElementById('activeToday').textContent = activeToday || 0;
+                
+                // 获取总对话数
+                const { count: totalChats } = await supabaseClient
+                    .from('chat_history')
+                    .select('*', { count: 'exact', head: true });
+                document.getElementById('totalChats').textContent = totalChats || 0;
+                
+                // 获取Pro用户数
+                const { count: proUsers } = await supabaseClient
+                    .from('users')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('plan', 'pro');
+                document.getElementById('proUsers').textContent = proUsers || 0;
+                
+            } catch (error) {
+                console.error('加载仪表板数据失败:', error);
+            }
+        }
+
+        // 初始化图表
+        function initializeCharts() {
+            // 用户增长趋势图
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            charts.userGrowth = new Chart(userGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                    datasets: [{
+                        label: '新增用户',
+                        data: [65, 78, 90, 120, 156, 195],
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // 每日活跃用户图
+            const dailyActiveCtx = document.getElementById('dailyActiveChart').getContext('2d');
+            charts.dailyActive = new Chart(dailyActiveCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                    datasets: [{
+                        label: '活跃用户',
+                        data: [120, 132, 145, 152, 165, 142, 138],
+                        backgroundColor: 'rgba(118, 75, 162, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // 加载各部分数据
+        async function loadSectionData(section) {
+            showLoading();
+            
+            try {
+                switch(section) {
+                    case 'users':
+                        await loadUsers();
+                        break;
+                    case 'chats':
+                        await loadChats();
+                        break;
+                    case 'memories':
+                        await loadMemories();
+                        break;
+                    case 'achievements':
+                        await loadAchievements();
+                        break;
+                    case 'stats':
+                        await loadStats();
+                        break;
+                }
+            } catch (error) {
+                console.error(`加载${section}数据失败:`, error);
+                showNotification(`加载数据失败`, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 加载用户数据
+        async function loadUsers() {
+            const search = document.getElementById('userSearch').value;
+            const filter = document.getElementById('userFilter').value;
+            
+            let query = supabaseClient
+                .from('users')
+                .select('*', { count: 'exact' });
+            
+            if (search) {
+                query = query.or(`email.ilike.%${search}%,nickname.ilike.%${search}%`);
+            }
+            
+            if (filter !== 'all') {
+                query = query.eq('plan', filter);
+            }
+            
+            const { data: users, count } = await query
+                .order('created_at', { ascending: false })
+                .range((currentPage - 1) * pageSize, currentPage * pageSize - 1);
+            
+            // 获取用户统计数据
+            const userIds = users.map(u => u.id);
+            const { data: stats } = await supabaseClient
+                .from('user_stats')
+                .select('*')
+                .in('user_id', userIds);
+            
+            // 合并数据
+            const statsMap = new Map(stats.map(s => [s.user_id, s]));
+            const mergedUsers = users.map(user => ({
+                ...user,
+                stats: statsMap.get(user.id) || {}
+            }));
+            
+            renderUsersTable(mergedUsers, count);
+        }
+
+        // 渲染用户表格
+        function renderUsersTable(users, totalCount) {
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = '';
+            
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.className = 'table-hover-effect';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="flex items-center">
+                            <img class="h-10 w-10 rounded-full" src="${user.avatar_url || 'https://ui-avatars.com/api/?name=' + (user.nickname || 'User')}" alt="">
+                            <div class="ml-4">
+                                <div class="text-sm font-medium text-gray-900">${user.nickname || '未设置'}</div>
+                                <div class="text-sm text-gray-500">ID: ${user.id.substring(0, 8)}...</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm text-gray-900">${user.email}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${user.plan === 'pro' ? 'bg-purple-100 text-purple-800' : 'bg-gray-100 text-gray-800'}">
+                            ${user.plan === 'pro' ? 'Pro' : '免费'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        Lv.${user.stats?.level || 1}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${user.stats?.points || 0}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        ${new Date(user.created_at).toLocaleDateString()}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="editUser('${user.id}')" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button onclick="deleteUser('${user.id}')" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // 更新分页信息
+            document.getElementById('userStartIndex').textContent = (currentPage - 1) * pageSize + 1;
+            document.getElementById('userEndIndex').textContent = Math.min(currentPage * pageSize, totalCount);
+            document.getElementById('userTotalCount').textContent = totalCount;
+        }
+
+        // 编辑用户
+        async function editUser(userId) {
+            showLoading();
+            
+            try {
+                // 获取用户数据
+                const { data: user } = await supabaseClient
+                    .from('users')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+                
+                // 获取用户统计
+                const { data: stats } = await supabaseClient
+                    .from('user_stats')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .single();
+                
+                // 填充表单
+                document.getElementById('userId').value = user.id;
+                document.getElementById('userNickname').value = user.nickname || '';
+                document.getElementById('userEmail').value = user.email;
+                document.getElementById('userPlan').value = user.plan || 'free';
+                document.getElementById('userLevel').value = stats?.level || 1;
+                document.getElementById('userPoints').value = stats?.points || 0;
+                document.getElementById('userExp').value = stats?.exp || 0;
+                document.getElementById('userAvatar').value = user.avatar_url || '';
+                
+                document.getElementById('userModalTitle').textContent = '编辑用户';
+                document.getElementById('userModal').classList.remove('hidden');
+            } catch (error) {
+                console.error('获取用户数据失败:', error);
+                showNotification('获取用户数据失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 删除用户
+        async function deleteUser(userId) {
+            if (!confirm('确定要删除这个用户吗？此操作不可恢复！')) {
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                // 删除用户相关数据
+                await supabaseClient.from('user_stats').delete().eq('user_id', userId);
+                await supabaseClient.from('ai_memories').delete().eq('user_id', userId);
+                await supabaseClient.from('achievements').delete().eq('user_id', userId);
+                await supabaseClient.from('chat_history').delete().eq('user_id', userId);
+                
+                // 删除用户
+                await supabaseClient.from('users').delete().eq('id', userId);
+                
+                showNotification('用户删除成功', 'success');
+                loadUsers();
+            } catch (error) {
+                console.error('删除用户失败:', error);
+                showNotification('删除用户失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 显示添加用户模态框
+        function showAddUserModal() {
+            document.getElementById('userForm').reset();
+            document.getElementById('userId').value = '';
+            document.getElementById('userModalTitle').textContent = '添加用户';
+            document.getElementById('userModal').classList.remove('hidden');
+        }
+
+        // 关闭用户模态框
+        function closeUserModal() {
+            document.getElementById('userModal').classList.add('hidden');
+        }
+
+        // 保存用户
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            showLoading();
+            
+            try {
+                const userId = document.getElementById('userId').value;
+                const userData = {
+                    nickname: document.getElementById('userNickname').value,
+                    email: document.getElementById('userEmail').value,
+                    plan: document.getElementById('userPlan').value,
+                    avatar_url: document.getElementById('userAvatar').value
+                };
+                
+                const statsData = {
+                    level: parseInt(document.getElementById('userLevel').value),
+                    points: parseInt(document.getElementById('userPoints').value),
+                    exp: parseInt(document.getElementById('userExp').value)
+                };
+                
+                if (userId) {
+                    // 更新现有用户
+                    await supabaseClient
+                        .from('users')
+                        .update(userData)
+                        .eq('id', userId);
+                    
+                    await supabaseClient
+                        .from('user_stats')
+                        .update(statsData)
+                        .eq('user_id', userId);
+                } else {
+                    // 创建新用户（需要完整的认证流程，这里只是示例）
+                    showNotification('创建新用户需要通过正常注册流程', 'warning');
+                    closeUserModal();
+                    return;
+                }
+                
+                showNotification('保存成功', 'success');
+                closeUserModal();
+                loadUsers();
+            } catch (error) {
+                console.error('保存用户失败:', error);
+                showNotification('保存失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        });
+
+        // 翻页功能
+        function changeUserPage(direction) {
+            currentPage += direction;
+            if (currentPage < 1) currentPage = 1;
+            loadUsers();
+        }
+
+        // 加载对话记录
+        async function loadChats() {
+            const { data: chats } = await supabaseClient
+                .from('chat_history')
+                .select(`
+                    *,
+                    users (nickname, email)
+                `)
+                .order('updated_at', { ascending: false })
+                .limit(50);
+            
+            const chatsList = document.getElementById('chatsList');
+            chatsList.innerHTML = '';
+            
+            chats.forEach(chat => {
+                const div = document.createElement('div');
+                div.className = 'p-4 hover:bg-gray-50 cursor-pointer';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h4 class="font-semibold">${chat.title || '未命名对话'}</h4>
+                            <p class="text-sm text-gray-600">用户: ${chat.users?.nickname || chat.users?.email || '未知'}</p>
+                            <p class="text-sm text-gray-500">${new Date(chat.updated_at).toLocaleString()}</p>
+                        </div>
+                        <button onclick="deleteChat('${chat.id}')" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                chatsList.appendChild(div);
+            });
+        }
+
+        // 删除对话
+        async function deleteChat(chatId) {
+            if (!confirm('确定要删除这个对话吗？')) {
+                return;
+            }
+            
+            showLoading();
+            
+            try {
+                await supabaseClient
+                    .from('chat_messages')
+                    .delete()
+                    .eq('chat_id', chatId);
+                
+                await supabaseClient
+                    .from('chat_history')
+                    .delete()
+                    .eq('id', chatId);
+                
+                showNotification('对话删除成功', 'success');
+                loadChats();
+            } catch (error) {
+                console.error('删除对话失败:', error);
+                showNotification('删除失败', 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 加载AI记忆
+        async function loadMemories() {
+            const { data: memories, count } = await supabaseClient
+                .from('ai_memories')
+                .select('*', { count: 'exact' })
+                .order('created_at', { ascending: false })
+                .limit(20);
+            
+            document.getElementById('totalMemories').textContent = count || 0;
+            
+            const quotes = memories.filter(m => m.is_quote);
+            document.getElementById('totalQuotes').textContent = quotes.length;
+            
+            const recentMemories = document.getElementById('recentMemories');
+            recentMemories.innerHTML = '';
+            
+            memories.forEach(memory => {
+                const div = document.createElement('div');
+                div.className = 'p-3 bg-gray-50 rounded-lg';
+                div.innerHTML = `
+                    <p class="text-sm font-medium">${memory.summary}</p>
+                    <p class="text-xs text-gray-500 mt-1">${new Date(memory.created_at).toLocaleString()}</p>
+                `;
+                recentMemories.appendChild(div);
+            });
+        }
+
+        // 加载成就
+        async function loadAchievements() {
+            const achievementTypes = [
+                { id: 'firstQuestion', name: '初来乍到', icon: '🎯', description: '完成首次提问' },
+                { id: 'dailyStreak3', name: '坚持不懈', icon: '📅', description: '连续签到3天' },
+                { id: 'questions50', name: 'AI提问家', icon: '💬', description: '累计提问50次' },
+                { id: 'level5', name: '成长达人', icon: '⭐', description: '等级达到 Lv.5' },
+                { id: 'explorer', name: '探索者', icon: '🔍', description: '使用过3种不同模型' },
+                { id: 'deepThinker', name: '深度思考者', icon: '🧠', description: 'AI生成超1000字回答' }
+            ];
+            
+            const { data: unlockedAchievements } = await supabaseClient
+                .from('achievements')
+                .select('achievement_id, COUNT(*)', { count: 'exact' })
+                .eq('unlocked', true);
+            
+            const achievementsList = document.getElementById('achievementsList');
+            achievementsList.innerHTML = '';
+            
+            achievementTypes.forEach(achievement => {
+                const div = document.createElement('div');
+                div.className = 'bg-gray-50 rounded-lg p-4 text-center';
+                div.innerHTML = `
+                    <div class="text-4xl mb-2">${achievement.icon}</div>
+                    <h4 class="font-semibold">${achievement.name}</h4>
+                    <p class="text-sm text-gray-600 mt-1">${achievement.description}</p>
+                    <p class="text-xs text-gray-500 mt-2">解锁人数: <span class="font-semibold">0</span></p>
+                `;
+                achievementsList.appendChild(div);
+            });
+        }
+
+        // 加载统计数据
+        async function loadStats() {
+            // 模型使用分布
+            if (charts.modelUsage) {
+                charts.modelUsage.destroy();
+            }
+            
+            const modelCtx = document.getElementById('modelUsageChart').getContext('2d');
+            charts.modelUsage = new Chart(modelCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Epist-4.5 标准版', 'Epist-4.5 深度搜索', 'Trax-4.5 代码', 'Aria 图像'],
+                    datasets: [{
+                        data: [45, 25, 20, 10],
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(251, 146, 60, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+            
+            // 活跃时段热力图
+            if (charts.activityHeatmap) {
+                charts.activityHeatmap.destroy();
+            }
+            
+            const heatmapCtx = document.getElementById('activityHeatmap').getContext('2d');
+            charts.activityHeatmap = new Chart(heatmapCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 24}, (_, i) => `${i}:00`),
+                    datasets: [{
+                        label: '活跃用户数',
+                        data: [5, 3, 2, 1, 1, 2, 5, 12, 25, 35, 42, 48, 45, 40, 38, 42, 55, 68, 72, 65, 52, 38, 25, 15],
+                        borderColor: 'rgb(236, 72, 153)',
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // 显示/隐藏加载
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // 显示通知
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-20 right-4 px-6 py-3 rounded-lg shadow-lg animate-slideIn z-50 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+            } text-white`;
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${
+                        type === 'success' ? 'fa-check-circle' : 
+                        type === 'error' ? 'fa-exclamation-circle' : 
+                        type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'
+                    } mr-2"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

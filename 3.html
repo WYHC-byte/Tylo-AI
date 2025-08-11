@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JorkAI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+            background-color: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* Grid Background Pattern */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        /* Header Styles - Hidden by default */
+        header {
+            position: fixed;
+            top: -60px;
+            width: 100%;
+            background-color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: top 0.3s ease;
+        }
+
+        header.visible {
+            top: 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            height: 60px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00bfff;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #666;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #00bfff;
+        }
+
+        .language-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Hero Video Section - Full Screen */
+        .hero-video {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .hero-title {
+            font-size: clamp(40px, 5vw, 60px);
+            font-weight: bold;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-title .blue {
+            color: #00bfff;
+        }
+
+        .year-display {
+            font-size: clamp(24px, 3vw, 36px);
+            font-weight: 300;
+            opacity: 0.7;
+            margin-bottom: 30px;
+        }
+
+        .play-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 40px;
+        }
+
+        .play-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .play-icon {
+            width: 0;
+            height: 0;
+            border-left: 15px solid white;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            margin-left: 3px;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(16px, 2vw, 20px);
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .hero-description {
+            font-size: clamp(14px, 1.8vw, 18px);
+            opacity: 0.8;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* News Section */
+        .news-section {
+            padding: 60px 40px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            margin: 0;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .news-container {
+            display: flex;
+            gap: 60px;
+            align-items: start;
+            flex-wrap: wrap;
+        }
+
+        .news-left {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .news-date {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .blue-bar {
+            width: 60px;
+            height: 3px;
+            background: #00bfff;
+            margin-right: 30px;
+        }
+
+        .date-display {
+            font-size: 48px;
+            color: #e0e0e0;
+            font-weight: 300;
+        }
+
+        .year {
+            font-size: 14px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .news-content {
+            position: relative;
+        }
+
+        .news-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .news-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .read-more {
+            color: #00bfff;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        /* Game Card */
+        .game-showcase {
+            flex: 1;
+            min-width: 400px;
+            position: relative;
+        }
+
+        .game-card {
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+
+        .game-card:hover {
+            transform: rotate(0deg);
+        }
+
+        .game-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .game-card-content {
+            padding: 25px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+        }
+
+        .game-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .game-card-title {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .game-card-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Vision Section - Optimized for single page view */
+        .vision-section {
+            padding: 60px 40px;
+            background: rgba(255, 255, 255, 0.95);
+            margin-top: 30px;
+            min-height: auto;
+        }
+
+        .vision-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .vision-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .vision-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .vision-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-primary {
+            background: #00bfff;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 8px 24px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .vision-statement {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .vision-quote {
+            font-size: clamp(24px, 3vw, 36px);
+            color: #00bfff;
+            font-weight: 300;
+            line-height: 1.4;
+        }
+
+        .about-content {
+            color: #666;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .about-content h3 {
+            color: #333;
+            font-size: 20px;
+            margin: 30px 0 15px;
+        }
+
+        .highlight {
+            color: #00bfff;
+            font-weight: 500;
+        }
+
+        /* Four Seasons Story Section */
+        .seasons-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #a29bfe 100%);
+            padding: 80px 40px;
+            margin-top: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .seasons-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+
+        .seasons-images {
+            flex: 1;
+            min-width: 400px;
+            position: relative;
+        }
+
+        .main-image {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .character-thumbnails {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .upload-thumbnail {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #00bfff 0%, #0099cc 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-thumbnail:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .upload-content {
+            text-align: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .upload-icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+        }
+
+        .upload-text {
+            line-height: 1.1;
+        }
+
+        .upload-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .seasons-info {
+            flex: 1;
+            min-width: 400px;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .seasons-title {
+            font-size: clamp(36px, 4vw, 56px);
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .seasons-subtitle {
+            font-size: 20px;
+            margin-bottom: 25px;
+            opacity: 0.9;
+        }
+
+        .seasons-description {
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            font-size: 14px;
+        }
+
+        .video-button {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 15px 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .news-container,
+            .seasons-container {
+                flex-direction: column;
+            }
+
+            .game-showcase,
+            .seasons-images,
+            .seasons-info {
+                min-width: 100%;
+            }
+
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .vision-quote {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Grid Background -->
+    <div class="grid-background"></div>
+
+    <!-- Header - Initially Hidden -->
+    <header id="navbar">
+        <nav>
+            <div style="display: flex; align-items: center; gap: 40px;">
+                <div class="logo">Tenyun Game</div>
+                <ul class="nav-menu">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#products">产品信息</a></li>
+                    <li><a href="#about">了解我们</a></li>
+                    <li><a href="#join">加入我们</a></li>
+                    <li><a href="#news">新闻动态</a></li>
+                </ul>
+            </div>
+            <button class="language-btn">CH</button>
+        </nav>
+    </header>
+
+    <!-- Hero Video Section - Full Screen -->
+    <section class="hero-video" id="home">
+        <img src="hero.jpg" alt="背景图" class="video-background">
+        <div class="video-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="blue">不只于</span>表面<br>
+                的<br>
+                深度<br>
+                <span class="blue">搜索</span>
+            </h1>
+            <div class="year-display">2025</div>
+            <div class="play-button">
+                <div class="play-icon"></div>
+            </div>
+            <p class="hero-subtitle">JorkAI - 未来已来</p>
+            <p class="hero-description">深度思考 · 精准回答 · 创意无限</p>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news-section" id="news">
+        <div class="section-content">
+            <div class="news-container">
+                <div class="news-left">
+                    <div class="news-date">
+                        <div class="blue-bar"></div>
+                        <div>
+                            <div class="date-display">07/15</div>
+                            <div class="year">2025</div>
+                        </div>
+                    </div>
+                    
+                    <div class="news-content">
+                        <h2 class="news-title">JorkAI-DeepSearch</h2>
+                        <p class="news-text">
+                            最新深度搜索模型，告别无用信息
+                        </p>
+                        <a href="login.html" class="read-more">
+                            体验一下 
+                            <span style="margin-left: 8px;">→</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="game-showcase">
+                    <div class="game-card">
+                        <img src="预告片.mp4" alt="预告片">
+                        <div class="game-card-content">
+                            <div class="game-badge">JorkAI</div>
+                            <h3 class="game-card-title">深度搜索模型</h3>
+                            <p class="game-card-subtitle">告别广告</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section class="vision-section" id="about">
+        <div class="vision-content">
+            <div class="vision-header">
+                <h2 class="vision-title">我们的愿景</h2>
+                <div class="vision-buttons">
+                    <button class="btn-primary">关于JorkAI</button>
+                    <button class="btn-secondary">开发历程</button>
+                </div>
+            </div>
+
+            <div class="vision-statement">
+                <h1 class="vision-quote">
+                    「用游戏讲述每个人心中的重生梦想，<br>
+                    让玩家在虚拟世界找到人生的答案。」
+                </h1>
+            </div>
+
+            <div class="about-content">
+                <h3>关于《四季物语》</h3>
+                <p>
+                    《四季物语》是 腾云游戏工作室 联合 JorkAI于2024年推出的重生题材恋爱冒险游戏。游戏以独特的"重生"设定为核心，让玩家体验从失败到成功、从卑微到巅峰的人生逆转。通过精心设计的剧情分支和人物互动，
+                    玩家将在游戏中学会如何珍惜真正重要的人，如何把握机会改变命运，如何在逆境中崛起。
+                </p>
+                <p style="margin-top: 15px;">
+                    游戏强调<span class="highlight">"选择改变命运"</span>的核心理念，每一个选择都会影响故事走向。从高中到创业，从初恋到婚姻，从一无所有到商业帝国，
+                    玩家将亲历一场跨越十六年的人生史诗。
+                </p>
+                <p style="margin-top: 15px;">
+                    《四季物语》不仅是一款游戏，更是一面镜子，映照出每个人内心对重新开始的渴望。我们希望通过这款游戏，
+                    让玩家明白：虽然现实中没有重生，但每一天都是新的开始。
+                </p>
+
+                <h3 style="color: #00bfff;">游戏特色</h3>
+                <p style="margin-top: 15px;">
+                    • 丰富的剧情分支：超过50个重要选择节点，20+种不同结局<br>
+                    • 深度角色塑造：每个角色都有完整的人物弧光<br>
+                    • 真实的情感体验：初恋的美好、背叛的痛苦、成功的喜悦<br>
+                    • 励志的人生哲学：不做舔狗，成为自己人生的主角
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Four Seasons Story Section -->
+    <section class="seasons-section" id="products">
+        <div class="seasons-container">
+            <div class="seasons-images">
+                <img src="预告片.mp4" alt="四季物语" class="main-image">
+                <div class="character-thumbnails">
+                    <img src="lsy.jpg" alt="林诗雨" class="thumbnail">
+                    <img src="lry.jpg" alt="柳如烟" class="thumbnail">
+                    <img src="qxe.jpg" alt="秦雪儿" class="thumbnail">
+                    <img src="sxn.jpg" alt="苏小暖" class="thumbnail">
+                    <div class="upload-thumbnail" id="playerPhoto" onclick="document.getElementById('photoUpload').click()">
+                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                        <div class="upload-content">
+                            <div class="upload-icon">📸</div>
+                            <div class="upload-text">你就是<br>主角<br>点击上传你的帅照</div>
+                        </div>
+                        <img id="uploadedPhoto" style="display: none;">
+                    </div>
+                    <img src="zgz.jpg" alt="赵公子" class="thumbnail">
+                </div>
+            </div>
+            
+            <div class="seasons-info">
+                <h1 class="seasons-title">四季物语</h1>
+                <p class="seasons-subtitle">Seasons of Heart</p>
+                
+                <p class="seasons-description">
+                    重生恋爱打脸逆袭游戏<br>
+                    重生归来，不做舔狗，只做人生赢家<br>
+                    用智慧改写命运，用真心守护所爱<br>
+                    这一世，要让所有人刮目相看！
+                </p>
+                
+                <div class="social-links">
+                    <span>游戏官网</span>
+                    <span>微博</span>
+                    <span>微信公众号</span>
+                    <span>Bilibili</span>
+                </div>
+                
+                <div class="video-button">
+                    <div class="play-button" style="width: 40px; height: 40px; margin: 0; background: rgba(255,255,255,0.2);">
+                        <div class="play-icon" style="border-left-width: 12px; border-top-width: 8px; border-bottom-width: 8px;"></div>
+                    </div>
+                    <span style="font-size: 16px; font-weight: 500;">游戏宣传片</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Show navbar after scrolling past hero section
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            const heroHeight = document.querySelector('.hero-video').offsetHeight;
+            
+            if (window.scrollY > heroHeight - 100) {
+                navbar.classList.add('visible');
+            } else {
+                navbar.classList.remove('visible');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Play button functionality
+        document.querySelectorAll('.play-button').forEach(button => {
+            button.addEventListener('click', function() {
+                console.log('Play video');
+            });
+        });
+
+        // Character thumbnail hover effect
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            thumb.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Photo upload functionality
+        document.getElementById('photoUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const uploadedPhoto = document.getElementById('uploadedPhoto');
+                    const uploadContent = document.querySelector('.upload-content');
+                    
+                    uploadedPhoto.src = e.target.result;
+                    uploadedPhoto.style.display = 'block';
+                    uploadContent.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Upload thumbnail hover effect
+        document.querySelector('.upload-thumbnail').addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1) rotate(5deg)';
+        });
+        document.querySelector('.upload-thumbnail').addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1) rotate(0deg)';
+        });
+    </script>
+</body>
+</html>
