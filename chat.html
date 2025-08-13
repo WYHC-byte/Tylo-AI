@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JorkAI</title>
+    <title>TyloAI</title>
     <link rel="icon" href="logo.png" type="image/png">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
@@ -21,2779 +22,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Blockly 积木块编程库 -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
-    <style>
-        /* 侧边栏内容的渐入动画 */
-.sidebar .p-4,
-.sidebar #chatHistory,
-.sidebar #userInfoPanel {
-    transition: opacity 0.3s ease 0.1s, transform 0.3s ease 0.1s;
-}
-
-.sidebar:not(.active) .p-4,
-.sidebar:not(.active) #chatHistory,
-.sidebar:not(.active) #userInfoPanel {
-    opacity: 0;
-    transform: translateX(-20px);
-    transition-delay: 0s;
-}
-
-/* 按钮加载状态 */
-#sidebarToggle.loading {
-    pointer-events: none;
-    opacity: 0.7;
-}
-
-#sidebarToggle.loading i {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-        /* AI意图联想系统 - 虚化建议样式 */
-.input-suggestion-wrapper {
-    position: relative;
-    width: 100%;
-}
-
-.suggestion-ghost-text {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    padding: 0.5rem;
-    color: #9CA3AF;
-    opacity: 0.5;
-    white-space: nowrap;
-    overflow: hidden;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    display: flex;
-    align-items: center;
-}
-
-.dark .suggestion-ghost-text {
-    color: #6B7280;
-    opacity: 0.4;
-}
-
-.suggestion-ghost-text span.typed {
-    color: transparent;
-}
-
-.suggestion-ghost-text span.suggested {
-    color: #9CA3AF;
-    font-style: italic;
-}
-
-.dark .suggestion-ghost-text span.suggested {
-    color: #6B7280;
-}
-
-/* 加载动画 - 三个点 */
-.suggestion-loading-dots {
-    display: inline-block;
-    margin-left: 4px;
-}
-
-.suggestion-loading-dots::after {
-    content: '...';
-    animation: dots 1.5s steps(4, end) infinite;
-    display: inline-block;
-    width: 20px;
-    text-align: left;
-}
-
-@keyframes dots {
-    0%, 20% { content: ''; }
-    40% { content: '.'; }
-    60% { content: '..'; }
-    80%, 100% { content: '...'; }
-}
-
-/* Tab提示 */
-.tab-hint {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.75rem;
-    color: #9CA3AF;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 2px 8px;
-    border-radius: 4px;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.dark .tab-hint {
-    background: rgba(31, 41, 55, 0.9);
-    color: #6B7280;
-}
-
-.tab-hint.visible {
-    opacity: 1;
-}
-
-/* 空闲提示气泡 */
-.idle-suggestion-bubble {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    left: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 10;
-}
-
-.idle-suggestion-bubble.visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.idle-suggestion-bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 20px;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 6px solid #764ba2;
-}
-
-/* 建议列表（备选方案） */
-.suggestion-list {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid #E5E7EB;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
-    overflow-y: auto;
-    display: none;
-    z-index: 100;
-}
-
-.dark .suggestion-list {
-    background: #1F2937;
-    border-color: #374151;
-}
-
-.suggestion-list-item {
-    padding: 8px 12px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    font-size: 0.9rem;
-    color: #4B5563;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.dark .suggestion-list-item {
-    color: #D1D5DB;
-}
-
-.suggestion-list-item:hover,
-.suggestion-list-item.selected {
-    background: #F3F4F6;
-}
-
-.dark .suggestion-list-item:hover,
-.dark .suggestion-list-item.selected {
-    background: #374151;
-}
-
-.suggestion-list-item-icon {
-    color: #5D5CDE;
-    width: 20px;
-    text-align: center;
-}
-        /* AI成就勋章系统样式 */
-.achievement-wall-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.achievement-header {
-    text-align: center;
-    margin-bottom: 40px;
-    position: relative;
-}
-
-.achievement-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 10px;
-    display: inline-block;
-    position: relative;
-}
-
-.achievement-title::after {
-    content: '✨';
-    position: absolute;
-    right: -40px;
-    top: 0;
-    animation: sparkle 2s infinite;
-}
-
-@keyframes sparkle {
-    0%, 100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    50% { transform: scale(1.2) rotate(180deg); opacity: 0.7; }
-}
-
-.achievement-stats {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 20px;
-}
-
-.achievement-stat {
-    text-align: center;
-}
-
-.achievement-stat-value {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #5D5CDE;
-}
-
-.achievement-stat-label {
-    font-size: 0.9rem;
-    color: #6B7280;
-}
-
-/* 勋章网格布局 */
-.achievement-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px;
-    margin-top: 30px;
-}
-
-.achievement-card {
-    background: white;
-    border-radius: 16px;
-    padding: 20px;
-    text-align: center;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid transparent;
-    overflow: hidden;
-}
-
-.dark .achievement-card {
-    background: #1F2937;
-}
-
-.achievement-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
-
-.achievement-card.unlocked {
-    border-color: #5D5CDE;
-    background: linear-gradient(145deg, #ffffff, #f0f9ff);
-}
-
-.dark .achievement-card.unlocked {
-    background: linear-gradient(145deg, #1F2937, #1e3a8a);
-}
-
-.achievement-card.unlocked::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(93, 92, 222, 0.1), transparent);
-    animation: achievementShine 3s infinite;
-}
-
-@keyframes achievementShine {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.achievement-icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    transition: all 0.3s ease;
-}
-
-.achievement-card.locked .achievement-icon {
-    filter: grayscale(100%);
-    opacity: 0.3;
-}
-
-.achievement-card.unlocked .achievement-icon {
-    animation: achievementBounce 0.6s ease;
-}
-
-@keyframes achievementBounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-}
-
-.achievement-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 5px;
-    color: #1F2937;
-}
-
-.dark .achievement-name {
-    color: #F3F4F6;
-}
-
-.achievement-card.locked .achievement-name {
-    color: #9CA3AF;
-}
-
-.achievement-description {
-    font-size: 0.75rem;
-    color: #6B7280;
-    line-height: 1.4;
-    margin-bottom: 8px;
-}
-
-.achievement-progress {
-    margin-top: 10px;
-    background: #E5E7EB;
-    border-radius: 10px;
-    height: 6px;
-    overflow: hidden;
-}
-
-.achievement-progress-bar {
-    height: 100%;
-    background: linear-gradient(90deg, #5D5CDE, #764ba2);
-    border-radius: 10px;
-    transition: width 0.5s ease;
-}
-
-.achievement-date {
-    font-size: 0.7rem;
-    color: #16A34A;
-    margin-top: 8px;
-    font-weight: 500;
-}
-
-/* 解锁动画弹窗 */
-.achievement-unlock-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: white;
-    border-radius: 20px;
-    padding: 30px;
-    text-align: center;
-    z-index: 10001;
-    min-width: 350px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: achievementUnlockPop 0.5s ease forwards;
-}
-
-.dark .achievement-unlock-popup {
-    background: #1F2937;
-}
-
-@keyframes achievementUnlockPop {
-    0% { 
-        transform: translate(-50%, -50%) scale(0) rotate(-180deg);
-        opacity: 0;
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.1) rotate(10deg);
-    }
-    100% { 
-        transform: translate(-50%, -50%) scale(1) rotate(0deg);
-        opacity: 1;
-    }
-}
-
-.achievement-unlock-icon {
-    font-size: 5rem;
-    margin-bottom: 20px;
-    animation: achievementUnlockRotate 1s ease;
-}
-
-@keyframes achievementUnlockRotate {
-    0% { transform: rotate(0deg) scale(0); }
-    50% { transform: rotate(180deg) scale(1.2); }
-    100% { transform: rotate(360deg) scale(1); }
-}
-
-.achievement-unlock-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.achievement-unlock-name {
-    font-size: 1.2rem;
-    color: #1F2937;
-    margin-bottom: 20px;
-}
-
-.dark .achievement-unlock-name {
-    color: #F3F4F6;
-}
-
-.achievement-unlock-actions {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-}
-
-.achievement-unlock-btn {
-    padding: 10px 20px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.achievement-unlock-share {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.achievement-unlock-share:hover {
-    transform: scale(1.05);
-}
-
-.achievement-unlock-close {
-    background: #F3F4F6;
-    color: #6B7280;
-}
-
-.dark .achievement-unlock-close {
-    background: #374151;
-    color: #D1D5DB;
-}
-
-/* 勋章墙入口按钮 */
-.achievement-wall-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.achievement-wall-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-}
-
-.achievement-wall-btn::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-    animation: btnShine 3s infinite;
-}
-
-@keyframes btnShine {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.achievement-new-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #EF4444;
-    color: white;
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-weight: bold;
-    animation: pulse 2s infinite;
-}
-
-/* 分享卡片样式 */
-.achievement-share-card {
-    position: fixed;
-    top: -9999px;
-    left: -9999px;
-    width: 600px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 20px;
-    padding: 40px;
-    color: white;
-}
-
-.achievement-share-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.achievement-share-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.achievement-share-subtitle {
-    opacity: 0.9;
-    font-size: 1.1rem;
-}
-
-.achievement-share-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.achievement-share-item {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    padding: 15px;
-    text-align: center;
-    backdrop-filter: blur(10px);
-}
-
-.achievement-share-footer {
-    text-align: center;
-    padding-top: 20px;
-    border-top: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-/* 隐藏勋章特效 */
-.hidden-achievement-hint {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(93, 92, 222, 0.9);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    z-index: 1000;
-    animation: hintSlideUp 0.5s ease;
-}
-
-@keyframes hintSlideUp {
-    from {
-        transform: translateX(-50%) translateY(100px);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(-50%) translateY(0);
-        opacity: 1;
-    }
-}
-        /* 新手引导系统样式 */
-.guide-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 9998;
-    transition: opacity 0.3s ease;
-}
-
-.guide-highlight {
-    position: relative;
-    z-index: 9999;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
-}
-
-.guide-tooltip {
-    position: fixed;
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    max-width: 320px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    z-index: 10000;
-    animation: guidePopIn 0.3s ease;
-}
-
-.dark .guide-tooltip {
-    background: #1F2937;
-    color: white;
-}
-
-@keyframes guidePopIn {
-    0% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.guide-tooltip::before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
-}
-
-.guide-tooltip.top::before {
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 10px 10px 0 10px;
-    border-color: white transparent transparent transparent;
-}
-
-.dark .guide-tooltip.top::before {
-    border-color: #1F2937 transparent transparent transparent;
-}
-
-.guide-tooltip.bottom::before {
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-width: 0 10px 10px 10px;
-    border-color: transparent transparent white transparent;
-}
-
-.dark .guide-tooltip.bottom::before {
-    border-color: transparent transparent #1F2937 transparent;
-}
-
-.guide-tooltip.left::before {
-    right: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-width: 10px 0 10px 10px;
-    border-color: transparent transparent transparent white;
-}
-
-.dark .guide-tooltip.left::before {
-    border-color: transparent transparent transparent #1F2937;
-}
-
-.guide-tooltip.right::before {
-    left: -10px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-width: 10px 10px 10px 0;
-    border-color: transparent white transparent transparent;
-}
-
-.dark .guide-tooltip.right::before {
-    border-color: transparent #1F2937 transparent transparent;
-}
-
-.guide-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #5D5CDE;
-}
-
-.guide-content {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #4B5563;
-    margin-bottom: 20px;
-}
-
-.dark .guide-content {
-    color: #D1D5DB;
-}
-
-.guide-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.guide-steps {
-    display: flex;
-    gap: 6px;
-}
-
-.guide-step-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #E5E7EB;
-    transition: all 0.3s ease;
-}
-
-.guide-step-dot.active {
-    background: #5D5CDE;
-    width: 24px;
-    border-radius: 4px;
-}
-
-.guide-buttons {
-    display: flex;
-    gap: 10px;
-}
-
-.guide-btn {
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    font-weight: 500;
-}
-
-.guide-btn-skip {
-    background: #F3F4F6;
-    color: #6B7280;
-}
-
-.guide-btn-skip:hover {
-    background: #E5E7EB;
-}
-
-.dark .guide-btn-skip {
-    background: #374151;
-    color: #9CA3AF;
-}
-
-.dark .guide-btn-skip:hover {
-    background: #4B5563;
-}
-
-.guide-btn-next {
-    background: #5D5CDE;
-    color: white;
-}
-
-.guide-btn-next:hover {
-    background: #4F46E5;
-}
-
-.guide-btn-complete {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-}
-
-.guide-btn-complete:hover {
-    opacity: 0.9;
-}
-
-/* 引导时高亮元素的动画 */
-.guide-pulse {
-    animation: guidePulse 2s infinite;
-}
-
-@keyframes guidePulse {
-    0%, 100% {
-        box-shadow: 0 0 0 0 rgba(93, 92, 222, 0.4);
-    }
-    50% {
-        box-shadow: 0 0 0 10px rgba(93, 92, 222, 0);
-    }
-}
-
-/* 欢迎弹窗样式 */
-.guide-welcome-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 20px;
-    padding: 40px;
-    max-width: 500px;
-    width: 90%;
-    z-index: 10001;
-    text-align: center;
-    animation: welcomeSlideIn 0.5s ease;
-}
-
-.dark .guide-welcome-modal {
-    background: #1F2937;
-}
-
-@keyframes welcomeSlideIn {
-    0% {
-        transform: translate(-50%, -50%) scale(0.9);
-        opacity: 0;
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-        opacity: 1;
-    }
-}
-
-.guide-welcome-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.guide-welcome-title {
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: #1F2937;
-}
-
-.dark .guide-welcome-title {
-    color: white;
-}
-
-.guide-welcome-subtitle {
-    font-size: 1.1rem;
-    color: #6B7280;
-    margin-bottom: 30px;
-    line-height: 1.6;
-}
-
-.dark .guide-welcome-subtitle {
-    color: #D1D5DB;
-}
-        /* 人格卡片样式 - 横向布局 */
-.personality-card-container {
-    position: relative;
-    margin: 2rem 0;
-}
-
-.personality-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    color: white;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    min-height: 500px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-}
-
-.personality-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: shimmer 3s infinite;
-}
-
-@keyframes shimmer {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.personality-card-left {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.personality-card-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.personality-card-header {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding-bottom: 1.5rem;
-    border-bottom: 2px solid rgba(255,255,255,0.2);
-    margin-bottom: 1rem;
-}
-
-.personality-card-title {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-}
-
-.personality-card-subtitle {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    align-items: center;
-    margin-top: 0.5rem;
-}
-
-.personality-card-level {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    padding: 0.5rem 1.5rem;
-    border-radius: 20px;
-    font-size: 1rem;
-    backdrop-filter: blur(10px);
-}
-
-.personality-card-date {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.personality-card-section {
-    background: rgba(255,255,255,0.1);
-    border-radius: 15px;
-    padding: 1.2rem;
-    backdrop-filter: blur(5px);
-}
-
-.personality-card-label {
-    font-weight: bold;
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.1rem;
-}
-
-.personality-card-keywords {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.personality-keyword {
-    background: rgba(255,255,255,0.2);
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    backdrop-filter: blur(5px);
-    transition: all 0.3s ease;
-}
-
-.personality-keyword:hover {
-    background: rgba(255,255,255,0.3);
-    transform: translateY(-2px);
-}
-
-.personality-card-quotes {
-    max-height: 150px;
-    overflow-y: auto;
-}
-
-.personality-quote {
-    margin: 0.75rem 0;
-    padding-left: 1rem;
-    border-left: 3px solid rgba(255,255,255,0.5);
-    font-style: italic;
-    opacity: 0.95;
-    line-height: 1.6;
-}
-
-.personality-card-description {
-    line-height: 1.8;
-    font-size: 1rem;
-    text-align: justify;
-}
-
-.personality-card-footer {
-    grid-column: 1 / -1;
-    text-align: center;
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid rgba(255,255,255,0.2);
-}
-
-.personality-card-message {
-    font-size: 1.2rem;
-    font-weight: 500;
-    font-style: italic;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-/* 控制按钮 */
-.personality-card-controls {
-    position: absolute;
-    bottom: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.5rem;
-    z-index: 10;
-}
-
-.personality-card-btn {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.personality-card-btn:hover {
-    background: rgba(255,255,255,0.3);
-    transform: translateY(-2px);
-}
-
-
-
-/* 导出水印样式 */
-.export-watermark {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(255,255,255,0.9);
-    padding: 10px 15px;
-    border-radius: 10px;
-    color: #333;
-    font-size: 12px;
-    line-height: 1.4;
-    text-align: right;
-    display: none;
-}
-
-.personality-card.exporting .export-watermark {
-    display: block;
-}
-
-.watermark-logo {
-    font-weight: bold;
-    font-size: 14px;
-    color: #667eea;
-}
-
-.watermark-slogan {
-    font-style: italic;
-    opacity: 0.8;
-}
-
-.watermark-url {
-    color: #667eea;
-    text-decoration: none;
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .personality-card {
-        grid-template-columns: 1fr;
-        padding: 1.5rem;
-    }
-    
-    .personality-card-title {
-        font-size: 1.8rem;
-    }
-    
-    .personality-card-controls {
-        position: relative;
-        bottom: auto;
-        right: auto;
-        margin-top: 1rem;
-        justify-content: center;
-    }
-}
-
-/* 流式加载占位 */
-.personality-card-loading {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 20px;
-    padding: 2.5rem;
-    color: white;
-    min-height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.personality-card-loading::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    animation: loading-wave 2s infinite;
-}
-
-@keyframes loading-wave {
-    0% { left: -100%; }
-    100% { left: 100%; }
-}
-
-.loading-text {
-    font-size: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.loading-spinner {
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-        body {
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            background-color: #f7f5f3 !important; /* Claude 浅色背景 */
-        }
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            line-height: 1.8;
-        }
-
-/* 侧边栏基础样式 - 默认隐藏状态 */
-.sidebar {
-    transform: translateX(-100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
-                opacity 0.3s ease,
-                box-shadow 0.3s ease;
-    opacity: 0;
-    will-change: transform;
-}
-
-/* 侧边栏显示状态 */
-.sidebar.active {
-    transform: translateX(0);
-    opacity: 1;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
-}
-
-/* 深色模式下的阴影 */
-.dark .sidebar.active {
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
-}
-
-/* 侧边栏按钮悬停效果 */
-#sidebarToggle {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-#sidebarToggle:hover {
-    background-color: #f3f4f6;
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.dark #sidebarToggle:hover {
-    background-color: #374151;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* 按钮点击时的反弹效果 */
-#sidebarToggle:active {
-    transform: scale(0.98);
-}
-
-/* 按钮图标旋转动画 */
-#sidebarToggle i {
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-block;
-}
-
-/* 侧边栏打开时按钮图标样式 */
-#sidebarToggle.active i {
-    transform: rotate(90deg);
-}
-
-/* 按钮状态指示器（可选：添加小圆点表示状态） */
-#sidebarToggle::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 6px;
-    height: 6px;
-    background-color: #10b981;
-    border-radius: 50%;
-    opacity: 0;
-    transform: scale(0);
-    transition: all 0.3s ease;
-}
-
-#sidebarToggle.active::after {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* 为主内容区域添加过渡效果（如果需要推拉效果） */
-.main-content {
-    transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.main-content.sidebar-open {
-    margin-left: 288px; /* 侧边栏宽度 w-72 = 18rem = 288px */
-}
-
-/* 响应式：小屏幕时保持覆盖模式 */
-@media (max-width: 768px) {
-    .main-content.sidebar-open {
-        margin-left: 0;
-    }
-    
-    .sidebar.active {
-        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-    }
-}
-
-.epist-search-container {
-    background: linear-gradient(145deg, #ffffff, #f0f9ff);
-    border: 2px solid #0284c7;
-    border-radius: 20px;
-    padding: 1.5rem;
-    margin: 2rem auto;
-    position: relative;
-    max-width: 100%;
-    box-shadow: 
-        0 4px 20px rgba(2, 132, 199, 0.1),
-        0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.dark .epist-search-container {
-    background: linear-gradient(145deg, #0c4a6e, #164e63);
-    border-color: #0ea5e9;
-    box-shadow: 
-        0 4px 20px rgba(14, 165, 233, 0.2),
-        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-}
-
-.epist-search-container:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 8px 30px rgba(2, 132, 199, 0.15),
-        0 0 0 1px rgba(255, 255, 255, 0.9) inset;
-}
-
-.epist-search-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px dashed rgba(2, 132, 199, 0.2);
-    font-weight: 700;
-    font-size: 1.15rem;
-    color: #0c4a6e;
-}
-
-.dark .epist-search-header {
-    color: #7dd3fc;
-    border-bottom-color: rgba(125, 211, 252, 0.2);
-}
-
-.epist-search-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 0.75rem;
-    color: #0284c7;
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.dark .epist-search-icon {
-    color: #0ea5e9;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.8;
-        transform: scale(1.05);
-    }
-}
-
-/* 搜索内容 - 一个大框 */
-.epist-search-content {
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(2, 132, 199, 0.15);
-    border-radius: 12px;
-    padding: 1.5rem;
-    font-size: 0.95rem;
-    line-height: 1.8;
-    color: #1e293b;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    max-height: none;
-    overflow: visible;
-    transition: all 0.3s ease;
-}
-
-.dark .epist-search-content {
-    background: rgba(30, 58, 138, 0.2);
-    border-color: rgba(125, 211, 252, 0.15);
-    color: #e0f2fe;
-}
-
-/* 折叠状态 */
-.epist-search-collapsed {
-    max-height: 200px;
-    overflow: hidden;
-    position: relative;
-}
-
-.epist-search-collapsed::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100px;
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(255, 255, 255, 0.8) 50%,
-        rgba(255, 255, 255, 0.95) 100%
-    );
-    pointer-events: none;
-}
-
-.dark .epist-search-collapsed::after {
-    background: linear-gradient(
-        to bottom,
-        transparent 0%,
-        rgba(30, 58, 138, 0.8) 50%,
-        rgba(30, 58, 138, 0.95) 100%
-    );
-}
-
-/* 折叠按钮 */
-.epist-search-toggle {
-    background: linear-gradient(135deg, #0284c7, #0369a1);
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin-top: 1rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.epist-search-toggle:hover {
-    background: linear-gradient(135deg, #0369a1, #075985);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
-}
-
-.epist-search-toggle:active {
-    transform: translateY(0);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    .epist-search-container {
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 16px;
-    }
-    
-    .epist-search-header {
-        font-size: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .epist-search-content {
-        padding: 1rem;
-        font-size: 0.875rem;
-    }
-    
-    .epist-search-collapsed {
-        max-height: 150px;
-    }
-}
-
-/* 自定义下拉菜单 */
-.custom-dropdown {
-    position: relative;
-    user-select: none;
-}
-
-.dropdown-selected {
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 1px solid #e2e8f0;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.dark .dropdown-selected {
-    background-color: rgba(31, 41, 55, 0.8);
-    border-color: #374151;
-    color: #e2e8f0;
-}
-
-.dropdown-selected:hover {
-    border-color: #5D5CDE;
-}
-
-.dropdown-options {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin-top: 0.25rem;
-    border-radius: 0.5rem;
-    border: 1px solid #e2e8f0;
-    background-color: white;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    opacity: 0;
-    transform: translateY(-10px);
-    visibility: hidden;
-    transition: all 0.2s ease;
-    overflow: hidden;
-}
-
-.dark .dropdown-options {
-    background-color: #1F2937;
-    border-color: #374151;
-}
-
-.dropdown-options.open {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-}
-
-.dropdown-option {
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.dropdown-option:hover {
-    background-color: #EEF2FF;
-}
-
-.dark .dropdown-option:hover {
-    background-color: #374151;
-}
-
-.dropdown-option.selected {
-    background-color: #EEF2FF;
-    color: #5D5CDE;
-}
-
-.dark .dropdown-option.selected {
-    background-color: #2D3748;
-    color: #81E6D9;
-}
-
-/* 模型徽章样式 */
-.model-badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.375rem;
-    margin-left: 0.5rem;
-}
-
-.model-badge.epist {
-    background-color: #dbeafe;
-    color: #3b82f6;
-}
-
-.dark .model-badge.epist {
-    background-color: #1e3a8a;
-    color: #93c5fd;
-}
-
-.model-badge.trax {
-    background-color: #dcfce7;
-    color: #16a34a;
-}
-
-.dark .model-badge.trax {
-    background-color: #14532d;
-    color: #86efac;
-}
-
-.model-badge.aria {
-    background-color: #fdf2f8;
-    color: #ec4899;
-}
-
-.dark .model-badge.aria {
-    background-color: #831843;
-    color: #f9a8d4;
-}
-
-/* 代码块样式 */
-.code-block {
-    background-color: #f8fafc;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1rem 0;
-    position: relative;
-    overflow-x: auto;
-    line-height: 1.8;
-    border: 1px solid #e2e8f0;
-}
-
-.dark .code-block {
-    background-color: #1E293B;
-    border-color: #374151;
-}
-
-.copy-button {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.copy-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-}
-
-/* 图片生成进度样式 */
-.image-generation-progress {
-    background-color: #fdf2f8;
-    border: 1px solid #ec4899;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.dark .image-generation-progress {
-    background-color: #831843;
-    border-color: #ec4899;
-}
-
-.progress-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #ec4899;
-}
-
-.dark .progress-header {
-    color: #f9a8d4;
-}
-
-.progress-icon {
-    margin-right: 0.5rem;
-    font-size: 1.2rem;
-    animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.progress-text {
-    color: #7c2d12;
-    line-height: 1.8;
-}
-
-.dark .progress-text {
-    color: #fed7aa;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 4px;
-    background-color: #fce7f3;
-    border-radius: 2px;
-    margin-top: 0.5rem;
-    overflow: hidden;
-}
-
-.dark .progress-bar {
-    background-color: #9d174d;
-}
-
-.progress-bar-fill {
-    height: 100%;
-    background-color: #ec4899;
-    border-radius: 2px;
-    transition: width 0.3s ease;
-    animation: progress-pulse 2s ease-in-out infinite;
-}
-
-@keyframes progress-pulse {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
-}
-
-/* 文件预览样式 */
-.file-preview {
-    display: flex;
-    align-items: center;
-    background-color: #f3f4f6;
-    border-radius: 0.5rem;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    max-width: 100%;
-}
-
-.dark .file-preview {
-    background-color: #374151;
-}
-
-.file-icon {
-    font-size: 1.5rem;
-    margin-right: 0.75rem;
-    color: #5D5CDE;
-}
-
-.file-info {
-    flex-grow: 1;
-    overflow: hidden;
-}
-
-.file-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-weight: 500;
-}
-
-.file-size {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-.dark .file-size {
-    color: #9ca3af;
-}
-
-.file-remove {
-    color: #ef4444;
-    cursor: pointer;
-    padding: 0.25rem;
-}
-
-.file-thumbnail {
-    width: 48px;
-    height: 48px;
-    object-fit: cover;
-    border-radius: 0.25rem;
-    margin-right: 0.75rem;
-}
-
-/* Canvas容器样式 */
-.canvas-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background-color: white;
-    border-left: 1px solid #e2e8f0;
-    z-index: 40;
-    display: flex;
-    flex-direction: column;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.dark .canvas-container {
-    background-color: #1F2937;
-    border-color: #374151;
-}
-
-.canvas-container.active {
-    transform: translateX(0);
-}
-
-.canvas-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.dark .canvas-header {
-    border-color: #374151;
-}
-
-.canvas-content {
-    flex: 1;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.canvas-iframe {
-    flex: 1;
-    border: none;
-    width: 100%;
-}
-
-.canvas-editor {
-    height: 40%;
-    border-top: 1px solid #e2e8f0;
-    padding: 1rem;
-    font-family: 'Courier New', monospace;
-    overflow: auto;
-    white-space: pre-wrap;
-    display: none;
-    background-color: #f8fafc;
-}
-
-.dark .canvas-editor {
-    border-color: #374151;
-    background-color: #111827;
-    color: #e5e7eb;
-}
-
-.canvas-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.dark .canvas-controls {
-    border-color: #374151;
-}
-
-/* 图片查看器样式 */
-.image-viewer-container {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 50%;
-    height: 100%;
-    background-color: white;
-    border-left: 1px solid #e2e8f0;
-    z-index: 41;
-    display: flex;
-    flex-direction: column;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-}
-
-.dark .image-viewer-container {
-    background-color: #1F2937;
-    border-color: #374151;
-}
-
-.image-viewer-container.active {
-    transform: translateX(0);
-}
-
-.image-viewer-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.dark .image-viewer-header {
-    border-color: #374151;
-}
-
-.image-viewer-content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    overflow: auto;
-}
-
-.image-viewer-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    border-radius: 0.5rem;
-}
-
-.image-viewer-controls {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 1rem;
-    border-top: 1px solid #e2e8f0;
-}
-
-.dark .image-viewer-controls {
-    border-color: #374151;
-}
-
-/* 生成的图片样式 */
-.generated-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
-    margin: 1rem 0;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.generated-image:hover {
-    transform: scale(1.02);
-}
-
-/* 聊天历史项目样式 */
-.chat-item {
-    display: flex;
-    align-items: center;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    margin-bottom: 0.5rem;
-    transition: all 0.2s ease;
-    border-left: 3px solid transparent;
-}
-
-.chat-item:hover {
-    background-color: #f3f4f6;
-    border-left-color: #5D5CDE;
-}
-
-.dark .chat-item:hover {
-    background-color: #374151;
-}
-
-.chat-item-icon {
-    margin-right: 0.75rem;
-    color: #5D5CDE;
-}
-
-.chat-item-content {
-    flex-grow: 1;
-    overflow: hidden;
-}
-
-.chat-item-title {
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.chat-item-time {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-.dark .chat-item-time {
-    color: #9ca3af;
-}
-
-.chat-item-actions {
-    display: flex;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.chat-item:hover .chat-item-actions {
-    opacity: 1;
-}
-
-.chat-item-delete {
-    color: #ef4444;
-    cursor: pointer;
-    padding: 0.25rem;
-    margin-left: 0.5rem;
-}
-
-/* 用户消息容器 */
-.user-message-container {
-    background-color: #f3f4f6;
-    border-radius: 1rem;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-}
-
-.dark .user-message-container {
-    background-color: #2d3748;
-}
-
-/* Markdown内容样式 */
-.markdown-content {
-    line-height: 1.8;
-}
-
-.markdown-content h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.3rem;
-    border-bottom: 1px solid #e2e8f0;
-    line-height: 1.5;
-}
-
-.dark .markdown-content h1 {
-    border-color: #4b5563;
-}
-
-.markdown-content h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-top: 1.4rem;
-    margin-bottom: 0.7rem;
-    padding-bottom: 0.2rem;
-    border-bottom: 1px solid #e2e8f0;
-    line-height: 1.5;
-}
-
-.dark .markdown-content h2 {
-    border-color: #4b5563;
-}
-
-.markdown-content h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-top: 1.3rem;
-    margin-bottom: 0.65rem;
-    line-height: 1.5;
-}
-
-.markdown-content p {
-    margin-bottom: 1.2rem;
-    line-height: 1.8;
-}
-
-.markdown-content ul, .markdown-content ol {
-    margin-bottom: 1.2rem;
-    padding-left: 1.5rem;
-    line-height: 1.8;
-}
-
-.markdown-content li {
-    margin-bottom: 0.6rem;
-    line-height: 1.8;
-}
-
-.markdown-content blockquote {
-    border-left: 4px solid #e2e8f0;
-    padding-left: 1rem;
-    margin-left: 0;
-    margin-bottom: 1.2rem;
-    color: #4b5563;
-    line-height: 1.8;
-}
-
-.dark .markdown-content blockquote {
-    border-color: #4b5563;
-    color: #9ca3af;
-}
-
-/* 表格样式 */
-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin: 1rem 0;
-    line-height: 1.8;
-}
-
-table, th, td {
-    border: 1px solid #e2e8f0;
-}
-
-.dark table, .dark th, .dark td {
-    border-color: #374151;
-}
-
-th, td {
-    padding: 0.75rem;
-    text-align: left;
-    line-height: 1.8;
-}
-
-th {
-    background-color: #f8fafc;
-}
-
-.dark th {
-    background-color: #1E293B;
-}
-
-/* 错误消息样式 */
-.error-message {
-    background-color: #fee2e2;
-    border: 1px solid #ef4444;
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.dark .error-message {
-    background-color: #7f1d1d;
-    border-color: #ef4444;
-    color: #fecaca;
-}
-
-.error-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: #ef4444;
-}
-
-.dark .error-header {
-    color: #fca5a5;
-}
-
-.error-icon {
-    margin-right: 0.5rem;
-    font-size: 1.2rem;
-}
-
-.error-text {
-    color: #7f1d1d;
-    line-height: 1.8;
-}
-
-.dark .error-text {
-    color: #fecaca;
-}
-
-/* 停止生成按钮 */
-.stop-generation {
-    background-color: #fee2e2 !important;
-    color: #ef4444 !important;
-}
-
-.dark .stop-generation {
-    background-color: #7f1d1d !important;
-    color: #fca5a5 !important;
-}
-
-/* 打字动画 */
-.ai-typing {
-    display: inline-block;
-    position: relative;
-    min-height: 20px;
-    width: 60px;
-}
-
-.ai-typing::after {
-    content: "";
-    position: absolute;
-    width: 6px;
-    height: 16px;
-    background-color: #5D5CDE;
-    animation: typing-cursor 0.8s infinite;
-    margin-left: 4px;
-}
-
-@keyframes typing-cursor {
-    0%, 100% { opacity: 0; }
-    50% { opacity: 1; }
-}
-
-/* 当前聊天标题 */
-.current-chat-title {
-    margin-left: 1rem;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-}
-
-/* 深色模式支持 */
-.dark {
-    background-color: #1F2937;
-    color: #E5E7EB;
-}
-
-/* 模态框样式 */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-}
-
-.modal {
-    background-color: white;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    max-width: 600px;
-    width: 90%;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-}
-
-.dark .modal {
-    background-color: #1F2937;
-    color: white;
-}
-
-/* 积分警告 */
-.quota-warning {
-    background-color: #fef3c7;
-    border: 1px solid #f59e0b;
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.dark .quota-warning {
-    background-color: #78350f;
-    border-color: #f59e0b;
-    color: #fef3c7;
-}
-
-.quota-warning-icon {
-    color: #f59e0b;
-    margin-right: 0.5rem;
-    font-size: 1.25rem;
-}
-
-/* 用户信息面板样式 - 添加头像 */
-.user-info-panel {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: #f3f4f6;
-    border-top: 1px solid #e2e8f0;
-    padding: 1rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.dark .user-info-panel {
-    background-color: #2d3748;
-    border-color: #374151;
-}
-
-.user-info-panel:hover {
-    background-color: #e5e7eb;
-}
-
-.dark .user-info-panel:hover {
-    background-color: #374151;
-}
-
-.user-info-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.user-info-left {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-}
-
-.user-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    background-color: #e5e7eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.875rem;
-    color: #6b7280;
-    overflow: hidden;
-}
-
-.dark .user-avatar {
-    background-color: #4b5563;
-    color: #d1d5db;
-}
-
-.user-nickname {
-    font-weight: 600;
-    font-size: 1rem;
-}
-
-.user-plan {
-    font-size: 0.75rem;
-    color: #6b7280;
-}
-
-.dark .user-plan {
-    color: #9ca3af;
-}
-
-/* 修改用户模态框为横向长方形布局 */
-.user-modal {
-    max-width: 900px;
-    width: 90%;
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-.user-modal-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    padding: 1rem;
-}
-
-.user-modal-left, .user-modal-right {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-/* 等级系统样式 */
-.level-container {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
-    padding: 1.5rem;
-    color: white;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-}
-
-.level-container::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-    animation: levelShine 3s infinite;
-}
-
-@keyframes levelShine {
-    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-}
-
-.level-number {
-    font-size: 3rem;
-    font-weight: bold;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    margin-bottom: 0.5rem;
-}
-
-.level-title {
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-}
-
-.level-progress {
-    background: rgba(255,255,255,0.2);
-    border-radius: 10px;
-    height: 8px;
-    margin: 1rem 0;
-    overflow: hidden;
-}
-
-.level-progress-fill {
-    background: linear-gradient(90deg, #FFD700, #FFA500);
-    height: 100%;
-    border-radius: 10px;
-    transition: width 0.5s ease;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.level-exp-text {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-/* Pro用户头像框 - 第5级奖励 */
-.avatar-frame-level5 {
-    position: relative;
-    border-radius: 50%;
-    padding: 4px;
-    background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
-    background-size: 400% 400%;
-    animation: rainbowFrame 2s ease infinite;
-}
-
-@keyframes rainbowFrame {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-.avatar-frame-level5 .user-avatar {
-    border-radius: 50%;
-    overflow: hidden;
-}
-
-/* 签到按钮样式 */
-.checkin-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.checkin-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.checkin-button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-.checkin-button.checked-in {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-}
-
-/* 专属称号样式 */
-.special-title {
-    background: linear-gradient(45deg, #FFD700, #FFA500);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-@media (max-width: 768px) {
-    .user-modal-content {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-}
-
-.user-modal-item {
-    padding: 0.75rem 0;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.dark .user-modal-item {
-    border-color: #374151;
-}
-
-.user-modal-item:last-child {
-    border-bottom: none;
-}
-
-.user-modal-label {
-    font-weight: 500;
-    margin-bottom: 0.25rem;
-}
-
-.user-modal-input {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    background-color: white;
-}
-
-.dark .user-modal-input {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: white;
-}
-
-.language-selector {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-}
-
-.style-selector .dropdown-options {
-    min-width: 200px;
-    left: auto;
-    right: auto;
-}
-
-.language-option {
-    flex: 1;
-    padding: 0.5rem;
-    text-align: center;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.dark .language-option {
-    border-color: #4b5563;
-}
-
-.language-option:hover {
-    background-color: #f3f4f6;
-}
-
-.dark .language-option:hover {
-    background-color: #4b5563;
-}
-
-.language-option.selected {
-   background-color: #5D5CDE;
-   color: white;
-   border-color: #5D5CDE;
-}
-
-.danger-button {
-   background-color: #ef4444 !important;
-   color: white !important;
-}
-
-.danger-button:hover {
-   background-color: #dc2626 !important;
-}
-
-/* Aria示例按钮样式 */
-.aria-example-button {
-   display: inline-flex;
-   align-items: center;
-   padding: 0.5rem 1rem;
-   margin: 0.25rem;
-   border-radius: 9999px;
-   border: 1px solid #ec4899;
-   background-color: #fdf2f8;
-   color: #ec4899;
-   font-size: 0.875rem;
-   cursor: pointer;
-   transition: all 0.2s ease;
-}
-
-.aria-example-button:hover {
-   background-color: #ec4899;
-   color: white;
-}
-
-.dark .aria-example-button {
-   background-color: #831843;
-   border-color: #ec4899;
-   color: #f9a8d4;
-}
-
-.dark .aria-example-button:hover {
-   background-color: #ec4899;
-   color: white;
-}
-/* 邀请系统动画 */
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(1.05);
-        opacity: 0.8;
-    }
-}
-
-.animate-pulse {
-    animation: pulse 2s ease-in-out infinite;
-}
-
-/* 邀请进度条动画 */
-#inviteProgress {
-    background-image: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.15) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0.15) 75%,
-        transparent 75%,
-        transparent
-    );
-    background-size: 1rem 1rem;
-    animation: progress-bar-stripes 1s linear infinite;
-}
-
-@keyframes progress-bar-stripes {
-    0% {
-        background-position: 1rem 0;
-    }
-    100% {
-        background-position: 0 0;
-    }
-}
-
-/* 插件市场样式 */
-.plugin-market-container {
-    max-width: 1400px;
-    width: 95%;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.plugin-card {
-    background: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-}
-
-.dark .plugin-card {
-    background: #1F2937;
-}
-
-.plugin-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-
-.plugin-official-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.plugin-price {
-    display: inline-flex;
-    align-items: center;
-    background: #FEF3C7;
-    color: #92400E;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.dark .plugin-price {
-    background: #78350F;
-    color: #FEF3C7;
-}
-
-.plugin-price-free {
-    background: #D1FAE5;
-    color: #065F46;
-}
-
-.dark .plugin-price-free {
-    background: #064E3B;
-    color: #6EE7B7;
-}
-
-/* 积木块编程界面 */
-.blockly-workspace {
-    height: 500px;
-    border: 2px solid #E5E7EB;
-    border-radius: 8px;
-    background: white;
-}
-
-.dark .blockly-workspace {
-    border-color: #374151;
-    background: #1F2937;
-}
-
-.code-editor-container {
-    position: relative;
-    height: 500px;
-    border: 2px solid #E5E7EB;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.dark .code-editor-container {
-    border-color: #374151;
-}
-
-.code-editor {
-    width: 100%;
-    height: 100%;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    padding: 16px;
-    background: #1E293B;
-    color: #E2E8F0;
-    border: none;
-    outline: none;
-    resize: none;
-}
-
-.plugin-tab {
-    padding: 10px 20px;
-    background: #F3F4F6;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-weight: 500;
-}
-
-.dark .plugin-tab {
-    background: #374151;
-}
-
-.plugin-tab.active {
-    background: #5D5CDE;
-    color: white;
-}
-
-.plugin-stats {
-    display: flex;
-    gap: 20px;
-    margin-top: 10px;
-    font-size: 14px;
-    color: #6B7280;
-}
-
-.dark .plugin-stats {
-    color: #9CA3AF;
-}
-
-.plugin-stat {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-/* 开发者工具 */
-.developer-panel {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
-    padding: 24px;
-    color: white;
-    margin-bottom: 20px;
-}
-
-.developer-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.developer-stat-card {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 8px;
-    padding: 16px;
-    text-align: center;
-}
-
-.developer-stat-value {
-    font-size: 28px;
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-.developer-stat-label {
-    font-size: 14px;
-    opacity: 0.9;
-}
-    </style>
     <script>  
-// 禁用右键菜单
-document.addEventListener('contextmenu', function(e) {
-    e.preventDefault();
-});
-// 监听键盘事件
-document.addEventListener('keydown', function(event) {
+        // 禁用右键菜单
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        // 监听键盘事件
+        document.addEventListener('keydown', function(event) {
             // 检测是否按下 Ctrl + Shift + M
             if (event.ctrlKey && event.shiftKey && event.key === 'M') {
                 // 阻止默认行为（避免浏览器快捷键冲突）
                 event.preventDefault();
                 // 显示系统弹窗
-                alert('👋 欢迎来到菜单环节！\n\n我们团队的信条：\n\n1. 咖啡 > 代码\n\n2. 能跑就别动\n\n3. 周五不部署\n\n想加入我们？查看招聘页！');
+                alert('👋 欢迎来到彩蛋环节！\n\n我们团队的信条：\n\n1. 咖啡 > 代码\n\n2. 能跑就别动\n\n3. 周五不部署\n\n想加入我们？查看招聘页！');
             }
         });
     </script>
@@ -2802,25 +43,25 @@ document.addEventListener('keydown', function(event) {
     <!-- 侧边栏 -->
     <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-72 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-10">
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-            <h2 class="text-lg font-semibold">聊天历史</h2>
+            <h2 class="text-lg font-semibold">Chat history</h2>
             <button id="closeBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="p-4">
             <button id="newChatBtn" class="w-full py-2 px-4 bg-orange-200 text-orange-600 rounded-lg hover:bg-orange-300 transition-colors flex items-center justify-center mb-4">
-                <i class="fas fa-plus mr-2"></i> 新建聊天
+                <i class="fas fa-plus mr-2"></i> New chat
             </button>
 
             <!-- 插件市场按钮 -->
             <button id="pluginMarketBtn" class="w-full py-2 px-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-all flex items-center justify-center mb-4 relative overflow-hidden">
-                <i class="fas fa-puzzle-piece mr-2"></i> 插件市场
+                <i class="fas fa-puzzle-piece mr-2"></i> Plugin marketplace
                 <span id="newPluginBadge" class="absolute top-1 right-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full hidden">新</span>
             </button>
             
             <!-- 新增搜索框 -->
             <div class="relative mb-4">
-                <input id="chatSearchInput" type="text" placeholder="搜索聊天记录..." 
+                <input id="chatSearchInput" type="text" placeholder="Search chat records..." 
                        class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent">
                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                     <i class="fas fa-search text-gray-400 text-sm"></i>
@@ -2829,7 +70,7 @@ document.addEventListener('keydown', function(event) {
         </div>
         <div id="chatHistory" class="p-4 overflow-y-auto" style="max-height: calc(100vh - 200px);">
             <div class="space-y-2">
-                <p id="emptyHistoryMessage" class="text-gray-500 dark:text-gray-400 text-sm">暂无聊天历史</p>
+                <p id="emptyHistoryMessage" class="text-gray-500 dark:text-gray-400 text-sm">No chat history yet</p>
             </div>
         </div>
         <!-- 用户信息面板 -->
@@ -2837,11 +78,11 @@ document.addEventListener('keydown', function(event) {
             <div class="user-info-content">
                 <div class="user-info-left">
                     <div class="user-avatar" id="userAvatar">
-                        <img src="https://jorkai.cn/用户默认头像" alt="用户头像" style="width: 100%; height: 100%; object-fit: cover;">
+                        <img src="https://jorkai.cn/用户默认头像" alt="User" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
                     <div>
-                        <div id="userNickname" class="user-nickname">用户</div>
-                        <div id="userPlan" class="user-plan">免费计划</div>
+                        <div id="userNickname" class="user-nickname">User</div>
+                        <div id="userPlan" class="user-plan">Free Plan</div>
                     </div>
                 </div>
                 <i class="fas fa-chevron-right text-gray-400"></i>
@@ -2865,7 +106,7 @@ document.addEventListener('keydown', function(event) {
             </div>
             
             <div id="quotaContainer" class="flex items-center">
-                <span id="pointsDisplay" class="mr-2 text-sm font-medium">积分: 3000</span>
+                <span id="pointsDisplay" class="mr-2 text-sm font-medium">Points: 3000</span>
                 <button id="addPointsBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-1 rounded-md">
                     <i class="fas fa-plus-circle"></i>
                 </button>
@@ -2881,25 +122,25 @@ document.addEventListener('keydown', function(event) {
                 <!-- 初始界面 -->
                 <div id="initialView" class="flex flex-col items-center justify-center mt-8">
                     <div id="planStatus" class="bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-1 flex items-center space-x-2 mb-4">
-                        <span class="text-gray-600 dark:text-gray-300">免费计划</span>
+                        <span class="text-gray-600 dark:text-gray-300">Free Plan</span>
                         <span>•</span>
-                        <a href="#" id="upgradeLink" class="text-blue-500 hover:text-blue-600">升级</a>
+                        <a href="#" id="upgradeLink" class="text-blue-500 hover:text-blue-600">Upgrade</a>
                     </div>
                     <div class="text-3xl font-semibold mb-8 flex items-center">
                         <img src="logo.png" alt="JorkAI Logo" class="w-10 h-10 mr-3 rounded-full object-cover"> 
-                        <span id="timeGreeting">JorkAI 已准备就绪</span>
+                        <span id="timeGreeting">Tylo is ready</span>
                     </div>
                     <div class="w-full max-w-2xl">
                         <div id="quotaWarning" class="quota-warning hidden mb-4">
                             <div class="flex items-center">
                                 <i class="fas fa-exclamation-triangle quota-warning-icon"></i>
-                                <span>您的积分即将用尽，还剩下 <strong id="lowPointsValue">50</strong> 积分。</span>
+                                <span>Your points are about to run out, with  <strong id="lowPointsValue">50</strong> points remaining.</span>
                             </div>
-                            <a href="#" id="upgradeLinkWarning" class="text-blue-600 dark:text-blue-400 font-medium">升级</a>
+                            <a href="#" id="upgradeLinkWarning" class="text-blue-600 dark:text-blue-400 font-medium">Upgrade</a>
                         </div>
                         
                         <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4">
-                            <textarea id="userInput" placeholder="向 JorkAI 提问任何问题..." class="w-full p-2 focus:outline-none bg-transparent text-base resize-none" rows="1"></textarea>
+                            <textarea id="userInput" placeholder="Ask Tylo any question..." class="w-full p-2 focus:outline-none bg-transparent text-base resize-none" rows="1"></textarea>
                             <div id="filePreviewArea" class="mt-2 hidden"></div>
                             <div class="flex justify-between items-center mt-2">
                                 <div class="flex items-center">
@@ -2912,16 +153,16 @@ document.addEventListener('keydown', function(event) {
                                         </button>
                                         <div class="dropdown-options">
                                             <div class="dropdown-option selected" data-value="normal">
-                                                <i class="fas fa-comment"></i>正常语气
+                                                <i class="fas fa-comment"></i>Normal
                                             </div>
                                             <div class="dropdown-option" data-value="concise">
-                                                <i class="fas fa-list"></i>简洁语气
+                                                <i class="fas fa-list"></i>Concise
                                             </div>
                                             <div class="dropdown-option" data-value="formal">
-                                                <i class="fas fa-user-tie"></i>正式语气
+                                                <i class="fas fa-user-tie"></i>Formal tone
                                             </div>
                                             <div class="dropdown-option" data-value="explanatory">
-                                                <i class="fas fa-chalkboard-teacher"></i>解释性语气
+                                                <i class="fas fa-chalkboard-teacher"></i>Explanatory tone
                                             </div>
                                         </div>
                                     </div>
@@ -2929,14 +170,14 @@ document.addEventListener('keydown', function(event) {
                                 <div class="flex items-center">
                                     <div id="modelSelector" class="custom-dropdown mr-2">
                                         <div class="dropdown-selected">
-                                            <span>Jork-Epist-4 标准版</span>
+                                            <span>tylo-Epist-4.5</span>
                                             <i class="fas fa-chevron-down ml-2 text-xs"></i>
                                         </div>
                                         <div class="dropdown-options">
-                                            <div class="dropdown-option selected" data-value="Jork-Epist-4-n">Jork-Epist-4.5 标准版</div>
-                                            <div class="dropdown-option" data-value="Jork-Epist-4">Jork-Epist-4.5-DeepSearch <span class="model-badge epist">深度推理搜索</span></div>
-                                            <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4.5 <span class="model-badge trax">代码模型</span></div>
-                                            <div class="dropdown-option" data-value="Aria">Jork-Aria-1.3 <span class="model-badge aria">文生图</span></div>
+                                            <div class="dropdown-option selected" data-value="Jork-Epist-4-n">Tylo-Epist-4.5</div>
+                                            <div class="dropdown-option" data-value="Jork-Epist-4">Tylo-Epist-4.5-DeepSearch <span class="model-badge epist">Deepsearch model</span></div>
+                                            <div class="dropdown-option" data-value="Jork-Trax-4">Tylo-Trax-4.5 <span class="model-badge trax">search</span></div>
+                                            <div class="dropdown-option" data-value="Aria">Tylo-Aria-1.3 <span class="model-badge aria">text to image</span></div>
                                             <!--<div class="dropdown-option" data-value="Aria-music">Jork-Aria-Music(测试中，禁止使用)<span class="model-badge aria">文生音乐</span></div>--->
                                         </div>
                                     </div>
@@ -2948,36 +189,36 @@ document.addEventListener('keydown', function(event) {
                         </div>
                         <div id="promptButtons" class="flex flex-wrap justify-center space-x-2 mt-6">
                             <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-pen mr-2"></i> 写作助手
+                                <i class="fas fa-pen mr-2"></i> Writing
                             </button>
                             <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-graduation-cap mr-2"></i> 学习辅导
+                                <i class="fas fa-graduation-cap mr-2"></i> Learn
                             </button>
                             <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-code mr-2"></i> 编程开发
+                                <i class="fas fa-code mr-2"></i> Code
                             </button>
                             <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-search mr-2"></i> 深度搜索
+                                <i class="fas fa-search mr-2"></i> DeepSearch
                             </button>
                             <button class="flex items-center px-4 py-2 mb-2 rounded-full border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                                <i class="fas fa-user-circle mr-2"></i> AI眼中的你
+                                <i class="fas fa-user-circle mr-2"></i> You in the eyes of AI
                             </button>
                         </div>
                         <div id="ariaExamples" class="hidden flex flex-wrap justify-center mt-6">
                             <button class="aria-example-button">
-                                <i class="fas fa-dragon mr-2"></i> 画一条威武的中国龙
+                                <i class="fas fa-dragon mr-2"></i> Draw a majestic Chinese dragon
                             </button>
                             <button class="aria-example-button">
-                                <i class="fas fa-cat mr-2"></i> 赛博朋克风格的猫咪
+                                <i class="fas fa-cat mr-2"></i> a cyberpunk-style cat
                             </button>
                             <button class="aria-example-button">
-                                <i class="fas fa-mountain mr-2"></i> 日落时分的雪山景色
+                                <i class="fas fa-mountain mr-2"></i> a snow-capped mountain scene at sunset
                             </button>
                             <button class="aria-example-button">
-                                <i class="fas fa-palette mr-2"></i> 梵高风格的星空
+                                <i class="fas fa-palette mr-2"></i> a starry sky in Van Gogh's style
                             </button>
                             <button class="aria-example-button">
-                                <i class="fas fa-robot mr-2"></i> 未来城市的机器人
+                                <i class="fas fa-robot mr-2"></i> a robot in a future city.
                             </button>
                         </div>
                     </div>
@@ -3007,16 +248,16 @@ document.addEventListener('keydown', function(event) {
                                 </button>
                                 <div class="dropdown-options">
                                     <div class="dropdown-option selected" data-value="normal">
-                                        <i class="fas fa-comment"></i>正常语气
+                                        <i class="fas fa-comment"></i>Normal
                                     </div>
                                     <div class="dropdown-option" data-value="concise">
-                                        <i class="fas fa-list"></i>简洁语气
+                                        <i class="fas fa-list"></i>Concise
                                     </div>
                                     <div class="dropdown-option" data-value="formal">
-                                        <i class="fas fa-user-tie"></i>正式语气
+                                        <i class="fas fa-user-tie"></i>Formal
                                     </div>
                                     <div class="dropdown-option" data-value="explanatory">
-                                        <i class="fas fa-chalkboard-teacher"></i>解释性语气
+                                        <i class="fas fa-chalkboard-teacher"></i>Explanatory
                                     </div>
                                 </div>
                             </div>
@@ -3028,11 +269,11 @@ document.addEventListener('keydown', function(event) {
                                     <i class="fas fa-chevron-down ml-2 text-xs"></i>
                                 </div>
                                 <div class="dropdown-options">
-                                    <div class="dropdown-option selected" data-value="Jork-Epist-4-n">Jork-Epist-4.5 标准版</div>
-                                        <div class="dropdown-option" data-value="Jork-Epist-4">Jork-Epist-4.5-DeepSearch <span class="model-badge epist">深度推理搜索</span></div>
-                                        <div class="dropdown-option" data-value="Jork-Trax-4">Jork-Trax-4.5<span class="model-badge trax">编码模型</span></div>
-                                        <div class="dropdown-option" data-value="Aria">Jork-Aria-1.3 <span class="model-badge aria">文生图</span></div>
-                                        <div class="dropdown-option" data-value="Aria-music">Jork-Aria-Music <span class="model-badge aria">文生音乐</span></div>
+                                    <div class="dropdown-option selected" data-value="Jork-Epist-4-n">Tylo-Epist-4.5 标准版</div>
+                                        <div class="dropdown-option" data-value="Jork-Epist-4">Tylo-Epist-4.5-DeepSearch <span class="model-badge epist">Deepsearch</span></div>
+                                        <div class="dropdown-option" data-value="Jork-Trax-4">Tylo-Trax-4.5<span class="model-badge trax">Search</span></div>
+                                        <div class="dropdown-option" data-value="Aria">Tylo-Aria-1.3 <span class="model-badge aria">text to image</span></div>
+                                        <!--<div class="dropdown-option" data-value="Aria-music">Tylo-Aria-Music <span class="model-badge aria">文生音乐</span></div>-->
                                     </div>
                             </div>
                             <button id="replySendButton" class="bg-orange-200 text-orange-600 p-2 rounded-md hover:bg-orange-300 transition-colors">
@@ -3057,22 +298,22 @@ document.addEventListener('keydown', function(event) {
     <div id="redemptionModal" class="modal-overlay hidden">
         <div class="modal">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium">兑换积分</h3>
+                <h3 class="text-lg font-medium">Redeem points</h3>
                 <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <p class="mb-4">请输入兑换码以获取额外积分</p>
-            <input id="redemptionCodeInput" type="text" placeholder="输入兑换码" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md mb-4 bg-white dark:bg-gray-800 text-base">
+            <p class="mb-4">Please enter the redemption code to get extra points.</p>
+            <input id="redemptionCodeInput" type="text" placeholder="Enter the redemption code" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md mb-4 bg-white dark:bg-gray-800 text-base">
             <div class="flex justify-end">
                 <button id="cancelRedemptionBtn" class="px-4 py-2 mr-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors">
-                    取消
+                    cancel
                 </button>
                 <button id="redeemCodeBtn" class="px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors">
-                    兑换
+                    redemption
                 </button>
             </div>
-            <a href="https://new.kaijunjs.com/item/oegls5">没有兑换码？点击获取</a>
+            <a href="https://new.kaijunjs.com/item/oegls5">No redemption code? Click to get one.</a>
             <div id="redemptionResult" class="mt-3 text-center hidden"></div>
         </div>
     </div>
@@ -3081,7 +322,7 @@ document.addEventListener('keydown', function(event) {
 <div id="membershipModal" class="modal-overlay hidden">
     <div class="modal" style="max-width: 1200px; width: 90%; max-height: 90vh; overflow-y: auto;">
         <div class="flex justify-between items-center mb-6">
-            <h3 class="text-3xl font-bold">选择您的计划</h3>
+            <h3 class="text-3xl font-bold">Select your plan</h3>
             <button id="closeMembershipModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-2">
                 <i class="fas fa-times text-xl"></i>
             </button>
@@ -3092,26 +333,26 @@ document.addEventListener('keydown', function(event) {
             <!-- 免费计划 -->
             <div class="relative border-2 border-gray-300 rounded-xl p-6 bg-gray-50 dark:bg-gray-800 transition-all hover:shadow-lg">
                 <div class="absolute top-4 right-4 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-3 py-1 rounded-full text-sm font-medium">
-                    当前计划
+                    Current plan
                 </div>
-                <h4 class="text-xl font-bold mb-4">免费计划</h4>
-                <div class="text-3xl font-bold mb-6">¥0<span class="text-base font-normal text-gray-500">/永久</span></div>
+                <h4 class="text-xl font-bold mb-4">Free Plan</h4>
+                <div class="text-3xl font-bold mb-6">$0<span class="text-base font-normal text-gray-500">/Year</span></div>
                 <ul class="space-y-3 text-base">
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                        <span>每日3000积分额度</span>
+                        <span>3,000 - point limit per day/span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                        <span>基础模型访问权限</span>
+                        <span>Access to our most smart model</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-times text-gray-400 mr-3 mt-1"></i>
-                        <span class="text-gray-500">无限制使用所有功能</span>
+                        <span class="text-gray-500">Unlimited messages, interactions, and history</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-times text-gray-400 mr-3 mt-1"></i>
-                        <span class="text-gray-500">优先响应速度</span>
+                        <span class="text-gray-500">Access on Web</span>
                     </li>
                 </ul>
             </div>
@@ -3119,25 +360,25 @@ document.addEventListener('keydown', function(event) {
             <!-- Pro计划 -->
             <div class="relative border-2 border-purple-500 rounded-xl p-6 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 transform hover:scale-105 transition-all shadow-xl">
                 <div class="absolute top-4 right-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-3 py-1 rounded-full text-sm font-medium">
-                    推荐
+                    HOT
                 </div>
-                <h4 class="text-xl font-bold mb-4">JorkAI Pro</h4>
+                <h4 class="text-xl font-bold mb-4">Tylo Pro</h4>
                 <div class="text-3xl font-bold mb-6 text-purple-600 dark:text-purple-400">
-                    <span id="proPriceDisplay">¥39.9</span><span class="text-base font-normal">/永久</span>
-                    <span id="discountBadge" class="hidden ml-2 text-sm bg-red-500 text-white px-2 py-1 rounded-full">立减¥10</span>
+                    <span id="proPriceDisplay">$5.9</span><span class="text-base font-normal">/99999Month</span>
+                    <span id="discountBadge" class="hidden ml-2 text-sm bg-red-500 text-white px-2 py-1 rounded-full">GET $1.9 discount</span>
                 </div>
                 <ul class="space-y-3 text-base">
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                        <span class="font-medium">无限积分使用</span>
+                        <span class="font-medium">Everything in Free, and:</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                        <span>所有模型访问权限</span>
+                        <span>Higher message caps on our most smart model and tools like Aria, Browsing, Advanced Data Analysis, and more</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
-                        <span>优先响应速度</span>
+                        <span>Admin console for Plugin marketplace</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-green-500 mr-3 mt-1"></i>
@@ -3155,14 +396,14 @@ document.addEventListener('keydown', function(event) {
                 <div class="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl border border-yellow-200 dark:border-yellow-800">
                     <h5 class="text-base font-semibold mb-3 flex items-center">
                         <i class="fas fa-tag mr-2 text-yellow-600"></i>
-                        使用邀请码立减10元
+                        Use the invitation code to get an immediate $1.9 discount.
                     </h5>
                     <div class="flex gap-2">
-                        <input id="inviteCodeInput" type="text" placeholder="输入邀请码" 
+                        <input id="inviteCodeInput" type="text" placeholder="Enter invitation code" 
                             class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-base">
                         <button id="applyInviteCodeBtn" 
                             class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors font-medium">
-                            应用
+                            Use
                         </button>
                     </div>
                     <div id="inviteCodeMessage" class="mt-2 text-sm hidden"></div>
@@ -3172,14 +413,14 @@ document.addEventListener('keydown', function(event) {
                 <div class="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl border border-purple-200 dark:border-purple-800">
                     <h5 class="text-base font-semibold mb-3 flex items-center">
                         <i class="fas fa-users mr-2 text-purple-600"></i>
-                        邀请好友，免费升级Pro
+                        Invite friends and get a free upgrade to Pro.
                     </h5>
                     
                     <div class="bg-white dark:bg-gray-800 p-3 rounded-lg border border-purple-200 dark:border-purple-700 mb-3">
                         <div class="flex items-center justify-between mb-2">
-                            <span class="text-sm text-gray-600 dark:text-gray-400">您的邀请码：</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Your invitation code:</span>
                             <div class="flex items-center gap-2">
-                                <code id="myInviteCode" class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded font-mono text-sm">生成中...</code>
+                                <code id="myInviteCode" class="bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded font-mono text-sm">Generating...</code>
                                 <button id="copyInviteCodeBtn" class="text-purple-600 hover:text-purple-700 text-sm">
                                     <i class="fas fa-copy"></i>
                                 </button>
@@ -3195,7 +436,7 @@ document.addEventListener('keydown', function(event) {
                             <button id="claimFreeProBtn" 
                                 class="px-3 py-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled>
-                                <i class="fas fa-crown mr-1"></i>领取
+                                <i class="fas fa-crown mr-1"></i>GET
                             </button>
                         </div>
                         <div class="mt-2">
@@ -3206,7 +447,7 @@ document.addEventListener('keydown', function(event) {
                     </div>
                     
                     <p class="text-xs text-gray-500 dark:text-gray-400">
-                        每成功邀请一位好友购买Pro，您将获得进度奖励
+                        Each time you successfully invite a friend to purchase Pro, will receive a progress reward.
                     </p>
                 </div>
             </div>
@@ -3215,7 +456,7 @@ document.addEventListener('keydown', function(event) {
             <div class="space-y-4">
                 <!-- 支付方式 -->
                 <div class="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl">
-                    <h5 class="text-base font-semibold mb-3">支付方式</h5>
+                    <h5 class="text-base font-semibold mb-3">Payment method</h5>
                     <div class="p-3 bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                         <label class="flex items-center justify-between cursor-pointer">
                             <div class="flex items-center">
@@ -3224,19 +465,19 @@ document.addEventListener('keydown', function(event) {
                                     <path fill="#00C83A" d="M512 0C229.2 0 0 229.2 0 512s229.2 512 512 512 512-229.2 512-512S794.8 0 512 0z"/>
                                     <path fill="#FFFFFF" d="M650.4 363.2c-23.6-14.8-50-26-78.4-33.2-30.8-7.6-62.8-11.6-95.2-11.6-40 0-79.2 6-116.4 17.6-36 11.2-68.4 27.6-96 48.4-27.2 20.4-49.2 45.2-65.2 73.2-16 28.4-24 59.2-24 91.6 0 26.8 5.6 52.4 16.4 76.4 10.8 23.6 26 44.8 45.2 62.8 19.6 18.4 42.8 33.6 68.8 45.2l-17.2 60.8c-1.2 4.4-0.4 8.4 2.4 11.6 2 2.4 4.8 3.6 8 3.6 1.2 0 2.4-0.4 3.6-0.8l75.6-31.6c24.4 4.8 49.6 7.2 74.8 7.2 40 0 79.2-6 116.4-17.6 36-11.2 68.4-27.6 96-48.4 27.2-20.4 49.2-45.2 65.2-73.2 16-28.4 24-59.2 24-91.6 0-26.8-5.6-52.4-16.4-76.4-10.8-23.6-26-44.8-45.2-62.8-19.2-18-42.4-33.2-68.4-44.8zM404.8 564.4c-20.4 0-37.2-16.8-37.2-37.2s16.8-37.2 37.2-37.2 37.2 16.8 37.2 37.2-16.8 37.2-37.2 37.2zm214.4 0c-20.4 0-37.2-16.8-37.2-37.2s16.8-37.2 37.2-37.2 37.2 16.8 37.2 37.2-16.8 37.2-37.2 37.2z"/>
                                 </svg>
-                                <span class="font-medium">微信支付</span>
+                                <span class="font-medium">WeChat Pay</span>
                             </div>
-                            <span class="text-xs text-green-600 font-medium">推荐</span>
+                            <span class="text-xs text-green-600 font-medium">Be about to go offline!</span>
                         </label>
                     </div>
                     <p class="mt-2 text-xs text-gray-500">
-                        支付宝和QQ支付预计8月接入
+                        Visa & Mastercard payment is expected to be integrated in SEPTENBER.
                     </p>
                 </div>
 
                 <!-- 支付按钮 -->
                 <button id="payWithWechatBtn" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:opacity-90 transition-all text-lg shadow-lg">
-                    立即支付 <span id="finalPriceDisplay">¥39.9</span>
+                    立即支付 <span id="finalPriceDisplay">¥39.9($5.9)</span>
                 </button>
 
                 <!-- 分隔线 -->
@@ -3245,16 +486,16 @@ document.addEventListener('keydown', function(event) {
                         <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-2 bg-white dark:bg-gray-900 text-gray-500">或</span>
+                        <span class="px-2 bg-white dark:bg-gray-900 text-gray-500">Or</span>
                     </div>
                 </div>
 
                 <!-- 兑换码 -->
                 <div class="space-y-3">
-                    <input id="membershipCodeInput" type="text" placeholder="输入会员兑换码" 
+                    <input id="membershipCodeInput" type="text" placeholder="Enter the membership redemption code" 
                         class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-base">
                     <button id="upgradeMembershipBtn" class="w-full py-3 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors font-medium">
-                        使用兑换码升级
+                        Upgrade with the redemption code
                     </button>
                 </div>
 
@@ -3263,30 +504,30 @@ document.addEventListener('keydown', function(event) {
         </div>
         
         <a href="term.html" class="text-xs text-gray-500 dark:text-gray-400 mt-6 text-center block">
-            继续即表示您同意我们的使用政策
+            Continuing indicates that you agree to our usage policy.
         </a>
     </div>
 </div>
 
-<!-- 支付表单（隐藏） -->
+<!-- Payment Form (Hidden) -->
 <form id="paymentForm" action="https://code.lfk.cc/submit.php" method="post" style="display: none;">
     <input type="hidden" name="pid" value="1338">
     <input type="hidden" name="type" value="wxpay">
     <input type="hidden" name="out_trade_no" id="out_trade_no" value="">
     <input type="hidden" name="notify_url" id="notify_url" value="">
     <input type="hidden" name="return_url" id="return_url" value="">
-    <input type="hidden" name="name" value="JorkAI Pro会员">
+    <input type="hidden" name="name" value="TyloAI Pro Membership">
     <input type="hidden" name="money" value="39.9">
-    <input type="hidden" name="sitename" value="JorkAI">
+    <input type="hidden" name="sitename" value="TyloAI">
     <input type="hidden" name="sign" id="sign" value="">
     <input type="hidden" name="sign_type" value="MD5">
 </form>
 
-<!-- 支付处理模态框 -->
+<!-- Payment Processing Modal -->
 <div id="paymentModal" class="modal-overlay hidden">
     <div class="modal">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-medium">正在跳转到支付页面...</h3>
+            <h3 class="text-lg font-medium">Redirecting to payment page...</h3>
             <button id="closePaymentModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                 <i class="fas fa-times"></i>
             </button>
@@ -3295,16 +536,17 @@ document.addEventListener('keydown', function(event) {
             <div class="mb-4">
                 <i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i>
             </div>
-            <p class="text-gray-600 dark:text-gray-400 mb-4">正在为您跳转到安全支付页面，请稍候...</p>
+            <p class="text-gray-600 dark:text-gray-400 mb-4">Redirecting to secure payment page, please wait...</p>
         </div>
     </div>
 </div>
+
 
 <!-- 添加支付相关的JavaScript代码 -->
 <script>
     // 主项目 Supabase
 const supabaseUrl = 'https://gjyycwhzldgkjpccutsd.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqeXljd2h6bGRna2pwY2N1dHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2OTQzNjMsImV4cCI6MjA3MDI3MDM2M30.UgLuisEG0zRwUZqsa3IYqRbPie3OifPqY2qJuSq0s2g'
 
 // 插件市场 Supabase
 const marketSupabaseUrl = 'https://jzbhltbdxirrbikauiif.supabase.co'
@@ -3643,7 +885,7 @@ class InviteSystem {
         const result = membershipSystem.activateMembership('INVITE-FREE-PRO-' + this.userId);
         
         if (result.success) {
-            alert('恭喜您成功升级为Pro会员！');
+            alert('Congratulations! Successfully upgraded to Pro!');
             window.location.reload();
         }
     }
@@ -3740,8 +982,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== 支付相关事件 =====
     
     // 支付按钮事件
-const payWithWechatBtn = document.getElementById('payWithWechatBtn');
-if (payWithWechatBtn) {
+    const payWithWechatBtn = document.getElementById('payWithWechatBtn');
+    if (payWithWechatBtn) {
     payWithWechatBtn.addEventListener('click', async function() {
         try {
             // 记录成功邀请（如果使用了邀请码）
@@ -3800,25 +1042,25 @@ if (payWithWechatBtn) {
             }
             
             // 填充表单数据
-document.getElementById('out_trade_no').value = orderNo;
-document.getElementById('notify_url').value = params.notify_url;
-document.getElementById('return_url').value = params.return_url;
-document.getElementById('sign').value = sign;
-document.querySelector('input[name="money"]').value = price.toFixed(1);
+            document.getElementById('out_trade_no').value = orderNo;
+            document.getElementById('notify_url').value = params.notify_url;
+            document.getElementById('return_url').value = params.return_url;
+            document.getElementById('sign').value = sign;
+            document.querySelector('input[name="money"]').value = price.toFixed(1);
 
-// 直接提交表单到易支付
-document.getElementById('paymentForm').submit();
-            
-        } catch (error) {
-            console.error('支付错误:', error);
-            alert('支付请求失败，请重试');
-            const paymentModal = document.getElementById('paymentModal');
-            if (paymentModal) {
-                paymentModal.classList.add('hidden');
+            // 直接提交表单到易支付
+            document.getElementById('paymentForm').submit();
+                        
+                    } catch (error) {
+                        console.error('支付错误:', error);
+                        alert('支付请求失败，请重试');
+                        const paymentModal = document.getElementById('paymentModal');
+                        if (paymentModal) {
+                            paymentModal.classList.add('hidden');
+                        }
+                    }
+                });
             }
-        }
-    });
-}
     
     // ===== 模态框控制事件 =====
     
@@ -3882,6 +1124,54 @@ document.getElementById('paymentForm').submit();
     }
 });
 
+// 初始化用户数据
+async function initializeUserData() {
+    try {
+        // 检查用户是否存在
+        const { data: userData, error } = await supabaseClient
+            .from('users')
+            .select('*')
+            .eq('id', currentUserId)
+            .single();
+        
+        if (error && error.code === 'PGRST116') {
+            // 用户不存在，创建新用户
+            await createNewUser();
+        } else if (userData) {
+            // 加载现有用户数据
+            await loadUserData();
+        }
+    } catch (error) {
+        console.error('Error initializing user data:', error);
+    }
+}
+
+// 创建新用户
+async function createNewUser() {
+    try {
+        // 创建用户记录
+        await supabaseClient
+            .from('users')
+            .insert({
+                id: currentUserId,
+                nickname: '新用户',
+                avatar_url: 'https://www.jorkai.cn/用户默认头像'
+            });
+        
+        // 创建用户统计
+        await supabaseClient
+            .from('user_stats')
+            .insert({
+                user_id: currentUserId
+            });
+        
+        // 加载数据
+        await loadUserData();
+    } catch (error) {
+        console.error('Error creating new user:', error);
+    }
+}
+
 // 检查支付状态
 function checkPaymentStatus() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -3894,23 +1184,21 @@ function checkPaymentStatus() {
     }
 }
 
-// 激活Pro会员
 function activateProMembership() {
-    const tempProCode = 'JORK-PRO-' + Date.now();
-    const result = membershipSystem.activateMembership(tempProCode);
-    
-    if (result.success) {
-        const paymentModal = document.getElementById('paymentModal');
-        const membershipModal = document.getElementById('membershipModal');
+        const tempProCode = 'TYLO-PRO-' + Date.now();
+        const result = membershipSystem.activateMembership(tempProCode);
         
-        if (paymentModal) paymentModal.classList.add('hidden');
-        if (membershipModal) membershipModal.classList.add('hidden');
-        
-        alert('恭喜您成功升级为JorkAI Pro会员！');
-        window.location.reload();
+        if (result.success) {
+            const paymentModal = document.getElementById('paymentModal');
+            const membershipModal = document.getElementById('membershipModal');
+            
+            if (paymentModal) paymentModal.classList.add('hidden');
+            if (membershipModal) membershipModal.classList.add('hidden');
+            
+            alert('Congratulations! You have successfully upgraded to TyloAI Pro!');
+            window.location.reload();
+        }
     }
-}
-
 // 页面加载时检查支付回调
 window.addEventListener('load', function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -3938,7 +1226,7 @@ window.addEventListener('load', function() {
                 if (membershipModal) membershipModal.classList.add('hidden');
                 
                 // 显示成功提示
-                alert('恭喜您成功升级为JorkAI Pro会员！');
+                alert('Congratulations! Successfully upgraded to Pro!');
                 
                 // 清理URL参数
                 window.history.replaceState({}, document.title, window.location.pathname);
@@ -3954,292 +1242,288 @@ window.addEventListener('load', function() {
 // ==========支付逻辑完成==========
     </script>
 
-<!-- 插件市场模态框 -->
 <div id="pluginMarketModal" class="modal-overlay hidden">
     <div class="modal plugin-market-container">
         <div class="flex justify-between items-center mb-6 border-b pb-4">
             <h2 class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                <i class="fas fa-puzzle-piece mr-2"></i>插件市场
+                <i class="fas fa-puzzle-piece mr-2"></i>Plugin Market
             </h2>
             <button id="closePluginMarketBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 p-2">
                 <i class="fas fa-times text-xl"></i>
             </button>
         </div>
 
-        <!-- 用户信息栏 -->
+        <!-- User Info Bar -->
         <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-4 mb-6">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-4">
                     <div class="text-lg font-semibold">
                         <i class="fas fa-coins text-yellow-500 mr-2"></i>
-                        我的积分：<span id="marketCredits" class="text-2xl text-purple-600 dark:text-purple-400">1000</span>
+                        My Credits: <span id="marketCredits" class="text-2xl text-purple-600 dark:text-purple-400">1000</span>
                     </div>
                     <div id="proUserBadge" class="hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-1 rounded-full text-sm font-bold">
-                        Pro用户 · 无限积分
+                        Pro User · Unlimited Credits
                     </div>
                 </div>
                 <div class="flex gap-3">
                     <button id="becomeDevBtn" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                        <i class="fas fa-code mr-2"></i>成为开发者
+                        <i class="fas fa-code mr-2"></i>Become Developer
                     </button>
                     <button id="myPluginsBtn" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        <i class="fas fa-box mr-2"></i>我的插件
+                        <i class="fas fa-box mr-2"></i>My Plugins
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- 分类标签 -->
+        <!-- Category Tabs -->
         <div class="flex gap-2 mb-6 flex-wrap">
-            <button class="plugin-tab active" data-category="all">全部</button>
-            <button class="plugin-tab" data-category="official">官方插件</button>
-            <button class="plugin-tab" data-category="tool">工具</button>
-            <button class="plugin-tab" data-category="efficiency">效率</button>
-            <button class="plugin-tab" data-category="entertainment">娱乐</button>
-            <button class="plugin-tab" data-category="learning">学习</button>
+            <button class="plugin-tab active" data-category="all">All</button>
+            <button class="plugin-tab" data-category="official">Official</button>
+            <button class="plugin-tab" data-category="tool">Tools</button>
+            <button class="plugin-tab" data-category="efficiency">Productivity</button>
+            <button class="plugin-tab" data-category="entertainment">Entertainment</button>
+            <button class="plugin-tab" data-category="learning">Learning</button>
         </div>
 
-        <!-- 搜索栏 -->
+        <!-- Search Bar -->
         <div class="relative mb-6">
-            <input id="pluginSearchInput" type="text" placeholder="搜索插件..." 
+            <input id="pluginSearchInput" type="text" placeholder="Search plugins..." 
                 class="w-full px-4 py-3 pl-12 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800">
             <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
         </div>
 
-        <!-- 插件列表 -->
+        <!-- Plugin List -->
         <div id="pluginList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- 插件卡片将通过JavaScript动态生成 -->
+            <!-- Plugin cards will be dynamically generated via JavaScript -->
         </div>
 
-        <!-- 加载提示 -->
+        <!-- Loading Indicator -->
         <div id="pluginLoadingIndicator" class="text-center py-8 hidden">
             <i class="fas fa-spinner fa-spin text-3xl text-purple-600"></i>
-            <p class="mt-2 text-gray-600">加载插件中...</p>
+            <p class="mt-2 text-gray-600">Loading plugins...</p>
         </div>
     </div>
 </div>
 
-<!-- 插件详情模态框 -->
+<!-- Plugin Detail Modal -->
 <div id="pluginDetailModal" class="modal-overlay hidden">
     <div class="modal" style="max-width: 900px; width: 90%; max-height: 90vh; overflow-y: auto;">
         <div id="pluginDetailContent">
-            <!-- 动态生成内容 -->
+            <!-- Dynamic content -->
         </div>
     </div>
 </div>
 
-<!-- 插件编辑器模态框 -->
+<!-- Plugin Editor Modal -->
 <div id="pluginEditorModal" class="modal-overlay hidden">
     <div class="modal" style="max-width: 1200px; width: 95%; max-height: 90vh;">
         <div class="flex justify-between items-center mb-4">
             <h3 class="text-xl font-bold">
-                <i class="fas fa-code mr-2"></i>插件开发工具
+                <i class="fas fa-code mr-2"></i>Plugin Development Tool
             </h3>
             <button id="closePluginEditorBtn" class="text-gray-500 hover:text-gray-700">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
-        <!-- 编辑器标签页 -->
+        <!-- Editor Tabs -->
         <div class="flex gap-2 mb-4">
             <button id="blocklyTab" class="plugin-tab active" onclick="pluginManager.switchEditorTab('blockly')">
-                <i class="fas fa-cubes mr-2"></i>积木块编程
+                <i class="fas fa-cubes mr-2"></i>Block Programming
             </button>
             <button id="jsTab" class="plugin-tab" onclick="pluginManager.switchEditorTab('javascript')">
-                <i class="fab fa-js mr-2"></i>JavaScript代码
+                <i class="fab fa-js mr-2"></i>JavaScript Code
             </button>
         </div>
 
-        <!-- 积木块编程界面 -->
+        <!-- Blockly Programming Interface -->
         <div id="blocklyEditor" class="blockly-workspace">
-            <!-- Blockly 将在这里初始化 -->
+            <!-- Blockly will initialize here -->
         </div>
 
-        <!-- JavaScript代码编辑器 -->
+        <!-- JavaScript Code Editor -->
         <div id="jsEditor" class="code-editor-container hidden">
-            <textarea id="jsCodeEditor" class="code-editor" placeholder="// 在这里编写您的插件代码..."></textarea>
+            <textarea id="jsCodeEditor" class="code-editor" placeholder="// Write your plugin code here..."></textarea>
         </div>
 
-        <!-- 底部操作栏 -->
+        <!-- Bottom Action Bar -->
         <div class="flex justify-between items-center mt-4">
             <div class="flex gap-2">
                 <button onclick="pluginManager.testPlugin()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                    <i class="fas fa-play mr-2"></i>测试运行
+                    <i class="fas fa-play mr-2"></i>Test Run
                 </button>
                 <button onclick="pluginManager.exportPlugin()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                    <i class="fas fa-download mr-2"></i>导出代码
+                    <i class="fas fa-download mr-2"></i>Export Code
                 </button>
             </div>
             <button onclick="pluginManager.savePlugin()" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
-                <i class="fas fa-save mr-2"></i>保存插件
+                <i class="fas fa-save mr-2"></i>Save Plugin
             </button>
         </div>
     </div>
 </div>
 
-<!-- 支付维护费模态框 -->
+<!-- Maintenance Fee Modal -->
 <div id="maintenanceFeeModal" class="modal-overlay hidden">
     <div class="modal" style="max-width: 500px;">
         <div class="text-center">
             <i class="fas fa-server text-5xl text-blue-500 mb-4"></i>
-            <h3 class="text-xl font-bold mb-2">服务器维护费</h3>
+            <h3 class="text-xl font-bold mb-2">Server Maintenance Fee</h3>
             <p class="text-gray-600 dark:text-gray-400 mb-6">
-                为了维持插件服务的稳定运行，普通用户需要支付3元的服务器维护费。
-                <br><span class="text-sm mt-2 block text-purple-600">Pro用户免费使用所有功能</span>
+                To maintain stable plugin services, regular users need to pay a $0.5 server maintenance fee.
+                <br><span class="text-sm mt-2 block text-purple-600">Pro users enjoy all features for free</span>
             </p>
             <div class="bg-gray-100 dark:bg-gray-800 rounded-lg p-4 mb-6">
-                <div class="text-2xl font-bold text-orange-500">¥3.00</div>
-                <div class="text-sm text-gray-500">一次性费用</div>
+                <div class="text-2xl font-bold text-orange-500">$0.50</div>
+                <div class="text-sm text-gray-500">One-time fee</div>
             </div>
             <div class="flex gap-3 justify-center">
                 <button id="cancelMaintenanceFee" class="px-6 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600">
-                    取消
+                    Cancel
                 </button>
                 <button id="payMaintenanceFee" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90">
-                    <i class="fas fa-credit-card mr-2"></i>立即支付
+                    <i class="fas fa-credit-card mr-2"></i>Pay Now
                 </button>
             </div>
         </div>
     </div>
 </div>
 
-    <!-- Canvas容器（初始隐藏） -->
-    <div id="canvasContainer" class="canvas-container">
-        <div class="canvas-header">
-            <h3 class="font-medium">Canvas 预览</h3>
-            <div class="flex space-x-2">
-                <button id="newTabButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    <i class="fas fa-external-link-alt"></i>
-                </button>
-                <button id="closeCanvasButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-        <div class="canvas-content">
-            <iframe id="canvasIframe" class="canvas-iframe" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms" allow="clipboard-write" allowfullscreen></iframe>
-            <div id="canvasEditor" class="canvas-editor"></div>
-        </div>
-        <div class="canvas-controls">
-            <button id="toggleEditorButton" class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                <i class="fas fa-code mr-1"></i>切换代码编辑器
+<!-- Canvas Container (Initially Hidden) -->
+<div id="canvasContainer" class="canvas-container">
+    <div class="canvas-header">
+        <h3 class="font-medium">Canvas Preview</h3>
+        <div class="flex space-x-2">
+            <button id="newTabButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-external-link-alt"></i>
             </button>
-            <div class="flex space-x-2">
-                <button id="runCodeButton" class="px-3 py-1 text-sm bg-orange-200 text-orange-600 rounded hover:bg-orange-300 transition-colors">
-                    <i class="fas fa-play mr-1"></i>运行代码
-                </button>
-                <button id="updateCodeButton" class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors">
-                    <i class="fas fa-save mr-1"></i>保存修改
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 这里本来有个彩蛋，但被上一个开发者吃掉了 -->
-    <!-- 404: 彩蛋未找到 -->
-
-    <!-- 图片查看器容器（初始隐藏） -->
-    <div id="imageViewerContainer" class="image-viewer-container">
-        <div class="image-viewer-header">
-            <h3 class="font-medium">媒体查看器</h3>
-            <div class="flex space-x-2">
-                <button id="closeImageViewerButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        </div>
-        <div class="image-viewer-content">
-            <img id="imageViewerImage" class="image-viewer-image" src="" alt="Generated Media" style="display: none;">
-            <video id="imageViewerVideo" class="image-viewer-image" controls style="display: none;"></video>
-        </div>
-        <div class="image-viewer-controls">
-            <button id="openImageNewTabButton" class="px-4 py-2 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors">
-                <i class="fas fa-external-link-alt mr-2"></i>在新标签页打开
-            </button>
-            <button id="downloadImageButton" class="px-4 py-2 bg-green-100 text-green-600 rounded hover:bg-green-200 transition-colors">
-                <i class="fas fa-download mr-2"></i>下载媒体
+            <button id="closeCanvasButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-times"></i>
             </button>
         </div>
     </div>
+    <div class="canvas-content">
+        <iframe id="canvasIframe" class="canvas-iframe" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-forms" allow="clipboard-write" allowfullscreen></iframe>
+        <div id="canvasEditor" class="canvas-editor"></div>
+    </div>
+    <div class="canvas-controls">
+        <button id="toggleEditorButton" class="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+            <i class="fas fa-code mr-1"></i>Toggle Code Editor
+        </button>
+        <div class="flex space-x-2">
+            <button id="runCodeButton" class="px-3 py-1 text-sm bg-orange-200 text-orange-600 rounded hover:bg-orange-300 transition-colors">
+                <i class="fas fa-play mr-1"></i>Run Code
+            </button>
+            <button id="updateCodeButton" class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors">
+                <i class="fas fa-save mr-1"></i>Save Changes
+            </button>
+        </div>
+    </div>
+</div>
 
-    <!--用户信息模态框的HTML结构 -->
+<!-- Image Viewer Container (Initially Hidden) -->
+<div id="imageViewerContainer" class="image-viewer-container">
+    <div class="image-viewer-header">
+        <h3 class="font-medium">Media Viewer</h3>
+        <div class="flex space-x-2">
+            <button id="closeImageViewerButton" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+    <div class="image-viewer-content">
+        <img id="imageViewerImage" class="image-viewer-image" src="" alt="Generated Media" style="display: none;">
+        <video id="imageViewerVideo" class="image-viewer-image" controls style="display: none;"></video>
+    </div>
+    <div class="image-viewer-controls">
+        <button id="openImageNewTabButton" class="px-4 py-2 bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors">
+            <i class="fas fa-external-link-alt mr-2"></i>Open in New Tab
+        </button>
+        <button id="downloadImageButton" class="px-4 py-2 bg-green-100 text-green-600 rounded hover:bg-green-200 transition-colors">
+            <i class="fas fa-download mr-2"></i>Download Media
+        </button>
+    </div>
+</div>
+
+<!-- User Info Modal HTML Structure -->
 <div id="userInfoModal" class="modal-overlay hidden">
     <div class="modal user-modal">
         <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-medium">用户设置</h3>
+            <h3 class="text-lg font-medium">User Settings</h3>
             <button id="closeUserModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
         <div class="user-modal-content">
-            <!-- 左侧内容 -->
+            <!-- Left Content -->
             <div class="user-modal-left">
-                <!-- 等级系统 -->
+                <!-- Level System -->
                 <div class="level-container">
                     <div class="level-number" id="userLevel">1</div>
-                    <div class="level-title" id="levelTitle">新手上路</div>
+                    <div class="level-title" id="levelTitle">Beginner</div>
                     <div class="level-progress">
                         <div class="level-progress-fill" id="levelProgressFill" style="width: 0%"></div>
                     </div>
                     <div class="level-exp-text" id="levelExpText">0 / 100 EXP</div>
                     <button id="checkinBtn" class="checkin-button mt-3">
-                        <i class="fas fa-calendar-check mr-2"></i>每日签到
+                        <i class="fas fa-calendar-check mr-2"></i>Daily Check-in
                     </button>
                 </div>
 
-                <!-- AI记忆功能 -->
+                <!-- AI Memory Feature -->
                 <div class="user-modal-item">
                     <div class="user-modal-label flex items-center justify-between">
-                        <span>AI记忆功能</span>
+                        <span>AI Memory</span>
                         <label class="flex items-center cursor-pointer">
                             <input type="checkbox" id="memoryToggle" class="mr-2">
-                            <span class="text-sm">启用</span>
+                            <span class="text-sm">Enable</span>
                         </label>
                     </div>
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        AI会记住关于您的重要信息，以提供更个性化的回答
+                        AI will remember important information about you to provide more personalized responses
                     </p>
                     
                     <div class="mt-3 max-h-40 overflow-y-auto" id="memoryList">
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">暂无记忆</p>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No memories yet</p>
                     </div>
                     
                     <button id="clearAllMemoriesBtn" class="mt-3 w-full px-4 py-2 bg-purple-100 text-purple-600 rounded-md hover:bg-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                        <i class="fas fa-eraser mr-2"></i>清除所有记忆
+                        <i class="fas fa-eraser mr-2"></i>Clear All Memories
                     </button>
                 </div>
 
-                <!-- 奖励提示 -->
+                <!-- Reward Prompt -->
                 <div class="user-modal-item" id="rewardPrompt">
                     <a href="https://new.kaijunjs.com/item/nmqz1v" class="text-green-600 dark:text-green-400 py-2 block">
-                      您已产生39.9元知识成就，充值会员立即提现
+                      You have earned $5.9 in knowledge achievement. Upgrade to Pro to claim immediately
                     </a>
                 </div>
             </div>
 
-            <!-- 右侧内容 -->
+            <!-- Right Content -->
             <div class="user-modal-right">
-                <!-- 个人信息 -->
+                <!-- Personal Information -->
                 <div class="user-modal-item">
-                    <div class="user-modal-label">昵称</div>
-                    <input id="nicknameInput" type="text" class="user-modal-input" placeholder="请输入昵称">
+                    <div class="user-modal-label">Nickname</div>
+                    <input id="nicknameInput" type="text" class="user-modal-input" placeholder="Enter nickname">
                     <button id="saveNicknameBtn" class="mt-2 px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors">
-                        保存昵称
+                        Save Nickname
                     </button>
                 </div>
                 
                 <div class="user-modal-item">
-                    <div class="user-modal-label">头像URL</div>
-                    <input id="avatarUrlInput" type="text" class="user-modal-input" placeholder="请输入头像URL">
+                    <div class="user-modal-label">Avatar URL</div>
+                    <input id="avatarUrlInput" type="text" class="user-modal-input" placeholder="Enter avatar URL">
                     <button id="saveAvatarBtn" class="mt-2 px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors">
-                        保存头像
+                        Save Avatar
                     </button>
                 </div>
 
-                <!-- 语言选择 -->
+                <!-- Language Selection -->
                 <div class="user-modal-item">
-                    <div class="user-modal-label">语言选择</div>
+                    <div class="user-modal-label">Language</div>
                     <div class="language-selector">
                         <div class="language-option" data-lang="zh" data-url="chat.html">
                             <i class="fas fa-language mr-1"></i>中文
@@ -4253,11 +1537,11 @@ window.addEventListener('load', function() {
                     </div>
                 </div>
 
-                <!-- 勋章墙入口 -->
+                <!-- Achievement Wall Entry -->
                 <div class="user-modal-item">
                     <button id="achievementWallBtn" class="achievement-wall-btn w-full relative">
                         <i class="fas fa-trophy"></i>
-                        <span>我的成就勋章墙</span>
+                        <span>My Achievement Wall</span>
                         <span id="achievementCount" class="ml-auto bg-white/20 px-2 py-1 rounded-full text-sm">
                             0/10
                         </span>
@@ -4265,27 +1549,28 @@ window.addEventListener('load', function() {
                     </button>
                 </div>
 
-                <!-- 在删除操作部分之前添加 -->
+                <!-- Restart Guide Button -->
                 <div class="user-modal-item">
                     <button id="restartGuideBtn" class="w-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-md hover:opacity-90 transition-colors mb-3">
-                        <i class="fas fa-compass mr-2"></i>重新开始新手引导
+                        <i class="fas fa-compass mr-2"></i>Restart Tutorial
                     </button>
                 </div>
 
-                <!-- 删除操作 -->
+                <!-- Delete Operations -->
                 <div class="user-modal-item">
                     <button id="deleteAllChatsBtn" class="w-full px-4 py-2 bg-red-100 text-red-600 rounded-md hover:bg-red-200 transition-colors mb-3">
-                        <i class="fas fa-trash-alt mr-2"></i>删除所有对话
+                        <i class="fas fa-trash-alt mr-2"></i>Delete All Conversations
                     </button>
                     
                     <button id="logoutBtn" class="w-full px-4 py-2 bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        <i class="fas fa-sign-out-alt mr-2"></i>取消登录
+                        <i class="fas fa-sign-out-alt mr-2"></i>Log Out
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 
             <script>
@@ -5456,16 +2741,16 @@ window.pluginAPI = {
     
     getLevelTitle(level) {
         const titles = {
-            1: '新手上路',
-            2: '初窥门径',
-            3: '小有所成',
-            4: '渐入佳境',
-            5: '头像达人',
-            6: '经验老手',
-            7: 'AI大神',
-            8: '超级用户',
-            9: '贴吧老哥',
-            10: 'Pro用户'
+        1: 'Beginner',
+        2: 'Getting Started',
+        3: 'Making Progress',
+        4: 'Getting Better',
+        5: 'Avatar Master',
+        6: 'Experienced User',
+        7: 'AI Expert',
+        8: 'Super User',
+        9: 'Forum Veteran',
+        10: 'Pro User'
         };
         return titles[level] || '未知等级';
     }
@@ -5543,7 +2828,7 @@ window.pluginAPI = {
         } else if (level === 10) {
             // Pro用户
             membershipSystem.activateMembership('LEVEL-10-AUTO-PRO');
-            this.showBenefitNotification('恭喜升级为Pro用户！');
+            this.showBenefitNotification('Congratulations! Successfully upgraded to Pro!');
         }
     }
     
@@ -6709,9 +3994,9 @@ window.exportPersonalityCard = async function(cardId) {
                 baseUrl: 'https://api.linkapi.org/v1',
                 apiKey: 'sk-H5JewkujpZ96zoor25C3F1EcE0F7452a8017Ab2355E18446',
                 models: {
-                    'Jork-Epist-4-n': 'claude-3-5-haiku-20241022', //基础模型
+                    'Jork-Epist-4-n': 'gpt-5-nano', //基础模型
                     'Jork-Epist-4': 'grok-3-deepsearch',  // 深度推理搜索模型
-                    'Jork-Trax-4': 'gpt-4o-2024-11-20',  // 代码模型
+                    'Jork-Trax-4': 'deepseek-r1-search',  // 代码模型
                     'Aria-music': 'suno_music'  // 文生音乐模型
                 },
                 sunoUrl: 'https://api.linkapi.org/suno'
@@ -8270,7 +5555,7 @@ async syncChatToSupabase(chatId) {
             const deleteBtn = chatItem.querySelector('.chat-item-delete');
             deleteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (confirm('确定要删除这个对话吗？')) {
+                if (confirm('Deleted')) {
                     this.deleteChat(chat.id);
                 }
             });
@@ -9315,148 +6600,56 @@ class AchievementSystem {
         this.achievementKey = 'jiorkAchievements';
         this.achievements = {
             firstQuestion: {
-                id: 'firstQuestion',
-                name: '初来乍到',
-                description: '完成首次提问',
-                icon: '🎯',
-                condition: 'firstQuestion',
-                unlocked: false,
-                unlockedAt: null
-            },
-            dailyStreak3: {
-                id: 'dailyStreak3',
-                name: '坚持不懈',
-                description: '连续签到3天',
-                icon: '📅',
-                condition: 'dailyStreak',
-                target: 3,
-                progress: 0,
-                unlocked: false,
-                unlockedAt: null
-            },
-            questions50: {
-                id: 'questions50',
-                name: 'AI提问家',
-                description: '累计提问50次',
-                icon: '💬',
-                condition: 'questionCount',
-                target: 50,
-                progress: 0,
-                unlocked: false,
-                unlockedAt: null
-            },
-            feedback10: {
-                id: 'feedback10',
-                name: '热爱反馈',
-                description: '点赞或反馈10次',
-                icon: '👍',
-                condition: 'feedbackCount',
-                target: 10,
-                progress: 0,
-                unlocked: false,
-                unlockedAt: null
-            },
-            level5: {
-                id: 'level5',
-                name: '成长达人',
-                description: '等级达到 Lv.5',
-                icon: '⭐',
-                condition: 'level',
-                target: 5,
-                unlocked: false,
-                unlockedAt: null
-            },
-            explorer: {
-                id: 'explorer',
-                name: '探索者',
-                description: '使用过3种不同模型',
-                icon: '🔍',
-                condition: 'modelsUsed',
-                target: 3,
-                progress: new Set(),
-                unlocked: false,
-                unlockedAt: null
-            },
-            deepThinker: {
-                id: 'deepThinker',
-                name: '深度思考者',
-                description: 'AI生成超1000字回答',
-                icon: '🧠',
-                condition: 'longResponse',
-                unlocked: false,
-                unlockedAt: null
-            },
-            easterEggHunter: {
-                id: 'easterEggHunter',
-                name: '彩蛋猎人',
-                description: '触发隐藏语气包',
-                icon: '🥚',
-                condition: 'hiddenFeature',
-                unlocked: false,
-                unlockedAt: null
-            },
-            publicWelfare: {
-                id: 'publicWelfare',
-                name: '公益守护者',
-                description: '支持公益活动',
-                icon: '❤️',
-                condition: 'manual',
-                unlocked: false,
-                unlockedAt: null
-            },
-            inviter: {
-                id: 'inviter',
-                name: '传道授业',
-                description: '成功邀请1名新用户',
-                icon: '🎓',
-                condition: 'invite',
-                target: 1,
-                progress: 0,
-                unlocked: false,
-                unlockedAt: null
-            },
-            // 隐藏勋章
-            earlyBird: {
-                id: 'earlyBird',
-                name: '早起鸟儿',
-                description: '凌晨5:20访问',
-                icon: '🌅',
-                condition: 'timeSpecific',
-                hidden: true,
-                unlocked: false,
-                unlockedAt: null
-            },
-            nightOwl: {
-                id: 'nightOwl',
-                name: '夜猫子',
-                description: '凌晨3:00-4:00深夜访问',
-                icon: '🦉',
-                condition: 'timeSpecific',
-                hidden: true,
-                unlocked: false,
-                unlockedAt: null
-            },
-            luckyNumber: {
-                id: 'luckyNumber',
-                name: '幸运数字',
-                description: '第666次或888次提问',
-                icon: '🍀',
-                condition: 'questionSpecific',
-                hidden: true,
-                unlocked: false,
-                unlockedAt: null
-            },
-            secretPhrase: {
-                id: 'secretPhrase',
-                name: '密语大师',
-                description: '输入神秘暗号',
-                icon: '🔮',
-                condition: 'phraseSpecific',
-                hidden: true,
-                unlocked: false,
-                unlockedAt: null
-            }
-        };
+            name: 'First Steps',
+            description: 'Complete your first question',
+            icon: '🎯'
+        },
+        dailyStreak3: {
+            name: 'Persistent',
+            description: 'Check in for 3 consecutive days',
+            icon: '📅'
+        },
+        questions50: {
+            name: 'AI Questioner',
+            description: 'Ask 50 questions in total',
+            icon: '💬'
+        },
+        feedback10: {
+            name: 'Feedback Lover',
+            description: 'Give feedback 10 times',
+            icon: '👍'
+        },
+        level5: {
+            name: 'Growth Expert',
+            description: 'Reach Level 5',
+            icon: '⭐'
+        },
+        explorer: {
+            name: 'Explorer',
+            description: 'Use 3 different models',
+            icon: '🔍'
+        },
+        deepThinker: {
+            name: 'Deep Thinker',
+            description: 'AI generates a response over 1000 words',
+            icon: '🧠'
+        },
+        easterEggHunter: {
+            name: 'Easter Egg Hunter',
+            description: 'Trigger hidden voice package',
+            icon: '🥚'
+        },
+        publicWelfare: {
+            name: 'Charity Guardian',
+            description: 'Support charity activities',
+            icon: '❤️'
+        },
+        inviter: {
+            name: 'Mentor',
+            description: 'Successfully invite 1 new user',
+            icon: '🎓'
+        }
+    };
         
         this.loadAchievements();
         this.initTimeCheckers();
@@ -12002,7 +9195,7 @@ ${hasMemories ? `基于的观察数据：\n${memoryContext}` : '这是一位刚�
         
         // 预检查积分
         if (!pointsSystem.canUsePoints(50)) {
-            alert('您的积分不足，请等待下一个重置周期或使用兑换码获取更多积分。');
+            alert('Insufficient points. Please wait for the next reset cycle or use redemption codes to get more points.');
             isSending = false;
             return;
         }
@@ -12492,30 +9685,37 @@ async function loadUserData() {
         });
 
         // 保存昵称
+// 示例：保存昵称时的错误处理
 document.getElementById('saveNicknameBtn').addEventListener('click', async function() {
     const nickname = document.getElementById('nicknameInput').value.trim();
-    if (nickname) {
-        // 保存到本地
+    if (!nickname) return;
+    
+    try {
+        const { data, error } = await supabaseClient
+            .from('users')
+            .update({ nickname: nickname })
+            .eq('id', currentUserId);
+        
+        if (error) throw error;
+        
+        // 更新本地存储
         localStorage.setItem('jiorkUserNickname', nickname);
         document.getElementById('userNickname').textContent = nickname;
         
-        // 保存到 Supabase
-        try {
-            await supabaseClient
-                .from('users')
-                .update({ nickname: nickname })
-                .eq('id', currentUserId);
-            
-            this.textContent = '已保存';
-            this.classList.add('bg-green-200', 'text-green-600');
-        } catch (error) {
-            console.error('Error saving nickname:', error);
-            this.textContent = '保存失败';
-        }
+        // 显示成功
+        this.textContent = 'Saved';
+        this.classList.add('bg-green-200', 'text-green-600');
+    } catch (error) {
+        console.error('Error saving nickname:', error);
+        this.textContent = 'Save failed';
+        this.classList.add('bg-red-200', 'text-red-600');
         
+        // 显示错误信息
+        alert(`Save failed: ${error.message}`);
+    } finally {
         setTimeout(() => {
             this.textContent = '保存昵称';
-            this.classList.remove('bg-green-200', 'text-green-600');
+            this.className = 'mt-2 px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors';
         }, 1500);
     }
 });
@@ -12535,11 +9735,11 @@ document.getElementById('saveAvatarBtn').addEventListener('click', async functio
                 .update({ avatar_url: avatarUrl })
                 .eq('id', currentUserId);
             
-            this.textContent = '已保存';
+            this.textContent = 'Saved';
             this.classList.add('bg-green-200', 'text-green-600');
         } catch (error) {
             console.error('Error saving avatar:', error);
-            this.textContent = '保存失败';
+            this.textContent = 'Save failed';
         }
         
         setTimeout(() => {
@@ -12563,7 +9763,7 @@ document.getElementById('saveAvatarBtn').addEventListener('click', async functio
 
         // 删除所有对话
         document.getElementById('deleteAllChatsBtn').addEventListener('click', function() {
-            if (confirm('确定要删除所有对话吗？此操作不可恢复。')) {
+            if (confirm('Are you sure you want to delete all conversations? This action cannot be undone.')) {
                 // 删除聊天历史
                 chatManager.chatHistory = [];
                 chatManager.currentChatId = null;
@@ -12582,7 +9782,7 @@ document.getElementById('saveAvatarBtn').addEventListener('click', async functio
                 document.getElementById('userInfoModal').classList.add('hidden');
                 
                 // 显示删除成功提示
-                this.textContent = '已删除所有对话';
+                this.textContent = 'Deleted';
                 this.classList.add('danger-button');
                 
                 setTimeout(() => {
@@ -12599,10 +9799,10 @@ document.getElementById('saveAvatarBtn').addEventListener('click', async functio
 
         // 清除所有记忆
         document.getElementById('clearAllMemoriesBtn').addEventListener('click', function() {
-            if (confirm('确定要清除所有AI记忆吗？此操作不可恢复。')) {
+            if (confirm('Are you sure you want to clear all AI memories? This action cannot be undone.')) {
                 memoryManager.clearAllMemories();
                 
-                this.textContent = '已清除';
+                this.textContent = 'Cleared';
                 this.classList.add('bg-green-200', 'text-green-600');
                 
                 setTimeout(() => {
@@ -12615,7 +9815,7 @@ document.getElementById('saveAvatarBtn').addEventListener('click', async functio
 
         // 取消登录
 document.getElementById('logoutBtn').addEventListener('click', async function() {
-    if (confirm('确定要退出登录吗？')) {
+    if (confirm('Are you sure you want to log out?')) {
         try {
             const { error } = await supabaseClient.auth.signOut();
             if (error) throw error;
@@ -12627,7 +9827,7 @@ document.getElementById('logoutBtn').addEventListener('click', async function() 
             window.location.href = '/login.html';
         } catch (error) {
             console.error('Error signing out:', error);
-            alert('退出登录失败，请重试');
+            alert('Logout failed, please try again');
         }
     }
 });
