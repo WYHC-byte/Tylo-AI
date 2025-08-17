@@ -869,6 +869,491 @@
         </div>
     </section>
 
+    <!-- Video Preview Section -->
+    <section class="video-preview-section">
+        <div class="video-container">
+            <!-- 背景装饰元素 -->
+            <div class="video-bg-decoration">
+                <div class="decoration-circle circle-1"></div>
+                <div class="decoration-circle circle-2"></div>
+                <div class="decoration-line line-1"></div>
+                <div class="decoration-line line-2"></div>
+            </div>
+            
+            <!-- 视频标题区域 -->
+            <div class="video-header">
+                <span class="video-badge">NEW RELEASE</span>
+                <h2 class="video-title">Experience the Future of AI</h2>
+                <p class="video-subtitle">Watch how TyloAI transforms your workflow with intelligent automation</p>
+            </div>
+            
+            <!-- 视频播放器容器 -->
+            <div class="video-player-wrapper">
+                <!-- 左侧装饰文字 -->
+                <div class="video-side-text left">
+                    <div class="vertical-text">INNOVATION</div>
+                </div>
+                
+                <!-- 中间视频播放器 -->
+                <div class="video-player-container">
+                    <!-- 视频边框装饰 -->
+                    <div class="video-frame">
+                        <div class="frame-corner top-left"></div>
+                        <div class="frame-corner top-right"></div>
+                        <div class="frame-corner bottom-left"></div>
+                        <div class="frame-corner bottom-right"></div>
+                    </div>
+                    
+                    <!-- 视频播放器 -->
+                    <video class="preview-video" id="previewVideo" poster="" controls>
+                        <source src="预告.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    
+                    <!-- 自定义播放按钮（覆盖层） -->
+                    <div class="video-overlay" id="videoOverlay">
+                        <div class="play-button-custom">
+                            <svg width="80" height="80" viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="39" stroke="#000" stroke-width="2" fill="rgba(255,255,255,0.95)"/>
+                                <polygon points="32,25 32,55 52,40" fill="#000"/>
+                            </svg>
+                        </div>
+                        <div class="overlay-text">WATCH PREVIEW</div>
+                    </div>
+                </div>
+                
+                <!-- 右侧装饰文字 -->
+                <div class="video-side-text right">
+                    <div class="vertical-text">EXCELLENCE</div>
+                </div>
+            </div>
+            
+            <!-- 视频信息栏 -->
+            <div class="video-info-bar">
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <span>2:30 min</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-video"></i>
+                    <span>4K Quality</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-language"></i>
+                    <span>Multi-language</span>
+                </div>
+            </div>
+            
+            <!-- 底部引导文字 -->
+            <div class="video-cta">
+                <p>Discover how leading companies are leveraging TyloAI to accelerate innovation</p>
+                <div class="scroll-indicator">
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Preview Section CSS -->
+    <style>
+        /* Video Preview Section Styles */
+        .video-preview-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+            padding: 4rem 2rem;
+        }
+
+        .video-container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 背景装饰元素 */
+        .video-bg-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .decoration-circle {
+            position: absolute;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-radius: 50%;
+        }
+
+        .circle-1 {
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            right: -200px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .circle-2 {
+            width: 400px;
+            height: 400px;
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        .decoration-line {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);
+            height: 1px;
+            width: 100%;
+        }
+
+        .line-1 {
+            top: 20%;
+            animation: slideRight 10s linear infinite;
+        }
+
+        .line-2 {
+            bottom: 30%;
+            animation: slideLeft 8s linear infinite;
+        }
+
+        @keyframes slideRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes slideLeft {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* 视频标题区域 */
+        .video-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .video-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #000;
+            color: #fff;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .video-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .video-subtitle {
+            font-size: 1.25rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 视频播放器容器 */
+        .video-player-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin: 4rem 0;
+            position: relative;
+        }
+
+        /* 侧边装饰文字 */
+        .video-side-text {
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(0,0,0,0.03);
+            letter-spacing: 0.5rem;
+            user-select: none;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .video-side-text.left {
+            animation-delay: 0.5s;
+        }
+
+        .video-side-text.right {
+            animation-delay: 0.7s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 视频播放器主容器 */
+        .video-player-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            aspect-ratio: 16 / 9;
+            background: #f8f9fa;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        /* 视频边框装饰 */
+        .video-frame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .frame-corner {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 3px solid #000;
+        }
+
+        .frame-corner.top-left {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .frame-corner.top-right {
+            top: 20px;
+            right: 20px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .frame-corner.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .frame-corner.bottom-right {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* 视频元素 */
+        .preview-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* 自定义播放按钮覆盖层 */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .video-overlay:hover {
+            background: rgba(255,255,255,0.95);
+        }
+
+        .video-overlay:hover .play-button-custom {
+            transform: scale(1.1);
+        }
+
+        .video-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .play-button-custom {
+            transition: transform 0.3s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .overlay-text {
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #000;
+        }
+
+        /* 视频信息栏 */
+        .video-info-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 3rem 0;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .info-item i {
+            color: #000;
+            font-size: 1.1rem;
+        }
+
+        /* 底部引导 */
+        .video-cta {
+            text-align: center;
+            margin-top: 3rem;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        .video-cta p {
+            font-size: 1.125rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .scroll-indicator {
+            display: inline-block;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .scroll-indicator i {
+            font-size: 1.5rem;
+            color: #000;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .video-side-text {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 968px) {
+            .video-side-text {
+                display: none;
+            }
+            
+            .video-player-container {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-title {
+                font-size: 2rem;
+            }
+            
+            .video-subtitle {
+                font-size: 1rem;
+            }
+            
+            .frame-corner {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .frame-corner.top-left,
+            .frame-corner.top-right {
+                top: 10px;
+            }
+            
+            .frame-corner.bottom-left,
+            .frame-corner.bottom-right {
+                bottom: 10px;
+            }
+            
+            .frame-corner.top-left,
+            .frame-corner.bottom-left {
+                left: 10px;
+            }
+            
+            .frame-corner.top-right,
+            .frame-corner.bottom-right {
+                right: 10px;
+            }
+            
+            .video-info-bar {
+                gap: 1.5rem;
+            }
+            
+            .info-item {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+
+    <!-- Video Preview Section JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('previewVideo');
+            const overlay = document.getElementById('videoOverlay');
+            
+            // 点击覆盖层播放视频
+            overlay.addEventListener('click', function() {
+                overlay.classList.add('hidden');
+                video.play();
+            });
+            
+            // 视频暂停时显示覆盖层
+            video.addEventListener('pause', function() {
+                if (video.currentTime < video.duration) {
+                    overlay.classList.remove('hidden');
+                }
+            });
+            
+            // 视频结束时显示覆盖层
+            video.addEventListener('ended', function() {
+                overlay.classList.remove('hidden');
+                video.currentTime = 0;
+            });
+        });
+    </script>
+    
     <!-- Feature highlights -->
     <section class="sections" id="features">
         <div class="section">
@@ -937,15 +1422,6 @@
                     <!-- First set of logos -->
                     <div class="logo-track">
                         <div class="logo-item">
-                            <img src="hncheer.jpg" alt="Hunan Cheer Company" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="logo-placeholder" style="display: none;">
-                                <span>Hunan Cheer</span>
-                            </div>
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Tencent_Cloud_logo.svg" alt="Tencent Cloud">
-                        </div>
-                        <div class="logo-item">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
                         </div>
                         <div class="logo-item">
@@ -961,15 +1437,6 @@
                     
                     <!-- Second set of logos (copy for seamless loop) -->
                     <div class="logo-track">
-                        <div class="logo-item">
-                            <img src="hncheer.jpg" alt="Hunan Cheer Company" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="logo-placeholder" style="display: none;">
-                                <span>Hunan Cheer</span>
-                            </div>
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Tencent_Cloud_logo.svg" alt="Tencent Cloud">
-                        </div>
                         <div class="logo-item">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
                         </div>
@@ -1303,7 +1770,7 @@
             <p>Register now to unlock more premium features and enjoy personalized AI service experience</p>
             <div class="cta-buttons">
                 <a href="login.html" class="cta-button primary">Login Now</a>
-                <a href="login.html" class="cta-button secondary">Free Registration</a>
+                <a href="chat-guest.html" class="cta-button secondary">Guest Mode</a>
             </div>
             <div class="cta-features">
                 <div class="cta-feature">

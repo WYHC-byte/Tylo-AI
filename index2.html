@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI - 服务区域公告</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: slideIn 1s ease-out 0.2s both;
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .brand-transition {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+        
+        .main-notice {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 40px;
+            animation: slideIn 1s ease-out 0.4s both;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-notice::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1a1a1a, #666);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .notice-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        
+        .notice-icon {
+            font-size: 1.5rem;
+            color: #1a1a1a;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        .notice-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .notice-content {
+            font-size: 1.1rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .service-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .service-section {
+            padding: 24px;
+            border-radius: 6px;
+            text-align: center;
+            animation: slideIn 1s ease-out 0.6s both;
+        }
+        
+        .not-available {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+        }
+        
+        .available {
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .section-icon {
+            font-size: 1.2rem;
+        }
+        
+        .not-available .section-icon {
+            color: #e53e3e;
+        }
+        
+        .available .section-icon {
+            color: #38a169;
+        }
+        
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .region-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            margin: 4px;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            animation: slideIn 1s ease-out calc(0.8s + var(--delay, 0s)) both;
+        }
+        
+        .mainland-region {
+            color: #1a1a1a;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        .cta-section {
+            text-align: center;
+            margin-top: 50px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            animation: slideIn 1s ease-out 0.8s both;
+        }
+        
+        .cta-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .cta-description {
+            color: #666;
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+        
+        .website-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #1a1a1a;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 16px 0;
+        }
+        
+        .website-button:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .website-button i {
+            transition: transform 0.3s ease;
+        }
+        
+        .website-button:hover i {
+            transform: translateX(2px);
+        }
+        
+        .footer-info {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e9ecef;
+            animation: slideIn 1s ease-out 1s both;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            animation: slideIn 1s ease-out calc(1.2s + var(--delay, 0s)) both;
+        }
+        
+        .info-icon {
+            color: #1a1a1a;
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+        
+        .info-text {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+            
+            .logo {
+                font-size: 2.2rem;
+            }
+            
+            .main-notice {
+                padding: 30px 20px;
+            }
+            
+            .service-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .website-button {
+                padding: 12px 24px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        .region-item:nth-child(1) { --delay: 0s; }
+        .region-item:nth-child(2) { --delay: 0.1s; }
+        .region-item:nth-child(3) { --delay: 0.2s; }
+        
+        .info-item:nth-child(1) { --delay: 0s; }
+        .info-item:nth-child(2) { --delay: 0.1s; }
+        .info-item:nth-child(3) { --delay: 0.2s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">TyloAI</div>
+            <div class="brand-transition">从 JorkAI 华丽蜕变，开启智能新纪元</div>
+        </div>
+        
+        <div class="main-notice">
+            <div class="notice-header">
+                <i class="fas fa-globe-asia notice-icon"></i>
+                <h1 class="notice-title">重磅消息：服务区域大升级</h1>
+            </div>
+            
+            <div class="notice-content">
+                🎉 <strong>重磅官宣！</strong> JorkAI 正式进化为 <strong>TyloAI</strong><br>
+                全新品牌，全新体验，更精准的智能服务即将开启！<br>
+                为了提供更优质的服务体验，我们对服务区域进行了战略性调整
+            </div>
+            
+            <div class="service-grid">
+                <div class="service-section not-available">
+                    <div class="section-header">
+                        <i class="fas fa-times-circle section-icon"></i>
+                        <div class="section-title">⏸告别</div>
+                    </div>
+                    <div class="mainland-region">
+                        <i class="fas fa-map-marker-alt"></i>
+                        中国大陆
+                    </div>
+                </div>
+                
+                <div class="service-section available">
+                    <div class="section-header">
+                        <i class="fas fa-check-circle section-icon"></i>
+                        <div class="section-title">精彩继续</div>
+                    </div>
+                    <div>
+                        <div class="region-item">
+                            <i class="fas fa-map-pin"></i>
+                            香港特别行政区
+                        </div>
+                        <div class="region-item">
+                            <i class="fas fa-map-pin"></i>
+                            澳门特别行政区
+                        </div>
+                        <div class="region-item">
+                            <i class="fas fa-map-pin"></i>
+                            台湾地区
+                        </div>
+                        <div class="region-item">
+                            <i class="fas fa-map-pin"></i>
+                            海外地区
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta-section">
+            <div class="cta-title">
+                <i class="fas fa-rocket"></i>
+                🎊 TyloAI 全新宇宙，等你来探索！
+            </div>
+            <div class="cta-description">
+                💎 感谢每一位用户的陪伴与信任！<br>
+                🚀 TyloAI 承诺为符合服务区域的朋友们带来：<br>
+                ⚡ 更快的响应速度 |  更智能的交互 |  更贴心的服务
+            </div>
+            
+            <a href="https://tyloai.com" class="website-button" target="_blank">
+                <i class="fas fa-external-link-alt"></i>
+                立即体验 tyloai.com
+            </a>
+        </div>
+        
+        <div class="footer-info">
+            <div class="info-grid">
+                <div class="info-item">
+                    <i class="fas fa-calendar-alt info-icon"></i>
+                    <div class="info-text">
+                        📅 变更将于8月1日生效，新时代正式开启
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <i class="fas fa-headset info-icon"></i>
+                    <div class="info-text">
+                        💬 遇到疑问？我们的客服小伙伴随时在线
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <i class="fas fa-heart info-icon"></i>
+                    <div class="info-text">
+                        💕 每一份支持都是我们前进的动力
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

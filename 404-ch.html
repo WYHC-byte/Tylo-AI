@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI - 服务区域限制 / Service Region Restriction</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 40px;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .lang-switch {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+        
+        .lang-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+        
+        .lang-btn.active {
+            background: #000;
+            color: #fff;
+        }
+        
+        .content {
+            display: none;
+        }
+        
+        .content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+        }
+        
+        h2 {
+            font-size: 24px;
+            margin: 40px 0 20px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        
+        h3 {
+            font-size: 18px;
+            margin: 30px 0 15px;
+            font-weight: 500;
+            opacity: 0.85;
+        }
+        
+        p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+        
+        .quote {
+            margin: 40px 0;
+            padding: 20px;
+            border-left: 3px solid #000;
+            background: #f9f9f9;
+            text-align: left;
+            font-style: italic;
+            position: relative;
+        }
+        
+        .quote::before {
+            content: '"';
+            font-size: 40px;
+            position: absolute;
+            left: 10px;
+            top: -10px;
+            opacity: 0.2;
+        }
+        
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: #000;
+            margin: 40px auto;
+            opacity: 0.3;
+        }
+        
+        .brand-note {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 14px;
+            opacity: 0.6;
+        }
+        
+        .highlight {
+            font-weight: 600;
+            opacity: 1;
+        }
+        
+        @media (max-width: 640px) {
+            .container {
+                padding: 40px 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            h2 {
+                font-size: 20px;
+            }
+            
+            .lang-switch {
+                top: 20px;
+                right: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-switch">
+        <button class="lang-btn active" onclick="switchLang('zh')">中文</button>
+        <button class="lang-btn" onclick="switchLang('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <img src="logo.png" alt="TyloAI Logo" class="logo">
+        
+        <!-- Chinese Version -->
+        <div class="content active" id="zh">
+            <h1>本网站不提供对中国大陆地区的访问服务</h1>
+            
+            <div class="divider"></div>
+            
+            <h2>关于 TyloAI 服务范围声明</h2>
+            
+            <p class="highlight">尊敬的用户，感谢您对 TyloAI（原 JorkAI）的关注与支持。</p>
+            
+            <p>基于相关法律法规及运营策略考虑，TyloAI 人工智能服务平台目前暂不向中国大陆地区提供访问及服务支持。我们深知这可能给部分用户带来不便，对此深表歉意。</p>
+            
+            <h3>全球化AI服务愿景</h3>
+            <p>TyloAI 致力于打造领先的人工智能解决方案，为全球用户提供创新、高效、安全的AI服务体验。我们的技术团队持续探索前沿科技，推动人工智能在各领域的应用与发展。</p>
+            
+            <div class="quote">
+                "人工智能的未来不仅仅是技术的进步，更是人类智慧与创造力的延伸。我们相信，通过负责任的创新，AI将成为推动社会进步的重要力量。"
+            </div>
+            
+            <h3>服务区域说明</h3>
+            <p>当前，TyloAI 服务覆盖北美、欧洲、亚太（不含中国大陆）等多个地区。我们正在积极评估全球市场机会，致力于在合规的前提下扩展服务范围。</p>
+            
+            <h3>未来展望</h3>
+            <p>随着技术发展和政策环境的变化，我们期待未来能够为更多地区的用户提供优质的AI服务。TyloAI 将继续秉承"创新、开放、负责"的理念，推动人工智能技术的普惠发展。</p>
+            
+            <p class="brand-note">
+                <strong>TyloAI</strong>（原 JorkAI）—— 您值得信赖的智能伙伴<br>
+                探索无限可能，共创智能未来
+            </p>
+        </div>
+        
+        <!-- English Version -->
+        <div class="content" id="en">
+            <h1>This Website Does Not Provide Access Services to Mainland China</h1>
+            
+            <div class="divider"></div>
+            
+            <h2>About TyloAI Service Coverage Statement</h2>
+            
+            <p class="highlight">Dear Users, thank you for your interest and support in TyloAI (formerly JorkAI).</p>
+            
+            <p>Due to relevant laws, regulations, and operational strategy considerations, the TyloAI artificial intelligence service platform currently does not provide access and service support to mainland China. We understand this may cause inconvenience to some users, and we sincerely apologize for this.</p>
+            
+            <h3>🌍 Global AI Service Vision</h3>
+            <p>TyloAI is committed to building leading artificial intelligence solutions, providing innovative, efficient, and secure AI service experiences for global users. Our technical team continuously explores cutting-edge technologies, driving the application and development of artificial intelligence across various fields.</p>
+            
+            <div class="quote">
+                "The future of artificial intelligence is not just about technological advancement, but an extension of human wisdom and creativity. We believe that through responsible innovation, AI will become an important force in driving social progress."
+            </div>
+            
+            <h3>📋 Service Region Description</h3>
+            <p>Currently, TyloAI services cover multiple regions including North America, Europe, and Asia-Pacific (excluding mainland China). We are actively evaluating global market opportunities and are committed to expanding our service range under compliance.</p>
+            
+            <h3>🚀 Future Outlook</h3>
+            <p>With technological development and changes in the policy environment, we look forward to providing quality AI services to users in more regions in the future. TyloAI will continue to uphold the philosophy of "Innovation, Openness, and Responsibility" to promote the inclusive development of artificial intelligence technology.</p>
+            
+            <p class="brand-note">
+                <strong>TyloAI</strong> (formerly JorkAI) — Your Trusted Intelligent Partner<br>
+                Explore Infinite Possibilities, Create an Intelligent Future Together
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        function switchLang(lang) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Hide all content
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Show selected language content
+            document.getElementById(lang).classList.add('active');
+            
+            // Update page language attribute
+            document.documentElement.lang = lang;
+        }
+    </script>
+</body>
+</html>
