@@ -2417,7 +2417,7 @@ setTimeout(() => {
                 models: {
                     'Jork-Epist-4-n': 'gpt-5-nano', // Basic model
                     'Jork-Epist-4': 'grok-3-deepsearch',  // Deep reasoning search model
-                    'Jork-Trax-4': 'deepseek-r1-search',  // Code model
+                    'Jork-Trax-4': 'deepseek-v3',  // Code model
                     'Aria-music': 'suno_music'  // Text-to-music model
                 },
                 sunoUrl: 'https://api.linkapi.org/suno'
@@ -6039,19 +6039,24 @@ let aiIntentSystem;
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            // Ensure initialization after other systems
+            // 确保Supabase客户端正确初始化
+            if (!window.supabaseClient || !window.marketSupabaseClient) {
+                initializeSupabaseClients();
+            }
+            
+            // 确保初始化后其他系统
             setTimeout(() => {
                 aiIntentSystem = new AIIntentSuggestionSystem();
             }, 100);
-            // Initialize plugin manager
+            // 初始化插件管理器
             pluginManager = new PluginManager();
 
-            // Check payment callback
+            // 检查支付回调
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('plugin_payment') === 'success') {
                 localStorage.setItem('pluginAccessRights', 'true');
-                alert('Payment successful! You can now use the plugin marketplace.');
-                // Clear URL parameters
+                alert('支付成功！您现在可以使用插件市场了。');
+                // 清理URL参数
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
