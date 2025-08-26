@@ -455,6 +455,142 @@
             51%, 100% { opacity: 0; }
         }
 
+        /* News Section - Professional Design */
+        .news-section {
+            padding: 6rem 2rem;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .news-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .news-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .news-header h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .news-header p {
+            font-size: 1.125rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .news-card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .news-card:hover {
+            border-color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .news-category {
+            background: #000;
+            color: #fff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .news-date {
+            color: #666;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .news-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.75rem;
+            line-height: 1.3;
+        }
+
+        .news-excerpt {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .news-link {
+            display: inline-flex;
+            align-items: center;
+            color: #000;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .news-link i {
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .news-link:hover i {
+            transform: translateX(3px);
+        }
+
+        .news-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .view-all-news {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-news:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
         /* Feature sections */
         .sections {
             padding: 4rem 2rem;
@@ -640,6 +776,15 @@
                 font-size: 2rem;
             }
 
+            .news-header h2 {
+                font-size: 2rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -791,51 +936,6 @@
 </head>
 
 <body>
-    <!-- 声明弹窗 -->
-    <div id="translationNotice" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease-out;">
-        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-            <h3 style="margin-bottom: 1rem; color: #000; font-size: 1.25rem;">服务调整说明</h3>
-            <p style="margin-bottom: 1.5rem; line-height: 1.6;">
-                近期本服务刚从中国地区调整为海外服务，部分内容翻译尚未完善，使用时建议开启翻译工具。<br><br>
-                Recently, this service has just been adjusted from China region to overseas service. Some content translations are not yet complete. It is recommended to enable translation tools when using.
-            </p>
-            <button id="closeNotice" style="background: #000; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 25px; cursor: pointer; font-weight: 500; transition: all 0.3s ease; width: 100%;">
-                我已知晓 / I understand
-            </button>
-        </div>
-    </div>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const notice = document.getElementById('translationNotice');
-            const closeBtn = document.getElementById('closeNotice');
-            
-            // 检查是否已关闭过弹窗（7天内不再显示）
-            const lastClosed = localStorage.getItem('translationNoticeClosed');
-            if (lastClosed && (new Date().getTime() - lastClosed < 7 * 24 * 60 * 60 * 1000)) {
-                notice.style.display = 'none';
-            }
-            
-            // 关闭按钮点击事件
-            closeBtn.addEventListener('click', function() {
-                // 添加入场动画
-                notice.style.opacity = '0';
-                // 等待动画结束后隐藏
-                setTimeout(() => {
-                    notice.style.display = 'none';
-                }, 300);
-                // 记录关闭时间
-                localStorage.setItem('translationNoticeClosed', new Date().getTime().toString());
-            });
-        });
-    </script>
-
     <!-- Navigation bar -->
     <nav class="navbar">
         <div class="nav-container">
@@ -869,490 +969,96 @@
         </div>
     </section>
 
-    <!-- Video Preview Section -->
-    <section class="video-preview-section">
-        <div class="video-container">
-            <!-- 背景装饰元素 -->
-            <div class="video-bg-decoration">
-                <div class="decoration-circle circle-1"></div>
-                <div class="decoration-circle circle-2"></div>
-                <div class="decoration-line line-1"></div>
-                <div class="decoration-line line-2"></div>
+    <!-- Latest News Section -->
+    <section class="news-section" id="news">
+        <div class="news-container">
+            <div class="news-header">
+                <h2>Latest Updates</h2>
+                <p>Stay informed about TyloAI's latest developments and announcements</p>
             </div>
             
-            <!-- 视频标题区域 -->
-            <div class="video-header">
-                <span class="video-badge">NEW RELEASE</span>
-                <h2 class="video-title">Experience the Future of AI</h2>
-                <p class="video-subtitle">Watch how TyloAI transforms your workflow with intelligent automation</p>
-            </div>
-            
-            <!-- 视频播放器容器 -->
-            <div class="video-player-wrapper">
-                <!-- 左侧装饰文字 -->
-                <div class="video-side-text left">
-                    <div class="vertical-text">INNOVATION</div>
-                </div>
-                
-                <!-- 中间视频播放器 -->
-                <div class="video-player-container">
-                    <!-- 视频边框装饰 -->
-                    <div class="video-frame">
-                        <div class="frame-corner top-left"></div>
-                        <div class="frame-corner top-right"></div>
-                        <div class="frame-corner bottom-left"></div>
-                        <div class="frame-corner bottom-right"></div>
+            <div class="news-grid">
+                <article class="news-card" onclick="window.location.href='news.html?id=1'">
+                    <div class="news-card-header">
+                        <span class="news-category">Release</span>
+                        <span class="news-date">Aug 7, 2025</span>
                     </div>
-                    
-                    <!-- 视频播放器 -->
-                    <video class="preview-video" id="previewVideo" poster="" controls>
-                        <source src="预告.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    
-                    <!-- 自定义播放按钮（覆盖层） -->
-                    <div class="video-overlay" id="videoOverlay">
-                        <div class="play-button-custom">
-                            <svg width="80" height="80" viewBox="0 0 80 80">
-                                <circle cx="40" cy="40" r="39" stroke="#000" stroke-width="2" fill="rgba(255,255,255,0.95)"/>
-                                <polygon points="32,25 32,55 52,40" fill="#000"/>
-                            </svg>
-                        </div>
-                        <div class="overlay-text">WATCH PREVIEW</div>
+                    <h3>Agent Intelligence System Launch</h3>
+                    <p class="news-excerpt">Revolutionary Agent capabilities that transform AI from a response tool into a proactive thinking assistant capable of complex task execution.</p>
+                    <a href="news.html?id=1" class="news-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
+
+                <article class="news-card" onclick="window.location.href='news.html?id=2'">
+                    <div class="news-card-header">
+                        <span class="news-category">Innovation</span>
+                        <span class="news-date">Aug 7, 2025</span>
                     </div>
-                </div>
-                
-                <!-- 右侧装饰文字 -->
-                <div class="video-side-text right">
-                    <div class="vertical-text">EXCELLENCE</div>
-                </div>
+                    <h3>Image-to-Music AI Model</h3>
+                    <p class="news-excerpt">Industry-leading AI model that understands visual emotions and compositions to generate matching musical pieces automatically.</p>
+                    <a href="news.html?id=2" class="news-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
+
+                <article class="news-card" onclick="window.location.href='news.html?id=3'">
+                    <div class="news-card-header">
+                        <span class="news-category">Community</span>
+                        <span class="news-date">Now Live</span>
+                    </div>
+                    <h3>Discord Beta Program</h3>
+                    <p class="news-excerpt">Join our US Discord beta community and explore AI's unlimited possibilities. Limited offer: First 100 users get lifetime Pro status.</p>
+                    <a href="news.html?id=3" class="news-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
+
+                <article class="news-card" onclick="window.location.href='news.html?id=4'">
+                    <div class="news-card-header">
+                        <span class="news-category">Technology</span>
+                        <span class="news-date">Aug 20, 2025</span>
+                    </div>
+                    <h3>Multi-Model API Integration</h3>
+                    <p class="news-excerpt">TyloAI now integrates APIs from leading AI models, providing users with diverse choices and powerful capability combinations.</p>
+                    <a href="news.html?id=4" class="news-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
+
+                <article class="news-card" onclick="window.location.href='news.html?id=5'">
+                    <div class="news-card-header">
+                        <span class="news-category">Safety</span>
+                        <span class="news-date">Aug 7, 2025</span>
+                    </div>
+                    <h3>From Hard Refusal to Safe Completion</h3>
+                    <p class="news-excerpt">Major breakthrough in AI safety: upgrading from traditional "hard refusal" to "safe completion" mode through advanced safety training.</p>
+                    <a href="news.html?id=5" class="news-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
+
+                <article class="news-card" onclick="window.location.href='news.html?id=6'">
+                    <div class="news-card-header">
+                        <span class="news-category">Vision</span>
+                        <span class="news-date">Jul 21, 2025</span>
+                    </div>
+                    <h3>AI as Universal Empowerment</h3>
+                    <p class="news-excerpt">TyloAI's mission to make artificial intelligence a universal tool for empowering everyone, not just a privilege for the few.</p>
+                    <a href="news.html?id=6" class="news-link">
+                        Read More <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>
             </div>
-            
-            <!-- 视频信息栏 -->
-            <div class="video-info-bar">
-                <div class="info-item">
-                    <i class="fas fa-clock"></i>
-                    <span>2:30 min</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-video"></i>
-                    <span>4K Quality</span>
-                </div>
-                <div class="info-item">
-                    <i class="fas fa-language"></i>
-                    <span>Multi-language</span>
-                </div>
-            </div>
-            
-            <!-- 底部引导文字 -->
-            <div class="video-cta">
-                <p>Discover how leading companies are leveraging TyloAI to accelerate innovation</p>
-                <div class="scroll-indicator">
-                    <i class="fas fa-chevron-down"></i>
-                </div>
+
+            <div class="news-cta">
+                <a href="news.html" class="view-all-news">
+                    <span>View All News</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
         </div>
     </section>
-
-    <!-- Video Preview Section CSS -->
-    <style>
-        /* Video Preview Section Styles */
-        .video-preview-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #fff;
-            position: relative;
-            overflow: hidden;
-            padding: 4rem 2rem;
-        }
-
-        .video-container {
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* 背景装饰元素 */
-        .video-bg-decoration {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .decoration-circle {
-            position: absolute;
-            border: 1px solid rgba(0,0,0,0.05);
-            border-radius: 50%;
-        }
-
-        .circle-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -200px;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .circle-2 {
-            width: 400px;
-            height: 400px;
-            bottom: -100px;
-            left: -100px;
-            animation: float 15s ease-in-out infinite reverse;
-        }
-
-        .decoration-line {
-            position: absolute;
-            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.03), transparent);
-            height: 1px;
-            width: 100%;
-        }
-
-        .line-1 {
-            top: 20%;
-            animation: slideRight 10s linear infinite;
-        }
-
-        .line-2 {
-            bottom: 30%;
-            animation: slideLeft 8s linear infinite;
-        }
-
-        @keyframes slideRight {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        @keyframes slideLeft {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* 视频标题区域 */
-        .video-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: fadeInDown 1s ease-out;
-        }
-
-        .video-badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: #000;
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-bottom: 1rem;
-            position: relative;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .video-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .video-subtitle {
-            font-size: 1.25rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* 视频播放器容器 */
-        .video-player-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3rem;
-            margin: 4rem 0;
-            position: relative;
-        }
-
-        /* 侧边装饰文字 */
-        .video-side-text {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            font-size: 5rem;
-            font-weight: 900;
-            color: rgba(0,0,0,0.03);
-            letter-spacing: 0.5rem;
-            user-select: none;
-            animation: fadeIn 2s ease-out;
-        }
-
-        .video-side-text.left {
-            animation-delay: 0.5s;
-        }
-
-        .video-side-text.right {
-            animation-delay: 0.7s;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* 视频播放器主容器 */
-        .video-player-container {
-            position: relative;
-            width: 100%;
-            max-width: 900px;
-            aspect-ratio: 16 / 9;
-            background: #f8f9fa;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
-            animation: fadeInUp 1s ease-out;
-        }
-
-        /* 视频边框装饰 */
-        .video-frame {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 3;
-        }
-
-        .frame-corner {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 3px solid #000;
-        }
-
-        .frame-corner.top-left {
-            top: 20px;
-            left: 20px;
-            border-right: none;
-            border-bottom: none;
-        }
-
-        .frame-corner.top-right {
-            top: 20px;
-            right: 20px;
-            border-left: none;
-            border-bottom: none;
-        }
-
-        .frame-corner.bottom-left {
-            bottom: 20px;
-            left: 20px;
-            border-right: none;
-            border-top: none;
-        }
-
-        .frame-corner.bottom-right {
-            bottom: 20px;
-            right: 20px;
-            border-left: none;
-            border-top: none;
-        }
-
-        /* 视频元素 */
-        .preview-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            background: #000;
-        }
-
-        /* 自定义播放按钮覆盖层 */
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.9);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 2;
-        }
-
-        .video-overlay:hover {
-            background: rgba(255,255,255,0.95);
-        }
-
-        .video-overlay:hover .play-button-custom {
-            transform: scale(1.1);
-        }
-
-        .video-overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .play-button-custom {
-            transition: transform 0.3s ease;
-            animation: pulse 2s ease-in-out infinite;
-        }
-
-        .overlay-text {
-            margin-top: 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #000;
-        }
-
-        /* 视频信息栏 */
-        .video-info-bar {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin: 3rem 0;
-            animation: fadeInUp 1.2s ease-out;
-        }
-
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .info-item i {
-            color: #000;
-            font-size: 1.1rem;
-        }
-
-        /* 底部引导 */
-        .video-cta {
-            text-align: center;
-            margin-top: 3rem;
-            animation: fadeInUp 1.4s ease-out;
-        }
-
-        .video-cta p {
-            font-size: 1.125rem;
-            color: #666;
-            margin-bottom: 2rem;
-        }
-
-        .scroll-indicator {
-            display: inline-block;
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        .scroll-indicator i {
-            font-size: 1.5rem;
-            color: #000;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
-        }
-
-        /* 响应式设计 */
-        @media (max-width: 1200px) {
-            .video-side-text {
-                font-size: 3rem;
-            }
-        }
-
-        @media (max-width: 968px) {
-            .video-side-text {
-                display: none;
-            }
-            
-            .video-player-container {
-                max-width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .video-title {
-                font-size: 2rem;
-            }
-            
-            .video-subtitle {
-                font-size: 1rem;
-            }
-            
-            .frame-corner {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .frame-corner.top-left,
-            .frame-corner.top-right {
-                top: 10px;
-            }
-            
-            .frame-corner.bottom-left,
-            .frame-corner.bottom-right {
-                bottom: 10px;
-            }
-            
-            .frame-corner.top-left,
-            .frame-corner.bottom-left {
-                left: 10px;
-            }
-            
-            .frame-corner.top-right,
-            .frame-corner.bottom-right {
-                right: 10px;
-            }
-            
-            .video-info-bar {
-                gap: 1.5rem;
-            }
-            
-            .info-item {
-                font-size: 0.85rem;
-            }
-        }
-    </style>
-
-    <!-- Video Preview Section JavaScript -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const video = document.getElementById('previewVideo');
-            const overlay = document.getElementById('videoOverlay');
-            
-            // 点击覆盖层播放视频
-            overlay.addEventListener('click', function() {
-                overlay.classList.add('hidden');
-                video.play();
-            });
-            
-            // 视频暂停时显示覆盖层
-            video.addEventListener('pause', function() {
-                if (video.currentTime < video.duration) {
-                    overlay.classList.remove('hidden');
-                }
-            });
-            
-            // 视频结束时显示覆盖层
-            video.addEventListener('ended', function() {
-                overlay.classList.remove('hidden');
-                video.currentTime = 0;
-            });
-        });
-    </script>
     
     <!-- Feature highlights -->
     <section class="sections" id="features">
@@ -1408,360 +1114,33 @@
         </div>
     </section>
 
-
-    <!-- Customer showcase -->
-    <section class="customer-showcase">
-        <div class="showcase-container">
-            <div class="showcase-header">
-                <h2>Trusted by the World's Most Innovative Companies</h2>
-                <p>TyloAI supports these ecosystem integrations to streamline your workflow</p>
+    <!-- Statistics -->
+    <section class="stats" id="stats">
+        <div class="section">
+            <div class="section-header">
+                <h2>Trusted by Millions</h2>
+                <p>Join the growing community of TyloAI users worldwide</p>
             </div>
-            
-            <div class="logo-slider-wrapper">
-                <div class="logo-slider">
-                    <!-- First set of logos -->
-                    <div class="logo-track">
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
-                        </div>
-                    </div>
-                    
-                    <!-- Second set of logos (copy for seamless loop) -->
-                    <div class="logo-track">
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" alt="Microsoft">
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
-                        </div>
-                        <div class="logo-item">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
-                        </div>
-                    </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">1M+</div>
+                    <div class="stat-label">Active Users</div>
                 </div>
-            </div>
-            
-            <div class="showcase-stats">
-                <div class="showcase-stat">
-                    <div class="stat-value">50+</div>
-                    <div class="stat-desc">Enterprise Clients</div>
+                <div class="stat-item">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
                 </div>
-                <div class="showcase-stat">
-                    <div class="stat-value">1k+</div>
-                    <div class="stat-desc">Active Users</div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Countries</div>
                 </div>
-                <div class="showcase-stat">
-                    <div class="stat-value">99.9%</div>
-                    <div class="stat-desc">Service Availability</div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- CSS styles -->
-    <style>
-    /* Customer showcase section */
-    .customer-showcase {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-        position: relative;
-        overflow: hidden;
-        padding: 4rem 2rem;
-    }
-
-    .customer-showcase::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: radial-gradient(circle at 30% 50%, rgba(0,0,0,0.02) 0%, transparent 70%),
-                    radial-gradient(circle at 70% 50%, rgba(0,0,0,0.02) 0%, transparent 70%);
-        pointer-events: none;
-    }
-
-    .showcase-container {
-        width: 100%;
-        max-width: 1400px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-    }
-
-    .showcase-header {
-        text-align: center;
-        margin-bottom: 4rem;
-        animation: fadeInDown 1s ease-out;
-    }
-
-    .showcase-header h2 {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #000;
-        margin-bottom: 1rem;
-        line-height: 1.2;
-    }
-
-    .showcase-header p {
-        font-size: 1.25rem;
-        color: #666;
-        max-width: 600px;
-        margin: 0 auto;
-        line-height: 1.6;
-    }
-
-    /* Logo slider container */
-    .logo-slider-wrapper {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        margin: 4rem 0;
-        padding: 2rem 0;
-    }
-
-    .logo-slider-wrapper::before,
-    .logo-slider-wrapper::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100px;
-        z-index: 2;
-        pointer-events: none;
-    }
-
-    .logo-slider-wrapper::before {
-        left: 0;
-        background: linear-gradient(to right, #fafafa 0%, transparent 100%);
-    }
-
-    .logo-slider-wrapper::after {
-        right: 0;
-        background: linear-gradient(to left, #fafafa 0%, transparent 100%);
-    }
-
-    .logo-slider {
-        display: flex;
-        animation: slideLeft 30s linear infinite;
-    }
-
-    .logo-track {
-        display: flex;
-        align-items: center;
-        gap: 4rem;
-        padding: 0 2rem;
-    }
-
-    .logo-item {
-        flex-shrink: 0;
-        width: 180px;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #fff;
-        border-radius: 16px;
-        padding: 1.5rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-    }
-
-    .logo-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-    }
-
-    .logo-item img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        filter: grayscale(100%);
-        opacity: 0.7;
-        transition: all 0.3s ease;
-    }
-
-    .logo-item:hover img {
-        filter: grayscale(0%);
-        opacity: 1;
-    }
-
-    /* Logo placeholder (when image loading fails) */
-    .logo-placeholder {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f0f0f0;
-        border-radius: 8px;
-        color: #666;
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-
-    /* Sliding animation */
-    @keyframes slideLeft {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    /* Showcase statistics */
-    .showcase-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 3rem;
-        max-width: 800px;
-        margin: 4rem auto 0;
-        text-align: center;
-    }
-
-    .showcase-stat {
-        animation: fadeInUp 1s ease-out;
-        animation-fill-mode: both;
-    }
-
-    .showcase-stat:nth-child(1) { animation-delay: 0.2s; }
-    .showcase-stat:nth-child(2) { animation-delay: 0.4s; }
-    .showcase-stat:nth-child(3) { animation-delay: 0.6s; }
-
-    .stat-value {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #000;
-        margin-bottom: 0.5rem;
-    }
-
-    .stat-desc {
-        font-size: 1.125rem;
-        color: #666;
-        font-weight: 500;
-    }
-
-    /* Responsive design */
-    @media (max-width: 1024px) {
-        .showcase-header h2 {
-            font-size: 2.5rem;
-        }
-        
-        .logo-track {
-            gap: 3rem;
-        }
-        
-        .logo-item {
-            width: 150px;
-            height: 70px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .customer-showcase {
-            min-height: auto;
-            padding: 4rem 1rem;
-        }
-        
-        .showcase-header h2 {
-            font-size: 2rem;
-        }
-        
-        .showcase-header p {
-            font-size: 1.1rem;
-        }
-        
-        .logo-item {
-            width: 120px;
-            height: 60px;
-            padding: 1rem;
-        }
-        
-        .logo-track {
-            gap: 2rem;
-        }
-        
-        .showcase-stats {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .stat-value {
-            font-size: 2.5rem;
-        }
-        
-        /* Slow down sliding on mobile */
-        .logo-slider {
-            animation-duration: 40s;
-        }
-    }
-
-    /* Pause animation (when user hovers) */
-    .logo-slider:hover {
-        animation-play-state: paused;
-    }
-
-    /* Dark mode support (optional) */
-    @media (prefers-color-scheme: dark) {
-        .customer-showcase {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-        }
-        
-        .showcase-header h2 {
-            color: #fff;
-        }
-        
-        .showcase-header p {
-            color: #aaa;
-        }
-        
-        .logo-item {
-            background: #2a2a2a;
-            border: 1px solid #333;
-        }
-        
-        .logo-item img {
-            filter: grayscale(100%) invert(1);
-        }
-        
-        .logo-item:hover img {
-            filter: grayscale(0%) invert(0);
-        }
-        
-        .stat-value {
-            color: #fff;
-        }
-        
-        .stat-desc {
-            color: #aaa;
-        }
-        
-        .logo-slider-wrapper::before {
-            background: linear-gradient(to right, #1a1a1a 0%, transparent 100%);
-        }
-        
-        .logo-slider-wrapper::after {
-            background: linear-gradient(to left, #1a1a1a 0%, transparent 100%);
-        }
-    }
-    </style>
 
     <!-- Call-to-action section -->
     <section class="cta-section">
@@ -1815,30 +1194,20 @@
                 <div class="footer-section">
                     <h3>Privacy & Terms</h3>
                     <ul class="footer-links">
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Service</a></li>
-                        <li><a href="cookie-policy.html">Cookie Policy</a></li>
-                        <li><a href="memory-guide.html">Memory Guide</a></li>
+                        <li><a href="privacypolicy.html">Privacy Policy</a></li>
+                        <li><a href="privacypolicy.html">Terms of Service</a></li>
+                        <li><a href="privacypolicy.html">Cookie Policy</a></li>
+                        <li><a href="privacypolicy.html">Memory Guide</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
                     <h3>Contact Us</h3>
                     <ul class="footer-links">
                         <li><a href="mailto:info@tyloai.com">info@tyloai.com</a></li>
-                        <li><a href="support.html">Online Support</a></li>
+                        <li><a href="#">Online Support</a></li>
                         <li><a href="#">Help Center</a></li>
                         <li><a href="#">Developer Community</a></li>
                     </ul>
-                </div>
-            </div>
-            <div class="footer-section">
-                <h3>Disclaimer</h3>
-                <div style="color: #ccc; line-height: 1.6;">
-                    <p>本网站不提供对中国大陆地区的访问服务。</p>
-                    <p>This website does not provide access services to mainland China.</p>
-                    <br>
-                    <p>近期本服务刚从中国地区调整为海外服务，部分内容翻译尚未完善，使用时建议开启翻译工具。</p>
-                    <p>Recently, this service has just been adjusted from China region to overseas service. Some content translations are not yet complete. It is recommended to enable translation tools when using.</p>
                 </div>
             </div>
             <div class="footer-bottom">

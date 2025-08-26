@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JorkAI - 登录</title>
+    <title>TyloAI - Login</title>
     <link rel="icon" href="logo.png" type="image/png">
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <style>
@@ -380,18 +380,18 @@
         <div class="left-column">
             <a href="https://jorkai.cn" class="logo">
                 <img src="logo.png" alt="JorkAI" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <span style="display:none;">✦ JorkAI</span>
+                <span style="display:none;">✦ TyloAI</span>
             </a>
             
-            <h1>你的想法，被放大了</h1>
-            <p class="subtitle">隐私优先的人工智能，帮助您自信地创造。</p>
+            <h1>Your ideas, Amplified</h1>
+            <p class="subtitle">Privacy-first artificial intelligence that helps you create with confidence.</p>
             
             <div class="login-form">
                 <div id="errorMessage" class="error-message"></div>
                 <div id="successMessage" class="success-message"></div>
                 
                 <div class="login-options">
-                    <!-- Google 登录按钮 -->
+                    <!-- Google Login Button -->
                     <button id="googleLoginBtn" class="google-btn">
                         <svg class="google-icon" width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                             <path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"/>
@@ -399,28 +399,28 @@
                             <path fill="#FBBC05" d="M11.69 28.18C11.25 26.86 11 25.45 11 24s.25-2.86.69-4.18v-5.7H4.34C2.85 17.09 2 20.45 2 24c0 3.55.85 6.91 2.34 9.88l7.35-5.7z"/>
                             <path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"/>
                         </svg>
-                        <span id="googleBtnText">使用 Google 继续</span>
+                        <span id="googleBtnText">Continue with Google</span>
                     </button>
                     
-                    <div class="divider">或</div>
+                    <div class="divider">or</div>
                     
-                    <!-- 邮箱登录表单 -->
+                    <!-- Email Login Form -->
                     <div id="emailForm">
-                        <input type="email" id="emailInput" class="email-input" placeholder="请输入您的电邮" autocomplete="email">
-                        <input type="password" id="passwordInput" class="email-input" placeholder="请输入您的密码" autocomplete="current-password">
+                        <input type="email" id="emailInput" class="email-input" placeholder="Enter your email address" autocomplete="email">
+                        <input type="password" id="passwordInput" class="email-input" placeholder="Enter your password" autocomplete="current-password">
                         <button id="emailLoginBtn" class="email-btn">
-                            <span id="emailBtnText">登录 / 注册</span>
+                            <span id="emailBtnText">Sign In / Sign Up</span>
                         </button>
                     </div>
                     
-                    <!-- 模式切换按钮 -->
+                    <!-- Mode Toggle Button -->
                     <button id="toggleModeBtn" class="toggle-mode-btn hidden">
-                        <span id="toggleModeText">没有账号？点击注册</span>
+                        <span id="toggleModeText">Don't have an account? Click to register</span>
                     </button>
                 </div>
                 
                 <p class="privacy-notice">
-                    继续即表示您同意 JorkAI 的<a href="PrivacyPolicy.html" class="privacy-link">隐私政策</a>。
+                    By continuing, you agree to TyloAI's <a href="terms.html" class="privacy-link">Privacy Policy</a>.
                 </p>
             </div>
         </div>
@@ -458,6 +458,19 @@
         
         let isLoginMode = true;
         
+        // Get redirect URL - fixes localhost callback issue
+        function getRedirectURL() {
+            const currentOrigin = window.location.origin;
+            
+            // For localhost development, use localhost callback
+            if (currentOrigin.includes('localhost') || currentOrigin.includes('127.0.0.1')) {
+                return `${currentOrigin}/chat.html`;
+            }
+            
+            // For production, use the production domain
+            return `${currentOrigin}/chat.html`;
+        }
+        
         // Show error message
         function showError(message) {
             errorMessage.textContent = message;
@@ -483,22 +496,25 @@
             const textElement = button.querySelector('span');
             if (isLoading) {
                 button.disabled = true;
-                textElement.innerHTML = '<div class="spinner"></div>处理中...';
+                textElement.innerHTML = '<div class="spinner"></div>Processing...';
             } else {
                 button.disabled = false;
                 textElement.textContent = originalText;
             }
         }
         
-        // Google Login
+        // Google Login - Fixed callback issue
         googleLoginBtn.addEventListener('click', async () => {
-            setLoading(googleLoginBtn, true, '使用 Google 继续');
+            setLoading(googleLoginBtn, true, 'Continue with Google');
             
             try {
+                const redirectURL = getRedirectURL();
+                console.log('Redirect URL:', redirectURL); // Debug log
+                
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        redirectTo: window.location.origin + '/chat.html',
+                        redirectTo: redirectURL,
                         queryParams: {
                             access_type: 'offline',
                             prompt: 'consent',
@@ -509,12 +525,12 @@
                 if (error) throw error;
                 
                 // Google will redirect automatically
-                showSuccess('正在跳转到 Google 登录...');
+                showSuccess('Redirecting to Google login...');
                 
             } catch (error) {
                 console.error('Google login error:', error);
-                showError('Google 登录失败：' + (error.message || '请稍后重试'));
-                setLoading(googleLoginBtn, false, '使用 Google 继续');
+                showError('Google login failed: ' + (error.message || 'Please try again'));
+                setLoading(googleLoginBtn, false, 'Continue with Google');
             }
         });
         
@@ -524,39 +540,39 @@
             const password = passwordInput.value.trim();
             
             if (!email) {
-                showError('请输入邮箱地址');
+                showError('Please enter your email address');
                 return;
             }
             
             if (!password) {
-                showError('请输入密码');
+                showError('Please enter your password');
                 return;
             }
             
             if (password.length < 6) {
-                showError('密码至少需要6个字符');
+                showError('Password must be at least 6 characters');
                 return;
             }
             
             setLoading(emailLoginBtn, true, emailBtnText.textContent);
             
             try {
-                // 首先尝试登录
+                // First try to sign in
                 const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
                 
                 if (signInError) {
-                    // 如果登录失败，检查是否是因为用户不存在
+                    // If login fails, check if it's because user doesn't exist
                     if (signInError.message.includes('Invalid login credentials')) {
-                        // 尝试注册新用户
+                        // Try to register new user
                         const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
                             email: email,
                             password: password,
                             options: {
                                 data: {
-                                    nickname: email.split('@')[0], // 使用邮箱前缀作为默认昵称
+                                    nickname: email.split('@')[0], // Use email prefix as default nickname
                                 }
                             }
                         });
@@ -565,49 +581,49 @@
                             throw signUpError;
                         }
                         
-                        // 注册成功
+                        // Registration successful
                         if (signUpData.user && signUpData.user.identities && signUpData.user.identities.length === 0) {
-                            showError('该邮箱已被注册，请直接登录');
+                            showError('This email is already registered. Please sign in directly.');
                         } else {
-                            showSuccess('注册成功！正在自动登录...');
+                            showSuccess('Registration successful! Signing in automatically...');
                             
-                            // 创建用户基础数据
+                            // Create user basic data
                             if (signUpData.user) {
                                 await initializeUserData(signUpData.user);
                             }
                             
-                            // 重定向到聊天页面
+                            // Redirect to chat page
                             setTimeout(() => {
-                                window.location.href = 'chat.html';  // 相对路径
+                                window.location.href = 'chat.html';
                             }, 1500);
                         }
                     } else {
                         throw signInError;
                     }
                 } else {
-                    // 登录成功
-                    showSuccess('登录成功！正在跳转...');
+                    // Sign in successful
+                    showSuccess('Sign in successful! Redirecting...');
                     
-                    // 确保用户数据存在
+                    // Ensure user data exists
                     if (signInData.user) {
                         await ensureUserData(signInData.user);
                     }
                     
                     setTimeout(() => {
-                        window.location.href = 'chat.html';  // 相对路径
+                        window.location.href = 'chat.html';
                     }, 1000);
                 }
             } catch (error) {
                 console.error('Authentication error:', error);
-                let errorMsg = '操作失败，请重试';
+                let errorMsg = 'Operation failed, please try again';
                 
                 if (error.message) {
                     if (error.message.includes('Email not confirmed')) {
-                        errorMsg = '请先验证您的邮箱';
+                        errorMsg = 'Please verify your email first';
                     } else if (error.message.includes('User already registered')) {
-                        errorMsg = '该邮箱已被注册';
+                        errorMsg = 'This email is already registered';
                     } else if (error.message.includes('Password')) {
-                        errorMsg = '密码错误';
+                        errorMsg = 'Incorrect password';
                     } else {
                         errorMsg = error.message;
                     }
@@ -615,28 +631,28 @@
                 
                 showError(errorMsg);
             } finally {
-                setLoading(emailLoginBtn, false, '登录 / 注册');
+                setLoading(emailLoginBtn, false, 'Sign In / Sign Up');
             }
         });
         
         // Initialize user data for new users
         async function initializeUserData(user) {
             try {
-                // 创建用户记录
+                // Create user record
                 const { error: userError } = await supabase
                     .from('users')
                     .insert({
                         id: user.id,
                         email: user.email,
                         nickname: user.user_metadata.nickname || user.email.split('@')[0],
-                        avatar_url: user.user_metadata.avatar_url || 'https://www.jorkai.cn/用户默认头像'
+                        avatar_url: user.user_metadata.avatar_url || 'https://www.jorkai.cn/default-avatar'
                     });
                 
                 if (userError && !userError.message.includes('duplicate')) {
                     console.error('Error creating user:', userError);
                 }
                 
-                // 创建用户统计数据
+                // Create user statistics data
                 const { error: statsError } = await supabase
                     .from('user_stats')
                     .insert({
@@ -658,19 +674,19 @@
         // Ensure user data exists (for existing users)
         async function ensureUserData(user) {
             try {
-                // 检查用户是否存在
+                // Check if user exists
                 const { data: userData, error: userError } = await supabase
                     .from('users')
                     .select('id')
                     .eq('id', user.id)
                     .single();
                 
-                // 如果用户不存在，创建用户数据
+                // If user doesn't exist, create user data
                 if (!userData) {
                     await initializeUserData(user);
                 }
             } catch (error) {
-                // 如果是因为记录不存在的错误，创建用户数据
+                // If error is because record doesn't exist, create user data
                 if (error.message && error.message.includes('No rows')) {
                     await initializeUserData(user);
                 } else {
@@ -696,42 +712,52 @@
         supabase.auth.getSession().then(({ data: { session } }) => {
             if (session) {
                 // User is logged in, redirect to chat
-                showSuccess('您已登录，正在跳转...');
+                showSuccess('You are already logged in, redirecting...');
                 setTimeout(() => {
-                    window.location.href = 'chat.html';  // 相对路径
+                    window.location.href = 'chat.html';
                 }, 1000);
             }
         });
         
-        // Listen for auth state changes
+        // Listen for auth state changes - Fixed callback handling
         supabase.auth.onAuthStateChange((event, session) => {
-            console.log('Auth state changed:', event);
+            console.log('Auth state changed:', event, session);
             if (event === 'SIGNED_IN' && session) {
+                // Ensure user data exists for OAuth logins
+                if (session.user) {
+                    ensureUserData(session.user);
+                }
+                
                 // Ensure we're not already redirecting
                 if (!window.location.href.includes('/chat.html')) {
-                    window.location.href = 'chat.html';  // 相对路径
+                    showSuccess('Login successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = 'chat.html';
+                    }, 1000);
                 }
+            } else if (event === 'SIGNED_OUT') {
+                console.log('User signed out');
             }
         });
         
         // Demo conversation animation
         const conversations = [
             {
-                user: "帮我分析这份销售数据并生成报告",
-                ai: "我来帮您分析销售数据。根据数据显示，本季度销售额同比增长23%...",
+                user: "Help me analyze this sales data and generate a report",
+                ai: "I'll help you analyze the sales data. Based on the data, sales revenue increased 23% compared to last quarter...",
                 hasImage: true,
-                imageName: "📊 销售分析报告"
+                imageName: "📊 Sales Analysis Report"
             },
             {
-                user: "写一个响应式的个人作品集网站",
-                ai: "我为您创建了一个现代化的响应式作品集网站，包含了暗色模式切换功能：",
+                user: "Create a responsive personal portfolio website",
+                ai: "I've created a modern responsive portfolio website with dark mode toggle functionality:",
                 hasCode: true,
                 code: `<!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人作品集</title>
+    <title>Personal Portfolio</title>
     <style>
         :root {
             --primary: #7856ff;
@@ -762,17 +788,17 @@
 </head>
 <body>
     <section class="hero">
-        <h1>您的名字</h1>
-        <p>全栈开发者 | UI/UX 设计师</p>
+        <h1>Your Name</h1>
+        <p>Full Stack Developer | UI/UX Designer</p>
     </section>
 </body>
 </html>`
             },
             {
-                user: "为我的咖啡店设计一个品牌标识",
-                ai: "我为您的咖啡店设计了一个温暖而现代的品牌标识：",
+                user: "Design a brand identity for my coffee shop",
+                ai: "I've designed a warm and modern brand identity for your coffee shop:",
                 hasImage: true,
-                imageName: "☕ Morning Brew 品牌设计"
+                imageName: "☕ Morning Brew Brand Design"
             }
         ];
 

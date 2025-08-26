@@ -4352,7 +4352,7 @@ class ChatHistoryManager {
         
         const disclaimer = document.createElement('div');
         disclaimer.className = 'text-sm text-gray-500';
-        disclaimer.textContent = isImage ? 'Aria可能会犯错，请核实媒体内容。' : 'JorkAI可能会犯错，请核实回复内容。';
+        disclaimer.textContent = isImage ? 'Aria可能会犯错，请核实媒体内容。' : 'TyloAI可能会犯错，请核实回复内容。';
         
         const controlsContainer = document.createElement('div');
         controlsContainer.className = 'flex items-center space-x-2';
@@ -4595,7 +4595,7 @@ class GuideSystem {
         this.steps = [
             {
                 type: 'welcome',
-                title: 'Welcome to JorkAI!',
+                title: 'Welcome to TyloAI!',
                 content: 'I am your AI assistant, I can help you with writing, programming, learning, creating images, and more. Let me show you how to use it quickly!',
                 target: null
             },
@@ -7881,7 +7881,7 @@ function appendMusicGenerationProgress() {
             
             // 更新计划状态显示
             const isPro = membershipSystem.checkMembership();
-            document.getElementById('userPlan').textContent = isPro ? 'Pro计划' : '免费计划';
+            document.getElementById('userPlan').textContent = isPro ? 'Pro Plan' : 'Free Plan';
             
             // 设置当前语言选中状态
             const currentLang = 'zh'; // 当前是中文版

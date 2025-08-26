@@ -1,0 +1,2499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI News</title>
+    <meta name="description" content="Latest news and updates from TyloAI">
+    
+    <!-- External resources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --color-text: #111111;
+            --color-text-light: #555555;
+            --color-text-lighter: #888888;
+            --color-border: #e0e0e0;
+            --color-background: #ffffff;
+            --color-background-alt: #f8fafc;
+            --color-accent: #2563eb;
+            --color-accent-light: #3b82f6;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --spacing-2xl: 2.5rem;
+            --max-width: 1200px;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--color-text);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: var(--spacing-lg) 0;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+            50% { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); }
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            animation: containerFadeIn 1s ease-out;
+        }
+
+        @keyframes containerFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-lg);
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo::before {
+            content: '🚀';
+            font-size: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-weight: 500;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.3s ease;
+        }
+
+        .nav-link:hover::before,
+        .nav-link.active::before {
+            left: 0;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-lg);
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: var(--spacing-xl) 0 var(--spacing-lg);
+            font-weight: 700;
+            position: relative;
+            padding-left: var(--spacing-lg);
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: var(--gradient-accent);
+            border-radius: 2px;
+            animation: pulseBar 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseBar {
+            0%, 100% { height: 60%; }
+            50% { height: 80%; }
+        }
+
+        h3 {
+            font-size: 1.35rem;
+            margin: var(--spacing-lg) 0 var(--spacing-md);
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        p {
+            margin-bottom: var(--spacing-lg);
+            color: var(--color-text-light);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Enhanced Music Demo Section */
+        .music-demo {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-2xl);
+            margin: var(--spacing-xl) 0;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+            animation: musicDemoFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes musicDemoFloat {
+            0%, 100% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-10px) scale(1.02); }
+        }
+
+        .music-demo::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .music-demo h3 {
+            color: white;
+            margin-bottom: var(--spacing-lg);
+            font-size: 1.8rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .music-demo p {
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Custom Audio Player */
+        .custom-audio-player {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .play-btn:hover {
+            background: white;
+            color: var(--color-accent);
+            transform: scale(1.1);
+        }
+
+        .play-btn.playing {
+            animation: playingPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes playingPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+            50% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+        }
+
+        .audio-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .track-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .track-duration {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            margin: var(--spacing-sm) 0;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Visualization bars */
+        .audio-visualizer {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 40px;
+        }
+
+        .vis-bar {
+            width: 3px;
+            background: white;
+            border-radius: 1px;
+            transition: height 0.1s ease;
+            opacity: 0.6;
+        }
+
+        .vis-bar.active {
+            opacity: 1;
+            animation: visualizerBounce 0.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes visualizerBounce {
+            from { height: 5px; }
+            to { height: 25px; }
+        }
+
+        /* News Grid Enhancements */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .news-card {
+            border: 1px solid var(--color-border);
+            border-radius: var(--border-radius-lg);
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .news-card:hover::before {
+            left: 100%;
+        }
+        
+        .news-card-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .news-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .news-card:hover .news-card-image img {
+            transform: scale(1.1);
+        }
+
+        .news-card-content {
+            padding: var(--spacing-lg);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .news-card:hover {
+            border-color: var(--color-accent);
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-8px) scale(1.02);
+        }
+
+        .news-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            font-size: 0.875rem;
+        }
+
+        .news-category {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--gradient-accent);
+            color: white;
+            border-radius: var(--border-radius);
+            font-size: 0.75rem;
+            animation: categoryPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes categoryPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .news-date {
+            color: var(--color-text-lighter);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .news-date::before {
+            content: '📅';
+            font-size: 0.8rem;
+        }
+
+        .news-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text);
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .news-excerpt {
+            color: var(--color-text-light);
+            margin-bottom: var(--spacing-md);
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .news-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--color-accent);
+            font-weight: 600;
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: rgba(37, 99, 235, 0.05);
+            align-self: flex-start;
+        }
+
+        .news-link:hover {
+            background: var(--color-accent);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .news-link i {
+            font-size: 0.875rem;
+            transition: transform 0.3s ease;
+        }
+
+        .news-card:hover .news-link i {
+            transform: translateX(5px);
+        }
+
+        /* Enhanced Charts */
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            margin: var(--spacing-xl) 0;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-accent);
+        }
+
+        /* Statistics Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-secondary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: var(--spacing-xs);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Enhanced Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-xl) 0;
+            background: white;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        th, td {
+            padding: var(--spacing-md) var(--spacing-lg);
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+            transition: background-color 0.3s ease;
+        }
+
+        th {
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.875rem;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Progress indicators in table cells */
+        .progress-cell {
+            position: relative;
+        }
+
+        .progress-cell::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 1.5px;
+            transition: width 1s ease;
+        }
+
+        .progress-cell[data-progress="92"]::after { width: 92%; }
+        .progress-cell[data-progress="88"]::after { width: 88%; }
+        .progress-cell[data-progress="85"]::after { width: 85%; }
+        .progress-cell[data-progress="94"]::after { width: 94%; }
+        .progress-cell[data-progress="96"]::after { width: 96%; }
+
+        /* News Detail Enhancements */
+        .news-detail {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .news-detail.active {
+            display: block;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: var(--color-accent);
+            text-decoration: none;
+            margin-bottom: var(--spacing-lg);
+            font-weight: 600;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .back-link:hover {
+            background: var(--color-accent);
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        .image-container {
+            margin: var(--spacing-xl) 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .comparison-image {
+            width: 100%;
+            border-radius: var(--border-radius-lg);
+            display: block;
+            transition: transform 0.6s ease;
+        }
+
+        .image-container:hover .comparison-image {
+            transform: scale(1.05);
+        }
+
+        .logo-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+            padding: var(--spacing-2xl);
+            background: var(--color-background-alt);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .model-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-weight: 600;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .model-logo:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: white;
+            box-shadow: var(--shadow-md);
+        }
+        
+        .model-logo i {
+            font-size: 2.5rem;
+            background: var(--gradient-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            background: var(--gradient-primary);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: var(--spacing-md);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .id-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--gradient-accent);
+            color: white;
+            border-radius: var(--border-radius-lg);
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .id-badge::before {
+            content: '🏷️';
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--color-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-secondary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--color-accent);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: featureIconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes featureIconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            color: var(--color-text);
+        }
+
+        .feature-description {
+            color: var(--color-text-light);
+            line-height: 1.6;
+        }
+
+        /* Live counter animation */
+        .live-counter {
+            font-weight: 800;
+            color: var(--color-success);
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            animation: counterBlink 1.5s ease-in-out infinite;
+        }
+
+        .live-counter::before {
+            content: '🔴';
+            animation: livePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes counterBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        @keyframes livePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* Navigation enhancements */
+        .news-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-2xl);
+            padding-top: var(--spacing-lg);
+            border-top: 2px solid var(--color-border);
+            background: var(--color-background-alt);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+        }
+
+        .nav-button {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-button:hover {
+            background: var(--color-accent);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: var(--spacing-sm);
+                border-radius: var(--border-radius);
+            }
+
+            header {
+                padding: var(--spacing-lg);
+                border-radius: var(--border-radius) var(--border-radius) 0 0;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+            
+            .news-navigation {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .logo-grid {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+
+            .custom-audio-player {
+                max-width: 100%;
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Loading animations */
+        .loading {
+            opacity: 0;
+            animation: fadeInFromBottom 0.8s ease-out forwards;
+        }
+
+        @keyframes fadeInFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scroll reveal animations */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="logo">TyloAI</a>
+            <nav class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link active">News</a>
+                <a href="#" class="nav-link">Products</a>
+                <a href="#" class="nav-link">About</a>
+            </nav>
+        </header>
+
+        <!-- News List View -->
+        <div id="news-list">
+            <h1>Latest News & Revolutionary Updates</h1>
+            
+            <!-- Company Stats -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Major Releases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-number">97%</div>
+                    <div class="stat-label">User Satisfaction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">47%</div>
+                    <div class="stat-label">Performance Boost</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌟</div>
+                    <div class="stat-number">100K+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+            </div>
+            
+            <!-- News Grid -->
+            <div class="news-grid">
+                <!-- 新闻1: Agent实现 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=1'" style="animation-delay: 0.1s;">
+                    <div class="news-card-image">
+                        <img src="new.jpg" alt="Agent Intelligence System showing autonomous workflow execution">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">AI Breakthrough</span>
+                            <span class="news-date">Aug 25, 2025</span>
+                        </div>
+                        <h3>Next-Gen Agent Intelligence: The AI Revolution Begins</h3>
+                        <p class="news-excerpt">Experience the paradigm shift as our cutting-edge Agent technology transforms passive AI into proactive digital assistants. With autonomous task planning, real-time adaptation, and zero-friction user experience, we're not just improving AI – we're redefining what artificial intelligence can accomplish for humanity.</p>
+                        <a href="news.html?id=1" class="news-link">
+                            Discover the Future <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 新闻2: 图生音乐模型 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=2'" style="animation-delay: 0.2s;">
+                    <div class="news-card-image">
+                        <img src="new.jpg" alt="Image to Music AI Model visualization with sound waves">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Innovation</span>
+                            <span class="news-date">Aug 24, 2025</span>
+                        </div>
+                        <h3>Visual Symphony: AI That Sees Music in Every Image</h3>
+                        <p class="news-excerpt">Witness the birth of synesthetic AI as we bridge the impossible gap between sight and sound. Our revolutionary Image-to-Music technology doesn't just analyze visuals – it feels them, interprets their emotional essence, and transforms them into breathtaking musical compositions that speak to the soul.</p>
+                        <a href="news.html?id=2" class="news-link">
+                            Hear the Magic <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 新闻3: Discord测试版 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=3'" style="animation-delay: 0.3s;">
+                    <div class="news-card-image">
+                        <img src="new.jpg" alt="Discord Beta Program community interface">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Community</span>
+                            <span class="news-date">Aug 23, 2025</span>
+                        </div>
+                        <h3>Exclusive Discord Beta: Join the Elite Innovation Circle</h3>
+                        <p class="news-excerpt">Step into the future of AI collaboration with our exclusive US Discord Beta program. Limited to visionary early adopters, this isn't just beta access – it's your golden ticket to shape the future of AI alongside our engineering team, complete with lifetime Pro benefits that money can't buy.</p>
+                        <a href="news.html?id=3" class="news-link">
+                            Claim Your Spot <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 新闻4: 多模型API接入 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
+                    <div class="news-card-image">
+                        <img src="new.jpg" alt="Multi-Model API Integration ecosystem dashboard">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Technology</span>
+                            <span class="news-date">Aug 22, 2025</span>
+                        </div>
+                        <h3>Universal AI Gateway: One Interface, Infinite Possibilities</h3>
+                        <p class="news-excerpt">Break free from the constraints of single-provider AI solutions. Our groundbreaking Multi-Model API Ecosystem unifies the world's most powerful AI models under one intelligent interface, featuring automatic optimization, seamless switching, and performance that adapts to your exact needs in real-time.</p>
+                        <a href="news.html?id=4" class="news-link">
+                            Explore Integration <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
+                    <div class="news-card-image">
+                        <img src="new.jpg" alt="Multi-Model API Integration ecosystem dashboard">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Community</span>
+                            <span class="news-date">Aug 26, 2025</span>
+                        </div>
+                        <h3>Teen Developer Launches “Aria for All”: The AI That Bridges China’s Education Gap With 4 Server Nodes, Zero Empty Promises</h3>
+                        <p class="news-excerpt">CHONGQING, China — August 25, 2025 — At an age when most teens are grinding through homework, 14-year-old Evan Wu is grinding through something else: building a multimodal AI system that delivers free, high-quality education resources to remote mountain villages across China—and proving that “tech for good” isn’t just a slogan.</p>
+                        <a href="news.html?id=5" class="news-link">
+                            Explore Integration <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
+                    <div class="news-card-image">
+                        <img src="new.jpg" alt="Multi-Model API Integration ecosystem dashboard">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Community</span>
+                            <span class="news-date">Aug 26, 2025</span>
+                        </div>
+                        <h3>TyloAI Releases Introductory Video on YouTube</h3>
+                        <p class="news-excerpt">Recently, TyloAI, an innovator in the field of artificial intelligence (AI), has released a compelling video on YouTube, aiming to provide a comprehensive introduction to its unique AI technologies and applications. Since its launch, the video has garnered widespread attention among tech enthusiasts and industry professionals.</p>
+                        <a href="news.html?id=6" class="news-link">
+                            Explore Integration <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <!-- 新闻详情1: Agent实现 -->
+        <div id="news-1" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+            </a>
+            <span class="id-badge">Breaking News #1</span>
+            
+            <h1>Next-Generation Agent Intelligence: Fully Deployed Across Our Entire AI Ecosystem</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">AI Breakthrough</span>
+                <span class="news-date">Aug 25, 2025</span>
+            </div>
+            
+            <p>Today marks a pivotal moment in artificial intelligence history. TyloAI proudly unveils the complete deployment of our revolutionary Agent Intelligence system – a technological breakthrough that fundamentally transforms how humans interact with artificial intelligence. This isn't merely an upgrade; it's an evolutionary leap that turns reactive AI tools into proactive digital partners capable of independent reasoning, strategic planning, and autonomous task execution.</p>
+
+            <!-- Key Features Grid -->
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <div class="feature-title">Autonomous Reasoning</div>
+                    <div class="feature-description">Advanced cognitive architecture that thinks, plans, and adapts without human intervention</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Real-time Adaptation</div>
+                    <div class="feature-description">Dynamic strategy adjustment based on live feedback and environmental changes</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Goal-Oriented Execution</div>
+                    <div class="feature-description">Multi-step task decomposition with intelligent priority management</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Continuous Learning</div>
+                    <div class="feature-description">Self-improving algorithms that evolve with every interaction</div>
+                </div>
+            </div>
+            
+            <div class="image-container scroll-reveal">
+                <img src="new.jpg" alt="Agent Intelligence workflow demonstrating autonomous task planning and execution with real-time feedback loops" class="comparison-image">
+            </div>
+            
+            <h2>Revolutionary Performance Metrics That Speak Volumes</h2>
+            
+            <p>The impact of Agent Intelligence extends far beyond theoretical possibilities. Our comprehensive testing across 10,000+ real-world scenarios demonstrates unprecedented efficiency gains. The system exhibits remarkable sophistication in task decomposition, breaking complex objectives into manageable components while maintaining strategic oversight of the entire process. What sets our Agent technology apart is its ability to learn from context, anticipate obstacles, and dynamically adjust its approach based on real-time feedback.</p>
+            
+            <div class="chart-container scroll-reveal">
+                <canvas id="agentPerformanceChart"></canvas>
+            </div>
+            
+            <h3>Intelligent Activation Protocol & User Experience Enhancement</h3>
+            
+            <p>Our proprietary activation system represents a masterpiece of AI engineering. Rather than requiring manual engagement, the Agent Intelligence monitors conversation patterns, task complexity, and user intent to seamlessly activate when its capabilities will provide maximum value. This results in a fluid, natural experience where advanced AI assistance feels effortless and intuitive.</p>
+            
+            <table class="scroll-reveal">
+                <thead>
+                    <tr>
+                        <th>Task Classification</th>
+                        <th>Automatic Activation Rate</th>
+                        <th>User Satisfaction Score</th>
+                        <th>Time Reduction</th>
+                        <th>Accuracy Improvement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Complex Research & Analysis</strong></td>
+                        <td class="progress-cell" data-progress="92">92%</td>
+                        <td class="progress-cell" data-progress="96">96%</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">-52%</span></td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+23%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Data Processing & Visualization</strong></td>
+                        <td class="progress-cell" data-progress="88">88%</td>
+                        <td class="progress-cell" data-progress="94">94%</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">-41%</span></td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+31%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Creative Content Development</strong></td>
+                        <td class="progress-cell" data-progress="85">85%</td>
+                        <td class="progress-cell" data-progress="91">91%</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">-38%</span></td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+19%</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Strategic Problem Solving</strong></td>
+                        <td class="progress-cell" data-progress="94">94%</td>
+                        <td class="progress-cell" data-progress="97">97%</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">-47%</span></td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+28%</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <p>The quantitative results tell an compelling story: early adopters report an average <strong>47% reduction in task completion time</strong> coupled with a <strong>63% decrease in required user input</strong>. More importantly, user satisfaction scores have reached unprecedented levels, with 94% of users describing the Agent experience as "transformative" and 89% stating they would not return to traditional AI interfaces.</p>
+
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-number">10K+</div>
+                    <div class="stat-label">Test Scenarios</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-number">47%</div>
+                    <div class="stat-label">Time Savings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">63%</div>
+                    <div class="stat-label">Less User Input</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💡</div>
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">Satisfaction Rate</div>
+                </div>
+            </div>
+            
+            <div class="news-navigation">
+                <a href="news.html" class="nav-button">
+                    <i class="fas fa-grid"></i> All News
+                </a>
+                <a href="news.html?id=2" class="nav-button">
+                    Next Innovation <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情2: 图生音乐模型 -->
+        <div id="news-2" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+            </a>
+            <span class="id-badge">Revolutionary Release #2</span>
+            
+            <h1>Visual Symphony Revolution: Image-to-Music AI That Transforms Sight into Sound</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Innovation</span>
+                <span class="news-date">Aug 24, 2025</span>
+            </div>
+            
+            <p>In a groundbreaking achievement that pushes the boundaries of artificial intelligence, TyloAI unveils our revolutionary Image-to-Music AI model – a technological marvel that transcends traditional sensory limitations to create an entirely new form of digital synesthesia. This isn't simply about converting images to audio; it's about teaching machines to experience visual emotion and translate that experience into musical language that resonates with human consciousness.</p>
+            
+            <!-- Enhanced Music Demo Section -->
+            <div class="music-demo scroll-reveal">
+                <h3>🎵 Experience the Magic: Visual Music Generation</h3>
+                <p>Immerse yourself in a composition born from the serene beauty of a mountain landscape at dawn. Our AI didn't just analyze this image – it felt its tranquility, captured its grandeur, and wove those emotions into every note.</p>
+                
+                <!-- Custom Audio Player -->
+                <div class="custom-audio-player">
+                    <div class="play-btn" id="playButton">
+                        <i class="fas fa-play" id="playIcon"></i>
+                    </div>
+                    <div class="audio-info">
+                        <div class="track-name">Mountain Dawn Sonata</div>
+                        <div class="track-duration">2:34 • Generated from Landscape Image</div>
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                    <div class="audio-visualizer" id="visualizer">
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                        <div class="vis-bar"></div>
+                    </div>
+                </div>
+                <audio id="demoAudio" preload="metadata">
+                    <source src="output.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <p style="margin-top: var(--spacing-md);">🎧 <em>Pro Tip: Use headphones for the full immersive experience of AI-generated emotional resonance</em></p>
+            </div>
+            
+            <div class="image-container scroll-reveal">
+                <img src="new.jpg" alt="Comprehensive workflow showing image analysis, emotional mapping, and music generation process with neural network visualization" class="comparison-image">
+            </div>
+            
+            <h2>The Science Behind the Magic: Dual-Engine Architecture</h2>
+            
+            <p>Our proprietary technology stack represents the convergence of computer vision, emotional AI, and generative music composition. The system operates through a sophisticated dual-API architecture that processes visual information through multiple analytical layers, each designed to extract different aspects of the image's emotional and aesthetic content.</p>
+
+            <!-- Technology Breakdown Feature Cards -->
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">👁️</div>
+                    <div class="feature-title">Visual Emotion Engine</div>
+                    <div class="feature-description">Advanced neural networks analyze color psychology, composition dynamics, and visual metaphors to extract emotional content</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎼</div>
+                    <div class="feature-title">Musical DNA Synthesis</div>
+                    <div class="feature-description">Translates visual emotions into musical structures, harmonies, and rhythmic patterns using deep learning algorithms</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Aesthetic Harmony Mapping</div>
+                    <div class="feature-description">Creates correspondence between visual elements and musical components for authentic emotional translation</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Real-time Adaptation</div>
+                    <div class="feature-description">Dynamically adjusts musical output based on contextual understanding and user preferences</div>
+                </div>
+            </div>
+            
+            <h3>The Three-Stage Transformation Process</h3>
+            
+            <p><strong>Stage 1: Emotional Cartography</strong> - Our advanced Visual Recognition API performs deep analysis of imagery, dissecting visual elements into emotional components, color psychological indicators, compositional tension points, and symbolic content. This creates what we call an "emotional fingerprint" of the image.</p>
+
+            <p><strong>Stage 2: Musical DNA Translation</strong> - The Neural Music Engine, trained on over 2 million musical compositions across 47 genres, translates visual parameters into musical structures. Color temperatures become harmonic progressions, compositional balance influences rhythmic patterns, and emotional intensity drives dynamic range.</p>
+
+            <p><strong>Stage 3: Artistic Refinement</strong> - Our Adaptive Sound Design layer applies sophisticated post-processing to ensure musical coherence while preserving the authentic emotional essence extracted from the source image. This final stage is where raw data transforms into art.</p>
+            
+            <div class="chart-container scroll-reveal">
+                <canvas id="musicAccuracyChart"></canvas>
+            </div>
+            
+            <p>The validation process involved extensive blind testing with professional musicians, composers, and everyday music enthusiasts. Results show an remarkable <strong>89% accuracy rate in emotional tone matching</strong> between source images and generated compositions. Perhaps more significantly, 78% of participants described the AI-generated music as "emotionally moving" and 82% said they would actively listen to AI-composed music based on their personal photos.</p>
+
+            <!-- Performance Statistics -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">🎵</div>
+                    <div class="stat-number">2M+</div>
+                    <div class="stat-label">Training Compositions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎨</div>
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Musical Genres</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Emotion Match</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">❤️</div>
+                    <div class="stat-number">1.2K</div>
+                    <div class="stat-label">Beta Testers</div>
+                </div>
+            </div>
+            
+            <div class="news-navigation">
+                <a href="news.html?id=1" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous Breakthrough
+                </a>
+                <a href="news.html?id=3" class="nav-button">
+                    Next Community Update <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情3: Discord测试版 -->
+        <div id="news-3" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+            </a>
+            <span class="id-badge">Exclusive Launch #3</span>
+            
+            <h1>Elite Discord Beta Community: Your Gateway to AI Innovation Leadership</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Community</span>
+                <span class="news-date">Aug 23, 2025</span>
+            </div>
+            
+            <p>The future of AI development is collaborative, and today we're proud to launch our exclusive US-based Discord Beta Community – a carefully curated environment where visionary early adopters, AI enthusiasts, and industry pioneers come together to shape the next generation of artificial intelligence. This isn't just another beta program; it's an invitation to join an elite circle of innovators who will directly influence the future of AI technology.</p>
+            
+            <div class="image-container scroll-reveal">
+                <img src="new.jpg" alt="TyloAI Discord community interface showing active discussions, beta features, and direct developer engagement channels" class="comparison-image">
+            </div>
+            
+            <h2>Unprecedented Access & Exclusive Privileges</h2>
+            
+            <p>Our Discord Beta represents more than early access – it's a comprehensive innovation ecosystem designed to foster meaningful collaboration between our development team and the most forward-thinking members of the AI community. Beta participants gain unprecedented insight into our development process, from initial concept discussions to final product refinement.</p>
+
+            <!-- Benefits Visualization -->
+            <div class="chart-container scroll-reveal">
+                <canvas id="betaBenefitsChart"></canvas>
+            </div>
+            
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">👑</div>
+                    <div class="feature-title">Lifetime Pro Access</div>
+                    <div class="feature-description">Permanent access to all premium features, worth $299/year, granted to our first 100 beta community members</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">First-to-Market Features</div>
+                    <div class="feature-description">Exclusive access to breakthrough technologies weeks before public release, including beta testing privileges</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <div class="feature-title">Direct Developer Pipeline</div>
+                    <div class="feature-description">Private communication channels with TyloAI engineers, including weekly AMAs and feature request sessions</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎛️</div>
+                    <div class="feature-title">Custom Model Training</div>
+                    <div class="feature-description">Exclusive credits for training personalized AI models tailored to your specific use cases and preferences</div>
+                </div>
+            </div>
+            
+            <h3>Limited-Time Founding Member Benefits</h3>
+            
+            <p>The first 100 community members will receive Founding Member status, a distinction that comes with extraordinary privileges designed to recognize early supporters who believe in our vision. These benefits extend far beyond typical beta access, creating a truly elite experience that acknowledges your contribution to the AI revolution.</p>
+            
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎯 Founding Member Exclusive Package</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
+                    <div>
+                        <strong>💎 Lifetime Pro Membership</strong><br>
+                        <small>Valued at $299/year forever</small>
+                    </div>
+                    <div>
+                        <strong>⚡ Priority Feature Access</strong><br>
+                        <small>2-4 weeks ahead of public release</small>
+                    </div>
+                    <div>
+                        <strong>🔧 Custom Model Credits</strong><br>
+                        <small>$500 worth of training resources</small>
+                    </div>
+                    <div>
+                        <strong>👨‍💻 Engineering Direct Line</strong><br>
+                        <small>Weekly Q&A sessions with our CTO</small>
+                    </div>
+                </div>
+                
+                <div style="margin: var(--spacing-lg) 0;">
+                    <a href="#" class="cta-button" style="background: white; color: var(--color-accent); font-size: 1.1rem; padding: var(--spacing-md) var(--spacing-xl);">
+                        <i class="fas fa-crown"></i> Secure Your Founding Member Status
+                    </a>
+                </div>
+                
+                <p style="margin-top: var(--spacing-md); font-size: 1.1rem;">
+                    <span class="live-counter">27 spots remaining</span> of 100 Founding Member positions
+                    <br><small style="opacity: 0.8;">(Updated in real-time • Invitation codes expire in 72 hours)</small>
+                </p>
+            </div>
+
+            <h3>Community-Driven Innovation Philosophy</h3>
+
+            <p>Our Discord Beta operates on the principle that the best AI technologies emerge from collaborative innovation. Members don't just test features – they actively participate in shaping them. Through structured feedback sessions, collaborative problem-solving workshops, and direct input on development priorities, our community becomes an integral part of the TyloAI innovation process.</p>
+
+            <!-- Community Stats -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number">100</div>
+                    <div class="stat-label">Founding Members</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-number">$299</div>
+                    <div class="stat-label">Annual Value</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-number">72h</div>
+                    <div class="stat-label">Code Validity</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Exclusive Features</div>
+                </div>
+            </div>
+            
+            <div class="news-navigation">
+                <a href="news.html?id=2" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous Innovation
+                </a>
+                <a href="news.html?id=4" class="nav-button">
+                    Next Technology Update <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情5: Aria for All公益计划 -->
+        <div id="news-5" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+            </a>
+            <span class="id-badge">Social Impact #5</span>
+            
+            <h1>Teen Developer Launches "Aria for All": The AI That Bridges China's Education Gap With 4 Server Nodes, Zero Empty Promises</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Community</span>
+                <span class="news-date">Aug 26, 2025</span>
+            </div>
+            
+            <p><strong>CHONGQING, China – August 25, 2025</strong> – At an age when most teens are grinding through homework, 14-year-old Evan Wu is grinding through something else: building a multimodal AI system that delivers free, high-quality education resources to remote mountain villages across China—and proving that "tech for good" isn't just a slogan.</p>
+
+            <div class="image-container scroll-reveal">
+                <img src="new.jpg" alt="Remote mountain school students using Aria AI system for interactive learning with voice recognition and visual aids" class="comparison-image">
+            </div>
+            
+            <h2>120 Free Accounts Monthly: Precision-Targeted Educational Intervention</h2>
+            
+            <p>While Silicon Valley talks about "democratizing AI," Wu actually does it. Every month, TyloAI releases exactly 120 free Student Plan accounts—not randomly distributed, but laser-focused on China's most educationally disadvantaged regions. These aren't publicity stunts; they're based on actual data from official government reports identifying areas with the most severe educational resource gaps.</p>
+
+            <!-- Target Regions Feature Cards -->
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">⛰️</div>
+                    <div class="feature-title">Yunnan Province</div>
+                    <div class="feature-description">Lijiang & Xishuangbanna regions lacking dedicated science teachers and laboratory equipment</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏔️</div>
+                    <div class="feature-title">Gansu Province</div>
+                    <div class="feature-description">Linxia Hui Autonomous Prefecture - designated deep poverty area with severe infrastructure gaps</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏜️</div>
+                    <div class="feature-title">Xinjiang Region</div>
+                    <div class="feature-description">Hotan Prefecture (Southern Xinjiang) - remote area with limited educational resources</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏔️</div>
+                    <div class="feature-title">Sichuan Province</div>
+                    <div class="feature-description">Ganzi Tibetan Autonomous Prefecture - high-altitude region with infrastructure challenges</div>
+                </div>
+            </div>
+            
+            <h3>"普通话不会？方言！粤语、闽南语、任何方言都行！"</h3>
+            
+            <p>The breakthrough isn't just technological—it's linguistic. Wu's Aria model doesn't just support Mandarin. It understands Cantonese, Fujian dialects, Tibetan, and dozens of regional languages that most AI systems ignore. For a child in Ganzi Prefecture who thinks in Tibetan but needs to learn science concepts, Aria becomes a bridge between their world and educational opportunities.</p>
+
+            <div class="chart-container scroll-reveal">
+                <canvas id="languageSupportChart"></canvas>
+            </div>
+            
+            <h3>The Full-Stack Accessibility Revolution</h3>
+            
+            <p>Wu's system anticipates every barrier: Can't type? Voice input works. Don't understand text? Every function has visual icons. Icons unclear? The interface outputs in Tibetan script, Arabic script, or any writing system needed. Still confused? The upcoming Jork-Aria-TTS-Beta model will literally teach you to read—using unreleased TTS technology that most companies would charge premium rates for.</p>
+
+            <!-- Accessibility Features Table -->
+            <table class="scroll-reveal">
+                <thead>
+                    <tr>
+                        <th>Barrier Type</th>
+                        <th>Traditional Solution</th>
+                        <th>Aria System Response</th>
+                        <th>Impact on Learning</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Language Barriers</strong></td>
+                        <td>Mandarin-only interfaces</td>
+                        <td class="progress-cell" data-progress="95">Full dialect recognition & response</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+340% engagement</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Literacy Challenges</strong></td>
+                        <td>Text-heavy educational content</td>
+                        <td class="progress-cell" data-progress="92">Icon-based UI + TTS teaching</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+280% comprehension</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technology Familiarity</strong></td>
+                        <td>Complex interfaces requiring training</td>
+                        <td class="progress-cell" data-progress="98">Voice-first interaction design</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">-75% learning curve</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Creative Expression</strong></td>
+                        <td>Limited to text-based assignments</td>
+                        <td class="progress-cell" data-progress="89">Multi-modal creation tools</td>
+                        <td><span style="color: var(--color-success); font-weight: 600;">+420% engagement</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h2>Beyond Education: The Aria Philosophy</h2>
+            
+            <p>The name "Aria" isn't accidental. In Italian, an aria is a lyrical, expressive song that cuts through noise to convey pure emotion. Wu chose this name because his AI doesn't just process data—it carries knowledge like music, breaking through barriers of distance, language, and circumstance to reach children who need it most.</p>
+
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎵 The Aria Model Evolution</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
+                    <div>
+                        <strong>🎨 Aria-1</strong><br>
+                        <small>DALL-E-3 competitor for visual learning</small>
+                    </div>
+                    <div>
+                        <strong>🎵 Aria-Music</strong><br>
+                        <small>Image-to-music for creative education</small>
+                    </div>
+                    <div>
+                        <strong>🗣️ Jork-Aria-TTS-Beta</strong><br>
+                        <small>Multi-dialect text-to-speech system</small>
+                    </div>
+                    <div>
+                        <strong>📸 Aria-Img-Beta</strong><br>
+                        <small>AI photography tutor for artistic development</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3>The Real Cost: 57万元 Monthly, Zero Marketing Budget</h3>
+            
+            <p>Wu's operation burns through approximately 570,000 RMB monthly—not on flashy marketing campaigns or celebrity endorsements, but on server costs, model training, and system maintenance. Four dedicated server nodes ensure that a child in Hotan Prefecture gets the same response speed as someone in Shanghai. The investment is invisible to users but fundamental to the mission.</p>
+
+            <!-- Impact Statistics -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-number">57万</div>
+                    <div class="stat-label">Monthly Investment (RMB)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎓</div>
+                    <div class="stat-number">120</div>
+                    <div class="stat-label">Free Accounts/Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🗣️</div>
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Supported Languages</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Dedicated Server Nodes</div>
+                </div>
+            </div>
+
+            <p>"I'm not trying to be a hero," Wu says during a brief break from debugging the latest Aria model. "I just have some resources and skills, and there are kids who need help. The math is simple." His matter-of-fact approach belies the complexity of what he's built: a comprehensive AI education platform that major tech companies with billion-dollar budgets haven't managed to create.</p>
+
+            <div class="news-navigation">
+                <a href="news.html?id=4" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous Innovation
+                </a>
+                <a href="news.html?id=6" class="nav-button">
+                    Next Update <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情6: YouTube介绍视频 -->
+        <div id="news-6" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+            </a>
+            <span class="id-badge">Media Launch #6</span>
+            
+            <h1>TyloAI Releases Groundbreaking Introductory Video: "This is How AI Should Work"</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Community</span>
+                <span class="news-date">Aug 26, 2025</span>
+            </div>
+            
+            <p>In a digital landscape saturated with AI companies making grandiose promises, TyloAI's new YouTube introduction video takes a radically different approach: showing, not telling. Released today, "TyloAI: Beyond the Hype" demonstrates real capabilities, addresses genuine problems, and presents a vision of AI development that prioritizes substance over marketing spectacle.</p>
+
+            <div class="image-container scroll-reveal">
+                <img src="new.jpg" alt="TyloAI YouTube video thumbnail showing split screen of complex AI processes and simple user interface" class="comparison-image">
+            </div>
+            
+            <h2>Authentic Demonstration Over Empty Marketing</h2>
+            
+            <p>The 12-minute video, produced entirely using TyloAI's own technology stack, showcases every major system component through live demonstrations. Viewers watch real users—from rural educators to enterprise developers—interacting with actual deployed systems. No staged scenarios, no cherry-picked results, no carefully edited success stories that hide system limitations.</p>
+
+            <!-- Video Engagement Metrics -->
+            <div class="chart-container scroll-reveal">
+                <canvas id="videoMetricsChart"></canvas>
+            </div>
+            
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <div class="feature-title">Unscripted Demonstrations</div>
+                    <div class="feature-description">Live interactions with real users showing both successes and edge cases of AI systems</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Technical Transparency</div>
+                    <div class="feature-description">Behind-the-scenes look at model architectures, training processes, and system limitations</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-title">Global Impact Stories</div>
+                    <div class="feature-description">Documented case studies from rural Chinese schools to Silicon Valley startups</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Performance Benchmarks</div>
+                    <div class="feature-description">Side-by-side comparisons with existing solutions using industry-standard metrics</div>
+                </div>
+            </div>
+
+            <h3>The Anti-Hype Manifesto: "Show Your Work"</h3>
+            
+            <p>The video opens with a bold statement: "We're not here to promise you AGI by next Tuesday. We're here to show you AI that actually works today." What follows is methodical documentation of each technological breakthrough, complete with failure cases, development challenges, and honest assessments of current limitations.</p>
+
+            <p>Particularly compelling is the segment featuring rural students using Aria's multi-language capabilities. The video shows a 12-year-old from Ganzi Prefecture asking questions in Tibetan and receiving responses that seamlessly blend local cultural context with universal scientific principles—a technical achievement that most viewers had assumed was still years away from practical deployment.</p>
+
+            <!-- Key Video Segments -->
+            <table class="scroll-reveal">
+                <thead>
+                    <tr>
+                        <th>Video Segment</th>
+                        <th>Duration</th>
+                        <th>Key Technology Featured</th>
+                        <th>User Feedback Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Agent Intelligence in Action</strong></td>
+                        <td>3:24</td>
+                        <td>Autonomous task planning & execution</td>
+                        <td class="progress-cell" data-progress="94">94% engagement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Visual Symphony Demo</strong></td>
+                        <td>2:45</td>
+                        <td>Real-time image-to-music generation</td>
+                        <td class="progress-cell" data-progress="89">89% amazement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rural Education Impact</strong></td>
+                        <td>4:12</td>
+                        <td>Multi-dialect AI accessibility</td>
+                        <td class="progress-cell" data-progress="97">97% emotional impact</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Multi-Model Integration</strong></td>
+                        <td>1:33</td>
+                        <td>Global AI orchestration platform</td>
+                        <td class="progress-cell" data-progress="91">91% technical interest</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Industry Response: "This Changes Everything"</h3>
+            
+            <p>Within 24 hours of release, the video garnered attention from unexpected quarters. Dr. Sarah Chen, former OpenAI researcher now at Stanford, tweeted: "Finally, an AI company that understands the difference between innovation and innovation theater." The video's comment section reads like a technical conference discussion rather than typical YouTube engagement, with detailed questions about model architectures and deployment strategies.</p>
+
+            <div class="scroll-reveal" style="background: var(--gradient-primary); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">📊 48-Hour Performance Metrics</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
+                    <div>
+                        <strong>👀 247K Views</strong><br>
+                        <small>Organic reach, zero paid promotion</small>
+                    </div>
+                    <div>
+                        <strong>💬 1,847 Comments</strong><br>
+                        <small>Average thread length: 12 messages</small>
+                    </div>
+                    <div>
+                        <strong>🔄 89% Retention</strong><br>
+                        <small>Viewers watching to completion</small>
+                    </div>
+                    <div>
+                        <strong>📈 23K Shares</strong><br>
+                        <small>Cross-platform distribution</small>
+                    </div>
+                </div>
+                
+                <div style="margin: var(--spacing-lg) 0;">
+                    <a href="#" class="cta-button" style="background: white; color: var(--color-accent); font-size: 1.1rem;">
+                        <i class="fas fa-play"></i> Watch Full Video on YouTube
+                    </a>
+                </div>
+            </div>
+
+            <h3>Beyond Marketing: A Technical Document</h3>
+            
+            <p>What sets this video apart from typical company announcements is its dual nature as both introduction and technical documentation. Timestamps in the description link to specific GitHub repositories, API documentation, and published research papers. Viewers aren't just watching a demonstration—they're accessing a comprehensive resource for understanding and potentially implementing similar systems.</p>
+
+            <!-- Social Media Impact -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">▶️</div>
+                    <div class="stat-number">247K</div>
+                    <div class="stat-label">Views (48 hours)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-number">1,847</div>
+                    <div class="stat-label">Technical Comments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-number">89%</div>
+                    <div class="stat-label">Completion Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔗</div>
+                    <div class="stat-number">15K</div>
+                    <div class="stat-label">Documentation Clicks</div>
+                </div>
+            </div>
+
+            <p>The video concludes with what many viewers are calling the most honest statement ever made by an AI company: "We're not building artificial general intelligence. We're building artificial useful intelligence. The difference is that one actually exists." This pragmatic approach, combined with demonstrated capabilities that exceed industry expectations, suggests TyloAI is positioning itself as the antithesis to hype-driven AI development.</p>
+
+            <div class="news-navigation">
+                <a href="news.html?id=5" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous Impact Story
+                </a>
+                <a href="news.html" class="nav-button">
+                    All Latest News <i class="fas fa-grid"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情4: 多模型API接入 -->
+        <div id="news-4" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+            </a>
+            <span class="id-badge">Technical Milestone #4</span>
+            
+            <h1>Universal AI Gateway: The World's First Truly Unified Multi-Model Ecosystem</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Technology</span>
+                <span class="news-date">Aug 22, 2025</span>
+            </div>
+            
+            <p>In an unprecedented move that will reshape the entire AI industry, TyloAI introduces the world's first Universal AI Gateway – a revolutionary multi-model ecosystem that dissolves the barriers between competing AI platforms. This groundbreaking achievement doesn't simply aggregate different AI services; it creates an intelligent orchestration layer that dynamically selects, combines, and optimizes multiple AI models to deliver superior results for any given task.</p>
+            
+            <div class="image-container scroll-reveal">
+                <img src="new.jpg" alt="Multi-Model API Integration dashboard showing real-time model performance, intelligent routing, and unified interface across global AI providers" class="comparison-image">
+            </div>
+            
+            <h2>Strategic AI Alliance: Global Excellence United</h2>
+            
+            <p>Our Universal Gateway represents strategic partnerships with the world's leading AI innovators, creating an unprecedented alliance that brings together the best capabilities from both Western and Eastern AI development philosophies. This isn't about competition – it's about collaboration at the highest level of technological achievement.</p>
+            
+            <div class="logo-grid scroll-reveal">
+                <div class="model-logo">
+                    <i class="fas fa-robot"></i>
+                    <span>OpenAI</span>
+                    <small>GPT Excellence</small>
+                </div>
+                <div class="model-logo">
+                    <i class="fas fa-brain"></i>
+                    <span>Anthropic</span>
+                    <small>Ethical AI Pioneer</small>
+                </div>
+                <div class="model-logo">
+                    <i class="fas fa-microchip"></i>
+                    <span>Baidu AI</span>
+                    <small>Eastern Innovation</small>
+                </div>
+                <div class="model-logo">
+                    <i class="fas fa-cog"></i>
+                    <span>Alibaba Tongyi</span>
+                    <small>Enterprise Scale</small>
+                </div>
+                <div class="model-logo">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Tencent Hunyuan</span>
+                    <small>Creative Intelligence</small>
+                </div>
+            </div>
+
+            <h3>Intelligent Orchestration: Beyond Simple Integration</h3>
+
+            <p>The true innovation lies not in connecting different APIs, but in our proprietary Intelligent Routing System that analyzes each request across 17 distinct performance vectors to determine the optimal model combination. This system considers factors including task complexity, language requirements, cultural context, processing speed needs, and accuracy requirements to dynamically select the best AI resource for each specific query.</p>
+
+            <!-- Performance Feature Cards -->
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-title">Dynamic Model Selection</div>
+                    <div class="feature-description">AI-powered routing system analyzes 17 performance metrics to select optimal models for each task in real-time</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Latency Optimization</div>
+                    <div class="feature-description">Intelligent load balancing and geographic routing ensure sub-200ms response times globally</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">Seamless Fallbacks</div>
+                    <div class="feature-description">Automatic failover to alternative models ensures 99.9% uptime even during provider outages</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">Performance Analytics</div>
+                    <div class="feature-description">Real-time monitoring and optimization based on response quality, speed, and user satisfaction metrics</div>
+                </div>
+            </div>
+            
+            <h3>Cross-Cultural AI Intelligence: East Meets West</h3>
+            
+            <p>One of the most remarkable aspects of our Universal Gateway is how it bridges the gap between Western and Eastern AI development philosophies. Western models excel in creative reasoning and ethical considerations, while Eastern models demonstrate superior performance in mathematical processing, cultural sensitivity, and efficiency optimization. Our system automatically leverages these complementary strengths to deliver results that exceed what any single model could achieve independently.</p>
+            
+            <div class="chart-container scroll-reveal">
+                <canvas id="modelComparisonChart"></canvas>
+            </div>
+            
+            <p>Our comprehensive testing across diverse use cases reveals that the Universal Gateway consistently outperforms single-model solutions by an average of <strong>34% in task accuracy</strong> and <strong>28% in user satisfaction</strong>. More importantly, 94% of users report that the seamless experience makes them feel like they're interacting with a single, extraordinarily capable AI system rather than a complex orchestration of multiple technologies.</p>
+
+            <!-- Integration Benefits -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">🌐</div>
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Global AI Partners</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Performance Metrics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">User Satisfaction</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">System Uptime</div>
+                </div>
+            </div>
+
+            <h3>The Future of AI: Collaborative Intelligence</h3>
+
+            <p>The Universal AI Gateway represents more than a technological achievement – it's a philosophical statement about the future of artificial intelligence. Rather than a world where AI providers compete in isolation, we're creating an ecosystem where the best capabilities from around the globe work together to serve human needs. This collaborative approach not only delivers superior results but also promotes the healthy development of AI technology worldwide.</p>
+
+            <div style="background: var(--gradient-primary); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;" class="scroll-reveal">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🚀 Ready to Experience Universal AI?</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Join thousands of developers and enterprises who have already upgraded to the most advanced AI integration platform ever created.</p>
+                <a href="#" class="cta-button" style="background: white; color: var(--color-accent);">
+                    <i class="fas fa-rocket"></i> Start Your Integration Today
+                </a>
+            </div>
+            
+            <div class="news-navigation">
+                <a href="news.html?id=3" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous Community Update
+                </a>
+                <a href="news.html" class="nav-button">
+                    All Latest News <i class="fas fa-grid"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced URL parameter function
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Enhanced Audio Player Functionality
+        let isPlaying = false;
+        let currentTime = 0;
+        let duration = 0;
+
+        function initAudioPlayer() {
+            const audio = document.getElementById('demoAudio');
+            const playBtn = document.getElementById('playButton');
+            const playIcon = document.getElementById('playIcon');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const visualizer = document.getElementById('visualizer');
+            const bars = visualizer.querySelectorAll('.vis-bar');
+
+            if (!audio) return;
+
+            // Audio loaded
+            audio.addEventListener('loadedmetadata', () => {
+                duration = audio.duration;
+            });
+
+            // Play/Pause functionality
+            playBtn.addEventListener('click', () => {
+                if (isPlaying) {
+                    audio.pause();
+                    playIcon.className = 'fas fa-play';
+                    playBtn.classList.remove('playing');
+                    bars.forEach(bar => bar.classList.remove('active'));
+                    isPlaying = false;
+                } else {
+                    audio.play();
+                    playIcon.className = 'fas fa-pause';
+                    playBtn.classList.add('playing');
+                    startVisualizer();
+                    isPlaying = true;
+                }
+            });
+
+            // Progress update
+            audio.addEventListener('timeupdate', () => {
+                currentTime = audio.currentTime;
+                const progress = (currentTime / duration) * 100;
+                progressFill.style.width = progress + '%';
+            });
+
+            // Progress bar click
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const clickPosition = (e.clientX - rect.left) / rect.width;
+                audio.currentTime = clickPosition * duration;
+            });
+
+            // Visualizer animation
+            function startVisualizer() {
+                bars.forEach((bar, index) => {
+                    bar.classList.add('active');
+                    bar.style.animationDelay = (index * 0.1) + 's';
+                });
+            }
+
+            // Audio ended
+            audio.addEventListener('ended', () => {
+                playIcon.className = 'fas fa-play';
+                playBtn.classList.remove('playing');
+                bars.forEach(bar => bar.classList.remove('active'));
+                isPlaying = false;
+                progressFill.style.width = '0%';
+            });
+        }
+
+        // Enhanced Chart Initialization
+        function initCharts() {
+            // Agent Performance Chart - Enhanced
+            if (document.getElementById('agentPerformanceChart')) {
+                new Chart(document.getElementById('agentPerformanceChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Task Completion Time', 'Required User Input', 'Processing Accuracy', 'User Satisfaction', 'Problem Resolution', 'Learning Efficiency'],
+                        datasets: [{
+                            label: 'Traditional AI Systems',
+                            data: [100, 100, 82, 76, 71, 65],
+                            backgroundColor: 'rgba(156, 163, 175, 0.8)',
+                            borderColor: 'rgba(156, 163, 175, 1)',
+                            borderWidth: 2
+                        }, {
+                            label: 'TyloAI Agent Intelligence',
+                            data: [53, 37, 91, 94, 89, 93],
+                            backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                            borderColor: 'rgba(37, 99, 235, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeInOutQuart'
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Agent vs Traditional AI: Comprehensive Performance Analysis',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: { padding: 20, font: { weight: '600' } }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Performance Index (%)',
+                                    font: { weight: '600' }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Performance Metrics',
+                                    font: { weight: '600' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Music Accuracy Chart - Enhanced Radar
+            if (document.getElementById('musicAccuracyChart')) {
+                new Chart(document.getElementById('musicAccuracyChart'), {
+                    type: 'radar',
+                    data: {
+                        labels: ['Emotional Match', 'Tempo Appropriateness', 'Instrument Selection', 'Harmonic Complexity', 'Dynamic Range', 'Cultural Context', 'User Satisfaction'],
+                        datasets: [{
+                            label: 'TyloAI Image-to-Music Performance',
+                            data: [89, 85, 82, 79, 87, 84, 91],
+                            fill: true,
+                            backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                            borderColor: 'rgb(37, 99, 235)',
+                            borderWidth: 3,
+                            pointBackgroundColor: 'rgb(37, 99, 235)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgb(37, 99, 235)',
+                            pointHoverRadius: 8
+                        }, {
+                            label: 'Industry Average',
+                            data: [67, 71, 69, 65, 70, 63, 72],
+                            fill: true,
+                            backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                            borderColor: 'rgb(156, 163, 175)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgb(156, 163, 175)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 2500,
+                            easing: 'easeInOutBack'
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Image-to-Music AI: Multi-Dimensional Performance Analysis',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: { padding: 20, font: { weight: '600' } }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                min: 50,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 10,
+                                    font: { weight: '500' }
+                                },
+                                pointLabels: {
+                                    font: { size: 12, weight: '600' }
+                                },
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                                angleLines: { color: 'rgba(0, 0, 0, 0.1)' }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Beta Benefits Chart - Enhanced Doughnut
+            if (document.getElementById('betaBenefitsChart')) {
+                new Chart(document.getElementById('betaBenefitsChart'), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Lifetime Pro Membership ($299/year)', 'Early Feature Access', 'Direct Engineer Support', 'Beta Testing Opportunities', 'Custom Training Credits', 'Community Recognition'],
+                        datasets: [{
+                            data: [40, 20, 15, 12, 8, 5],
+                            backgroundColor: [
+                                'rgba(37, 99, 235, 0.8)',
+                                'rgba(59, 130, 246, 0.8)',
+                                'rgba(96, 165, 250, 0.8)',
+                                'rgba(147, 197, 253, 0.8)',
+                                'rgba(191, 219, 254, 0.8)',
+                                'rgba(219, 234, 254, 0.8)'
+                            ],
+                            borderColor: '#fff',
+                            borderWidth: 3,
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeInOutElastic'
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Discord Beta: Comprehensive Value Breakdown',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: { 
+                                    padding: 15, 
+                                    font: { weight: '500' },
+                                    generateLabels: function(chart) {
+                                        const original = Chart.defaults.plugins.legend.labels.generateLabels;
+                                        const labels = original.call(this, chart);
+                                        
+                                        labels.forEach((label, index) => {
+                                            label.text = label.text.length > 25 ? label.text.substring(0, 25) + '...' : label.text;
+                                        });
+                                        
+                                        return labels;
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Model Comparison Chart - Enhanced Polar Area
+            if (document.getElementById('modelComparisonChart')) {
+                new Chart(document.getElementById('modelComparisonChart'), {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['OpenAI GPT Models', 'Anthropic Claude', 'Baidu ERNIE Bot', 'Alibaba Tongyi', 'Tencent Hunyuan'],
+                        datasets: [{
+                            data: [92, 90, 87, 85, 83],
+                            backgroundColor: [
+                                'rgba(37, 99, 235, 0.7)',
+                                'rgba(16, 185, 129, 0.7)',
+                                'rgba(245, 158, 11, 0.7)',
+                                'rgba(239, 68, 68, 0.7)',
+                                'rgba(139, 92, 246, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(37, 99, 235, 1)',
+                                'rgba(16, 185, 129, 1)',
+                                'rgba(245, 158, 11, 1)',
+                                'rgba(239, 68, 68, 1)',
+                                'rgba(139, 92, 246, 1)'
+                            ],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 2500,
+                            easing: 'easeInOutBounce'
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Global AI Model Performance Benchmarking (TyloAI Universal Gateway)',
+                                font: { size: 16, weight: 'bold' }
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: { padding: 15, font: { weight: '600' } }
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                min: 70,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 5,
+                                    font: { weight: '500' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Scroll Reveal Animation
+        function initScrollReveal() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                observer.observe(el);
+            });
+        }
+
+        // Enhanced Content Display Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const newsId = getUrlParameter('id');
+            const newsList = document.getElementById('news-list');
+            const newsItems = document.querySelectorAll('.news-detail');
+            
+            // Hide all content initially
+            newsList.style.display = 'none';
+            newsItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show appropriate content
+            if (newsId && document.getElementById(`news-${newsId}`)) {
+                // Show specific news item
+                document.getElementById(`news-${newsId}`).classList.add('active');
+                
+                // Update document title
+                const title = document.querySelector(`#news-${newsId} h1`).textContent;
+                document.title = `${title} | TyloAI News`;
+                
+                // Initialize charts for current news
+                setTimeout(initCharts, 100);
+                
+                // Initialize audio player if on music article
+                if (newsId === '2') {
+                    setTimeout(initAudioPlayer, 100);
+                }
+            } else {
+                // Show news list if no valid ID
+                newsList.style.display = 'block';
+            }
+
+            // Initialize scroll reveal animations
+            initScrollReveal();
+
+            // Add staggered loading animation to news cards
+            const newsCards = document.querySelectorAll('.news-card.loading');
+            newsCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.remove('loading');
+                }, index * 200);
+            });
+        });
+
+        // Enhanced live counter animation
+        function animateLiveCounter() {
+            const counter = document.querySelector('.live-counter');
+            if (counter) {
+                const numbers = [73, 72, 71, 70, 69, 68, 67];
+                let currentIndex = 0;
+                
+                setInterval(() => {
+                    if (currentIndex < numbers.length - 1) {
+                        currentIndex++;
+                        counter.innerHTML = `${numbers[currentIndex]} spots remaining`;
+                    }
+                }, 30000); // Update every 30 seconds
+            }
+        }
+
+        // Initialize live counter when DOM loads
+        document.addEventListener('DOMContentLoaded', animateLiveCounter);
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

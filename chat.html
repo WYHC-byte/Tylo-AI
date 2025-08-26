@@ -577,15 +577,60 @@ async function initializeSupabase() {
     }
 }
 
+// 替换原有的 checkAuth 函数为这个修复版本
 async function checkAuth() {
-    // 确保客户端已初始化
-    if (!window.supabaseClient || !window.marketSupabaseClient) {
-        initializeSupabaseClients();
-    }
+    console.log('执行checkAuth函数');
     
-    const isAuthenticated = await initializeSupabase();
-    if (isAuthenticated) {
+    try {
+        // 确保客户端已初始化
+        if (!window.supabaseClient) {
+            if (!initializeSupabaseClients()) {
+                console.log('客户端初始化失败，跳转到登录页');
+                window.location.href = '/login.html';
+                return false;
+            }
+        }
+        
+        const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+        
+        if (error) {
+            console.error('获取session失败:', error);
+            throw error;
+        }
+        
+        if (!session || !session.user || !session.user.id) {
+            console.log('用户未登录，跳转到登录页');
+            window.location.href = '/login.html';
+            return false;
+        }
+        
+        // 🔥 关键修复：强制确保用户ID是字符串类型，绝不能是"null"
+        const userId = String(session.user.id);
+        
+        // 验证用户ID有效性
+        if (userId === 'null' || userId === '' || !userId || userId === 'undefined') {
+            console.error('用户ID无效，强制重新登录');
+            window.location.href = '/login.html';
+            return false;
+        }
+        
+        // 多重设置确保全局可访问
+        window.currentUser = session.user;
+        window.currentUserId = userId;
+        currentUser = session.user;
+        currentUserId = userId;
+        
+        console.log('用户已登录, ID:', userId, '类型:', typeof userId);
+        
+        // 加载用户数据
         await loadUserData();
+        
+        return true;
+        
+    } catch (error) {
+        console.error('认证错误:', error);
+        window.location.href = '/login.html';
+        return false;
     }
 }
     // 主项目 Supabase
@@ -967,29 +1012,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 初始化会员系统（如果还没有初始化）
     if (typeof membershipSystem === 'undefined') {
         window.membershipSystem = initMembershipSystem();
-    }
-    // 检查用户是否已登录
-    async function checkAuth() {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        
-        if (!session) {
-            // 未登录，跳转到登录页
-            window.location.href = '/login.html';
-            return;
-        }
-        
-        currentUser = session.user;
-        currentUserId = session.user.id;
-        
-        // 加载用户数据
-        await loadUserData();
-        
-        // 监听认证状态变化
-        supabaseClient.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_OUT') {
-                window.location.href = '/login.html';
-            }
-        });
     }
 
     
@@ -1671,6 +1693,17 @@ window.addEventListener('load', function() {
     </div>
 </div>
 <script>
+    // 添加到 <script> 标签的开头
+function validateAndGetUserId() {
+    let userId = window.currentUserId || currentUserId;
+    
+    if (!userId || userId === 'null' || userId === '' || userId === 'undefined') {
+        console.error('用户ID验证失败:', userId);
+        return null;
+    }
+    
+    return String(userId);
+}
     // Control reward prompt display logic
 function updateRewardPrompt() {
     const userPlan = localStorage.getItem('userPlan') || 'free';
@@ -1743,7 +1776,7 @@ class PluginManager {
                         is_active
                     )
                 `)
-                .eq('user_id', currentUserId)
+                .eq('user_id', validateAndGetUserId() || window.currentUserId)
                 .eq('is_active', true);
             
             if (userPlugins && userPlugins.length > 0) {
@@ -1978,7 +2011,7 @@ class PluginManager {
             const { data, error } = await marketSupabaseClient
                 .from('user_credits')
                 .select('credits')
-                .eq('user_id', currentUserId)
+                .eq('user_id', validateAndGetUserId() || window.currentUserId)
                 .single();
 
             if (data) {
@@ -2039,7 +2072,7 @@ class PluginManager {
                         credits: this.userCredits - price,
                         total_spent: (await this.getTotalSpent()) + price
                     })
-                    .eq('user_id', currentUserId);
+                    .eq('user_id', validateAndGetUserId() || window.currentUserId);
 
                 if (creditError) throw creditError;
 
@@ -2069,7 +2102,7 @@ class PluginManager {
             const { data } = await marketSupabaseClient
                 .from('user_plugins')
                 .select('id')
-                .eq('user_id', currentUserId)
+                .eq('user_id', validateAndGetUserId() || window.currentUserId)
                 .eq('plugin_id', pluginId)
                 .single();
 
@@ -2380,7 +2413,7 @@ class PluginManager {
                     *,
                     plugins (*)
                 `)
-                .eq('user_id', currentUserId);
+                .eq('user_id', validateAndGetUserId() || window.currentUserId);
 
             this.myPlugins = data || [];
             
@@ -2611,7 +2644,7 @@ class PluginManager {
         const { data } = await marketSupabaseClient
             .from('user_credits')
             .select('total_spent')
-            .eq('user_id', currentUserId)
+            .eq('user_id', validateAndGetUserId() || window.currentUserId)
             .single();
         return data?.total_spent || 0;
     }
@@ -4226,7 +4259,7 @@ setTimeout(() => {
                         points: currentPoints.remaining,
                         points_reset_time: new Date(currentPoints.resetTime).toISOString()
                     })
-                    .eq('user_id', currentUserId);
+                    .eq('user_id', validateAndGetUserId() || window.currentUserId);
             }
 
             initializePoints() {
@@ -4592,7 +4625,7 @@ class MemoryManager {
             const { data: memories } = await supabaseClient
                 .from('ai_memories')
                 .select('*')
-                .eq('user_id', currentUserId)
+                .eq('user_id', validateAndGetUserId() || window.currentUserId)
                 .order('updated_at', { ascending: false });
             
             if (memories) {
@@ -5054,7 +5087,7 @@ class ChatHistoryManager {
                     *,
                     chat_messages (*)
                 `)
-                .eq('user_id', currentUserId)
+                .eq('user_id', validateAndGetUserId() || window.currentUserId)
                 .order('updated_at', { ascending: false });
             
             if (chats) {
@@ -6657,7 +6690,7 @@ async loadAchievements() {
         const { data: achievements } = await supabaseClient
             .from('achievements')
             .select('*')
-            .eq('user_id', currentUserId);
+            .eq('user_id', validateAndGetUserId() || window.currentUserId);
         
         if (achievements) {
             achievements.forEach(a => {
@@ -7717,11 +7750,13 @@ let aiIntentSystem;
                 initializeSupabaseClients();
             }
             
-            // 确保初始化后其他系统
-            setTimeout(() => {
-                aiIntentSystem = new AIIntentSuggestionSystem();
-            }, 100);
-            // 初始化插件管理器
+            // 延迟执行认证检查，确保所有系统都已初始化
+            setTimeout(async () => {
+                await checkAuth();
+            }, 500);
+            
+            // 初始化其他系统
+            aiIntentSystem = new AIIntentSuggestionSystem();
             pluginManager = new PluginManager();
 
             // 检查支付回调
@@ -7729,7 +7764,6 @@ let aiIntentSystem;
             if (urlParams.get('plugin_payment') === 'success') {
                 localStorage.setItem('pluginAccessRights', 'true');
                 alert('支付成功！您现在可以使用插件市场了。');
-                // 清理URL参数
                 window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
@@ -9564,64 +9598,93 @@ function appendMusicGenerationProgress() {
                 }
             });
         }
-
-        // 从 Supabase 加载用户数据
 async function loadUserData() {
-    try {
-        // 加载用户基本信息
+try {
+        // 🔥 确保使用有效的用户ID
+        let userId = window.currentUserId || currentUserId;
+        
+        if (!userId || userId === 'null' || userId === '' || userId === 'undefined') {
+            console.error('loadUserData: 用户ID无效');
+            return false;
+        }
+        
+        console.log('开始加载用户数据，用户ID:', userId);
+        
+        // 加载用户基本信息 - 使用验证后的userId
         const { data: userData, error: userError } = await supabaseClient
             .from('users')
             .select('*')
-            .eq('id', currentUserId)
+            .eq('id', userId)
             .single();
         
-        if (userData) {
+        if (userError && userError.code === 'PGRST116') {
+            // 用户记录不存在，创建新用户
+            await supabaseClient
+                .from('users')
+                .insert({
+                    id: userId,
+                    nickname: '新用户',
+                    avatar_url: 'https://www.jorkai.cn/用户默认头像'
+                });
+            
+            // 创建用户统计记录
+            await supabaseClient
+                .from('user_stats')
+                .insert({
+                    user_id: userId
+                });
+                
+            console.log('新用户记录已创建');
+        } else if (userData) {
             // 更新本地存储和UI
             localStorage.setItem('jiorkUserNickname', userData.nickname || '用户');
             localStorage.setItem('jiorkUserAvatarUrl', userData.avatar_url || 'https://www.jorkai.cn/用户默认头像');
             
-            // 更新UI显示
-            document.getElementById('userNickname').textContent = userData.nickname || '用户';
-            document.getElementById('nicknameInput').value = userData.nickname || '';
-            document.getElementById('avatarUrlInput').value = userData.avatar_url || '';
-            updateUserAvatar(userData.avatar_url);
+            // 更新UI元素
+            const nicknameEl = document.getElementById('userNickname');
+            if (nicknameEl) nicknameEl.textContent = userData.nickname || '用户';
             
-            // 更新会员状态
-            if (userData.plan === 'pro') {
-                membershipSystem.activateMembership('SUPABASE-PRO-' + currentUserId);
-            }
+            const nicknameInputEl = document.getElementById('nicknameInput');
+            if (nicknameInputEl) nicknameInputEl.value = userData.nickname || '';
+            
+            const avatarInputEl = document.getElementById('avatarUrlInput');
+            if (avatarInputEl) avatarInputEl.value = userData.avatar_url || '';
         }
         
         // 加载用户统计数据
         const { data: statsData } = await supabaseClient
             .from('user_stats')
             .select('*')
-            .eq('user_id', currentUserId)
+            .eq('user_id', validateAndGetUserId() || window.currentUserId)
             .single();
         
         if (statsData) {
             // 更新等级系统
-            levelSystem.levelData = {
-                level: statsData.level,
-                exp: statsData.exp,
-                totalExp: statsData.total_exp,
-                lastCheckin: statsData.last_checkin,
-                streakDays: statsData.streak_days
-            };
-            levelSystem.updateLevelUI();
+            if (window.levelSystem) {
+                levelSystem.levelData = {
+                    level: statsData.level || 1,
+                    exp: statsData.exp || 0,
+                    totalExp: statsData.total_exp || 0,
+                    lastCheckin: statsData.last_checkin,
+                    streakDays: statsData.streak_days || 0
+                };
+                levelSystem.updateLevelUI();
+            }
             
-            // 更新积分
-            pointsSystem.initializeFromSupabase(statsData);
+            // 更新积分系统
+            if (window.pointsSystem) {
+                pointsSystem.initializeFromSupabase(statsData);
+            }
         }
         
         // 加载聊天历史
-        await loadChatHistory();
+        await chatManager.loadChatHistory();
         
         // 加载AI记忆
-        await loadMemories();
+        await memoryManager.loadMemories();
         
         // 加载成就
-        await loadAchievements();
+        await achievementSystem.loadAchievements();
         
     } catch (error) {
         console.error('Error loading user data:', error);
@@ -9657,39 +9720,67 @@ async function loadUserData() {
         });
 
         // 保存昵称
-// 示例：保存昵称时的错误处理
+// 修复后的保存昵称事件处理器
 document.getElementById('saveNicknameBtn').addEventListener('click', async function() {
     const nickname = document.getElementById('nicknameInput').value.trim();
-    if (!nickname) return;
+    if (!nickname) {
+        alert('请输入昵称');
+        return;
+    }
+    
+    console.log('保存昵称:', nickname);
+    
+    // 🔥 关键验证：确保用户ID有效
+    let userId = window.currentUserId || currentUserId;
+    
+    if (!userId || userId === 'null' || userId === '' || userId === 'undefined') {
+        console.error('用户ID无效，重新获取');
+        try {
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session && session.user && session.user.id) {
+                userId = String(session.user.id);
+                window.currentUserId = userId;
+                currentUserId = userId;
+            } else {
+                throw new Error('无法获取有效用户ID');
+            }
+        } catch (error) {
+            alert('用户身份验证失败，请重新登录');
+            window.location.href = '/login.html';
+            return;
+        }
+    }
+    
+    console.log('使用的用户ID:', userId, '类型:', typeof userId);
     
     try {
-        const { data, error } = await supabaseClient
+        const { data, error } = await window.supabaseClient
             .from('users')
             .update({ nickname: nickname })
-            .eq('id', currentUserId);
+            .eq('id', userId);  // 直接使用验证后的userId
         
-        if (error) throw error;
+        if (error) {
+            console.error('保存失败:', error);
+            throw error;
+        }
         
-        // 更新本地存储
+        console.log('保存成功:', data);
         localStorage.setItem('jiorkUserNickname', nickname);
         document.getElementById('userNickname').textContent = nickname;
         
-        // 显示成功
-        this.textContent = 'Saved';
+        this.textContent = '保存成功';
         this.classList.add('bg-green-200', 'text-green-600');
-    } catch (error) {
-        console.error('Error saving nickname:', error);
-        this.textContent = 'Save failed';
-        this.classList.add('bg-red-200', 'text-red-600');
         
-        // 显示错误信息
-        alert(`Save failed: ${error.message}`);
-    } finally {
-        setTimeout(() => {
-            this.textContent = '保存昵称';
-            this.className = 'mt-2 px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors';
-        }, 1500);
+    } catch (error) {
+        console.error('保存昵称失败:', error);
+        this.textContent = '保存失败: ' + error.message;
+        this.classList.add('bg-red-200', 'text-red-600');
     }
+    
+    setTimeout(() => {
+        this.textContent = '保存昵称';
+        this.className = 'mt-2 px-4 py-2 bg-orange-200 text-orange-600 rounded-md hover:bg-orange-300 transition-colors';
+    }, 2000);
 });
 
         // 保存头像URL
@@ -10260,7 +10351,160 @@ window.addEventListener('error', (event) => {
         window.location.href = '/login.html';
     }
 });
+// 首次登录弹窗管理
+class FirstLoginModalManager {
+    constructor() {
+        this.selectedChoice = null;
+        this.init();
+    }
 
+    init() {
+        if (localStorage.getItem('jiorkFirstLoginCompleted')) {
+            return;
+        }
+        
+        this.bindEvents();
+        this.showModal();
+    }
+
+    bindEvents() {
+        document.querySelectorAll('.storage-option').forEach(option => {
+            option.addEventListener('click', () => this.selectOption(option));
+        });
+
+        document.getElementById('confirmStorageChoice').addEventListener('click', () => this.confirm());
+        document.getElementById('laterStorageChoice').addEventListener('click', () => this.chooseLater());
+    }
+
+    selectOption(option) {
+        document.querySelectorAll('.storage-option').forEach(opt => {
+            opt.classList.remove('border-blue-400', 'border-green-400', 'shadow-lg');
+            opt.querySelector('.option-check').classList.add('hidden');
+        });
+
+        this.selectedChoice = option.dataset.choice;
+        option.classList.add(this.selectedChoice === 'cloud' ? 'border-blue-400' : 'border-green-400', 'shadow-lg');
+        option.querySelector('.option-check').classList.remove('hidden');
+        
+        document.getElementById('confirmStorageChoice').disabled = false;
+    }
+
+    confirm() {
+        localStorage.setItem('jiorkDataStorageChoice', this.selectedChoice);
+        localStorage.setItem('jiorkFirstLoginCompleted', 'true');
+        this.hideModal();
+    }
+
+    chooseLater() {
+        localStorage.setItem('jiorkDataStorageChoice', 'local');
+        localStorage.setItem('jiorkFirstLoginCompleted', 'true');
+        this.hideModal();
+    }
+
+    showModal() {
+        document.getElementById('firstLoginModal').classList.remove('hidden');
+    }
+
+    hideModal() {
+        document.getElementById('firstLoginModal').classList.add('hidden');
+    }
+}
+
+// 修改checkAuth函数，在认证成功后检查首次登录
+const originalCheckAuth = checkAuth;
+checkAuth = async function() {
+    const result = await originalCheckAuth();
+    if (result) {
+        setTimeout(() => {
+            new FirstLoginModalManager();
+        }, 1000);
+    }
+    return result;
+};
 </script>
+<!-- 首次登录数据存储选择弹窗 -->
+<div id="firstLoginModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 p-8">
+        <!-- 头部 -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-database text-white text-2xl"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">选择您的数据存储方式</h2>
+            <p class="text-gray-600 dark:text-gray-400">我们关心您的隐私，让您自主选择个人数据的存储位置</p>
+        </div>
+
+        <!-- 选项卡片 -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- 云端存储选项 -->
+            <div class="storage-option border-2 border-gray-200 dark:border-gray-600 rounded-xl p-6 cursor-pointer transition-all hover:border-blue-400 hover:shadow-lg" data-choice="cloud">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cloud-upload-alt text-blue-600 dark:text-blue-400 text-xl"></i>
+                    </div>
+                    <div class="option-check hidden">
+                        <div class="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-white text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">云端同步</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">将个人数据存储在我们的安全服务器上</p>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center text-green-600 dark:text-green-400">
+                        <i class="fas fa-check w-4 h-4 mr-2"></i>多设备同步
+                    </div>
+                    <div class="flex items-center text-green-600 dark:text-green-400">
+                        <i class="fas fa-check w-4 h-4 mr-2"></i>自动备份
+                    </div>
+                    <div class="flex items-center text-orange-500 dark:text-orange-400">
+                        <i class="fas fa-exclamation-triangle w-4 h-4 mr-2"></i>需要网络连接
+                    </div>
+                </div>
+            </div>
+
+            <!-- 本地存储选项 -->
+            <div class="storage-option border-2 border-gray-200 dark:border-gray-600 rounded-xl p-6 cursor-pointer transition-all hover:border-green-400 hover:shadow-lg" data-choice="local">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-shield-alt text-green-600 dark:text-green-400 text-xl"></i>
+                    </div>
+                    <div class="option-check hidden">
+                        <div class="w-6 h-6 bg-green-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-check text-white text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">本地存储</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">将个人数据保存在您的设备上</p>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex items-center text-green-600 dark:text-green-400">
+                        <i class="fas fa-check w-4 h-4 mr-2"></i>完全隐私保护
+                    </div>
+                    <div class="flex items-center text-green-600 dark:text-green-400">
+                        <i class="fas fa-check w-4 h-4 mr-2"></i>离线可用
+                    </div>
+                    <div class="flex items-center text-orange-500 dark:text-orange-400">
+                        <i class="fas fa-exclamation-triangle w-4 h-4 mr-2"></i>仅限当前设备
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部按钮 -->
+        <div class="flex flex-col sm:flex-row gap-3">
+            <button id="confirmStorageChoice" class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50" disabled>
+                确认选择
+            </button>
+            <button id="laterStorageChoice" class="flex-1 border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-lg font-semibold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                稍后决定（使用本地存储）
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

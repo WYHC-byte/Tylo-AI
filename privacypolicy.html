@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI - Policy Center</title>
+    <meta name="description" content="TyloAI Policy Center - Privacy Policy, Terms of Service, Cookie Policy, and AI Memory Guide">
+    
+    <!-- External libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #eee;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #000;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header section */
+        .policy-header {
+            text-align: center;
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+            margin-bottom: 3rem;
+        }
+
+        .policy-header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .policy-header p {
+            font-size: 1.25rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .last-updated {
+            background: #000;
+            color: #fff;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 1.5rem;
+        }
+
+        /* Table of Contents */
+        .toc-section {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .toc-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .toc-item {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .toc-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-color: #000;
+        }
+
+        .toc-item-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .toc-item h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+
+        .toc-item p {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Policy sections */
+        .policy-section {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title i {
+            font-size: 2rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #000;
+            margin: 2rem 0 1rem 0;
+        }
+
+        .section-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #000;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .section-content h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .section-content p {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .section-content ul, .section-content ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+        }
+
+        .section-content li {
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-left: 4px solid #0ea5e9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+            border-left: 4px solid #ef4444;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .success-box {
+            background: #f0fdf4;
+            border: 1px solid #22c55e;
+            border-left: 4px solid #22c55e;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        /* Feature grids */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .feature-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .feature-card h4 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #000;
+        }
+
+        .feature-card p {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #000;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Contact section */
+        .contact-info {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .contact-info h4 {
+            color: #000;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.75rem 0;
+            color: #333;
+        }
+
+        .contact-item i {
+            color: #0ea5e9;
+            width: 20px;
+        }
+
+        /* Footer */
+        .footer {
+            background: #000;
+            color: #fff;
+            padding: 3rem 2rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #fff;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 2rem;
+            text-align: center;
+            color: #999;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .policy-header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .toc-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .policy-section {
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .policy-section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="logo.png" alt="TyloAI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                <i class="fas fa-robot" style="display: none;"></i>
+                TyloAI
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#privacy">Privacy</a></li>
+                <li><a href="#terms">Terms</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main content -->
+    <div class="main-content">
+        <!-- Header -->
+        <section class="policy-header">
+            <div class="container">
+                <h1>TyloAI Policy Center</h1>
+                <p>Your comprehensive guide to our privacy practices, terms of service, and AI features. We believe in complete transparency about how we handle your data and provide our services.</p>
+                <div class="last-updated">Last Updated: August 26, 2025</div>
+            </div>
+        </section>
+
+        <div class="container">
+            <!-- Table of Contents -->
+            <section class="toc-section">
+                <h2 class="toc-title">
+                    <i class="fas fa-compass"></i>
+                    Quick Navigation
+                </h2>
+                <div class="toc-grid">
+                    <a href="#ai-memory" class="toc-item">
+                        <i class="fas fa-brain toc-item-icon"></i>
+                        <h3>AI Memory Guide</h3>
+                        <p>Learn about our intelligent memory system and how to control your personalized AI experience.</p>
+                    </a>
+                    <a href="#privacy" class="toc-item">
+                        <i class="fas fa-shield-alt toc-item-icon"></i>
+                        <h3>Privacy Policy</h3>
+                        <p>Understand how we collect, use, and protect your personal information with complete transparency.</p>
+                    </a>
+                    <a href="#cookies" class="toc-item">
+                        <i class="fas fa-cookie-bite toc-item-icon"></i>
+                        <h3>Cookie Policy</h3>
+                        <p>Details about cookies, local storage, and how you can manage your data preferences.</p>
+                    </a>
+                    <a href="#terms" class="toc-item">
+                        <i class="fas fa-file-contract toc-item-icon"></i>
+                        <h3>Terms of Service</h3>
+                        <p>The legal agreement governing your use of TyloAI services and your rights as a user.</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- AI Memory Guide Section -->
+            <section id="ai-memory" class="policy-section">
+                <h2 class="section-title">
+                    <i class="fas fa-brain" style="color: #8b5cf6;"></i>
+                    AI Memory Feature Guide
+                </h2>
+
+                <div class="section-content">
+                    <div class="highlight-box">
+                        <h3>What is AI Memory?</h3>
+                        <p>Our AI Memory system creates a personalized experience by remembering your preferences, interests, and conversation patterns. This allows TyloAI to provide more relevant and contextual responses tailored specifically to you.</p>
+                    </div>
+
+                    <h3>How Memory Works</h3>
+                    <p>AI Memory analyzes your conversations to identify and store important information about you, such as:</p>
+                    <ul>
+                        <li>Personal preferences and interests</li>
+                        <li>Professional background and expertise areas</li>
+                        <li>Communication style preferences</li>
+                        <li>Recurring topics and questions</li>
+                        <li>Goals and projects you're working on</li>
+                    </ul>
+
+                    <h3>Memory Controls</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-toggle-on" style="color: #3b82f6;"></i>
+                            <h4>Enable/Disable</h4>
+                            <p>One-click control to turn memory feature on or off in settings.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-eye" style="color: #10b981;"></i>
+                            <h4>View Memories</h4>
+                            <p>See all stored memories and understand what AI knows about you.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-edit" style="color: #f59e0b;"></i>
+                            <h4>Edit Content</h4>
+                            <p>Modify or correct any stored information that's inaccurate.</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-trash-alt" style="color: #ef4444;"></i>
+                            <h4>Delete Data</h4>
+                            <p>Remove specific memories or clear all data completely.</p>
+                        </div>
+                    </div>
+
+                    <h3>AI Personality Analysis</h3>
+                    <p>Based on your interactions, we can generate a unique "Personality Card" that shows how AI perceives your characteristics and traits. This feature is:</p>
+                    <ul>
+                        <li><strong>Entertainment Purpose:</strong> For fun and self-reflection, not professional assessment</li>
+                        <li><strong>Privacy Protected:</strong> Generated locally and never shared without consent</li>
+                        <li><strong>Shareable:</strong> Export as image to share with friends if desired</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <p><strong>Privacy Note:</strong> All memory data is stored locally in your browser and can be completely deleted at any time. We never use this data for advertising or share it with third parties.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Privacy Policy Section -->
+            <section id="privacy" class="policy-section">
+                <h2 class="section-title">
+                    <i class="fas fa-shield-alt" style="color: #10b981;"></i>
+                    Privacy Policy
+                </h2>
+
+                <div class="section-content">
+                    <div class="success-box">
+                        <h4>Our Privacy Commitment</h4>
+                        <p>Your privacy is fundamental to everything we do. We are committed to being transparent about our data practices and giving you complete control over your information.</p>
+                    </div>
+
+                    <h3>Information We Collect</h3>
+                    
+                    <h4>Information You Provide</h4>
+                    <ul>
+                        <li><strong>Account Information:</strong> Optional nickname and avatar</li>
+                        <li><strong>Conversation Data:</strong> Your messages and interactions with AI</li>
+                        <li><strong>Uploaded Files:</strong> Images, documents (processed temporarily)</li>
+                        <li><strong>Preferences:</strong> Settings, themes, language choices</li>
+                    </ul>
+
+                    <h4>Automatically Collected Information</h4>
+                    <ul>
+                        <li><strong>Usage Statistics:</strong> Feature usage, model preferences</li>
+                        <li><strong>AI Memory Data:</strong> Conversation-derived insights (optional)</li>
+                        <li><strong>Technical Information:</strong> Browser type, device info (for optimization)</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <p><strong>What We DON'T Collect:</strong> Real names, phone numbers, precise location, payment details (handled by third parties), or any sensitive personal identifiers.</p>
+                    </div>
+
+                    <h3>How We Use Information</h3>
+                    <ul>
+                        <li><strong>Service Provision:</strong> Processing requests, generating responses</li>
+                        <li><strong>Personalization:</strong> Remembering preferences, improving relevance</li>
+                        <li><strong>Service Improvement:</strong> Analyzing usage patterns, fixing issues</li>
+                        <li><strong>Security:</strong> Preventing abuse, protecting service integrity</li>
+                    </ul>
+
+                    <h3>Data Storage & Security</h3>
+                    <p>Your data security is paramount:</p>
+                    <ul>
+                        <li><strong>Local Storage:</strong> Most data stored in your browser only</li>
+                        <li><strong>Encryption:</strong> All data transmission uses HTTPS</li>
+                        <li><strong>Access Control:</strong> Strict limits on who can access data</li>
+                        <li><strong>Regular Audits:</strong> Continuous security monitoring</li>
+                    </ul>
+
+                    <h3>Third-Party Services</h3>
+                    <p>We use trusted partners for specific services:</p>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-robot"></i>
+                            <h4>AI Models</h4>
+                            <p>Various AI providers for text, image, and code generation</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-credit-card"></i>
+                            <h4>Payment Processing</h4>
+                            <p>Secure payment platforms (no card data stored by us)</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-cloud"></i>
+                            <h4>Infrastructure</h4>
+                            <p>Cloud services for reliability and performance</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Security</h4>
+                            <p>CDN and security services for protection</p>
+                        </div>
+                    </div>
+
+                    <h3>Your Rights</h3>
+                    <p>You have complete control over your data:</p>
+                    <ul>
+                        <li><strong>Access:</strong> View all stored information about you</li>
+                        <li><strong>Correction:</strong> Update or fix any incorrect data</li>
+                        <li><strong>Deletion:</strong> Remove specific data or delete everything</li>
+                        <li><strong>Export:</strong> Download a copy of your data</li>
+                        <li><strong>Control:</strong> Manage privacy settings and preferences</li>
+                    </ul>
+
+                    <div class="contact-info">
+                        <h4>Privacy Questions?</h4>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>privacy@tyloai.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Response time: 1-3 business days</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cookie Policy Section -->
+            <section id="cookies" class="policy-section">
+                <h2 class="section-title">
+                    <i class="fas fa-cookie-bite" style="color: #f59e0b;"></i>
+                    Cookie & Data Storage Policy
+                </h2>
+
+                <div class="section-content">
+                    <p>We use cookies and local storage to enhance your experience and provide personalized service. Here's everything you need to know:</p>
+
+                    <h3>Types of Data Storage</h3>
+                    
+                    <h4>Essential Cookies (Always Active)</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Purpose</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>darkMode</td>
+                                <td>Remembers your theme preference</td>
+                                <td>Persistent</td>
+                            </tr>
+                            <tr>
+                                <td>tyloUserId</td>
+                                <td>Unique session identifier</td>
+                                <td>Persistent</td>
+                            </tr>
+                            <tr>
+                                <td>tyloLanguage</td>
+                                <td>Language settings</td>
+                                <td>Persistent</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4>Functional Storage (Optional)</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Purpose</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>tyloChatHistory</td>
+                                <td>Stores conversation history</td>
+                                <td>Persistent</td>
+                            </tr>
+                            <tr>
+                                <td>tyloMemorySystem</td>
+                                <td>AI memory functionality</td>
+                                <td>Persistent</td>
+                            </tr>
+                            <tr>
+                                <td>tyloAchievements</td>
+                                <td>Progress and achievements</td>
+                                <td>Persistent</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Local Storage</h3>
+                    <p>Beyond cookies, we use browser Local Storage for:</p>
+                    <ul>
+                        <li>Extended conversation history</li>
+                        <li>AI memory content and analysis</li>
+                        <li>User preferences and customizations</li>
+                        <li>Achievement and progress data</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <p><strong>Local Storage Benefits:</strong> Data stays on your device, larger storage capacity, not sent to servers with each request, and you have complete control.</p>
+                    </div>
+
+                    <h3>Managing Your Data</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-cog"></i>
+                            <h4>Browser Settings</h4>
+                            <p>Control cookies through your browser's privacy settings</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-sliders-h"></i>
+                            <h4>TyloAI Settings</h4>
+                            <p>Manage preferences directly in our app settings</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-download"></i>
+                            <h4>Export Data</h4>
+                            <p>Download a backup of all your stored information</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-trash"></i>
+                            <h4>Clear Everything</h4>
+                            <p>One-click option to delete all stored data</p>
+                        </div>
+                    </div>
+
+                    <h3>Third-Party Cookies</h3>
+                    <p>Some services we integrate may set their own cookies:</p>
+                    <ul>
+                        <li><strong>Payment Services:</strong> For processing transactions securely</li>
+                        <li><strong>CDN Services:</strong> For faster content delivery</li>
+                        <li><strong>Security Services:</strong> For protection against threats</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <p><strong>Important:</strong> We don't control third-party cookies. Please review their privacy policies for more information about their practices.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Terms of Service Section -->
+            <section id="terms" class="policy-section">
+                <h2 class="section-title">
+                    <i class="fas fa-file-contract" style="color: #6366f1;"></i>
+                    Terms of Service
+                </h2>
+
+                <div class="section-content">
+                    <div class="success-box">
+                        <h4>Agreement Acceptance</h4>
+                        <p>By using TyloAI services, you agree to these terms. If you disagree with any part of these terms, please do not use our services.</p>
+                    </div>
+
+                    <h3>Service Description</h3>
+                    <p>TyloAI provides AI-powered conversational assistance including:</p>
+                    <ul>
+                        <li>Intelligent chat and Q&A services</li>
+                        <li>Text creation and editing assistance</li>
+                        <li>Code writing and debugging support</li>
+                        <li>Image generation services</li>
+                        <li>Music generation (experimental feature)</li>
+                        <li>Document analysis and processing</li>
+                    </ul>
+
+                    <div class="warning-box">
+                        <h4>Important Disclaimers</h4>
+                        <ul>
+                            <li>AI-generated content is for reference only, not professional advice</li>
+                            <li>Not suitable for medical diagnosis, legal counsel, or investment decisions</li>
+                            <li>AI may produce incorrect or inaccurate information</li>
+                            <li>Users should verify important information independently</li>
+                        </ul>
+                    </div>
+
+                    <h3>User Conduct</h3>
+                    
+                    <h4>Permitted Uses</h4>
+                    <ul>
+                        <li>Personal learning, creation, and work assistance</li>
+                        <li>Reasonable commercial use (Pro users)</li>
+                        <li>Educational and research purposes</li>
+                        <li>Entertainment and creative exploration</li>
+                    </ul>
+
+                    <h4>Prohibited Activities</h4>
+                    <div class="warning-box">
+                        <p><strong>Strictly Prohibited:</strong></p>
+                        <ul>
+                            <li>Generating illegal, harmful, or infringing content</li>
+                            <li>Network attacks, scraping, or automated abuse</li>
+                            <li>Spreading false information or conducting fraudulent activities</li>
+                            <li>Harassment, threats, or privacy violations</li>
+                            <li>Creating adult, violent, or hate content</li>
+                            <li>Bypassing system restrictions or service exploitation</li>
+                            <li>Reselling or unauthorized distribution of services</li>
+                        </ul>
+                    </div>
+
+                    <h3>Account & Security</h3>
+                    <ul>
+                        <li>You're responsible for maintaining accurate account information</li>
+                        <li>Keep your account secure and don't share with others</li>
+                        <li>You're responsible for all activities under your account</li>
+                        <li>Report suspicious activity immediately</li>
+                    </ul>
+
+                    <h3>Intellectual Property</h3>
+                    
+                    <h4>Service Content Rights</h4>
+                    <p>TyloAI's interface, functionality, and brand elements are protected by intellectual property laws. Unauthorized copying, modification, or distribution is prohibited.</p>
+
+                    <h4>Generated Content Ownership</h4>
+                    <ul>
+                        <li><strong>Your Input:</strong> You retain all rights to content you provide</li>
+                        <li><strong>AI Generated:</strong> You may use AI-generated content subject to applicable laws</li>
+                        <li><strong>Note:</strong> AI content may be similar to others' generations; we don't guarantee uniqueness</li>
+                    </ul>
+
+                    <h3>Subscription Services</h3>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-user"></i>
+                            <h4>Free Plan</h4>
+                            <p>Daily credits, basic models, standard response speed</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-crown"></i>
+                            <h4>Pro Plan</h4>
+                            <p>Unlimited credits, all models, priority response, exclusive features</p>
+                        </div>
+                    </div>
+
+                    <h4>Payment & Refunds</h4>
+                    <ul>
+                        <li>Payments processed through secure third-party platforms</li>
+                        <li>Prices may change but won't affect existing subscriptions</li>
+                        <li>Digital services generally non-refundable once purchased</li>
+                        <li>Contact support for special circumstances</li>
+                    </ul>
+
+                    <h3>Limitation of Liability</h3>
+                    <div class="warning-box">
+                        <h4>Responsibility Limits</h4>
+                        <p>To the maximum extent permitted by law, TyloAI and its affiliates are not liable for:</p>
+                        <ul>
+                            <li>Service interruptions, errors, or unavailability</li>
+                            <li>Accuracy, completeness, or suitability of AI-generated content</li>
+                            <li>Any losses from using or inability to use services</li>
+                            <li>Third-party service issues or failures</li>
+                            <li>Data loss or corruption</li>
+                            <li>Any indirect, special, or consequential damages</li>
+                        </ul>
+                    </div>
+
+                    <h3>Service Changes & Termination</h3>
+                    <p>We reserve the right to:</p>
+                    <ul>
+                        <li>Modify, suspend, or terminate any part of the service</li>
+                        <li>Update service features, interface, or access requirements</li>
+                        <li>Adjust pricing and billing methods</li>
+                        <li>Terminate accounts for violations or inactivity</li>
+                    </ul>
+
+                    <h3>Governing Law</h3>
+                    <p>These terms are governed by applicable laws. Any disputes should first be resolved through friendly negotiation. If unsuccessful, disputes may be brought to courts with appropriate jurisdiction.</p>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="policy-section">
+                <h2 class="section-title">
+                    <i class="fas fa-headset" style="color: #8b5cf6;"></i>
+                    Contact & Support
+                </h2>
+
+                <div class="section-content">
+                    <p>Have questions about our policies or need assistance? We're here to help.</p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <i class="fas fa-envelope"></i>
+                            <h4>General Support</h4>
+                            <p>support@tyloai.com<br>Response: 1-3 business days</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Privacy Concerns</h4>
+                            <p>privacy@tyloai.com<br>Priority response for privacy issues</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-gavel"></i>
+                            <h4>Legal Matters</h4>
+                            <p>legal@tyloai.com<br>For terms and compliance issues</p>
+                        </div>
+                        <div class="feature-card">
+                            <i class="fas fa-bug"></i>
+                            <h4>Technical Issues</h4>
+                            <p>tech@tyloai.com<br>For bugs and technical problems</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-info">
+                        <h4>Additional Resources</h4>
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i>
+                            <span>Website: www.tyloai.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-book"></i>
+                            <span>Help Center: help.tyloai.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-users"></i>
+                            <span>Community: community.tyloai.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-code"></i>
+                            <span>Developer API: api.tyloai.com</span>
+                        </div>
+                    </div>
+
+                    <h3>Policy Updates</h3>
+                    <p>We may update these policies periodically. Significant changes will be communicated through:</p>
+                    <ul>
+                        <li>Website announcements</li>
+                        <li>In-app notifications</li>
+                        <li>Email notifications (if provided)</li>
+                        <li>Service interruption notices for major changes</li>
+                    </ul>
+
+                    <div class="info-box">
+                        <h4>Recent Updates</h4>
+                        <ul>
+                            <li><strong>August 26, 2025:</strong> Created unified policy center</li>
+                            <li><strong>August 6, 2024:</strong> Updated AI memory feature description</li>
+                            <li><strong>July 15, 2024:</strong> Updated third-party service list</li>
+                            <li><strong>January 1, 2024:</strong> Initial policies released</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>TyloAI</h3>
+                    <p style="color: #ccc; line-height: 1.6;">
+                        Committed to providing users with the most intelligent, secure, and convenient AI service experience. We believe AI will change the world and make life better.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h3>Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">AI Conversation</a></li>
+                        <li><a href="index.html">Image Understanding</a></li>
+                        <li><a href="index.html">Code Assistant</a></li>
+                        <li><a href="index.html">API Services</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Policies</h3>
+                    <ul class="footer-links">
+                        <li><a href="#privacy">Privacy Policy</a></li>
+                        <li><a href="#terms">Terms of Service</a></li>
+                        <li><a href="#cookies">Cookie Policy</a></li>
+                        <li><a href="#ai-memory">AI Memory Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:support@tyloai.com">Email Support</a></li>
+                        <li><a href="#contact">Contact Information</a></li>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TyloAI. All rights reserved. | Building the future of AI interaction.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Navigation bar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - 100; // Account for fixed navbar
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add active section highlighting
+        const sections = document.querySelectorAll('.policy-section');
+        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+        function updateActiveSection() {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                if (pageYOffset >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').slice(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveSection);
+
+        // Add table of contents functionality
+        const tocItems = document.querySelectorAll('.toc-item');
+        tocItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                    const offsetTop = targetSection.offsetTop - 100;
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all policy sections for animation
+        sections.forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+            observer.observe(section);
+        });
+
+        // Add copy functionality for contact information
+        document.querySelectorAll('.contact-item').forEach(item => {
+            const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/;
+            const text = item.textContent;
+            if (emailRegex.test(text)) {
+                item.style.cursor = 'pointer';
+                item.title = 'Click to copy email';
+                item.addEventListener('click', () => {
+                    const email = text.match(emailRegex)[0];
+                    navigator.clipboard.writeText(email).then(() => {
+                        const originalText = item.innerHTML;
+                        item.innerHTML = originalText.replace(email, `<strong style="color: #10b981;">${email} (Copied!)</strong>`);
+                        setTimeout(() => {
+                            item.innerHTML = originalText;
+                        }, 2000);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
