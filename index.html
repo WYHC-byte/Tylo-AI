@@ -932,6 +932,247 @@
                 max-width: 300px;
             }
         }
+        /* Trailer Section - Video */
+.trailer-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.trailer-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.trailer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.trailer-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.trailer-header h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.trailer-header p {
+    font-size: 1.25rem;
+    color: #ccc;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.trailer-player {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    border-radius: 15px;
+    overflow: hidden;
+    background: #000;
+}
+
+.video-player {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    border-radius: 15px;
+}
+
+.video-player::-webkit-media-controls-panel {
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+}
+
+.video-player::-webkit-media-controls-play-button {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.video-player::-webkit-media-controls-current-time-display,
+.video-player::-webkit-media-controls-time-remaining-display {
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+}
+
+.play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.video-container:hover .play-overlay {
+    opacity: 1;
+}
+
+.play-overlay:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.play-overlay i {
+    color: #fff;
+    font-size: 2rem;
+    margin-left: 4px;
+}
+
+.trailer-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+}
+
+.trailer-stat {
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+}
+
+.trailer-stat:hover {
+    transform: translateY(-3px);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.trailer-stat-icon {
+    font-size: 2rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.trailer-stat-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.25rem;
+}
+
+.trailer-stat-desc {
+    font-size: 0.9rem;
+    color: #aaa;
+    line-height: 1.4;
+}
+
+.trailer-cta {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.trailer-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 2.5rem;
+    background: #fff;
+    color: #000;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.trailer-button:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+}
+
+.trailer-button i {
+    font-size: 1.2rem;
+}
+
+/* Responsive design for trailer section */
+@media (max-width: 768px) {
+    .trailer-header h2 {
+        font-size: 2.2rem;
+    }
+    
+    .trailer-player {
+        padding: 1rem;
+        margin: 0 1rem;
+    }
+    
+    .trailer-info {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .trailer-button {
+        padding: 0.875rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .play-overlay {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .play-overlay i {
+        font-size: 1.5rem;
+    }
+}
     </style>
 </head>
 
@@ -945,6 +1186,7 @@
                 TyloAI
             </a>
             <ul class="nav-links">
+                <li><a href="#trailer">Trailer</a></li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#stats">Data</a></li>
@@ -1059,6 +1301,58 @@
             </div>
         </div>
     </section>
+
+    <!-- Trailer Section -->
+<section class="trailer-section" id="trailer">
+    <div class="trailer-container">
+        <div class="trailer-header">
+            <h2>Experience TyloAI</h2>
+            <p>Watch our exclusive trailer showcasing the future of intelligent AI interaction and discover what makes TyloAI extraordinary</p>
+        </div>
+        
+        <div class="trailer-player">
+            <div class="video-container">
+                <video class="video-player" controls preload="metadata" poster="">
+                    <source src="宣传片.mp4" type="video/mp4">
+                    Your browser does not support the video element.
+                </video>
+                <div class="play-overlay">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="trailer-info">
+            <div class="trailer-stat">
+                <i class="fas fa-magic trailer-stat-icon"></i>
+                <div class="trailer-stat-title">Next-Gen AI</div>
+                <div class="trailer-stat-desc">Revolutionary intelligence that understands and adapts</div>
+            </div>
+            <div class="trailer-stat">
+                <i class="fas fa-bolt trailer-stat-icon"></i>
+                <div class="trailer-stat-title">Lightning Fast</div>
+                <div class="trailer-stat-desc">Instant responses powered by advanced algorithms</div>
+            </div>
+            <div class="trailer-stat">
+                <i class="fas fa-shield-alt trailer-stat-icon"></i>
+                <div class="trailer-stat-title">Secure & Private</div>
+                <div class="trailer-stat-desc">Your conversations protected with enterprise-grade security</div>
+            </div>
+            <div class="trailer-stat">
+                <i class="fas fa-globe trailer-stat-icon"></i>
+                <div class="trailer-stat-title">Global Access</div>
+                <div class="trailer-stat-desc">Available worldwide with multi-language support</div>
+            </div>
+        </div>
+
+        <div class="trailer-cta">
+            <a href="login.html" class="trailer-button">
+                <i class="fas fa-rocket"></i>
+                Start Your Journey
+            </a>
+        </div>
+    </div>
+</section>
     
     <!-- Feature highlights -->
     <section class="sections" id="features">
