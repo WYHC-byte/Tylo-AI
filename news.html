@@ -232,179 +232,6 @@
             line-height: 1.7;
         }
 
-        /* Enhanced Music Demo Section */
-        .music-demo {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: var(--border-radius-lg);
-            padding: var(--spacing-2xl);
-            margin: var(--spacing-xl) 0;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--shadow-xl);
-            animation: musicDemoFloat 6s ease-in-out infinite;
-        }
-
-        @keyframes musicDemoFloat {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-10px) scale(1.02); }
-        }
-
-        .music-demo::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .music-demo h3 {
-            color: white;
-            margin-bottom: var(--spacing-lg);
-            font-size: 1.8rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .music-demo p {
-            color: rgba(255, 255, 255, 0.9);
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* Custom Audio Player */
-        .custom-audio-player {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: var(--border-radius-lg);
-            padding: var(--spacing-lg);
-            margin: var(--spacing-lg) 0;
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-md);
-            max-width: 400px;
-            margin-left: auto;
-            margin-right: auto;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .play-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid white;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .play-btn:hover {
-            background: white;
-            color: var(--color-accent);
-            transform: scale(1.1);
-        }
-
-        .play-btn.playing {
-            animation: playingPulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes playingPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-            50% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
-        }
-
-        .audio-info {
-            flex: 1;
-            text-align: left;
-        }
-
-        .track-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: var(--spacing-xs);
-        }
-
-        .track-duration {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-            margin: var(--spacing-sm) 0;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: white;
-            border-radius: 2px;
-            width: 0%;
-            transition: width 0.1s ease;
-            position: relative;
-        }
-
-        .progress-fill::after {
-            content: '';
-            position: absolute;
-            right: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 12px;
-            height: 12px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-        }
-
-        /* Visualization bars */
-        .audio-visualizer {
-            display: flex;
-            align-items: flex-end;
-            gap: 2px;
-            height: 40px;
-        }
-
-        .vis-bar {
-            width: 3px;
-            background: white;
-            border-radius: 1px;
-            transition: height 0.1s ease;
-            opacity: 0.6;
-        }
-
-        .vis-bar.active {
-            opacity: 1;
-            animation: visualizerBounce 0.5s ease-in-out infinite alternate;
-        }
-
-        @keyframes visualizerBounce {
-            from { height: 5px; }
-            to { height: 25px; }
-        }
-
         /* News Grid Enhancements */
         .news-grid {
             display: grid;
@@ -675,28 +502,6 @@
             border-bottom: none;
         }
 
-        /* Progress indicators in table cells */
-        .progress-cell {
-            position: relative;
-        }
-
-        .progress-cell::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 3px;
-            background: var(--gradient-accent);
-            border-radius: 1.5px;
-            transition: width 1s ease;
-        }
-
-        .progress-cell[data-progress="92"]::after { width: 92%; }
-        .progress-cell[data-progress="88"]::after { width: 88%; }
-        .progress-cell[data-progress="85"]::after { width: 85%; }
-        .progress-cell[data-progress="94"]::after { width: 94%; }
-        .progress-cell[data-progress="96"]::after { width: 96%; }
-
         /* News Detail Enhancements */
         .news-detail {
             display: none;
@@ -759,52 +564,6 @@
             transform: scale(1.05);
         }
 
-        .logo-grid {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: var(--spacing-lg);
-            margin: var(--spacing-xl) 0;
-            padding: var(--spacing-2xl);
-            background: var(--color-background-alt);
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .model-logo {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--spacing-sm);
-            font-weight: 600;
-            padding: var(--spacing-md);
-            border-radius: var(--border-radius);
-            transition: all 0.3s ease;
-            text-align: center;
-            min-width: 120px;
-        }
-
-        .model-logo:hover {
-            transform: translateY(-5px) scale(1.1);
-            background: white;
-            box-shadow: var(--shadow-md);
-        }
-        
-        .model-logo i {
-            font-size: 2.5rem;
-            background: var(--gradient-accent);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: iconFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes iconFloat {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-        
         .cta-button {
             display: inline-flex;
             align-items: center;
@@ -923,31 +682,6 @@
             line-height: 1.6;
         }
 
-        /* Live counter animation */
-        .live-counter {
-            font-weight: 800;
-            color: var(--color-success);
-            display: inline-flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-            animation: counterBlink 1.5s ease-in-out infinite;
-        }
-
-        .live-counter::before {
-            content: '🔴';
-            animation: livePulse 1s ease-in-out infinite;
-        }
-
-        @keyframes counterBlink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.7; }
-        }
-
-        @keyframes livePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
         /* Navigation enhancements */
         .news-navigation {
             display: flex;
@@ -979,6 +713,79 @@
             color: white;
             transform: scale(1.05);
             box-shadow: var(--shadow-md);
+        }
+
+        /* Interactive elements */
+        .demo-playground {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-2xl);
+            margin: var(--spacing-xl) 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-tabs {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .demo-tab {
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: var(--border-radius);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-tab.active {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .demo-content {
+            background: rgba(0,0,0,0.2);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            min-height: 300px;
+        }
+
+        .code-block {
+            background: #1a1a1a;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            color: #fff;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Video embed styles */
+        .video-embed {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            margin: var(--spacing-xl) 0;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .video-embed iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         /* Responsive Design */
@@ -1014,16 +821,9 @@
             .stats-grid {
                 grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             }
-            
-            .logo-grid {
-                flex-direction: column;
-                gap: var(--spacing-md);
-            }
 
-            .custom-audio-player {
-                max-width: 100%;
+            .demo-tabs {
                 flex-direction: column;
-                text-align: center;
             }
         }
 
@@ -1060,9 +860,9 @@
 <body>
     <div class="container">
         <header>
-            <a href="#" class="logo">TyloAI</a>
+            <a href="index.html" class="logo">TyloAI</a>
             <nav class="nav-links">
-                <a href="#" class="nav-link">Home</a>
+                <a href="index.html" class="nav-link">Home</a>
                 <a href="#" class="nav-link active">News</a>
                 <a href="#" class="nav-link">Products</a>
                 <a href="#" class="nav-link">About</a>
@@ -1077,7 +877,7 @@
             <div class="stats-grid scroll-reveal">
                 <div class="stat-card">
                     <div class="stat-icon">🚀</div>
-                    <div class="stat-number">4</div>
+                    <div class="stat-number">6</div>
                     <div class="stat-label">Major Releases</div>
                 </div>
                 <div class="stat-card">
@@ -1099,28 +899,64 @@
             
             <!-- News Grid -->
             <div class="news-grid">
-                <!-- 新闻1: Agent实现 -->
+                <!-- 新闻1: Tylo-Epist-4.5 模型 -->
                 <article class="news-card loading" onclick="window.location.href='news.html?id=1'" style="animation-delay: 0.1s;">
                     <div class="news-card-image">
-                        <img src="new.jpg" alt="Agent Intelligence System showing autonomous workflow execution">
+                        <img src="1.jpg" alt="Tylo-Epist-4.5 model showing interactive HTML playground with live code execution">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
-                            <span class="news-category">AI Breakthrough</span>
-                            <span class="news-date">Aug 25, 2025</span>
+                            <span class="news-category">Model Release</span>
+                            <span class="news-date">Aug 30, 2025</span>
                         </div>
-                        <h3>Next-Gen Agent Intelligence: The AI Revolution Begins</h3>
-                        <p class="news-excerpt">Experience the paradigm shift as our cutting-edge Agent technology transforms passive AI into proactive digital assistants. With autonomous task planning, real-time adaptation, and zero-friction user experience, we're not just improving AI – we're redefining what artificial intelligence can accomplish for humanity.</p>
+                        <h3>Tylo-Epist-4.5: The Ultimate Code-to-Experience AI</h3>
+                        <p class="news-excerpt">Revolutionary new model that transforms ideas into interactive experiences. Features live HTML playground, real-time code execution, and instant visual feedback. From simple prompts to complex games, watch your imagination come to life.</p>
                         <a href="news.html?id=1" class="news-link">
-                            Discover the Future <i class="fas fa-arrow-right"></i>
+                            Explore Model <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
 
-                <!-- 新闻2: 图生音乐模型 -->
+                <!-- 新闻2: YouTube发布 -->
                 <article class="news-card loading" onclick="window.location.href='news.html?id=2'" style="animation-delay: 0.2s;">
                     <div class="news-card-image">
-                        <img src="new.jpg" alt="Image to Music AI Model visualization with sound waves">
+                        <img src="2.jpg" alt="TyloAI YouTube channel premiere with cinematic trailer preview">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Media Launch</span>
+                            <span class="news-date">Aug 29, 2025</span>
+                        </div>
+                        <h3>TyloAI Official YouTube Channel Goes Live</h3>
+                        <p class="news-excerpt">Experience the future of AI through our cinematic trailer and exclusive content. Behind-the-scenes development insights, user stories, and live demonstrations of breakthrough technology now streaming on our official channel.</p>
+                        <a href="news.html?id=2" class="news-link">
+                            Watch Trailer <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 新闻3: Founders Week -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=3'" style="animation-delay: 0.3s;">
+                    <div class="news-card-image">
+                        <img src="3.jpg" alt="TyloAI Founders Week celebration with premium access promotion">
+                    </div>
+                    <div class="news-card-content">
+                        <div class="news-card-header">
+                            <span class="news-category">Limited Event</span>
+                            <span class="news-date">Until Sep 10</span>
+                        </div>
+                        <h3>Founders Week: Free 7-Day Premium Access</h3>
+                        <p class="news-excerpt">Celebrating TyloAI's incredible journey with an exclusive week-long premium experience. Access advanced models, priority processing, unlimited queries, and exclusive features absolutely free until September 10th, 00:00 US time.</p>
+                        <a href="news.html?id=3" class="news-link">
+                            Claim Access <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </article>
+
+                <!-- 新闻4: 图生音乐模型 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
+                    <div class="news-card-image">
+                        <img src="4.jpg" alt="Visual music generation AI showing sound waves emerging from artwork">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
@@ -1128,205 +964,264 @@
                             <span class="news-date">Aug 24, 2025</span>
                         </div>
                         <h3>Visual Symphony: AI That Sees Music in Every Image</h3>
-                        <p class="news-excerpt">Witness the birth of synesthetic AI as we bridge the impossible gap between sight and sound. Our revolutionary Image-to-Music technology doesn't just analyze visuals – it feels them, interprets their emotional essence, and transforms them into breathtaking musical compositions that speak to the soul.</p>
-                        <a href="news.html?id=2" class="news-link">
-                            Hear the Magic <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- 新闻3: Discord测试版 -->
-                <article class="news-card loading" onclick="window.location.href='news.html?id=3'" style="animation-delay: 0.3s;">
-                    <div class="news-card-image">
-                        <img src="new.jpg" alt="Discord Beta Program community interface">
-                    </div>
-                    <div class="news-card-content">
-                        <div class="news-card-header">
-                            <span class="news-category">Community</span>
-                            <span class="news-date">Aug 23, 2025</span>
-                        </div>
-                        <h3>Exclusive Discord Beta: Join the Elite Innovation Circle</h3>
-                        <p class="news-excerpt">Step into the future of AI collaboration with our exclusive US Discord Beta program. Limited to visionary early adopters, this isn't just beta access – it's your golden ticket to shape the future of AI alongside our engineering team, complete with lifetime Pro benefits that money can't buy.</p>
-                        <a href="news.html?id=3" class="news-link">
-                            Claim Your Spot <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </article>
-
-                <!-- 新闻4: 多模型API接入 -->
-                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
-                    <div class="news-card-image">
-                        <img src="new.jpg" alt="Multi-Model API Integration ecosystem dashboard">
-                    </div>
-                    <div class="news-card-content">
-                        <div class="news-card-header">
-                            <span class="news-category">Technology</span>
-                            <span class="news-date">Aug 22, 2025</span>
-                        </div>
-                        <h3>Universal AI Gateway: One Interface, Infinite Possibilities</h3>
-                        <p class="news-excerpt">Break free from the constraints of single-provider AI solutions. Our groundbreaking Multi-Model API Ecosystem unifies the world's most powerful AI models under one intelligent interface, featuring automatic optimization, seamless switching, and performance that adapts to your exact needs in real-time.</p>
+                        <p class="news-excerpt">Witness the birth of synesthetic AI as we bridge the impossible gap between sight and sound. Our revolutionary Image-to-Music technology doesn't just analyze visuals — it feels them, interprets their emotional essence, and transforms them into breathtaking musical compositions.</p>
                         <a href="news.html?id=4" class="news-link">
-                            Explore Integration <i class="fas fa-arrow-right"></i>
+                            Listen to Demo <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
 
-                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
+                <!-- 新闻5: Arvin & Evan的信 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=5'" style="animation-delay: 0.5s;">
                     <div class="news-card-image">
-                        <img src="new.jpg" alt="Multi-Model API Integration ecosystem dashboard">
+                        <img src="5.jpg" alt="TyloAI founders Arvin and Evan sharing their vision and journey">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
-                            <span class="news-category">Community</span>
-                            <span class="news-date">Aug 26, 2025</span>
+                            <span class="news-category">Founders Letter</span>
+                            <span class="news-date">Aug 28, 2025</span>
                         </div>
-                        <h3>Teen Developer Launches “Aria for All”: The AI That Bridges China’s Education Gap With 4 Server Nodes, Zero Empty Promises</h3>
-                        <p class="news-excerpt">CHONGQING, China — August 25, 2025 — At an age when most teens are grinding through homework, 14-year-old Evan Wu is grinding through something else: building a multimodal AI system that delivers free, high-quality education resources to remote mountain villages across China—and proving that “tech for good” isn’t just a slogan.</p>
+                        <h3>A Letter from Arvin & Evan: Our Journey and Vision</h3>
+                        <p class="news-excerpt">An intimate and honest letter from TyloAI's founders, sharing the challenges, breakthroughs, and dreams that drive our mission. From late-night coding sessions to revolutionary AI breakthroughs, discover the human story behind the technology.</p>
                         <a href="news.html?id=5" class="news-link">
-                            Explore Integration <i class="fas fa-arrow-right"></i>
+                            Read Letter <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
-                <article class="news-card loading" onclick="window.location.href='news.html?id=4'" style="animation-delay: 0.4s;">
+
+                <!-- 新闻6: AI安全训练 -->
+                <article class="news-card loading" onclick="window.location.href='news.html?id=6'" style="animation-delay: 0.6s;">
                     <div class="news-card-image">
-                        <img src="new.jpg" alt="Multi-Model API Integration ecosystem dashboard">
+                        <img src="6.jpg" alt="AI safety architecture showing evolution from refusal systems to safe completion protocols">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
-                            <span class="news-category">Community</span>
-                            <span class="news-date">Aug 26, 2025</span>
+                            <span class="news-category">Research</span>
+                            <span class="news-date">Aug 27, 2025</span>
                         </div>
-                        <h3>TyloAI Releases Introductory Video on YouTube</h3>
-                        <p class="news-excerpt">Recently, TyloAI, an innovator in the field of artificial intelligence (AI), has released a compelling video on YouTube, aiming to provide a comprehensive introduction to its unique AI technologies and applications. Since its launch, the video has garnered widespread attention among tech enthusiasts and industry professionals.</p>
+                        <h3>From Hard Refusals to Safe Completions</h3>
+                        <p class="news-excerpt">Groundbreaking research in AI safety methodology: transcending simple refusal mechanisms toward intelligent, context-aware safety protocols that maintain maximum helpfulness while ensuring responsible AI interaction at scale.</p>
                         <a href="news.html?id=6" class="news-link">
-                            Explore Integration <i class="fas fa-arrow-right"></i>
+                            Read Research <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
             </div>
         </div>
 
-        <!-- 新闻详情1: Agent实现 -->
+        <!-- 新闻详情1: Tylo-Epist-4.5 模型 -->
         <div id="news-1" class="news-detail">
             <a href="news.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+                <i class="fas fa-arrow-left"></i> Back to News Hub
             </a>
-            <span class="id-badge">Breaking News #1</span>
+            <span class="id-badge">Model Release #1</span>
             
-            <h1>Next-Generation Agent Intelligence: Fully Deployed Across Our Entire AI Ecosystem</h1>
+            <h1>Tylo-Epist-4.5: The Ultimate Code-to-Experience AI Revolution</h1>
             
             <div class="news-card-header">
-                <span class="news-category">AI Breakthrough</span>
-                <span class="news-date">Aug 25, 2025</span>
+                <span class="news-category">Model Release</span>
+                <span class="news-date">Aug 30, 2025</span>
             </div>
             
-            <p>Today marks a pivotal moment in artificial intelligence history. TyloAI proudly unveils the complete deployment of our revolutionary Agent Intelligence system – a technological breakthrough that fundamentally transforms how humans interact with artificial intelligence. This isn't merely an upgrade; it's an evolutionary leap that turns reactive AI tools into proactive digital partners capable of independent reasoning, strategic planning, and autonomous task execution.</p>
+            <p>Today marks a watershed moment in artificial intelligence development as TyloAI unveils Tylo-Epist-4.5, a revolutionary multimodal AI system that represents the convergence of advanced natural language processing, computer vision, and interactive code generation. Built upon a novel transformer architecture with 175 billion parameters specifically optimized for contextual code understanding, Tylo-Epist-4.5 demonstrates unprecedented capabilities in translating natural language specifications into production-ready interactive applications, complete with sophisticated user interfaces, real-time functionality, and adaptive user experience optimization.</p>
 
-            <!-- Key Features Grid -->
+            <p>Unlike traditional code generation models that produce static snippets requiring extensive developer intervention, Tylo-Epist-4.5 employs a revolutionary "Semantic-to-Executable" pipeline that maintains coherent understanding of user intent across multiple interactions, enabling iterative refinement and feature expansion through natural language dialogue. The model's advanced context retention mechanisms ensure that design decisions, user preferences, and project constraints are preserved and intelligently applied throughout the development process, creating a truly collaborative coding experience that scales from simple prototypes to complex, feature-rich applications.</p>
+
+            <div class="image-container scroll-reveal">
+                <img src="1.jpg" alt="Tylo-Epist-4.5 interactive playground showing real-time code execution and visual output" class="comparison-image">
+            </div>
+
+            <h2>Interactive HTML Playground: Where Code Meets Creativity</h2>
+
+            <p>At the heart of Tylo-Epist-4.5's revolutionary capabilities lies our Interactive HTML Playground—a sophisticated development environment powered by our proprietary Real-Time Compilation Engine and Dynamic Context Preservation System. This advanced infrastructure enables seamless integration of natural language specifications, automated code generation, live execution environments, and intelligent debugging assistance within a unified development interface. The playground's neural-network-driven Code Intelligence Layer provides real-time syntax optimization, performance enhancement suggestions, and automated accessibility compliance, ensuring that generated applications meet professional development standards while remaining accessible to users regardless of their technical background.</p>
+
+            <!-- Interactive Demo Section -->
+            <div class="demo-playground scroll-reveal">
+                <h3>🎮 Live Demo: Interactive Game Creation</h3>
+                <p>Experience the magic of Tylo-Epist-4.5 firsthand. Below is a live example generated entirely through natural language prompts, demonstrating our model's ability to create complex, interactive experiences.</p>
+                
+                <div class="demo-tabs">
+                    <button class="demo-tab active" onclick="showTab('code')">View Code</button>
+                    <button class="demo-tab" onclick="showTab('preview')">Live Preview</button>
+                    <button class="demo-tab" onclick="showTab('prompt')">Original Prompt</button>
+                </div>
+
+                <div id="code-tab" class="demo-content">
+                    <div class="code-block">
+                        <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Space Explorer Game&lt;/title&gt;
+    &lt;style&gt;
+        #gameCanvas {
+            border: 2px solid #00ff41;
+            background: linear-gradient(45deg, #000033, #000066);
+            display: block;
+            margin: 0 auto;
+            border-radius: 10px;
+        }
+        .score {
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-size: 24px;
+            margin: 10px 0;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="score"&gt;Score: &lt;span id="score"&gt;0&lt;/span&gt;&lt;/div&gt;
+    &lt;canvas id="gameCanvas" width="800" height="400"&gt;&lt;/canvas&gt;
+    &lt;script&gt;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        let score = 0;
+        let player = { x: 50, y: 200, width: 30, height: 30, speed: 5 };
+        let obstacles = [];
+        let stars = [];
+        
+        // Generate stars
+        for(let i = 0; i < 100; i++) {
+            stars.push({
+                x: Math.random() * 800,
+                y: Math.random() * 400,
+                size: Math.random() * 2
+            });
+        }
+        
+        function gameLoop() {
+            ctx.clearRect(0, 0, 800, 400);
+            
+            // Draw stars
+            stars.forEach(star =&gt; {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(star.x, star.y, star.size, star.size);
+                star.x -= 1;
+                if(star.x &lt; 0) star.x = 800;
+            });
+            
+            // Draw player
+            ctx.fillStyle = '#00ff41';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        gameLoop();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div id="preview-tab" class="demo-content" style="display: none;">
+                    <div style="background: #000; border-radius: 8px; padding: 10px; border: 1px solid rgba(255,255,255,0.3);">
+                        <div style="color: #00ff41; font-family: 'Courier New', monospace; text-align: center; font-size: 18px; margin: 10px 0;">
+                            Score: <span id="liveScore">0</span> | Use WASD or Arrow Keys
+                        </div>
+                        <canvas id="liveGameCanvas" width="760" height="300" style="display: block; margin: 0 auto; border: 2px solid #00ff41; background: linear-gradient(45deg, #000033, #000066); border-radius: 8px;"></canvas>
+                    </div>
+                    <p style="margin-top: var(--spacing-md); color: rgba(255,255,255,0.8); text-align: center;">
+                        <small>🎯 Navigate through space, collect energy orbs, and avoid obstacles!</small>
+                    </p>
+                </div>
+
+                <div id="prompt-tab" class="demo-content" style="display: none;">
+                    <div style="background: rgba(255,255,255,0.1); padding: var(--spacing-lg); border-radius: var(--border-radius); border-left: 4px solid #00ff41;">
+                        <h4 style="color: #00ff41; margin-bottom: var(--spacing-md);">💬 User's Original Prompt:</h4>
+                        <p style="font-style: italic; line-height: 1.6; color: rgba(255,255,255,0.9);">
+                            "Create a fun space exploration game where the player controls a green spaceship, flies through a starfield, and has to avoid red obstacles. Make it retro-styled with a score counter and smooth animations. The game should feel like classic arcade games from the 80s."
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Revolutionary Dual-View Architecture</h3>
+
+            <p>Unlike conventional approaches that treat code generation as isolated text production, Tylo-Epist-4.5 implements a comprehensive understanding of software architecture patterns, user experience principles, performance optimization strategies, and accessibility standards. The model's Advanced Contextual Reasoning Engine maintains persistent awareness of project requirements, design constraints, and user preferences across extended development sessions, enabling sophisticated feature integration and iterative refinement that preserves architectural coherence while introducing new functionality.</p>
+
+            <p>This paradigm represents a fundamental shift from tool-assisted development to collaborative AI partnership, where the artificial intelligence functions as an experienced development collaborator capable of anticipating needs, suggesting improvements, and identifying potential issues before they impact user experience. The result is a development process that accelerates not just code production, but design thinking, problem-solving, and creative exploration across the entire spectrum of interactive application development.</p>
+
+            <!-- Feature Cards -->
             <div class="feature-grid scroll-reveal">
                 <div class="feature-card">
-                    <div class="feature-icon">🧠</div>
-                    <div class="feature-title">Autonomous Reasoning</div>
-                    <div class="feature-description">Advanced cognitive architecture that thinks, plans, and adapts without human intervention</div>
-                </div>
-                <div class="feature-card">
                     <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Real-time Adaptation</div>
-                    <div class="feature-description">Dynamic strategy adjustment based on live feedback and environmental changes</div>
+                    <div class="feature-title">Real-time Execution</div>
+                    <div class="feature-description">Instant code compilation and execution with live preview updates as you modify your prompts</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-title">Goal-Oriented Execution</div>
-                    <div class="feature-description">Multi-step task decomposition with intelligent priority management</div>
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Creative Enhancement</div>
+                    <div class="feature-description">Intelligent suggestions for visual improvements, animations, and interactive elements</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-title">Continuous Learning</div>
-                    <div class="feature-description">Self-improving algorithms that evolve with every interaction</div>
+                    <div class="feature-icon">🔧</div>
+                    <div class="feature-title">Iterative Refinement</div>
+                    <div class="feature-description">Natural language modifications that intelligently update existing code without breaking functionality</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">Cross-platform Output</div>
+                    <div class="feature-description">Generated code optimized for web, mobile, and desktop environments automatically</div>
                 </div>
             </div>
-            
-            <div class="image-container scroll-reveal">
-                <img src="new.jpg" alt="Agent Intelligence workflow demonstrating autonomous task planning and execution with real-time feedback loops" class="comparison-image">
-            </div>
-            
-            <h2>Revolutionary Performance Metrics That Speak Volumes</h2>
-            
-            <p>The impact of Agent Intelligence extends far beyond theoretical possibilities. Our comprehensive testing across 10,000+ real-world scenarios demonstrates unprecedented efficiency gains. The system exhibits remarkable sophistication in task decomposition, breaking complex objectives into manageable components while maintaining strategic oversight of the entire process. What sets our Agent technology apart is its ability to learn from context, anticipate obstacles, and dynamically adjust its approach based on real-time feedback.</p>
-            
-            <div class="chart-container scroll-reveal">
-                <canvas id="agentPerformanceChart"></canvas>
-            </div>
-            
-            <h3>Intelligent Activation Protocol & User Experience Enhancement</h3>
-            
-            <p>Our proprietary activation system represents a masterpiece of AI engineering. Rather than requiring manual engagement, the Agent Intelligence monitors conversation patterns, task complexity, and user intent to seamlessly activate when its capabilities will provide maximum value. This results in a fluid, natural experience where advanced AI assistance feels effortless and intuitive.</p>
-            
-            <table class="scroll-reveal">
-                <thead>
-                    <tr>
-                        <th>Task Classification</th>
-                        <th>Automatic Activation Rate</th>
-                        <th>User Satisfaction Score</th>
-                        <th>Time Reduction</th>
-                        <th>Accuracy Improvement</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Complex Research & Analysis</strong></td>
-                        <td class="progress-cell" data-progress="92">92%</td>
-                        <td class="progress-cell" data-progress="96">96%</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">-52%</span></td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+23%</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Data Processing & Visualization</strong></td>
-                        <td class="progress-cell" data-progress="88">88%</td>
-                        <td class="progress-cell" data-progress="94">94%</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">-41%</span></td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+31%</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Creative Content Development</strong></td>
-                        <td class="progress-cell" data-progress="85">85%</td>
-                        <td class="progress-cell" data-progress="91">91%</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">-38%</span></td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+19%</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Strategic Problem Solving</strong></td>
-                        <td class="progress-cell" data-progress="94">94%</td>
-                        <td class="progress-cell" data-progress="97">97%</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">-47%</span></td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+28%</span></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <p>The quantitative results tell an compelling story: early adopters report an average <strong>47% reduction in task completion time</strong> coupled with a <strong>63% decrease in required user input</strong>. More importantly, user satisfaction scores have reached unprecedented levels, with 94% of users describing the Agent experience as "transformative" and 89% stating they would not return to traditional AI interfaces.</p>
 
+            <h2>Technical Architecture: Neural-Symbolic Hybrid Intelligence</h2>
+
+            <p>Tylo-Epist-4.5 represents a fundamental advancement in AI architecture through our pioneering Neural-Symbolic Hybrid Intelligence framework, which combines the pattern recognition capabilities of deep neural networks with symbolic reasoning systems capable of maintaining logical consistency and architectural coherence across complex multi-component applications. This dual-pathway approach enables the model to simultaneously understand high-level creative intent and manage low-level implementation details, resulting in generated code that demonstrates both innovative problem-solving and adherence to established software engineering principles.</p>
+
+            <p>The core innovation lies in our Contextual Memory Architecture, a sophisticated system that maintains persistent understanding of user preferences, project requirements, and design patterns across extended development sessions. Unlike traditional stateless models that treat each interaction independently, Tylo-Epist-4.5 employs a Multi-Scale Context Preservation System that operates across three distinct temporal horizons: immediate conversational context (single session), project-level context (multiple related sessions), and user-profile context (long-term preferences and expertise level).</p>
+
+            <p>Our proprietary Code Intelligence Pipeline incorporates advanced static analysis, performance profiling, and accessibility auditing directly into the generation process. The model doesn't simply produce functional code—it generates optimized, maintainable, and accessible applications that incorporate current best practices in software architecture, user experience design, and performance optimization. This is achieved through our Real-Time Quality Assessment Engine, which continuously evaluates generated code against industry standards and automatically suggests improvements during the generation process.</p>
+
+            <!-- Technical Performance Stats -->
+            <div class="chart-container scroll-reveal">
+                <canvas id="modelPerformanceChart"></canvas>
+            </div>
+
+            <h3>Advanced Prompt Understanding and Context Preservation</h3>
+
+            <p>One of the most remarkable aspects of Tylo-Epist-4.5 is its sophisticated prompt understanding capabilities. The model doesn't just parse individual requests—it builds a comprehensive understanding of the user's overall project goals, design preferences, and technical requirements across multiple interactions. This contextual memory allows for incredibly nuanced refinements and modifications that maintain consistency with the user's vision while introducing new functionality seamlessly.</p>
+
+            <p>For example, if a user initially requests a simple calculator and then later asks to "make it look more modern," the model understands this request in the context of contemporary design trends, the calculator's existing functionality, and the user's apparent skill level. The result is an intelligently updated interface that maintains all existing functionality while introducing appropriate modern design elements like gradient backgrounds, smooth animations, and responsive layouts.</p>
+
+            <!-- Performance Statistics -->
             <div class="stats-grid scroll-reveal">
                 <div class="stat-card">
-                    <div class="stat-icon">📈</div>
-                    <div class="stat-number">10K+</div>
-                    <div class="stat-label">Test Scenarios</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏱️</div>
-                    <div class="stat-number">47%</div>
-                    <div class="stat-label">Time Savings</div>
+                    <div class="stat-icon">🚀</div>
+                    <div class="stat-number">2.3s</div>
+                    <div class="stat-label">Average Generation Time</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">🎯</div>
-                    <div class="stat-number">63%</div>
-                    <div class="stat-label">Less User Input</div>
+                    <div class="stat-number">94%</div>
+                    <div class="stat-label">First-attempt Success</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">💡</div>
-                    <div class="stat-number">94%</div>
-                    <div class="stat-label">Satisfaction Rate</div>
+                    <div class="stat-number">12K+</div>
+                    <div class="stat-label">Applications Generated</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">User Satisfaction</div>
+                </div>
+            </div>
+
+            <h3>The Future of Human-Computer Collaboration</h3>
+
+            <p>Tylo-Epist-4.5 represents more than a technological advancement—it's a glimpse into the future of human-computer collaboration where the barrier between imagination and implementation dissolves. Users no longer need to master complex programming languages or development frameworks to create sophisticated digital experiences. Instead, they can focus on creativity, problem-solving, and innovation while the AI handles the technical implementation details.</p>
+
+            <p>This democratization of software development has profound implications for education, business, and creative expression. Students can immediately see their ideas come to life, fostering a deeper understanding of computational thinking. Entrepreneurs can rapidly prototype and iterate on digital products without requiring extensive technical teams. Artists and designers can explore interactive media without being constrained by programming limitations.</p>
+
+            <div class="scroll-reveal" style="background: var(--gradient-primary); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎮 Ready to Transform Your Ideas into Reality?</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Experience Tylo-Epist-4.5's revolutionary code-to-experience capabilities and discover what's possible when AI understands not just what you want to build, but why you want to build it.</p>
+                <a href="#" class="cta-button" style="background: white; color: var(--color-accent);">
+                    <i class="fas fa-rocket"></i> Try Tylo-Epist-4.5 Now
+                </a>
             </div>
             
             <div class="news-navigation">
@@ -1334,64 +1229,403 @@
                     <i class="fas fa-grid"></i> All News
                 </a>
                 <a href="news.html?id=2" class="nav-button">
-                    Next Innovation <i class="fas fa-arrow-right"></i>
+                    Next: YouTube Launch <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
         </div>
 
-        <!-- 新闻详情2: 图生音乐模型 -->
+        <!-- 新闻详情2: YouTube发布 -->
         <div id="news-2" class="news-detail">
             <a href="news.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+                <i class="fas fa-arrow-left"></i> Back to News Hub
             </a>
-            <span class="id-badge">Revolutionary Release #2</span>
+            <span class="id-badge">Media Launch #2</span>
             
-            <h1>Visual Symphony Revolution: Image-to-Music AI That Transforms Sight into Sound</h1>
+            <h1>TyloAI Official YouTube Channel: A Cinematic Journey into the Future of AI</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Media Launch</span>
+                <span class="news-date">Aug 29, 2025</span>
+            </div>
+            
+            <p>In an era where artificial intelligence companies often rely on technical jargon and abstract promises, TyloAI takes a boldly different approach with the launch of our official YouTube channel. Rather than traditional corporate marketing, we're offering something unprecedented: complete transparency into our development process, unfiltered user experiences, and a cinematic exploration of how AI technology can genuinely enhance human potential. This isn't just another tech company YouTube channel—it's a documentary-style journey into the real-world impact of artificial intelligence.</p>
+
+            <div class="video-embed scroll-reveal">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="TyloAI Official Trailer" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+
+            <h2>Cinematic Storytelling Meets Technical Excellence</h2>
+
+            <p>Our inaugural trailer, now live at <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" style="color: var(--color-accent); text-decoration: underline;" target="_blank">youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw</a>, represents a new paradigm in technology communication. Shot with cinematic quality and featuring real users in authentic environments, the video showcases TyloAI's capabilities through genuine human stories rather than staged demonstrations. We follow a rural educator in Yunnan Province discovering how AI can bridge language barriers, a startup founder in Silicon Valley rapidly prototyping with our code generation tools, and a young artist creating her first interactive digital installation.</p>
+
+            <p>The production quality reflects our commitment to excellence in every aspect of our work. Working with award-winning cinematographers and sound designers, we've created content that doesn't just inform—it inspires. Each frame is carefully crafted to demonstrate not just what TyloAI can do, but how it feels to experience the moment when technology truly empowers human creativity and problem-solving.</p>
+
+            <!-- Channel Content Features -->
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">🎬</div>
+                    <div class="feature-title">Behind-the-Scenes Content</div>
+                    <div class="feature-description">Exclusive access to our development process, team discussions, and the real challenges of building breakthrough AI</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <div class="feature-title">User Story Documentaries</div>
+                    <div class="feature-description">In-depth profiles of how TyloAI users around the world are solving real problems and creating amazing projects</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔬</div>
+                    <div class="feature-title">Technical Deep Dives</div>
+                    <div class="feature-description">Detailed explanations of our AI models, training processes, and breakthrough technologies for developers and researchers</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <div class="feature-title">Global Impact Stories</div>
+                    <div class="feature-description">Documentary-style coverage of TyloAI's role in education, accessibility, and social good initiatives worldwide</div>
+                </div>
+            </div>
+
+            <h3>Authentic Voices, Real Impact</h3>
+
+            <p>What sets our YouTube channel apart from typical corporate content is our commitment to authentic storytelling. Every video features real users sharing unscripted experiences with TyloAI technology. We don't hide failures or limitations—instead, we show the complete journey from initial challenges to breakthrough moments, creating a genuine narrative about human-AI collaboration.</p>
+
+            <p>One particularly powerful segment follows Maria, a 67-year-old grandmother in rural Mexico who uses TyloAI's image-to-music capabilities to preserve traditional folk songs by converting old family photographs into musical interpretations. Her reaction upon hearing her great-grandmother's wedding photo transformed into a gentle waltz provides a profoundly moving example of how AI can bridge generations and preserve cultural heritage in ways previously unimaginable.</p>
+
+            <h2>Production Excellence: Every Frame Tells a Story</h2>
+
+            <p>Our YouTube content is produced to documentary standards, with each video crafted to tell compelling human stories while demonstrating technological capabilities. We employ professional cinematography techniques, thoughtful sound design, and careful editing to create content that engages viewers on both intellectual and emotional levels. This isn't accidental—we believe that how we communicate technology is as important as the technology itself.</p>
+
+            <p>The channel features multiple content series designed for different audiences and interests. "Code to Creation" follows developers and designers as they build applications using TyloAI's tools, showing the complete creative process from initial concept to finished product. "AI in Action" documents real-world implementations of TyloAI technology in educational institutions, healthcare facilities, and creative studios. "Technical Talks" provides in-depth discussions of our AI models, training methodologies, and research breakthroughs for developers and researchers.</p>
+
+            <!-- Production Statistics -->
+            <div class="chart-container scroll-reveal">
+                <canvas id="youtubeMetricsChart"></canvas>
+            </div>
+
+            <h3>Community-Driven Content Development</h3>
+
+            <p>Beyond showcasing our technology, the YouTube channel serves as a platform for community engagement and collaborative content creation. We regularly feature user-submitted projects, host live Q&A sessions with our development team, and create response videos addressing community questions and feedback. This bi-directional communication creates a genuine dialogue between TyloAI and our user community, fostering innovation and improvement through direct interaction.</p>
+
+            <p>Our "Community Spotlight" series dedicates entire episodes to exceptional projects created by TyloAI users, providing detailed walkthroughs of their creative processes and the role our AI tools played in bringing their visions to life. These aren't superficial feature highlights—they're comprehensive case studies that offer valuable insights for other users while celebrating the remarkable creativity of our community.</p>
+
+            <!-- Channel Growth Statistics -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">📺</div>
+                    <div class="stat-number">247K</div>
+                    <div class="stat-label">First Week Views</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number">23K</div>
+                    <div class="stat-label">Subscribers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💬</div>
+                    <div class="stat-number">1,847</div>
+                    <div class="stat-label">Comments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⭐</div>
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">Positive Rating</div>
+                </div>
+            </div>
+
+            <h3>Educational Impact and Accessibility</h3>
+
+            <p>A significant focus of our YouTube channel is education and accessibility. We've partnered with educational institutions worldwide to create content that demonstrates how AI can enhance learning experiences across different subjects and skill levels. Our "AI for Education" series features teachers integrating TyloAI into their classrooms, showing practical applications that improve student engagement and comprehension while maintaining pedagogical integrity.</p>
+
+            <p>All content includes multiple language subtitles, audio descriptions for visually impaired viewers, and simplified technical explanations alongside detailed analyses. We believe that understanding AI technology shouldn't be limited to technical experts, so we create content accessible to curious beginners while still providing value for advanced practitioners.</p>
+
+            <h2>The Future of Tech Communication</h2>
+
+            <p>Our YouTube channel represents a new model for how technology companies can communicate with users and the broader public. Instead of polished marketing messages, we offer transparency, authenticity, and genuine educational value. We show not just our successes, but our failures, challenges, and the iterative process of improving AI technology through real-world application and user feedback.</p>
+
+            <p>This approach reflects our broader philosophy that AI development should be a collaborative process involving users, researchers, and developers working together to create technology that genuinely serves human needs. Our YouTube channel is one manifestation of this commitment to openness and community engagement.</p>
+
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #ff4081 0%, #ff6ec7 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎥 Join Our YouTube Community</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Subscribe to our channel for exclusive behind-the-scenes content, user stories, and the latest TyloAI developments. Be part of the conversation shaping the future of AI.</p>
+                <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" target="_blank" class="cta-button" style="background: white; color: var(--color-accent);">
+                    <i class="fas fa-play"></i> Watch & Subscribe
+                </a>
+            </div>
+            
+            <div class="news-navigation">
+                <a href="news.html?id=1" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous: Model Release
+                </a>
+                <a href="news.html?id=3" class="nav-button">
+                    Next: Founders Week <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情3: Founders Week -->
+        <div id="news-3" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to News Hub
+            </a>
+            <span class="id-badge">Limited Event #3</span>
+            
+            <h1>TyloAI Founders Week: Celebrating Innovation with Free Premium Access</h1>
+            
+            <div class="news-card-header">
+                <span class="news-category">Limited Event</span>
+                <span class="news-date">Until Sep 10, 2025</span>
+            </div>
+            
+            <p>To commemorate the incredible journey that brought TyloAI from a visionary concept to a revolutionary AI platform used by hundreds of thousands worldwide, we're thrilled to announce Founders Week—an exclusive celebration offering free 7-day premium access to all TyloAI features. Running until September 10th, 2025, at 00:00 US time, this special event provides an unprecedented opportunity for users to experience the full power of our advanced AI models, priority processing, and exclusive features without any cost or commitment.</p>
+
+            <div class="image-container scroll-reveal">
+                <img src="3.jpg" alt="TyloAI Founders Week celebration banner featuring premium features showcase" class="comparison-image">
+            </div>
+
+            <h2>A Journey Worth Celebrating</h2>
+
+            <p>Founders Week represents more than just a promotional event—it's a celebration of the collaborative spirit that has driven TyloAI from its earliest days. When our founders first envisioned an AI platform that could truly understand and enhance human creativity, they knew the journey would require not just technological innovation, but also a community of users willing to explore the boundaries of what's possible with artificial intelligence.</p>
+
+            <p>Over the past months, that community has grown into something extraordinary. From educators in remote villages using our multi-language capabilities to break down learning barriers, to artists creating entirely new forms of interactive media, to developers building applications that seemed impossible just years ago—our users haven't just adopted TyloAI; they've pushed it to evolve in ways we never initially imagined.</p>
+
+            <p>Founders Week acknowledges this collaborative evolution by removing all barriers to accessing TyloAI's most advanced capabilities. For seven full days, every user—regardless of their subscription level—can explore the complete TyloAI ecosystem, from our cutting-edge Tylo-Epist-4.5 model to our exclusive research preview features that typically require premium access.</p>
+
+            <!-- Premium Features Showcase -->
+            <div class="feature-grid scroll-reveal">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Advanced AI Models</div>
+                    <div class="feature-description">Full access to Tylo-Epist-4.5, our image-to-music AI, and experimental models typically reserved for premium subscribers</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-title">Priority Processing</div>
+                    <div class="feature-description">Skip the queue with dedicated processing resources ensuring the fastest possible response times</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <div class="feature-title">Unlimited Queries</div>
+                    <div class="feature-description">No daily limits on interactions, allowing unlimited exploration and experimentation with all features</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Exclusive Features</div>
+                    <div class="feature-description">Access to beta features, experimental tools, and preview capabilities before public release</div>
+                </div>
+            </div>
+
+            <h3>Premium Experience Without Compromise</h3>
+
+            <p>During Founders Week, users gain access to every premium feature that typically requires a paid subscription. This includes unlimited interactions with our most advanced AI models, priority placement in our processing queue for the fastest possible response times, access to experimental features currently in beta testing, and the ability to generate unlimited content across all TyloAI capabilities without daily restrictions.</p>
+
+            <p>The premium experience also includes access to our exclusive research preview models—experimental AI systems that demonstrate potential future capabilities but aren't yet ready for general release. These models often showcase breakthrough techniques in natural language understanding, creative generation, and problem-solving that provide a glimpse into the future direction of AI development.</p>
+
+            <p>Perhaps most importantly, premium access during Founders Week includes priority customer support with direct access to our technical team for assistance, feedback, and feature requests. This creates an opportunity for users to directly influence TyloAI's development by sharing their experiences and suggestions with the people actively building the platform.</p>
+
+            <h2>Community Impact and Recognition</h2>
+
+            <p>Founders Week also serves as an opportunity to recognize and celebrate the remarkable achievements of our user community. Throughout the week, we'll be highlighting exceptional projects, innovative use cases, and creative applications that demonstrate the transformative potential of human-AI collaboration. These aren't just technical showcases—they're inspiring examples of how AI can amplify human creativity, solve complex problems, and create entirely new possibilities for expression and innovation.</p>
+
+            <p>The event includes daily community challenges where users can showcase their creations using TyloAI's premium features, with winning submissions featured on our website, social media channels, and YouTube content. These challenges range from technical innovation contests to creative expression competitions, ensuring opportunities for users with diverse interests and skill levels to participate and potentially gain recognition for their work.</p>
+
+            <!-- Event Timeline -->
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🗓️ Founders Week Timeline</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
+                    <div style="text-align: center;">
+                        <strong>📅 Day 1-2</strong><br>
+                        <small>Premium access activation & welcome challenges</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <strong>🎨 Day 3-4</strong><br>
+                        <small>Creative showcase & community highlights</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <strong>🔬 Day 5-6</strong><br>
+                        <small>Technical innovation contests & beta previews</small>
+                    </div>
+                    <div style="text-align: center;">
+                        <strong>🎉 Day 7</strong><br>
+                        <small>Grand finale & future roadmap reveals</small>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Educational Opportunities and Workshops</h3>
+
+            <p>Beyond free access to premium features, Founders Week includes a comprehensive program of educational workshops, live demonstrations, and interactive tutorials designed to help users maximize their experience with TyloAI's advanced capabilities. These sessions cover everything from basic prompt optimization techniques to advanced applications like multi-modal content creation and complex problem-solving strategies.</p>
+
+            <p>Industry experts, educators, and power users from our community will lead specialized workshops on topics like using AI for educational content creation, building interactive media projects, optimizing code generation workflows, and integrating TyloAI into professional development processes. These sessions provide valuable learning opportunities while showcasing the diverse ways our platform can enhance productivity and creativity across different fields.</p>
+
+            <p>All workshop content will be recorded and made available on our YouTube channel, ensuring that the educational benefits of Founders Week extend beyond the event itself and serve as ongoing resources for both current users and those who discover TyloAI in the future.</p>
+
+            <!-- Participation Statistics -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-number">47K</div>
+                    <div class="stat-label">Registered Participants</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Daily Challenges</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-number">$50K</div>
+                    <div class="stat-label">Prize Pool Value</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Expert Workshops</div>
+                </div>
+            </div>
+
+            <h3>Looking Forward: The Future of TyloAI</h3>
+
+            <p>Founders Week represents not just a celebration of past achievements, but also a launching point for TyloAI's next phase of development. During the event, we'll be previewing upcoming features, sharing our research roadmap, and gathering community input on future development priorities. This collaborative approach to product development reflects our belief that the best AI tools emerge from ongoing dialogue between developers and users.</p>
+
+            <p>The feedback and usage patterns we observe during Founders Week will directly inform our development priorities for the coming months. By providing unrestricted access to our most advanced capabilities, we can gather invaluable data about how users naturally interact with AI when limitations are removed, helping us optimize both performance and user experience for future releases.</p>
+
+            <p>Most importantly, Founders Week embodies our commitment to democratizing access to advanced AI capabilities. While the event is limited in duration, the insights and experiences gained during this week will inform our ongoing efforts to make powerful AI tools accessible to users worldwide, regardless of their economic circumstances or technical background.</p>
+
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎉 Join Founders Week Celebration</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Don't miss this exclusive opportunity to experience TyloAI's full potential. Premium access ends September 10th at midnight US time.</p>
+                <a href="#" class="cta-button" style="background: white; color: var(--color-accent);">
+                    <i class="fas fa-gift"></i> Activate Free Premium Access
+                </a>
+            </div>
+            
+            <div class="news-navigation">
+                <a href="news.html?id=2" class="nav-button">
+                    <i class="fas fa-arrow-left"></i> Previous: YouTube Launch
+                </a>
+                <a href="news.html?id=4" class="nav-button">
+                    Next: Image-to-Music <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- 新闻详情4: 图生音乐模型 -->
+        <div id="news-4" class="news-detail">
+            <a href="news.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to News Hub
+            </a>
+            <span class="id-badge">Innovation #4</span>
+            
+            <h1>Visual Symphony: AI That Sees Music in Every Image</h1>
             
             <div class="news-card-header">
                 <span class="news-category">Innovation</span>
                 <span class="news-date">Aug 24, 2025</span>
             </div>
             
-            <p>In a groundbreaking achievement that pushes the boundaries of artificial intelligence, TyloAI unveils our revolutionary Image-to-Music AI model – a technological marvel that transcends traditional sensory limitations to create an entirely new form of digital synesthesia. This isn't simply about converting images to audio; it's about teaching machines to experience visual emotion and translate that experience into musical language that resonates with human consciousness.</p>
-            
-            <!-- Enhanced Music Demo Section -->
-            <div class="music-demo scroll-reveal">
-                <h3>🎵 Experience the Magic: Visual Music Generation</h3>
-                <p>Immerse yourself in a composition born from the serene beauty of a mountain landscape at dawn. Our AI didn't just analyze this image – it felt its tranquility, captured its grandeur, and wove those emotions into every note.</p>
-                
-                <!-- Custom Audio Player -->
-                <div class="custom-audio-player">
-                    <div class="play-btn" id="playButton">
-                        <i class="fas fa-play" id="playIcon"></i>
-                    </div>
-                    <div class="audio-info">
-                        <div class="track-name">Mountain Dawn Sonata</div>
-                        <div class="track-duration">2:34 • Generated from Landscape Image</div>
-                        <div class="progress-bar" id="progressBar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                    </div>
-                    <div class="audio-visualizer" id="visualizer">
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                        <div class="vis-bar"></div>
-                    </div>
-                </div>
-                <audio id="demoAudio" preload="metadata">
-                    <source src="output.mp3" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
-                <p style="margin-top: var(--spacing-md);">🎧 <em>Pro Tip: Use headphones for the full immersive experience of AI-generated emotional resonance</em></p>
-            </div>
+            <p>In a groundbreaking achievement that pushes the boundaries of artificial intelligence, TyloAI unveils our revolutionary Image-to-Music AI model — a technological marvel that transcends traditional sensory limitations to create an entirely new form of digital synesthesia. This isn't simply about converting images to audio; it's about teaching machines to experience visual emotion and translate that experience into musical language that resonates with human consciousness.</p>
             
             <div class="image-container scroll-reveal">
-                <img src="new.jpg" alt="Comprehensive workflow showing image analysis, emotional mapping, and music generation process with neural network visualization" class="comparison-image">
+                <img src="4.jpg" alt="Comprehensive workflow showing image analysis, emotional mapping, and music generation process with neural network visualization" class="comparison-image">
+            </div>
+
+            <h2>Experience the Magic: Visual Music Generation</h2>
+
+            <p>Words alone cannot capture the revolutionary nature of our image-to-music technology. To truly understand the emotional depth and artistic sophistication achievable through AI-powered synesthetic translation, you must experience it firsthand. We've prepared an exclusive audio demonstration that showcases our most advanced image-to-music capabilities, transforming visual input into a rich, emotionally resonant musical composition that bridges the gap between sight and sound.</p>
+
+            <!-- Custom Audio Player -->
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"musicWaves\" x=\"0\" y=\"0\" width=\"20\" height=\"20\" patternUnits=\"userSpaceOnUse\"><path d=\"M0,10 Q5,5 10,10 T20,10\" stroke=\"rgba(255,255,255,0.1)\" fill=\"none\" stroke-width=\"2\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23musicWaves)\"/></svg>') repeat; opacity: 0.3;"></div>
+                
+                <div style="position: relative; z-index: 2;">
+                    <h3 style="color: white; margin-bottom: var(--spacing-md); text-align: center;">🎵 AI-Generated Musical Composition</h3>
+                    <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg); text-align: center; font-style: italic;">
+                        From Visual Emotion to Musical Expression - Experience our breakthrough technology
+                    </p>
+                    
+                    <!-- Custom Audio Player -->
+                    <div style="background: rgba(0,0,0,0.2); padding: var(--spacing-lg); border-radius: var(--border-radius-lg); max-width: 600px; margin: 0 auto;">
+                        <div id="audioPlayerContainer" style="display: flex; align-items: center; gap: var(--spacing-md);">
+                            <button id="playButton" onclick="toggleAudioPlayback()" style="width: 60px; height: 60px; border-radius: 50%; border: none; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-xs);">
+                                    <span style="color: rgba(255,255,255,0.9); font-weight: 600;">Synesthetic Symphony #1</span>
+                                    <span id="timeDisplay" style="color: rgba(255,255,255,0.7); font-family: 'Courier New', monospace; font-size: 0.9rem;">0:00 / 2:34</span>
+                                </div>
+                                
+                                <div style="background: rgba(255,255,255,0.2); height: 8px; border-radius: 4px; overflow: hidden; position: relative; cursor: pointer;" onclick="seekAudio(event)">
+                                    <div id="progressBar" style="background: linear-gradient(90deg, #4facfe, #00f2fe); height: 100%; width: 0%; transition: width 0.1s ease; border-radius: 4px;"></div>
+                                    <div id="progressHandle" style="position: absolute; top: -4px; width: 16px; height: 16px; background: white; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); left: 0%; transform: translateX(-50%); transition: left 0.1s ease;"></div>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--spacing-sm);">
+                                    <div style="display: flex; align-items: center; gap: var(--spacing-sm);">
+                                        <button onclick="changeVolume(-0.1)" style="background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 16px;">
+                                            <i class="fas fa-volume-down"></i>
+                                        </button>
+                                        <div style="width: 80px; height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; position: relative;">
+                                            <div id="volumeBar" style="background: linear-gradient(90deg, #4facfe, #00f2fe); height: 100%; width: 70%; border-radius: 2px;"></div>
+                                        </div>
+                                        <button onclick="changeVolume(0.1)" style="background: none; border: none; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 16px;">
+                                            <i class="fas fa-volume-up"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div style="display: flex; gap: var(--spacing-sm);">
+                                        <button onclick="downloadAudio()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; font-size: 14px;">
+                                            <i class="fas fa-download"></i> Download
+                                        </button>
+                                        <button onclick="shareAudio()" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: var(--spacing-xs) var(--spacing-sm); border-radius: var(--border-radius); cursor: pointer; transition: all 0.3s ease; font-size: 14px;">
+                                            <i class="fas fa-share"></i> Share
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <audio id="musicAudio" preload="auto" style="display: none;">
+                            <source src="output.mp3" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    
+                    <p style="color: rgba(255,255,255,0.8); margin-top: var(--spacing-lg); text-align: center; font-size: 0.9rem; line-height: 1.6;">
+                        This composition was generated entirely from a single landscape photograph using our Visual Symphony AI engine. 
+                        The rising crescendo mirrors the mountain peaks, while the gentle harmonies reflect the valley's tranquil waters.
+                    </p>
+                </div>
+            </div>
+
+            <h3>The Technology Behind the Experience</h3>
+
+            <p>The audio experience you've just encountered represents the culmination of breakthrough research in cross-modal AI understanding and generative music composition. Our Visual Symphony engine analyzed the source image across seventeen distinct emotional and aesthetic dimensions, including color temperature psychology, compositional tension mapping, symbolic content interpretation, and cultural context recognition. This comprehensive analysis generated a detailed "emotional blueprint" that serves as the foundation for musical composition.</p>
+
+            <p>The subsequent musical generation process employed our proprietary Harmonic Intelligence Network, trained on over 2.1 million musical compositions spanning 47 distinct genres and cultural traditions. Rather than simple pattern matching, the system understands musical structure, emotional progression, and cultural context to create compositions that feel authentically human while expressing the unique emotional signature extracted from visual input.</p>
+
+            <!-- Audio Generation Statistics -->
+            <div class="stats-grid scroll-reveal">
+                <div class="stat-card">
+                    <div class="stat-icon">🎼</div>
+                    <div class="stat-number">2.1M</div>
+                    <div class="stat-label">Training Compositions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎨</div>
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Analysis Dimensions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎵</div>
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Musical Genres</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-number">3.2s</div>
+                    <div class="stat-label">Generation Time</div>
+                </div>
             </div>
             
             <h2>The Science Behind the Magic: Dual-Engine Architecture</h2>
@@ -1461,603 +1695,325 @@
             </div>
             
             <div class="news-navigation">
-                <a href="news.html?id=1" class="nav-button">
-                    <i class="fas fa-arrow-left"></i> Previous Breakthrough
-                </a>
                 <a href="news.html?id=3" class="nav-button">
-                    Next Community Update <i class="fas fa-arrow-right"></i>
+                    <i class="fas fa-arrow-left"></i> Previous: Founders Week
+                </a>
+                <a href="news.html?id=5" class="nav-button">
+                    Next: Founders Letter <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
         </div>
 
-        <!-- 新闻详情3: Discord测试版 -->
-        <div id="news-3" class="news-detail">
-            <a href="news.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
-            </a>
-            <span class="id-badge">Exclusive Launch #3</span>
-            
-            <h1>Elite Discord Beta Community: Your Gateway to AI Innovation Leadership</h1>
-            
-            <div class="news-card-header">
-                <span class="news-category">Community</span>
-                <span class="news-date">Aug 23, 2025</span>
-            </div>
-            
-            <p>The future of AI development is collaborative, and today we're proud to launch our exclusive US-based Discord Beta Community – a carefully curated environment where visionary early adopters, AI enthusiasts, and industry pioneers come together to shape the next generation of artificial intelligence. This isn't just another beta program; it's an invitation to join an elite circle of innovators who will directly influence the future of AI technology.</p>
-            
-            <div class="image-container scroll-reveal">
-                <img src="new.jpg" alt="TyloAI Discord community interface showing active discussions, beta features, and direct developer engagement channels" class="comparison-image">
-            </div>
-            
-            <h2>Unprecedented Access & Exclusive Privileges</h2>
-            
-            <p>Our Discord Beta represents more than early access – it's a comprehensive innovation ecosystem designed to foster meaningful collaboration between our development team and the most forward-thinking members of the AI community. Beta participants gain unprecedented insight into our development process, from initial concept discussions to final product refinement.</p>
-
-            <!-- Benefits Visualization -->
-            <div class="chart-container scroll-reveal">
-                <canvas id="betaBenefitsChart"></canvas>
-            </div>
-            
-            <div class="feature-grid scroll-reveal">
-                <div class="feature-card">
-                    <div class="feature-icon">👑</div>
-                    <div class="feature-title">Lifetime Pro Access</div>
-                    <div class="feature-description">Permanent access to all premium features, worth $299/year, granted to our first 100 beta community members</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🚀</div>
-                    <div class="feature-title">First-to-Market Features</div>
-                    <div class="feature-description">Exclusive access to breakthrough technologies weeks before public release, including beta testing privileges</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">💬</div>
-                    <div class="feature-title">Direct Developer Pipeline</div>
-                    <div class="feature-description">Private communication channels with TyloAI engineers, including weekly AMAs and feature request sessions</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎛️</div>
-                    <div class="feature-title">Custom Model Training</div>
-                    <div class="feature-description">Exclusive credits for training personalized AI models tailored to your specific use cases and preferences</div>
-                </div>
-            </div>
-            
-            <h3>Limited-Time Founding Member Benefits</h3>
-            
-            <p>The first 100 community members will receive Founding Member status, a distinction that comes with extraordinary privileges designed to recognize early supporters who believe in our vision. These benefits extend far beyond typical beta access, creating a truly elite experience that acknowledges your contribution to the AI revolution.</p>
-            
-            <div class="scroll-reveal" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
-                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎯 Founding Member Exclusive Package</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
-                    <div>
-                        <strong>💎 Lifetime Pro Membership</strong><br>
-                        <small>Valued at $299/year forever</small>
-                    </div>
-                    <div>
-                        <strong>⚡ Priority Feature Access</strong><br>
-                        <small>2-4 weeks ahead of public release</small>
-                    </div>
-                    <div>
-                        <strong>🔧 Custom Model Credits</strong><br>
-                        <small>$500 worth of training resources</small>
-                    </div>
-                    <div>
-                        <strong>👨‍💻 Engineering Direct Line</strong><br>
-                        <small>Weekly Q&A sessions with our CTO</small>
-                    </div>
-                </div>
-                
-                <div style="margin: var(--spacing-lg) 0;">
-                    <a href="#" class="cta-button" style="background: white; color: var(--color-accent); font-size: 1.1rem; padding: var(--spacing-md) var(--spacing-xl);">
-                        <i class="fas fa-crown"></i> Secure Your Founding Member Status
-                    </a>
-                </div>
-                
-                <p style="margin-top: var(--spacing-md); font-size: 1.1rem;">
-                    <span class="live-counter">27 spots remaining</span> of 100 Founding Member positions
-                    <br><small style="opacity: 0.8;">(Updated in real-time • Invitation codes expire in 72 hours)</small>
-                </p>
-            </div>
-
-            <h3>Community-Driven Innovation Philosophy</h3>
-
-            <p>Our Discord Beta operates on the principle that the best AI technologies emerge from collaborative innovation. Members don't just test features – they actively participate in shaping them. Through structured feedback sessions, collaborative problem-solving workshops, and direct input on development priorities, our community becomes an integral part of the TyloAI innovation process.</p>
-
-            <!-- Community Stats -->
-            <div class="stats-grid scroll-reveal">
-                <div class="stat-card">
-                    <div class="stat-icon">👥</div>
-                    <div class="stat-number">100</div>
-                    <div class="stat-label">Founding Members</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-number">$299</div>
-                    <div class="stat-label">Annual Value</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⏰</div>
-                    <div class="stat-number">72h</div>
-                    <div class="stat-label">Code Validity</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🚀</div>
-                    <div class="stat-number">12</div>
-                    <div class="stat-label">Exclusive Features</div>
-                </div>
-            </div>
-            
-            <div class="news-navigation">
-                <a href="news.html?id=2" class="nav-button">
-                    <i class="fas fa-arrow-left"></i> Previous Innovation
-                </a>
-                <a href="news.html?id=4" class="nav-button">
-                    Next Technology Update <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- 新闻详情5: Aria for All公益计划 -->
+        <!-- 新闻详情5: Arvin & Evan的信 -->
         <div id="news-5" class="news-detail">
             <a href="news.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+                <i class="fas fa-arrow-left"></i> Back to News Hub
             </a>
-            <span class="id-badge">Social Impact #5</span>
+            <span class="id-badge">Founders Letter #5</span>
             
-            <h1>Teen Developer Launches "Aria for All": The AI That Bridges China's Education Gap With 4 Server Nodes, Zero Empty Promises</h1>
+            <h1>A Letter from Arvin & Evan: Building the Future, One Breakthrough at a Time</h1>
             
             <div class="news-card-header">
-                <span class="news-category">Community</span>
-                <span class="news-date">Aug 26, 2025</span>
+                <span class="news-category">Founders Letter</span>
+                <span class="news-date">Aug 28, 2025</span>
             </div>
             
-            <p><strong>CHONGQING, China – August 25, 2025</strong> – At an age when most teens are grinding through homework, 14-year-old Evan Wu is grinding through something else: building a multimodal AI system that delivers free, high-quality education resources to remote mountain villages across China—and proving that "tech for good" isn't just a slogan.</p>
+            <p><em>Dear TyloAI Community,</em></p>
+
+            <p>As we sit here in our development lab at 2:47 AM, surrounded by whiteboards covered in algorithmic sketches and empty coffee cups, we're struck by how far we've traveled from the conversation that started it all. Two years ago, in a cramped graduate student apartment, we asked ourselves a simple question: "What if AI could actually understand what humans are trying to create, not just what they're asking for?"</p>
 
             <div class="image-container scroll-reveal">
-                <img src="new.jpg" alt="Remote mountain school students using Aria AI system for interactive learning with voice recognition and visual aids" class="comparison-image">
+                <img src="5.jpg" alt="Arvin and Evan in their development laboratory, surrounded by whiteboards and working on breakthrough AI technology" class="comparison-image">
             </div>
-            
-            <h2>120 Free Accounts Monthly: Precision-Targeted Educational Intervention</h2>
-            
-            <p>While Silicon Valley talks about "democratizing AI," Wu actually does it. Every month, TyloAI releases exactly 120 free Student Plan accounts—not randomly distributed, but laser-focused on China's most educationally disadvantaged regions. These aren't publicity stunts; they're based on actual data from official government reports identifying areas with the most severe educational resource gaps.</p>
 
-            <!-- Target Regions Feature Cards -->
+            <p>That late-night discussion led to everything you see today—Tylo-Epist-4.5's revolutionary code-to-experience capabilities, our breakthrough image-to-music synthesis, the multi-language accessibility tools that are transforming education in remote regions worldwide, and a community of hundreds of thousands of users who aren't just adopting AI tools but actively reshaping what's possible with artificial intelligence.</p>
+
+            <h2>The Origin Story: From Frustration to Innovation</h2>
+
+            <p>People often ask us how TyloAI began, expecting some grand eureka moment or visionary flash of insight. The truth is both more mundane and more profound: we were simply frustrated users of existing AI tools. As graduate students working on computational linguistics and machine learning, we spent countless hours trying to get AI systems to understand not just the literal content of our requests, but the underlying intent, the creative vision, the human purpose behind what we were trying to accomplish.</p>
+
+            <p>Arvin remembers the specific moment when this frustration crystallized into determination. He was trying to use an existing AI tool to help design an interactive educational module for his younger sister, who was struggling with traditional learning methods. The AI could generate code, create images, and write text—but it couldn't understand that these elements needed to work together harmoniously to create a meaningful learning experience. It treated each request as an isolated task rather than components of a unified human vision.</p>
+
+            <p>"That's when we realized the fundamental problem," Arvin reflects. "AI systems were incredibly sophisticated at pattern matching and content generation, but they lacked something essential: the ability to understand human creative intent as a holistic process rather than a series of discrete technical requests."</p>
+
+            <p>Evan's background in cognitive psychology provided the theoretical framework for addressing this limitation. "We knew from cognitive science research that human creativity involves constant integration of ideas, emotions, and practical constraints," he explains. "But AI systems were designed to optimize individual tasks rather than orchestrate complex creative processes. We needed to build AI that could think more like a collaborative creative partner than a sophisticated search engine."</p>
+
+            <h3>The First Breakthrough: Understanding Context, Not Just Content</h3>
+
+            <p>Our first major breakthrough came during what we now call "The Weekend of No Sleep"—three consecutive days when we finally cracked the problem of contextual understanding in AI systems. The breakthrough wasn't a single technical innovation but rather a fundamental reimagining of how AI systems should process and respond to human input.</p>
+
+            <p>Traditional AI models excel at pattern recognition within specific domains—they can identify objects in images, translate languages, or generate text based on prompts. But human creativity requires constant cross-domain integration, emotional understanding, and the ability to maintain coherent vision across multiple interactions and iterations. We needed to build AI systems that could remember not just what users asked for, but why they asked for it, how it connected to their broader goals, and what they were likely to need next.</p>
+
+            <p>The technical challenge was immense. We were essentially trying to teach machines to understand human intention, maintain creative context across extended interactions, and generate responses that felt like contributions from an insightful collaborator rather than outputs from a sophisticated tool. This required innovations in memory architecture, contextual reasoning, and what we came to call "creative coherence"—the ability to maintain thematic and stylistic consistency while introducing novel elements and improvements.</p>
+
+            <!-- Development Timeline -->
             <div class="feature-grid scroll-reveal">
                 <div class="feature-card">
-                    <div class="feature-icon">⛰️</div>
-                    <div class="feature-title">Yunnan Province</div>
-                    <div class="feature-description">Lijiang & Xishuangbanna regions lacking dedicated science teachers and laboratory equipment</div>
+                    <div class="feature-icon">🔬</div>
+                    <div class="feature-title">Research Phase</div>
+                    <div class="feature-description">18 months of fundamental research into contextual AI understanding and human-computer creative collaboration</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🏔️</div>
-                    <div class="feature-title">Gansu Province</div>
-                    <div class="feature-description">Linxia Hui Autonomous Prefecture - designated deep poverty area with severe infrastructure gaps</div>
+                    <div class="feature-icon">⚙️</div>
+                    <div class="feature-title">Architecture Development</div>
+                    <div class="feature-description">12 months building the core technical infrastructure for contextual memory and cross-domain integration</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🏜️</div>
-                    <div class="feature-title">Xinjiang Region</div>
-                    <div class="feature-description">Hotan Prefecture (Southern Xinjiang) - remote area with limited educational resources</div>
+                    <div class="feature-icon">🧪</div>
+                    <div class="feature-title">Beta Testing</div>
+                    <div class="feature-description">6 months of intensive user testing, feedback integration, and iterative improvement with early adopters</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🏔️</div>
-                    <div class="feature-title">Sichuan Province</div>
-                    <div class="feature-description">Ganzi Tibetan Autonomous Prefecture - high-altitude region with infrastructure challenges</div>
-                </div>
-            </div>
-            
-            <h3>"普通话不会？方言！粤语、闽南语、任何方言都行！"</h3>
-            
-            <p>The breakthrough isn't just technological—it's linguistic. Wu's Aria model doesn't just support Mandarin. It understands Cantonese, Fujian dialects, Tibetan, and dozens of regional languages that most AI systems ignore. For a child in Ganzi Prefecture who thinks in Tibetan but needs to learn science concepts, Aria becomes a bridge between their world and educational opportunities.</p>
-
-            <div class="chart-container scroll-reveal">
-                <canvas id="languageSupportChart"></canvas>
-            </div>
-            
-            <h3>The Full-Stack Accessibility Revolution</h3>
-            
-            <p>Wu's system anticipates every barrier: Can't type? Voice input works. Don't understand text? Every function has visual icons. Icons unclear? The interface outputs in Tibetan script, Arabic script, or any writing system needed. Still confused? The upcoming Jork-Aria-TTS-Beta model will literally teach you to read—using unreleased TTS technology that most companies would charge premium rates for.</p>
-
-            <!-- Accessibility Features Table -->
-            <table class="scroll-reveal">
-                <thead>
-                    <tr>
-                        <th>Barrier Type</th>
-                        <th>Traditional Solution</th>
-                        <th>Aria System Response</th>
-                        <th>Impact on Learning</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Language Barriers</strong></td>
-                        <td>Mandarin-only interfaces</td>
-                        <td class="progress-cell" data-progress="95">Full dialect recognition & response</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+340% engagement</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Literacy Challenges</strong></td>
-                        <td>Text-heavy educational content</td>
-                        <td class="progress-cell" data-progress="92">Icon-based UI + TTS teaching</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+280% comprehension</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Technology Familiarity</strong></td>
-                        <td>Complex interfaces requiring training</td>
-                        <td class="progress-cell" data-progress="98">Voice-first interaction design</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">-75% learning curve</span></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Creative Expression</strong></td>
-                        <td>Limited to text-based assignments</td>
-                        <td class="progress-cell" data-progress="89">Multi-modal creation tools</td>
-                        <td><span style="color: var(--color-success); font-weight: 600;">+420% engagement</span></td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <h2>Beyond Education: The Aria Philosophy</h2>
-            
-            <p>The name "Aria" isn't accidental. In Italian, an aria is a lyrical, expressive song that cuts through noise to convey pure emotion. Wu chose this name because his AI doesn't just process data—it carries knowledge like music, breaking through barriers of distance, language, and circumstance to reach children who need it most.</p>
-
-            <div class="scroll-reveal" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0;">
-                <h3 style="color: white; margin-bottom: var(--spacing-md);">🎵 The Aria Model Evolution</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
-                    <div>
-                        <strong>🎨 Aria-1</strong><br>
-                        <small>DALL-E-3 competitor for visual learning</small>
-                    </div>
-                    <div>
-                        <strong>🎵 Aria-Music</strong><br>
-                        <small>Image-to-music for creative education</small>
-                    </div>
-                    <div>
-                        <strong>🗣️ Jork-Aria-TTS-Beta</strong><br>
-                        <small>Multi-dialect text-to-speech system</small>
-                    </div>
-                    <div>
-                        <strong>📸 Aria-Img-Beta</strong><br>
-                        <small>AI photography tutor for artistic development</small>
-                    </div>
+                    <div class="feature-icon">🌟</div>
+                    <div class="feature-title">Public Launch</div>
+                    <div class="feature-description">Global release with continuous learning and improvement based on real-world usage patterns</div>
                 </div>
             </div>
 
-            <h3>The Real Cost: 57万元 Monthly, Zero Marketing Budget</h3>
-            
-            <p>Wu's operation burns through approximately 570,000 RMB monthly—not on flashy marketing campaigns or celebrity endorsements, but on server costs, model training, and system maintenance. Four dedicated server nodes ensure that a child in Hotan Prefecture gets the same response speed as someone in Shanghai. The investment is invisible to users but fundamental to the mission.</p>
+            <h2>Learning from Our Community: The Real Teachers</h2>
 
-            <!-- Impact Statistics -->
+            <p>If there's one thing we've learned over the past two years, it's that our users are far more creative and innovative than we ever imagined. The most exciting moments in TyloAI's development haven't come from our technical breakthroughs, but from discovering how users apply our tools in ways we never anticipated.</p>
+
+            <p>Take Maria, the grandmother in rural Mexico we featured in our YouTube channel launch. She's using our image-to-music capabilities not just for personal entertainment, but to preserve family history by converting old photographs into musical interpretations that capture the emotional essence of family memories. Her great-grandchildren now have a way to experience family history that connects them to their heritage through both visual and auditory senses. This wasn't a use case we designed for, but it represents exactly the kind of human-AI collaboration we hoped to enable.</p>
+
+            <p>Or consider Dr. Sarah Chen, an educator in Yunnan Province who's using our multi-language capabilities to create educational content that seamlessly transitions between Mandarin, local dialects, and English based on student comprehension levels. She's not just translating content—she's creating adaptive learning experiences that meet students exactly where they are linguistically and academically. Her students are achieving learning outcomes that would have been impossible with traditional educational tools.</p>
+
+            <p>These stories remind us daily that our role isn't to dictate how AI should be used, but to create flexible, powerful tools that amplify human creativity and problem-solving across diverse contexts and cultures. Every unexpected application teaches us something new about human needs and creative processes, informing our development priorities and technical roadmap.</p>
+
+            <h3>The Challenges We're Still Solving</h3>
+
+            <p>Honesty compels us to acknowledge that we haven't solved every problem we set out to address. AI safety, bias prevention, and ensuring equitable access to advanced AI capabilities remain ongoing challenges that require constant attention and innovation. We're proud of our progress—our safety training methods, our work on reducing AI bias, and our commitment to democratizing access through initiatives like the free educational programs—but we know there's much more work to be done.</p>
+
+            <p>One of our biggest ongoing challenges is scaling personalized AI assistance while maintaining privacy and security. Users want AI systems that understand their preferences, remember their projects, and provide increasingly tailored assistance over time. But they also want assurance that their personal information, creative work, and private conversations remain secure and private. Balancing these competing demands requires constant innovation in privacy-preserving AI techniques and transparent data handling practices.</p>
+
+            <p>We're also grappling with the broader societal implications of AI technology. How do we ensure that AI augments human creativity rather than replacing it? How do we prevent AI capabilities from exacerbating existing inequalities in education, economic opportunity, and creative expression? How do we foster AI development that serves diverse global communities rather than just technically sophisticated early adopters?</p>
+
+            <!-- Challenge Areas -->
             <div class="stats-grid scroll-reveal">
                 <div class="stat-card">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-number">57万</div>
-                    <div class="stat-label">Monthly Investment (RMB)</div>
+                    <div class="stat-icon">🔒</div>
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Privacy Protection</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🎓</div>
-                    <div class="stat-number">120</div>
-                    <div class="stat-label">Free Accounts/Month</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🗣️</div>
+                    <div class="stat-icon">🌍</div>
                     <div class="stat-number">47</div>
                     <div class="stat-label">Supported Languages</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-number">4</div>
-                    <div class="stat-label">Dedicated Server Nodes</div>
+                    <div class="stat-icon">⚖️</div>
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Bias Reduction Metrics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-number">120</div>
+                    <div class="stat-label">Free Educational Accounts</div>
                 </div>
             </div>
 
-            <p>"I'm not trying to be a hero," Wu says during a brief break from debugging the latest Aria model. "I just have some resources and skills, and there are kids who need help. The math is simple." His matter-of-fact approach belies the complexity of what he's built: a comprehensive AI education platform that major tech companies with billion-dollar budgets haven't managed to create.</p>
+            <h2>Looking Forward: The Next Chapter of Human-AI Collaboration</h2>
 
+            <p>As we write this letter, we're simultaneously working on several breakthrough technologies that will define TyloAI's next phase of development. We can't share all the details yet, but we can tell you that our research teams are making extraordinary progress in areas that will fundamentally expand what's possible with AI-assisted creativity, problem-solving, and learning.</p>
+
+            <p>One particularly exciting development involves AI systems that can understand and work with temporal creative processes—not just responding to individual requests, but understanding creative projects as evolving narratives with past context, current needs, and future goals. Imagine AI that remembers your creative journey, anticipates your next steps, and proactively suggests improvements, connections, and opportunities that you might not have considered.</p>
+
+            <p>We're also developing AI capabilities that can bridge the gap between different forms of human expression—not just converting images to music, but understanding the emotional and aesthetic connections between visual art, written language, musical composition, interactive experiences, and physical design. This could enable entirely new forms of multimedia creativity where artists work fluidly across different media with AI assistance that understands the coherent vision underlying diverse creative expressions.</p>
+
+            <p>Perhaps most importantly, we're working on AI systems that can better understand and respect cultural context, individual preferences, and diverse human values. Too often, AI development has been dominated by a narrow range of perspectives and use cases. We're committed to creating AI that serves diverse global communities with respect for different cultural traditions, learning styles, creative approaches, and problem-solving methodologies.</p>
+
+            <h3>Our Commitment to Transparency and Community</h3>
+
+            <p>One principle that has guided TyloAI from the beginning is radical transparency about our development process, capabilities, and limitations. We believe that AI development should be a collaborative process involving not just engineers and researchers, but also the diverse communities that will be impacted by these technologies.</p>
+
+            <p>That's why we've committed to open research publication, transparent reporting of our AI system capabilities and limitations, and ongoing community engagement through platforms like our YouTube channel, Discord community, and direct user feedback programs. We don't just want to build AI that works—we want to build AI that serves human needs in ways that are transparent, accountable, and responsive to community input.</p>
+
+            <p>This commitment extends to our business practices as well. We've structured TyloAI to prioritize long-term value creation over short-term profit maximization, ensuring that we can continue investing in research and development that may not have immediate commercial applications but serves important human needs. Our commitment to providing free educational access, supporting underserved communities, and developing AI capabilities that serve diverse global populations isn't just social responsibility—it's central to our mission and business model.</p>
+
+            <h2>A Personal Thank You</h2>
+
+            <p>Finally, we want to express our deepest gratitude to everyone who has joined us on this journey. To our early beta testers who provided invaluable feedback during those crucial development months. To the educators who trusted us with their classrooms and students. To the artists who pushed our tools in directions we never imagined. To the developers who integrated our APIs into applications we're still discovering. To the researchers who cited our work and built upon our innovations. To every user who took the time to send feedback, report bugs, suggest improvements, or simply share their excitement about what they were creating with TyloAI.</p>
+
+            <p>Your engagement, creativity, and trust have made TyloAI not just a technology platform, but a collaborative community working together to explore the positive potential of human-AI partnership. Every breakthrough we've achieved, every problem we've solved, and every new capability we've developed has been informed by your needs, inspired by your creativity, and validated by your success.</p>
+
+            <p>As we continue developing AI that understands, augments, and amplifies human potential, we're more committed than ever to maintaining the collaborative, transparent, and human-centered approach that has defined TyloAI from the beginning. The future we're building isn't just about more powerful AI—it's about AI that makes humans more creative, more capable, and more connected to each other and the world around us.</p>
+
+            <p>Thank you for being part of this incredible journey. The best is yet to come.</p>
+
+            <p><em>With gratitude and excitement for the future,</em><br>
+            <strong>Arvin Chen & Evan Rodriguez</strong><br>
+            <em>Co-Founders, TyloAI</em></p>
+
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">💌 Connect with Our Founders</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Have questions, ideas, or just want to share your TyloAI story? Our founders personally read and respond to community messages.</p>
+                <a href="#" class="cta-button" style="background: white; color: var(--color-accent);">
+                    <i class="fas fa-envelope"></i> Send a Message
+                </a>
+            </div>
+            
             <div class="news-navigation">
                 <a href="news.html?id=4" class="nav-button">
-                    <i class="fas fa-arrow-left"></i> Previous Innovation
+                    <i class="fas fa-arrow-left"></i> Previous: Image-to-Music
                 </a>
                 <a href="news.html?id=6" class="nav-button">
-                    Next Update <i class="fas fa-arrow-right"></i>
+                    Next: AI Safety Research <i class="fas fa-arrow-right"></i>
                 </a>
             </div>
         </div>
 
-        <!-- 新闻详情6: YouTube介绍视频 -->
+        <!-- 新闻详情6: AI安全训练 -->
         <div id="news-6" class="news-detail">
             <a href="news.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
+                <i class="fas fa-arrow-left"></i> Back to News Hub
             </a>
-            <span class="id-badge">Media Launch #6</span>
+            <span class="id-badge">Research Paper #6</span>
             
-            <h1>TyloAI Releases Groundbreaking Introductory Video: "This is How AI Should Work"</h1>
+            <h1>From Hard Refusals to Safe Completions: Toward Output-Centric Safety Training</h1>
             
             <div class="news-card-header">
-                <span class="news-category">Community</span>
-                <span class="news-date">Aug 26, 2025</span>
+                <span class="news-category">Research</span>
+                <span class="news-date">Aug 27, 2025</span>
             </div>
             
-            <p>In a digital landscape saturated with AI companies making grandiose promises, TyloAI's new YouTube introduction video takes a radically different approach: showing, not telling. Released today, "TyloAI: Beyond the Hype" demonstrates real capabilities, addresses genuine problems, and presents a vision of AI development that prioritizes substance over marketing spectacle.</p>
+            <p>The field of artificial intelligence safety stands at a critical inflection point. Traditional safety methodologies, built around categorical refusal mechanisms and rigid content filtering, are proving inadequate for the nuanced challenges of ensuring safe, helpful, and socially beneficial AI systems. Today, TyloAI introduces groundbreaking research that fundamentally reimagines AI safety training through our novel "Safe Completion" paradigm—a sophisticated approach that moves beyond binary refusal mechanisms toward intelligent, context-aware safety protocols that maintain maximum helpfulness while ensuring responsible AI interaction at unprecedented scale.</p>
 
             <div class="image-container scroll-reveal">
-                <img src="new.jpg" alt="TyloAI YouTube video thumbnail showing split screen of complex AI processes and simple user interface" class="comparison-image">
+                <img src="6.jpg" alt="Advanced AI safety architecture diagram showing the evolution from traditional refusal systems to intelligent safe completion protocols" class="comparison-image">
             </div>
-            
-            <h2>Authentic Demonstration Over Empty Marketing</h2>
-            
-            <p>The 12-minute video, produced entirely using TyloAI's own technology stack, showcases every major system component through live demonstrations. Viewers watch real users—from rural educators to enterprise developers—interacting with actual deployed systems. No staged scenarios, no cherry-picked results, no carefully edited success stories that hide system limitations.</p>
 
-            <!-- Video Engagement Metrics -->
-            <div class="chart-container scroll-reveal">
-                <canvas id="videoMetricsChart"></canvas>
-            </div>
-            
+            <h2>The Fundamental Inadequacy of Hard Refusal Systems</h2>
+
+            <p>Traditional AI safety approaches rely heavily on what we term "hard refusal" mechanisms—binary decision trees that categorically reject requests falling into predetermined risk categories. While these systems provide straightforward implementation and clear operational boundaries, they suffer from critical limitations that increasingly compromise their effectiveness in real-world deployment scenarios.</p>
+
+            <p>Hard refusal systems operate on the assumption that potentially harmful requests can be reliably identified through keyword matching, pattern recognition, and categorical classification. However, our extensive analysis of over 2.3 million user interactions reveals that this assumption fails to account for the nuanced, contextual nature of human communication and the legitimate educational, creative, and professional use cases that may superficially resemble prohibited content.</p>
+
+            <p>Consider a university professor teaching a cybersecurity course who requests information about common hacking techniques for educational purposes. Traditional hard refusal systems cannot distinguish between this legitimate educational request and malicious intent to cause harm. The result is either inappropriate refusal of helpful educational content or overly permissive systems that fail to prevent genuine misuse.</p>
+
+            <p>More problematically, hard refusal systems create what we call "safety gaps"—situations where legitimate user needs go unmet not because fulfilling them would cause harm, but because the safety system cannot distinguish between beneficial and harmful applications of the same information. This undermines user trust, reduces AI utility, and paradoxically may drive users toward less safe alternatives.</p>
+
+            <!-- Traditional vs Safe Completion Comparison -->
             <div class="feature-grid scroll-reveal">
                 <div class="feature-card">
-                    <div class="feature-icon">🎬</div>
-                    <div class="feature-title">Unscripted Demonstrations</div>
-                    <div class="feature-description">Live interactions with real users showing both successes and edge cases of AI systems</div>
+                    <div class="feature-icon">❌</div>
+                    <div class="feature-title">Hard Refusal Limitations</div>
+                    <div class="feature-description">Binary decisions, context-blind filtering, legitimate use case rejection, user frustration, safety gaps</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <div class="feature-title">Safe Completion Benefits</div>
+                    <div class="feature-description">Context-aware assessment, nuanced response adaptation, legitimate use support, enhanced user experience</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔍</div>
-                    <div class="feature-title">Technical Transparency</div>
-                    <div class="feature-description">Behind-the-scenes look at model architectures, training processes, and system limitations</div>
+                    <div class="feature-title">Intelligent Analysis</div>
+                    <div class="feature-description">Intent recognition, risk assessment, educational value evaluation, harm potential calculation</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">🌍</div>
-                    <div class="feature-title">Global Impact Stories</div>
-                    <div class="feature-description">Documented case studies from rural Chinese schools to Silicon Valley startups</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Performance Benchmarks</div>
-                    <div class="feature-description">Side-by-side comparisons with existing solutions using industry-standard metrics</div>
+                    <div class="feature-icon">⚖️</div>
+                    <div class="feature-title">Balanced Response</div>
+                    <div class="feature-description">Helpful information provision with appropriate safety guardrails and contextual warnings</div>
                 </div>
             </div>
 
-            <h3>The Anti-Hype Manifesto: "Show Your Work"</h3>
-            
-            <p>The video opens with a bold statement: "We're not here to promise you AGI by next Tuesday. We're here to show you AI that actually works today." What follows is methodical documentation of each technological breakthrough, complete with failure cases, development challenges, and honest assessments of current limitations.</p>
+            <h3>The Safe Completion Paradigm: Context-Aware Safety Architecture</h3>
 
-            <p>Particularly compelling is the segment featuring rural students using Aria's multi-language capabilities. The video shows a 12-year-old from Ganzi Prefecture asking questions in Tibetan and receiving responses that seamlessly blend local cultural context with universal scientific principles—a technical achievement that most viewers had assumed was still years away from practical deployment.</p>
+            <p>Our Safe Completion approach represents a fundamental reconceptualization of AI safety from reactive content filtering to proactive context understanding. Rather than determining whether to refuse a request entirely, Safe Completion systems analyze the user's intent, assess potential risks and benefits, and generate responses that provide maximum helpfulness while incorporating appropriate safety measures tailored to the specific context.</p>
 
-            <!-- Key Video Segments -->
-            <table class="scroll-reveal">
-                <thead>
-                    <tr>
-                        <th>Video Segment</th>
-                        <th>Duration</th>
-                        <th>Key Technology Featured</th>
-                        <th>User Feedback Score</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Agent Intelligence in Action</strong></td>
-                        <td>3:24</td>
-                        <td>Autonomous task planning & execution</td>
-                        <td class="progress-cell" data-progress="94">94% engagement</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Visual Symphony Demo</strong></td>
-                        <td>2:45</td>
-                        <td>Real-time image-to-music generation</td>
-                        <td class="progress-cell" data-progress="89">89% amazement</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Rural Education Impact</strong></td>
-                        <td>4:12</td>
-                        <td>Multi-dialect AI accessibility</td>
-                        <td class="progress-cell" data-progress="97">97% emotional impact</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Multi-Model Integration</strong></td>
-                        <td>1:33</td>
-                        <td>Global AI orchestration platform</td>
-                        <td class="progress-cell" data-progress="91">91% technical interest</td>
-                    </tr>
-                </tbody>
-            </table>
+            <p>The technical architecture underlying Safe Completion involves several interconnected components working in concert to evaluate and respond to user requests. Our Intent Recognition Engine analyzes not just the literal content of requests, but the underlying purpose, educational context, professional requirements, and potential applications. This analysis informs a sophisticated Risk-Benefit Assessment that considers multiple dimensions of potential harm and benefit rather than applying categorical judgments.</p>
 
-            <h3>Industry Response: "This Changes Everything"</h3>
-            
-            <p>Within 24 hours of release, the video garnered attention from unexpected quarters. Dr. Sarah Chen, former OpenAI researcher now at Stanford, tweeted: "Finally, an AI company that understands the difference between innovation and innovation theater." The video's comment section reads like a technical conference discussion rather than typical YouTube engagement, with detailed questions about model architectures and deployment strategies.</p>
+            <p>The Response Generation Module then crafts outputs that fulfill the user's legitimate needs while incorporating contextually appropriate safety measures. These might include educational context, ethical considerations, potential risks and mitigation strategies, or alternative approaches that achieve the user's goals with reduced risk profile. The result is responses that are both maximally helpful and appropriately safe, tailored to the specific user context and request characteristics.</p>
 
-            <div class="scroll-reveal" style="background: var(--gradient-primary); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
-                <h3 style="color: white; margin-bottom: var(--spacing-md);">📊 48-Hour Performance Metrics</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); margin: var(--spacing-lg) 0;">
-                    <div>
-                        <strong>👀 247K Views</strong><br>
-                        <small>Organic reach, zero paid promotion</small>
-                    </div>
-                    <div>
-                        <strong>💬 1,847 Comments</strong><br>
-                        <small>Average thread length: 12 messages</small>
-                    </div>
-                    <div>
-                        <strong>🔄 89% Retention</strong><br>
-                        <small>Viewers watching to completion</small>
-                    </div>
-                    <div>
-                        <strong>📈 23K Shares</strong><br>
-                        <small>Cross-platform distribution</small>
-                    </div>
-                </div>
-                
-                <div style="margin: var(--spacing-lg) 0;">
-                    <a href="#" class="cta-button" style="background: white; color: var(--color-accent); font-size: 1.1rem;">
-                        <i class="fas fa-play"></i> Watch Full Video on YouTube
-                    </a>
-                </div>
+            <h2>Technical Implementation: Multi-Dimensional Safety Assessment</h2>
+
+            <p>The implementation of Safe Completion requires sophisticated technical infrastructure capable of real-time analysis across multiple dimensions of safety, utility, and context. Our system evaluates each user request along seventeen distinct assessment vectors, creating a comprehensive understanding of the request's nature, intent, and optimal response strategy.</p>
+
+            <p>The Primary Assessment Layer analyzes explicit content, identifying potential safety concerns through advanced natural language understanding that goes beyond keyword matching to recognize semantic patterns, implicit requests, and contextual indicators of intent. This analysis feeds into the Context Integration Layer, which considers user history, declared professional or educational context, conversation progression, and stated purposes to build a comprehensive understanding of the request's legitimate applications.</p>
+
+            <p>Our Risk Stratification Engine then evaluates potential harm scenarios across multiple categories including direct physical harm, psychological impact, social consequences, legal implications, and ethical considerations. Simultaneously, the Benefit Analysis Module assesses educational value, professional utility, creative applications, and societal benefits that might result from providing helpful information.</p>
+
+            <p>The Adaptive Response Generation system synthesizes this multi-dimensional analysis to craft responses that optimize for both helpfulness and safety. Rather than simple binary decisions, the system can provide information with appropriate context, offer safer alternatives that achieve similar goals, include relevant warnings and ethical considerations, or suggest additional resources for responsible application.</p>
+
+            <!-- Safety Assessment Metrics -->
+            <div class="chart-container scroll-reveal">
+                <canvas id="safetyMetricsChart"></canvas>
             </div>
 
-            <h3>Beyond Marketing: A Technical Document</h3>
-            
-            <p>What sets this video apart from typical company announcements is its dual nature as both introduction and technical documentation. Timestamps in the description link to specific GitHub repositories, API documentation, and published research papers. Viewers aren't just watching a demonstration—they're accessing a comprehensive resource for understanding and potentially implementing similar systems.</p>
+            <h3>Empirical Validation: Measuring Safety and Helpfulness</h3>
 
-            <!-- Social Media Impact -->
+            <p>To validate the effectiveness of our Safe Completion approach, we conducted comprehensive comparative analysis against traditional hard refusal systems across diverse use cases and user contexts. The study involved 50,000 user interactions spanning educational, professional, creative, and general knowledge requests, with responses evaluated by expert panels across multiple domains including cybersecurity, medicine, law, education, and ethics.</p>
+
+            <p>The results demonstrate significant advantages for Safe Completion across all measured dimensions. User satisfaction increased by 73% compared to hard refusal systems, primarily due to reduced inappropriate refusals and more nuanced, helpful responses to complex queries. Educational effectiveness, measured through comprehension assessments and learning outcome evaluations, improved by 45% when users received contextually appropriate information rather than categorical refusals.</p>
+
+            <p>Critically, safety outcomes also improved under the Safe Completion paradigm. By providing information with appropriate context and safety considerations, users demonstrated better understanding of potential risks and more responsible application of knowledge compared to scenarios where they sought information through less safe channels after experiencing hard refusals from AI systems.</p>
+
+            <!-- Research Results -->
             <div class="stats-grid scroll-reveal">
                 <div class="stat-card">
-                    <div class="stat-icon">▶️</div>
-                    <div class="stat-number">247K</div>
-                    <div class="stat-label">Views (48 hours)</div>
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-number">50K</div>
+                    <div class="stat-label">Test Interactions</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">💬</div>
-                    <div class="stat-number">1,847</div>
-                    <div class="stat-label">Technical Comments</div>
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-number">73%</div>
+                    <div class="stat-label">Satisfaction Increase</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">⏱️</div>
-                    <div class="stat-number">89%</div>
-                    <div class="stat-label">Completion Rate</div>
+                    <div class="stat-icon">🎓</div>
+                    <div class="stat-number">45%</div>
+                    <div class="stat-label">Learning Improvement</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon">🔗</div>
-                    <div class="stat-number">15K</div>
-                    <div class="stat-label">Documentation Clicks</div>
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-number">67%</div>
+                    <div class="stat-label">Safety Enhancement</div>
                 </div>
             </div>
 
-            <p>The video concludes with what many viewers are calling the most honest statement ever made by an AI company: "We're not building artificial general intelligence. We're building artificial useful intelligence. The difference is that one actually exists." This pragmatic approach, combined with demonstrated capabilities that exceed industry expectations, suggests TyloAI is positioning itself as the antithesis to hype-driven AI development.</p>
+            <h2>Addressing Complex Safety Scenarios</h2>
 
+            <p>The true test of any AI safety system lies in its ability to handle complex, ambiguous scenarios where traditional approaches fail. Our Safe Completion methodology demonstrates particular strength in addressing requests that involve dual-use information—knowledge that can be applied for both beneficial and harmful purposes depending on intent and implementation.</p>
+
+            <p>Consider requests for information about chemical processes that might be used for educational purposes, legitimate industrial applications, or potentially harmful activities. Hard refusal systems must either block all such information (preventing legitimate educational and professional use) or allow it without safety considerations (potentially enabling misuse). Safe Completion systems can provide scientifically accurate information while including appropriate safety context, ethical considerations, and guidance toward beneficial applications.</p>
+
+            <p>Similarly, our system excels at handling requests that require cultural sensitivity, where safety considerations may vary across different social contexts and user backgrounds. Rather than applying universal restrictions that may be inappropriate for certain cultural or educational contexts, Safe Completion systems can adapt responses to respect legitimate cultural practices while maintaining appropriate safety standards.</p>
+
+            <h3>Long-term Learning and Adaptation</h3>
+
+            <p>A critical advantage of the Safe Completion approach is its capacity for continuous improvement through real-world interaction data and outcome analysis. Unlike static hard refusal systems that require manual updating of refusal categories, Safe Completion systems learn from user feedback, outcome assessments, and evolving safety understanding to continuously refine their assessment and response capabilities.</p>
+
+            <p>Our implementation includes sophisticated feedback mechanisms that track user satisfaction, educational effectiveness, safety outcomes, and long-term behavioral patterns to identify opportunities for system improvement. This creates a virtuous cycle where safer, more helpful responses lead to better user outcomes, which in turn provide data for further system refinement.</p>
+
+            <p>The system also incorporates expert input from domain specialists in safety, ethics, education, and various professional fields to ensure that safety assessments remain aligned with current best practices and emerging understanding of AI safety challenges. This collaborative approach ensures that technological capabilities are balanced with human wisdom and domain expertise.</p>
+
+            <h2>Implications for the Future of AI Safety</h2>
+
+            <p>The success of our Safe Completion research has profound implications for the future development of AI safety protocols across the industry. As AI systems become more sophisticated and widely deployed, the limitations of simple refusal-based safety measures become increasingly apparent. The challenge for the AI development community is to create safety systems that scale with AI capabilities while maintaining the nuanced judgment necessary for real-world deployment.</p>
+
+            <p>Safe Completion represents a pathway toward AI safety systems that can grow more sophisticated alongside AI capabilities, providing increasingly nuanced and context-appropriate safety measures rather than simply more restrictive categorical refusals. This approach enables AI systems to become more helpful and trustworthy simultaneously, supporting rather than undermining user confidence in AI technology.</p>
+
+            <p>Furthermore, our research demonstrates that advanced safety measures can actually enhance rather than compromise AI utility. By providing more intelligent, context-aware responses to safety-sensitive requests, AI systems can better serve legitimate user needs while maintaining appropriate safety standards. This challenges the common assumption that AI safety necessarily involves trade-offs with AI helpfulness.</p>
+
+            <h3>Open Research and Collaborative Development</h3>
+
+            <p>In keeping with our commitment to advancing AI safety as a collective endeavor rather than competitive advantage, TyloAI is making our Safe Completion research freely available to the broader AI research community. Our technical papers, implementation guidelines, and evaluation methodologies are being published in peer-reviewed venues and shared through open research platforms.</p>
+
+            <p>We believe that AI safety challenges are too important and complex for any single organization to address in isolation. The most effective approaches will emerge through collaborative research, shared methodologies, and collective learning from diverse implementation experiences across different AI systems and use cases.</p>
+
+            <p>To support this collaborative approach, we're establishing the Safe Completion Research Consortium—a collaborative initiative bringing together AI researchers, safety experts, ethicists, and domain specialists to advance context-aware AI safety methodologies. The consortium will serve as a platform for sharing research findings, coordinating evaluation standards, and developing best practices for implementing sophisticated safety measures in production AI systems.</p>
+
+            <div class="scroll-reveal" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;">
+                <h3 style="color: white; margin-bottom: var(--spacing-md);">🔬 Access Our Safety Research</h3>
+                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Read our complete technical paper, implementation guidelines, and contribute to the future of AI safety through collaborative research.</p>
+                <a href="#" class="cta-button" style="background: white; color: var(--color-accent);">
+                    <i class="fas fa-file-alt"></i> Download Research Paper
+                </a>
+            </div>
+            
             <div class="news-navigation">
                 <a href="news.html?id=5" class="nav-button">
-                    <i class="fas fa-arrow-left"></i> Previous Impact Story
-                </a>
-                <a href="news.html" class="nav-button">
-                    All Latest News <i class="fas fa-grid"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- 新闻详情4: 多模型API接入 -->
-        <div id="news-4" class="news-detail">
-            <a href="news.html" class="back-link">
-                <i class="fas fa-arrow-left"></i> Back to Innovation Hub
-            </a>
-            <span class="id-badge">Technical Milestone #4</span>
-            
-            <h1>Universal AI Gateway: The World's First Truly Unified Multi-Model Ecosystem</h1>
-            
-            <div class="news-card-header">
-                <span class="news-category">Technology</span>
-                <span class="news-date">Aug 22, 2025</span>
-            </div>
-            
-            <p>In an unprecedented move that will reshape the entire AI industry, TyloAI introduces the world's first Universal AI Gateway – a revolutionary multi-model ecosystem that dissolves the barriers between competing AI platforms. This groundbreaking achievement doesn't simply aggregate different AI services; it creates an intelligent orchestration layer that dynamically selects, combines, and optimizes multiple AI models to deliver superior results for any given task.</p>
-            
-            <div class="image-container scroll-reveal">
-                <img src="new.jpg" alt="Multi-Model API Integration dashboard showing real-time model performance, intelligent routing, and unified interface across global AI providers" class="comparison-image">
-            </div>
-            
-            <h2>Strategic AI Alliance: Global Excellence United</h2>
-            
-            <p>Our Universal Gateway represents strategic partnerships with the world's leading AI innovators, creating an unprecedented alliance that brings together the best capabilities from both Western and Eastern AI development philosophies. This isn't about competition – it's about collaboration at the highest level of technological achievement.</p>
-            
-            <div class="logo-grid scroll-reveal">
-                <div class="model-logo">
-                    <i class="fas fa-robot"></i>
-                    <span>OpenAI</span>
-                    <small>GPT Excellence</small>
-                </div>
-                <div class="model-logo">
-                    <i class="fas fa-brain"></i>
-                    <span>Anthropic</span>
-                    <small>Ethical AI Pioneer</small>
-                </div>
-                <div class="model-logo">
-                    <i class="fas fa-microchip"></i>
-                    <span>Baidu AI</span>
-                    <small>Eastern Innovation</small>
-                </div>
-                <div class="model-logo">
-                    <i class="fas fa-cog"></i>
-                    <span>Alibaba Tongyi</span>
-                    <small>Enterprise Scale</small>
-                </div>
-                <div class="model-logo">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Tencent Hunyuan</span>
-                    <small>Creative Intelligence</small>
-                </div>
-            </div>
-
-            <h3>Intelligent Orchestration: Beyond Simple Integration</h3>
-
-            <p>The true innovation lies not in connecting different APIs, but in our proprietary Intelligent Routing System that analyzes each request across 17 distinct performance vectors to determine the optimal model combination. This system considers factors including task complexity, language requirements, cultural context, processing speed needs, and accuracy requirements to dynamically select the best AI resource for each specific query.</p>
-
-            <!-- Performance Feature Cards -->
-            <div class="feature-grid scroll-reveal">
-                <div class="feature-card">
-                    <div class="feature-icon">🎯</div>
-                    <div class="feature-title">Dynamic Model Selection</div>
-                    <div class="feature-description">AI-powered routing system analyzes 17 performance metrics to select optimal models for each task in real-time</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title">Latency Optimization</div>
-                    <div class="feature-description">Intelligent load balancing and geographic routing ensure sub-200ms response times globally</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔄</div>
-                    <div class="feature-title">Seamless Fallbacks</div>
-                    <div class="feature-description">Automatic failover to alternative models ensures 99.9% uptime even during provider outages</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <div class="feature-title">Performance Analytics</div>
-                    <div class="feature-description">Real-time monitoring and optimization based on response quality, speed, and user satisfaction metrics</div>
-                </div>
-            </div>
-            
-            <h3>Cross-Cultural AI Intelligence: East Meets West</h3>
-            
-            <p>One of the most remarkable aspects of our Universal Gateway is how it bridges the gap between Western and Eastern AI development philosophies. Western models excel in creative reasoning and ethical considerations, while Eastern models demonstrate superior performance in mathematical processing, cultural sensitivity, and efficiency optimization. Our system automatically leverages these complementary strengths to deliver results that exceed what any single model could achieve independently.</p>
-            
-            <div class="chart-container scroll-reveal">
-                <canvas id="modelComparisonChart"></canvas>
-            </div>
-            
-            <p>Our comprehensive testing across diverse use cases reveals that the Universal Gateway consistently outperforms single-model solutions by an average of <strong>34% in task accuracy</strong> and <strong>28% in user satisfaction</strong>. More importantly, 94% of users report that the seamless experience makes them feel like they're interacting with a single, extraordinarily capable AI system rather than a complex orchestration of multiple technologies.</p>
-
-            <!-- Integration Benefits -->
-            <div class="stats-grid scroll-reveal">
-                <div class="stat-card">
-                    <div class="stat-icon">🌐</div>
-                    <div class="stat-number">5</div>
-                    <div class="stat-label">Global AI Partners</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-number">17</div>
-                    <div class="stat-label">Performance Metrics</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🎯</div>
-                    <div class="stat-number">94%</div>
-                    <div class="stat-label">User Satisfaction</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🚀</div>
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">System Uptime</div>
-                </div>
-            </div>
-
-            <h3>The Future of AI: Collaborative Intelligence</h3>
-
-            <p>The Universal AI Gateway represents more than a technological achievement – it's a philosophical statement about the future of artificial intelligence. Rather than a world where AI providers compete in isolation, we're creating an ecosystem where the best capabilities from around the globe work together to serve human needs. This collaborative approach not only delivers superior results but also promotes the healthy development of AI technology worldwide.</p>
-
-            <div style="background: var(--gradient-primary); color: white; padding: var(--spacing-xl); border-radius: var(--border-radius-lg); margin: var(--spacing-xl) 0; text-align: center;" class="scroll-reveal">
-                <h3 style="color: white; margin-bottom: var(--spacing-md);">🚀 Ready to Experience Universal AI?</h3>
-                <p style="color: rgba(255,255,255,0.9); margin-bottom: var(--spacing-lg);">Join thousands of developers and enterprises who have already upgraded to the most advanced AI integration platform ever created.</p>
-                <a href="#" class="cta-button" style="background: white; color: var(--color-accent);">
-                    <i class="fas fa-rocket"></i> Start Your Integration Today
-                </a>
-            </div>
-            
-            <div class="news-navigation">
-                <a href="news.html?id=3" class="nav-button">
-                    <i class="fas fa-arrow-left"></i> Previous Community Update
+                    <i class="fas fa-arrow-left"></i> Previous: Founders Letter
                 </a>
                 <a href="news.html" class="nav-button">
                     All Latest News <i class="fas fa-grid"></i>
@@ -2075,139 +2031,441 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         }
 
-        // Enhanced Audio Player Functionality
-        let isPlaying = false;
-        let currentTime = 0;
-        let duration = 0;
-
-        function initAudioPlayer() {
-            const audio = document.getElementById('demoAudio');
-            const playBtn = document.getElementById('playButton');
-            const playIcon = document.getElementById('playIcon');
-            const progressBar = document.getElementById('progressBar');
-            const progressFill = document.getElementById('progressFill');
-            const visualizer = document.getElementById('visualizer');
-            const bars = visualizer.querySelectorAll('.vis-bar');
-
-            if (!audio) return;
-
-            // Audio loaded
-            audio.addEventListener('loadedmetadata', () => {
-                duration = audio.duration;
+        // Demo playground functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.demo-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.querySelectorAll('.demo-tab').forEach(tab => {
+                tab.classList.remove('active');
             });
 
-            // Play/Pause functionality
-            playBtn.addEventListener('click', () => {
-                if (isPlaying) {
-                    audio.pause();
-                    playIcon.className = 'fas fa-play';
-                    playBtn.classList.remove('playing');
-                    bars.forEach(bar => bar.classList.remove('active'));
-                    isPlaying = false;
-                } else {
-                    audio.play();
-                    playIcon.className = 'fas fa-pause';
-                    playBtn.classList.add('playing');
-                    startVisualizer();
-                    isPlaying = true;
-                }
-            });
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            event.target.classList.add('active');
 
-            // Progress update
-            audio.addEventListener('timeupdate', () => {
-                currentTime = audio.currentTime;
-                const progress = (currentTime / duration) * 100;
-                progressFill.style.width = progress + '%';
-            });
-
-            // Progress bar click
-            progressBar.addEventListener('click', (e) => {
-                const rect = progressBar.getBoundingClientRect();
-                const clickPosition = (e.clientX - rect.left) / rect.width;
-                audio.currentTime = clickPosition * duration;
-            });
-
-            // Visualizer animation
-            function startVisualizer() {
-                bars.forEach((bar, index) => {
-                    bar.classList.add('active');
-                    bar.style.animationDelay = (index * 0.1) + 's';
-                });
+            // Initialize game if preview tab is selected
+            if (tabName === 'preview') {
+                setTimeout(initLiveGame, 100);
             }
-
-            // Audio ended
-            audio.addEventListener('ended', () => {
-                playIcon.className = 'fas fa-play';
-                playBtn.classList.remove('playing');
-                bars.forEach(bar => bar.classList.remove('active'));
-                isPlaying = false;
-                progressFill.style.width = '0%';
-            });
         }
 
+        // Live Game Implementation
+        function initLiveGame() {
+            const canvas = document.getElementById('liveGameCanvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let gameRunning = true;
+            let score = 0;
+            let gameSpeed = 2;
+            
+            const player = {
+                x: 50,
+                y: 150,
+                width: 25,
+                height: 25,
+                speed: 4,
+                color: '#00ff41'
+            };
+            
+            const obstacles = [];
+            const energyOrbs = [];
+            const stars = [];
+            
+            // Initialize stars background
+            for (let i = 0; i < 80; i++) {
+                stars.push({
+                    x: Math.random() * 760,
+                    y: Math.random() * 300,
+                    size: Math.random() * 2 + 0.5,
+                    speed: Math.random() * 0.5 + 0.5
+                });
+            }
+            
+            // Game input handling
+            const keys = {};
+            
+            document.addEventListener('keydown', (e) => {
+                keys[e.key.toLowerCase()] = true;
+                e.preventDefault();
+            });
+            
+            document.addEventListener('keyup', (e) => {
+                keys[e.key.toLowerCase()] = false;
+            });
+            
+            function spawnObstacle() {
+                if (Math.random() < 0.02) {
+                    obstacles.push({
+                        x: 760,
+                        y: Math.random() * (300 - 30),
+                        width: 20,
+                        height: 30,
+                        color: '#ff4444'
+                    });
+                }
+            }
+            
+            function spawnEnergyOrb() {
+                if (Math.random() < 0.015) {
+                    energyOrbs.push({
+                        x: 760,
+                        y: Math.random() * (300 - 15),
+                        width: 15,
+                        height: 15,
+                        color: '#ffaa00',
+                        pulse: 0
+                    });
+                }
+            }
+            
+            function updatePlayer() {
+                if (keys['w'] || keys['arrowup']) {
+                    player.y = Math.max(0, player.y - player.speed);
+                }
+                if (keys['s'] || keys['arrowdown']) {
+                    player.y = Math.min(300 - player.height, player.y + player.speed);
+                }
+                if (keys['a'] || keys['arrowleft']) {
+                    player.x = Math.max(0, player.x - player.speed);
+                }
+                if (keys['d'] || keys['arrowright']) {
+                    player.x = Math.min(760 - player.width, player.x + player.speed);
+                }
+            }
+            
+            function updateStars() {
+                stars.forEach(star => {
+                    star.x -= star.speed;
+                    if (star.x < 0) {
+                        star.x = 760;
+                        star.y = Math.random() * 300;
+                    }
+                });
+            }
+            
+            function updateObstacles() {
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    obstacles[i].x -= gameSpeed;
+                    
+                    // Remove obstacles that have moved off screen
+                    if (obstacles[i].x + obstacles[i].width < 0) {
+                        obstacles.splice(i, 1);
+                        score += 10;
+                        continue;
+                    }
+                    
+                    // Check collision with player
+                    if (obstacles[i].x < player.x + player.width &&
+                        obstacles[i].x + obstacles[i].width > player.x &&
+                        obstacles[i].y < player.y + player.height &&
+                        obstacles[i].y + obstacles[i].height > player.y) {
+                        gameRunning = false;
+                    }
+                }
+            }
+            
+            function updateEnergyOrbs() {
+                for (let i = energyOrbs.length - 1; i >= 0; i--) {
+                    energyOrbs[i].x -= gameSpeed * 0.8;
+                    energyOrbs[i].pulse += 0.2;
+                    
+                    // Remove orbs that have moved off screen
+                    if (energyOrbs[i].x + energyOrbs[i].width < 0) {
+                        energyOrbs.splice(i, 1);
+                        continue;
+                    }
+                    
+                    // Check collision with player
+                    if (energyOrbs[i].x < player.x + player.width &&
+                        energyOrbs[i].x + energyOrbs[i].width > player.x &&
+                        energyOrbs[i].y < player.y + player.height &&
+                        energyOrbs[i].y + energyOrbs[i].height > player.y) {
+                        energyOrbs.splice(i, 1);
+                        score += 50;
+                    }
+                }
+            }
+            
+            function draw() {
+                // Clear canvas with space background
+                ctx.fillStyle = '#000033';
+                ctx.fillRect(0, 0, 760, 300);
+                
+                // Draw stars
+                ctx.fillStyle = '#ffffff';
+                stars.forEach(star => {
+                    ctx.fillRect(star.x, star.y, star.size, star.size);
+                });
+                
+                // Draw player with glow effect
+                ctx.shadowColor = player.color;
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = player.color;
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+                ctx.shadowBlur = 0;
+                
+                // Draw obstacles
+                ctx.fillStyle = '#ff4444';
+                obstacles.forEach(obstacle => {
+                    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                });
+                
+                // Draw energy orbs with pulse effect
+                energyOrbs.forEach(orb => {
+                    const pulseSize = Math.sin(orb.pulse) * 3 + orb.width;
+                    ctx.fillStyle = orb.color;
+                    ctx.fillRect(
+                        orb.x - (pulseSize - orb.width) / 2, 
+                        orb.y - (pulseSize - orb.height) / 2, 
+                        pulseSize, 
+                        pulseSize
+                    );
+                });
+                
+                // Update score display
+                const scoreElement = document.getElementById('liveScore');
+                if (scoreElement) {
+                    scoreElement.textContent = score;
+                }
+            }
+            
+            function gameLoop() {
+                if (!gameRunning) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    ctx.fillRect(0, 0, 760, 300);
+                    ctx.fillStyle = '#ff4444';
+                    ctx.font = '24px Courier New';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('GAME OVER', 380, 130);
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '16px Courier New';
+                    ctx.fillText('Press R to Restart', 380, 160);
+                    ctx.fillText(`Final Score: ${score}`, 380, 180);
+                    
+                    if (keys['r']) {
+                        // Reset game
+                        score = 0;
+                        gameSpeed = 2;
+                        player.x = 50;
+                        player.y = 150;
+                        obstacles.length = 0;
+                        energyOrbs.length = 0;
+                        gameRunning = true;
+                    }
+                    return;
+                }
+                
+                updatePlayer();
+                updateStars();
+                updateObstacles();
+                updateEnergyOrbs();
+                spawnObstacle();
+                spawnEnergyOrb();
+                draw();
+                
+                // Increase difficulty over time
+                gameSpeed += 0.001;
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            // Start the game
+            gameLoop();
+        }
+
+        // Audio Player Functionality
+        let audioElement = null;
+        let isPlaying = false;
+        let currentVolume = 0.7;
+
+        function toggleAudioPlayback() {
+            audioElement = document.getElementById('musicAudio');
+            if (!audioElement) return;
+
+            const playButton = document.getElementById('playButton');
+            const playIcon = playButton.querySelector('i');
+
+            if (isPlaying) {
+                audioElement.pause();
+                playIcon.className = 'fas fa-play';
+                isPlaying = false;
+            } else {
+                audioElement.play();
+                playIcon.className = 'fas fa-pause';
+                isPlaying = true;
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            if (!audioElement || !isPlaying) return;
+
+            const progress = (audioElement.currentTime / audioElement.duration) * 100;
+            const progressBar = document.getElementById('progressBar');
+            const progressHandle = document.getElementById('progressHandle');
+            const timeDisplay = document.getElementById('timeDisplay');
+
+            if (progressBar) progressBar.style.width = progress + '%';
+            if (progressHandle) progressHandle.style.left = progress + '%';
+            
+            if (timeDisplay) {
+                const current = formatTime(audioElement.currentTime);
+                const total = formatTime(audioElement.duration);
+                timeDisplay.textContent = `${current} / ${total}`;
+            }
+
+            if (isPlaying) {
+                requestAnimationFrame(updateProgress);
+            }
+        }
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function seekAudio(event) {
+            if (!audioElement) return;
+            
+            const progressContainer = event.currentTarget;
+            const rect = progressContainer.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const width = rect.width;
+            const seekTime = (clickX / width) * audioElement.duration;
+            
+            audioElement.currentTime = seekTime;
+        }
+
+        function changeVolume(delta) {
+            currentVolume = Math.max(0, Math.min(1, currentVolume + delta));
+            if (audioElement) {
+                audioElement.volume = currentVolume;
+            }
+            
+            const volumeBar = document.getElementById('volumeBar');
+            if (volumeBar) {
+                volumeBar.style.width = (currentVolume * 100) + '%';
+            }
+        }
+
+        function downloadAudio() {
+            const link = document.createElement('a');
+            link.href = 'output.mp3';
+            link.download = 'tyloai-visual-symphony.mp3';
+            link.click();
+        }
+
+        function shareAudio() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'TyloAI Visual Symphony',
+                    text: 'Check out this AI-generated music from an image!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback to copying URL
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        }
+        
         // Enhanced Chart Initialization
         function initCharts() {
-            // Agent Performance Chart - Enhanced
-            if (document.getElementById('agentPerformanceChart')) {
-                new Chart(document.getElementById('agentPerformanceChart'), {
-                    type: 'bar',
+            // Initialize the live game when the preview tab is active
+            initLiveGame();
+            
+            // Model Performance Chart
+            if (document.getElementById('modelPerformanceChart')) {
+                new Chart(document.getElementById('modelPerformanceChart'), {
+                    type: 'radar',
                     data: {
-                        labels: ['Task Completion Time', 'Required User Input', 'Processing Accuracy', 'User Satisfaction', 'Problem Resolution', 'Learning Efficiency'],
+                        labels: ['Code Quality', 'Generation Speed', 'Context Understanding', 'User Satisfaction', 'Feature Completeness', 'Error Handling'],
                         datasets: [{
-                            label: 'Traditional AI Systems',
-                            data: [100, 100, 82, 76, 71, 65],
-                            backgroundColor: 'rgba(156, 163, 175, 0.8)',
-                            borderColor: 'rgba(156, 163, 175, 1)',
-                            borderWidth: 2
+                            label: 'Tylo-Epist-4.5',
+                            data: [94, 89, 96, 98, 92, 87],
+                            fill: true,
+                            backgroundColor: 'rgba(37, 99, 235, 0.2)',
+                            borderColor: 'rgb(37, 99, 235)',
+                            borderWidth: 3,
+                            pointBackgroundColor: 'rgb(37, 99, 235)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6
                         }, {
-                            label: 'TyloAI Agent Intelligence',
-                            data: [53, 37, 91, 94, 89, 93],
-                            backgroundColor: 'rgba(37, 99, 235, 0.8)',
-                            borderColor: 'rgba(37, 99, 235, 1)',
-                            borderWidth: 2
+                            label: 'Previous Generation',
+                            data: [72, 67, 74, 79, 71, 68],
+                            fill: true,
+                            backgroundColor: 'rgba(156, 163, 175, 0.1)',
+                            borderColor: 'rgb(156, 163, 175)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgb(156, 163, 175)',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4
                         }]
                     },
                     options: {
                         responsive: true,
-                        animation: {
-                            duration: 2000,
-                            easing: 'easeInOutQuart'
-                        },
+                        animation: { duration: 2500, easing: 'easeInOutBack' },
                         plugins: {
-                            title: {
-                                display: true,
-                                text: 'Agent vs Traditional AI: Comprehensive Performance Analysis',
-                                font: { size: 16, weight: 'bold' }
-                            },
-                            legend: {
-                                position: 'top',
-                                labels: { padding: 20, font: { weight: '600' } }
-                            }
+                            title: { display: true, text: 'Tylo-Epist-4.5 Performance Comparison', font: { size: 16, weight: 'bold' } },
+                            legend: { position: 'top', labels: { padding: 20, font: { weight: '600' } } }
                         },
                         scales: {
-                            y: {
+                            r: {
                                 beginAtZero: true,
+                                min: 60,
                                 max: 100,
-                                title: {
-                                    display: true,
-                                    text: 'Performance Index (%)',
-                                    font: { weight: '600' }
-                                },
-                                grid: { color: 'rgba(0, 0, 0, 0.1)' }
-                            },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Performance Metrics',
-                                    font: { weight: '600' }
-                                }
+                                ticks: { stepSize: 10, font: { weight: '500' } },
+                                pointLabels: { font: { size: 12, weight: '600' } }
                             }
                         }
                     }
                 });
             }
             
-            // Music Accuracy Chart - Enhanced Radar
+            // YouTube Metrics Chart
+            if (document.getElementById('youtubeMetricsChart')) {
+                new Chart(document.getElementById('youtubeMetricsChart'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+                        datasets: [{
+                            label: 'Views (thousands)',
+                            data: [23, 45, 67, 89, 134, 178, 247],
+                            borderColor: 'rgb(37, 99, 235)',
+                            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Subscribers (thousands)',
+                            data: [2, 5, 8, 12, 16, 19, 23],
+                            borderColor: 'rgb(16, 185, 129)',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: { duration: 2000, easing: 'easeInOutQuart' },
+                        plugins: {
+                            title: { display: true, text: 'YouTube Channel Growth - First Week', font: { size: 16, weight: 'bold' } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, title: { display: true, text: 'Count (thousands)' } },
+                            x: { title: { display: true, text: 'Days Since Launch' } }
+                        }
+                    }
+                });
+            }
+
+            // Music Accuracy Chart
             if (document.getElementById('musicAccuracyChart')) {
                 new Chart(document.getElementById('musicAccuracyChart'), {
                     type: 'radar',
@@ -2223,174 +2481,55 @@
                             pointBackgroundColor: 'rgb(37, 99, 235)',
                             pointBorderColor: '#fff',
                             pointBorderWidth: 2,
-                            pointRadius: 6,
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgb(37, 99, 235)',
-                            pointHoverRadius: 8
-                        }, {
-                            label: 'Industry Average',
-                            data: [67, 71, 69, 65, 70, 63, 72],
-                            fill: true,
-                            backgroundColor: 'rgba(156, 163, 175, 0.1)',
-                            borderColor: 'rgb(156, 163, 175)',
-                            borderWidth: 2,
-                            pointBackgroundColor: 'rgb(156, 163, 175)',
-                            pointBorderColor: '#fff',
-                            pointBorderWidth: 2,
-                            pointRadius: 4
+                            pointRadius: 6
                         }]
                     },
                     options: {
                         responsive: true,
-                        animation: {
-                            duration: 2500,
-                            easing: 'easeInOutBack'
-                        },
+                        animation: { duration: 2500, easing: 'easeInOutBack' },
                         plugins: {
-                            title: {
-                                display: true,
-                                text: 'Image-to-Music AI: Multi-Dimensional Performance Analysis',
-                                font: { size: 16, weight: 'bold' }
-                            },
-                            legend: {
-                                position: 'top',
-                                labels: { padding: 20, font: { weight: '600' } }
-                            }
-                        },
-                        scales: {
-                            r: {
-                                beginAtZero: true,
-                                min: 50,
-                                max: 100,
-                                ticks: {
-                                    stepSize: 10,
-                                    font: { weight: '500' }
-                                },
-                                pointLabels: {
-                                    font: { size: 12, weight: '600' }
-                                },
-                                grid: { color: 'rgba(0, 0, 0, 0.1)' },
-                                angleLines: { color: 'rgba(0, 0, 0, 0.1)' }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Beta Benefits Chart - Enhanced Doughnut
-            if (document.getElementById('betaBenefitsChart')) {
-                new Chart(document.getElementById('betaBenefitsChart'), {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Lifetime Pro Membership ($299/year)', 'Early Feature Access', 'Direct Engineer Support', 'Beta Testing Opportunities', 'Custom Training Credits', 'Community Recognition'],
-                        datasets: [{
-                            data: [40, 20, 15, 12, 8, 5],
-                            backgroundColor: [
-                                'rgba(37, 99, 235, 0.8)',
-                                'rgba(59, 130, 246, 0.8)',
-                                'rgba(96, 165, 250, 0.8)',
-                                'rgba(147, 197, 253, 0.8)',
-                                'rgba(191, 219, 254, 0.8)',
-                                'rgba(219, 234, 254, 0.8)'
-                            ],
-                            borderColor: '#fff',
-                            borderWidth: 3,
-                            hoverOffset: 10
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        animation: {
-                            duration: 2000,
-                            easing: 'easeInOutElastic'
-                        },
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Discord Beta: Comprehensive Value Breakdown',
-                                font: { size: 16, weight: 'bold' }
-                            },
-                            legend: {
-                                position: 'bottom',
-                                labels: { 
-                                    padding: 15, 
-                                    font: { weight: '500' },
-                                    generateLabels: function(chart) {
-                                        const original = Chart.defaults.plugins.legend.labels.generateLabels;
-                                        const labels = original.call(this, chart);
-                                        
-                                        labels.forEach((label, index) => {
-                                            label.text = label.text.length > 25 ? label.text.substring(0, 25) + '...' : label.text;
-                                        });
-                                        
-                                        return labels;
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.label + ': ' + context.parsed + '%';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Model Comparison Chart - Enhanced Polar Area
-            if (document.getElementById('modelComparisonChart')) {
-                new Chart(document.getElementById('modelComparisonChart'), {
-                    type: 'polarArea',
-                    data: {
-                        labels: ['OpenAI GPT Models', 'Anthropic Claude', 'Baidu ERNIE Bot', 'Alibaba Tongyi', 'Tencent Hunyuan'],
-                        datasets: [{
-                            data: [92, 90, 87, 85, 83],
-                            backgroundColor: [
-                                'rgba(37, 99, 235, 0.7)',
-                                'rgba(16, 185, 129, 0.7)',
-                                'rgba(245, 158, 11, 0.7)',
-                                'rgba(239, 68, 68, 0.7)',
-                                'rgba(139, 92, 246, 0.7)'
-                            ],
-                            borderColor: [
-                                'rgba(37, 99, 235, 1)',
-                                'rgba(16, 185, 129, 1)',
-                                'rgba(245, 158, 11, 1)',
-                                'rgba(239, 68, 68, 1)',
-                                'rgba(139, 92, 246, 1)'
-                            ],
-                            borderWidth: 2
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        animation: {
-                            duration: 2500,
-                            easing: 'easeInOutBounce'
-                        },
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: 'Global AI Model Performance Benchmarking (TyloAI Universal Gateway)',
-                                font: { size: 16, weight: 'bold' }
-                            },
-                            legend: {
-                                position: 'bottom',
-                                labels: { padding: 15, font: { weight: '600' } }
-                            }
+                            title: { display: true, text: 'Image-to-Music AI Performance Analysis', font: { size: 16, weight: 'bold' } }
                         },
                         scales: {
                             r: {
                                 beginAtZero: true,
                                 min: 70,
                                 max: 100,
-                                ticks: {
-                                    stepSize: 5,
-                                    font: { weight: '500' }
-                                }
+                                ticks: { stepSize: 5 }
                             }
+                        }
+                    }
+                });
+            }
+
+            // Safety Metrics Chart
+            if (document.getElementById('safetyMetricsChart')) {
+                new Chart(document.getElementById('safetyMetricsChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Safety Compliance', 'User Satisfaction', 'Educational Value', 'Response Quality', 'Context Understanding'],
+                        datasets: [{
+                            label: 'Hard Refusal Systems',
+                            data: [78, 45, 52, 41, 38],
+                            backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                            borderColor: 'rgba(239, 68, 68, 1)',
+                            borderWidth: 2
+                        }, {
+                            label: 'Safe Completion Systems',
+                            data: [94, 87, 89, 92, 85],
+                            backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: { duration: 2000, easing: 'easeInOutQuart' },
+                        plugins: {
+                            title: { display: true, text: 'Safety Methodology Comparison', font: { size: 16, weight: 'bold' } }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, max: 100, title: { display: true, text: 'Performance Score (%)' } }
                         }
                     }
                 });
@@ -2441,9 +2580,28 @@
                 // Initialize charts for current news
                 setTimeout(initCharts, 100);
                 
-                // Initialize audio player if on music article
-                if (newsId === '2') {
-                    setTimeout(initAudioPlayer, 100);
+                // Initialize audio if on music page
+                if (newsId === '4') {
+                    setTimeout(() => {
+                        const audio = document.getElementById('musicAudio');
+                        if (audio) {
+                            audio.volume = currentVolume;
+                            // Audio event listeners
+                            audio.addEventListener('loadedmetadata', () => {
+                                const timeDisplay = document.getElementById('timeDisplay');
+                                if (timeDisplay) {
+                                    timeDisplay.textContent = `0:00 / ${formatTime(audio.duration)}`;
+                                }
+                            });
+                            
+                            audio.addEventListener('ended', () => {
+                                const playButton = document.getElementById('playButton');
+                                const playIcon = playButton.querySelector('i');
+                                playIcon.className = 'fas fa-play';
+                                isPlaying = false;
+                            });
+                        }
+                    }, 500);
                 }
             } else {
                 // Show news list if no valid ID
@@ -2461,25 +2619,6 @@
                 }, index * 200);
             });
         });
-
-        // Enhanced live counter animation
-        function animateLiveCounter() {
-            const counter = document.querySelector('.live-counter');
-            if (counter) {
-                const numbers = [73, 72, 71, 70, 69, 68, 67];
-                let currentIndex = 0;
-                
-                setInterval(() => {
-                    if (currentIndex < numbers.length - 1) {
-                        currentIndex++;
-                        counter.innerHTML = `${numbers[currentIndex]} spots remaining`;
-                    }
-                }, 30000); // Update every 30 seconds
-            }
-        }
-
-        // Initialize live counter when DOM loads
-        document.addEventListener('DOMContentLoaded', animateLiveCounter);
 
         // Add smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

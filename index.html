@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TyloAI - Intelligent AI Assistant</title>
-    <meta name="description" content="TyloAI - Next-generation intelligent AI assistant supporting multimodal interaction and streaming conversations">
+    <title>TyloAI Launch Countdown</title>
+    <meta name="description" content="TyloAI official launch countdown - September 2nd, 2025">
     
     <!-- External icon libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -22,9 +22,10 @@
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #000;
             background: #fff;
             overflow-x: hidden;
+            min-height: 100vh;
         }
 
         /* Animation definitions */
@@ -32,17 +33,6 @@
             from {
                 opacity: 0;
                 transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
             }
             to {
                 opacity: 1;
@@ -58,6 +48,11 @@
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); }
+            50% { box-shadow: 0 0 40px rgba(0, 0, 0, 0.2); }
         }
 
         /* Navigation bar */
@@ -91,12 +86,6 @@
             gap: 0.5rem;
         }
 
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-        }
-
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -114,636 +103,319 @@
             color: #000;
         }
 
-        /* Hero section - full screen */
-        .hero {
-            height: 100vh;
+        /* Main countdown section */
+        .countdown-section {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
             background: #fff;
-            transition: all 0.5s ease;
-        }
-
-        .hero.chat-mode {
-            align-items: flex-start;
-            padding-top: 120px;
-        }
-
-        .hero-content {
-            width: 100%;
-            max-width: 800px;
-            padding: 0 2rem;
-            transition: all 0.5s ease;
-        }
-
-        /* Input container */
-        .input-container {
+            padding: 120px 2rem 60px;
             position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            transition: all 0.5s ease;
         }
 
-        .hero.chat-mode .input-container {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
+        .countdown-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.02) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .countdown-container {
             max-width: 800px;
-            z-index: 100;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .chat-input {
+        .launch-header {
+            margin-bottom: 3rem;
+        }
+
+        .launch-icon {
+            font-size: 4rem;
+            color: #000;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .launch-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #000;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        .launch-subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-weight: 400;
+        }
+
+        .launch-date {
+            font-size: 1.125rem;
+            color: #999;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        /* Countdown timer */
+        .countdown-timer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            margin: 4rem 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .countdown-item {
+            background: #fff;
+            border: 2px solid #eee;
+            border-radius: 16px;
+            padding: 2rem 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
-            padding: 1.5rem 4rem 1.5rem 2rem;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .countdown-item:hover::before {
+            left: 100%;
+        }
+
+        .countdown-item:hover {
+            border-color: #000;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .countdown-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+            font-feature-settings: 'tnum';
+        }
+
+        .countdown-label {
+            font-size: 0.875rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            margin-top: 4rem;
+        }
+
+        .trailer-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.25rem 3rem;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        .trailer-button:hover {
+            background: #333;
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .trailer-button i {
+            font-size: 1.5rem;
+        }
+
+        .notification-signup {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .email-input {
+            padding: 0.875rem 1.5rem;
             border: 2px solid #eee;
             border-radius: 25px;
-            font-size: 1.125rem;
+            font-size: 1rem;
             outline: none;
             transition: all 0.3s ease;
             background: #fff;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            min-width: 280px;
         }
 
-        .chat-input:focus {
+        .email-input:focus {
             border-color: #000;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .send-button {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #000;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
+        .notify-button {
+            padding: 0.875rem 2rem;
+            background: #fff;
+            color: #000;
+            border: 2px solid #000;
+            border-radius: 25px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notify-button:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* Status indicator */
+        .status-indicator {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-        }
-
-        .send-button:hover {
-            background: #333;
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .send-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: translateY(-50%);
-        }
-
-        /* Chat messages area */
-        .chat-messages {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            max-height: calc(100vh - 300px);
-            overflow-y: auto;
-        }
-
-        .hero.chat-mode .chat-messages {
-            display: block;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        .message {
+            gap: 0.75rem;
             margin-bottom: 2rem;
-            animation: fadeInUp 0.5s ease-out;
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 50px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .message.user {
-            text-align: right;
-        }
-
-        .message.ai {
-            text-align: left;
-        }
-
-        .message-bubble {
-            display: inline-block;
-            max-width: 80%;
-            padding: 1.25rem 1.75rem;
-            border-radius: 20px;
-            word-wrap: break-word;
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        .message.user .message-bubble {
-            background: #000;
-            color: #fff;
-        }
-
-        .message.ai .message-bubble {
-            background: #f8f9fa;
-            color: #333;
-            border: 1px solid #eee;
-        }
-
-        /* AI message content formatting styles */
-        .message.ai .message-bubble h1,
-        .message.ai .message-bubble h2,
-        .message.ai .message-bubble h3,
-        .message.ai .message-bubble h4,
-        .message.ai .message-bubble h5,
-        .message.ai .message-bubble h6 {
-            color: #000;
-            margin: 1rem 0 0.5rem 0;
-            font-weight: 600;
-        }
-
-        .message.ai .message-bubble h1 { font-size: 1.5rem; }
-        .message.ai .message-bubble h2 { font-size: 1.3rem; }
-        .message.ai .message-bubble h3 { font-size: 1.1rem; }
-        
-        .message.ai .message-bubble p {
-            margin: 0.5rem 0;
-            line-height: 1.6;
-        }
-
-        .message.ai .message-bubble ul,
-        .message.ai .message-bubble ol {
-            margin: 0.5rem 0;
-            padding-left: 1.5rem;
-        }
-
-        .message.ai .message-bubble li {
-            margin: 0.25rem 0;
-        }
-
-        .message.ai .message-bubble blockquote {
-            border-left: 3px solid #000;
-            margin: 1rem 0;
-            padding-left: 1rem;
-            font-style: italic;
-            color: #666;
-        }
-
-        .message.ai .message-bubble code {
-            background: #f1f3f4;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: #d73a49;
-        }
-
-        .message.ai .message-bubble pre {
-            background: #f8f9fa;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .message.ai .message-bubble pre code {
-            background: none;
-            padding: 0;
-            color: #333;
-            font-size: 0.875rem;
-            line-height: 1.4;
-        }
-
-        .code-header {
-            background: #e1e4e8;
-            padding: 0.5rem 1rem;
-            border-radius: 8px 8px 0 0;
-            font-size: 0.8rem;
-            color: #666;
-            border-bottom: 1px solid #d1d5da;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            margin: -1rem -1rem 0.5rem -1rem;
-        }
-
-        .message.ai .message-bubble table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-
-        .message.ai .message-bubble th,
-        .message.ai .message-bubble td {
-            border: 1px solid #e1e4e8;
-            padding: 0.5rem;
-            text-align: left;
-        }
-
-        .message.ai .message-bubble th {
-            background: #f6f8fa;
-            font-weight: 600;
-            color: #000;
-        }
-
-        .message.ai .message-bubble tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        .message.ai .message-bubble strong {
-            font-weight: 600;
-            color: #000;
-        }
-
-        .message.ai .message-bubble em {
-            font-style: italic;
-            color: #666;
-        }
-
-        .message.ai .message-bubble hr {
-            border: none;
-            border-top: 1px solid #e1e4e8;
-            margin: 1rem 0;
-        }
-
-        /* Loading animation */
-        .thinking-dot {
-            display: inline-block;
+        .status-dot {
             width: 12px;
             height: 12px;
             background: #000;
             border-radius: 50%;
-            animation: thinking-pulse 1.5s ease-in-out infinite;
-            margin: 0 auto;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes thinking-pulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-        }
-
-        /* Completion animation - checkmark */
-        .complete-check {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            position: relative;
-            opacity: 0;
-            animation: fadeInScale 0.4s ease-out forwards;
-        }
-
-        .complete-check::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            font-weight: bold;
+        .status-text {
+            font-weight: 600;
             color: #000;
+            font-size: 1rem;
         }
 
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* Thinking container styles */
-        .thinking-container {
-            padding: 1rem;
-            text-align: center;
-            animation: fadeInUp 0.3s ease-out;
-        }
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #000;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Streaming output animation */
-        .typing-indicator::after {
-            content: '|';
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-
-        /* News Section - Professional Design */
-        .news-section {
-            padding: 6rem 2rem;
-            background: #fff;
+        /* Features preview */
+        .features-preview {
+            margin-top: 5rem;
+            padding: 3rem 0;
             border-top: 1px solid #eee;
         }
 
-        .news-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .news-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .news-header h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .news-header p {
-            font-size: 1.125rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .news-card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .news-card:hover {
-            border-color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .news-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .news-category {
-            background: #000;
-            color: #fff;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .news-date {
-            color: #666;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .news-card h3 {
+        .features-title {
             font-size: 1.5rem;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-        }
-
-        .news-excerpt {
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .news-link {
-            display: inline-flex;
-            align-items: center;
-            color: #000;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .news-link i {
-            margin-left: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .news-link:hover i {
-            transform: translateX(3px);
-        }
-
-        .news-cta {
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .view-all-news {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .view-all-news:hover {
-            background: #333;
-            transform: translateY(-1px);
-        }
-
-        /* Feature sections */
-        .sections {
-            padding: 4rem 2rem;
-            background: #fff;
-        }
-
-        .section {
-            max-width: 1200px;
-            margin: 0 auto 6rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section h2 {
-            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 1rem;
             color: #000;
-        }
-
-        .section p {
-            font-size: 1.125rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
-            margin-top: 3rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .feature-card {
-            padding: 2.5rem;
-            border: 1px solid #eee;
-            border-radius: 16px;
+        .feature-item {
             text-align: center;
+            padding: 1.5rem;
+            border-radius: 12px;
             transition: all 0.3s ease;
-            background: #fff;
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border-color: #000;
+        .feature-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+            transform: translateY(-3px);
         }
 
         .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 2rem;
             color: #000;
+            margin-bottom: 1rem;
             animation: float 3s ease-in-out infinite;
         }
 
-        .feature-card h3 {
-            font-size: 1.5rem;
+        .feature-title {
+            font-size: 1.125rem;
             font-weight: 600;
-            margin-bottom: 1rem;
-            color: #000;
-        }
-
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        /* Statistics */
-        .stats {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .stats-grid {
-            max-width: 800px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-item {
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
             color: #000;
             margin-bottom: 0.5rem;
         }
 
-        .stat-label {
+        .feature-desc {
+            font-size: 0.9rem;
             color: #666;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            line-height: 1.5;
         }
 
         /* Footer */
         .footer {
             background: #000;
             color: #fff;
-            padding: 3rem 2rem 2rem;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
         }
 
         .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .footer-section h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
 
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
+        .footer-text {
             color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #fff;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #333;
-            padding-top: 2rem;
-            text-align: center;
-            color: #999;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         /* Responsive design */
@@ -752,427 +424,91 @@
                 display: none;
             }
 
-            .chat-input {
-                padding: 1.25rem 3.5rem 1.25rem 1.5rem;
-                font-size: 1rem;
+            .launch-title {
+                font-size: 2.5rem;
             }
 
-            .send-button {
-                width: 40px;
-                height: 40px;
-                right: 6px;
+            .launch-subtitle {
+                font-size: 1.25rem;
             }
 
-            .hero.chat-mode .input-container {
-                max-width: calc(100% - 2rem);
-                margin: 0 1rem;
+            .countdown-timer {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
             }
 
-            .chat-messages {
-                padding: 0 1rem;
+            .countdown-item {
+                padding: 1.5rem 0.75rem;
             }
 
-            .section h2 {
-                font-size: 2rem;
+            .countdown-number {
+                font-size: 2.5rem;
             }
 
-            .news-header h2 {
-                font-size: 2rem;
+            .trailer-button {
+                padding: 1rem 2rem;
+                font-size: 1.125rem;
             }
 
-            .news-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
+            .notification-signup {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .email-input {
+                min-width: 250px;
             }
 
             .features-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
         }
 
-        /* Scrollbar styles */
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 3px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #999;
-        }
-
-        /* Call-to-action section */
-        .cta-section {
-            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
-            padding: 5rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .cta-container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-        }
-
-        .cta-section p {
-            font-size: 1.25rem;
-            color: #666;
-            margin-bottom: 2.5rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 3rem;
-        }
-
-        .cta-button {
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.125rem;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .cta-button.primary {
-            background: #000;
-            color: #fff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .cta-button.primary:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .cta-button.secondary {
-            background: #fff;
-            color: #000;
-            border: 2px solid #000;
-        }
-
-        .cta-button.secondary:hover {
-            background: #000;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .cta-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .cta-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .cta-feature i {
-            color: #4CAF50;
-            font-size: 1.2rem;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .cta-button {
-                width: 200px;
-            }
-            
-            .cta-features {
+        @media (max-width: 480px) {
+            .countdown-timer {
                 grid-template-columns: 1fr;
-                text-align: left;
+                gap: 1rem;
                 max-width: 300px;
             }
+
+            .countdown-item {
+                padding: 1.25rem 1rem;
+            }
+
+            .countdown-number {
+                font-size: 2rem;
+            }
+
+            .launch-title {
+                font-size: 2rem;
+            }
         }
-        /* Trailer Section - Video */
-.trailer-section {
-    padding: 6rem 2rem;
-    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-}
 
-.trailer-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -50%;
-    width: 200%;
-    height: 100%;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
-    pointer-events: none;
-}
+        /* Launch effect when countdown reaches zero */
+        .launch-mode {
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            color: #fff;
+        }
 
-.trailer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
+        .launch-mode .launch-title,
+        .launch-mode .features-title {
+            color: #fff;
+        }
 
-.trailer-header {
-    text-align: center;
-    margin-bottom: 4rem;
-}
+        .launch-mode .countdown-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
 
-.trailer-header h2 {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-    background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+        .launch-mode .countdown-number {
+            color: #fff;
+        }
 
-.trailer-header p {
-    font-size: 1.25rem;
-    color: #ccc;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
-
-.trailer-player {
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 1.5rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-}
-
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    border-radius: 15px;
-    overflow: hidden;
-    background: #000;
-}
-
-.video-player {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    border-radius: 15px;
-}
-
-.video-player::-webkit-media-controls-panel {
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
-}
-
-.video-player::-webkit-media-controls-play-button {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    margin-left: 10px;
-}
-
-.video-player::-webkit-media-controls-current-time-display,
-.video-player::-webkit-media-controls-time-remaining-display {
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-}
-
-.play-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    opacity: 0;
-    pointer-events: none;
-}
-
-.video-container:hover .play-overlay {
-    opacity: 1;
-}
-
-.play-overlay:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translate(-50%, -50%) scale(1.1);
-}
-
-.play-overlay i {
-    color: #fff;
-    font-size: 2rem;
-    margin-left: 4px;
-}
-
-.trailer-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-    text-align: center;
-}
-
-.trailer-stat {
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-}
-
-.trailer-stat:hover {
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.15);
-}
-
-.trailer-stat-icon {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.trailer-stat-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 0.25rem;
-}
-
-.trailer-stat-desc {
-    font-size: 0.9rem;
-    color: #aaa;
-    line-height: 1.4;
-}
-
-.trailer-cta {
-    text-align: center;
-    margin-top: 3rem;
-}
-
-.trailer-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2.5rem;
-    background: #fff;
-    color: #000;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-}
-
-.trailer-button:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
-}
-
-.trailer-button i {
-    font-size: 1.2rem;
-}
-
-/* Responsive design for trailer section */
-@media (max-width: 768px) {
-    .trailer-header h2 {
-        font-size: 2.2rem;
-    }
-    
-    .trailer-player {
-        padding: 1rem;
-        margin: 0 1rem;
-    }
-    
-    .trailer-info {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .trailer-button {
-        padding: 0.875rem 2rem;
-        font-size: 1rem;
-    }
-    
-    .play-overlay {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .play-overlay i {
-        font-size: 1.5rem;
-    }
-}
+        .launch-mode .countdown-label {
+            color: #ccc;
+        }
     </style>
 </head>
 
@@ -1181,286 +517,95 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="#" class="logo">
-                <img src="logo.png" alt="TyloAI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <i class="fas fa-ai" style="display: none;"></i>
+                <i class="fas fa-rocket"></i>
                 TyloAI
             </a>
             <ul class="nav-links">
-                <li><a href="#trailer">Trailer</a></li>
+                <li><a href="#countdown">Countdown</a></li>
                 <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#stats">Data</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#trailer">Trailer</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Hero section -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <!-- Chat messages area -->
-            <div class="chat-messages" id="chatMessages"></div>
-
-            <!-- Input box -->
-            <div class="input-container">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." maxlength="2000">
-                <button class="send-button" id="sendButton">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest News Section -->
-    <section class="news-section" id="news">
-        <div class="news-container">
-            <div class="news-header">
-                <h2>Latest Updates</h2>
-                <p>Stay informed about TyloAI's latest developments and announcements</p>
-            </div>
-            
-            <div class="news-grid">
-                <article class="news-card" onclick="window.location.href='news.html?id=1'">
-                    <div class="news-card-header">
-                        <span class="news-category">Release</span>
-                        <span class="news-date">Aug 7, 2025</span>
-                    </div>
-                    <h3>Agent Intelligence System Launch</h3>
-                    <p class="news-excerpt">Revolutionary Agent capabilities that transform AI from a response tool into a proactive thinking assistant capable of complex task execution.</p>
-                    <a href="news.html?id=1" class="news-link">
-                        Read More <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>
-
-                <article class="news-card" onclick="window.location.href='news.html?id=2'">
-                    <div class="news-card-header">
-                        <span class="news-category">Innovation</span>
-                        <span class="news-date">Aug 7, 2025</span>
-                    </div>
-                    <h3>Image-to-Music AI Model</h3>
-                    <p class="news-excerpt">Industry-leading AI model that understands visual emotions and compositions to generate matching musical pieces automatically.</p>
-                    <a href="news.html?id=2" class="news-link">
-                        Read More <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>
-
-                <article class="news-card" onclick="window.location.href='news.html?id=3'">
-                    <div class="news-card-header">
-                        <span class="news-category">Community</span>
-                        <span class="news-date">Now Live</span>
-                    </div>
-                    <h3>Discord Beta Program</h3>
-                    <p class="news-excerpt">Join our US Discord beta community and explore AI's unlimited possibilities. Limited offer: First 100 users get lifetime Pro status.</p>
-                    <a href="news.html?id=3" class="news-link">
-                        Read More <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>
-
-                <article class="news-card" onclick="window.location.href='news.html?id=4'">
-                    <div class="news-card-header">
-                        <span class="news-category">Technology</span>
-                        <span class="news-date">Aug 20, 2025</span>
-                    </div>
-                    <h3>Multi-Model API Integration</h3>
-                    <p class="news-excerpt">TyloAI now integrates APIs from leading AI models, providing users with diverse choices and powerful capability combinations.</p>
-                    <a href="news.html?id=4" class="news-link">
-                        Read More <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>
-
-                <article class="news-card" onclick="window.location.href='news.html?id=5'">
-                    <div class="news-card-header">
-                        <span class="news-category">Safety</span>
-                        <span class="news-date">Aug 7, 2025</span>
-                    </div>
-                    <h3>From Hard Refusal to Safe Completion</h3>
-                    <p class="news-excerpt">Major breakthrough in AI safety: upgrading from traditional "hard refusal" to "safe completion" mode through advanced safety training.</p>
-                    <a href="news.html?id=5" class="news-link">
-                        Read More <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>
-
-                <article class="news-card" onclick="window.location.href='news.html?id=6'">
-                    <div class="news-card-header">
-                        <span class="news-category">Vision</span>
-                        <span class="news-date">Jul 21, 2025</span>
-                    </div>
-                    <h3>AI as Universal Empowerment</h3>
-                    <p class="news-excerpt">TyloAI's mission to make artificial intelligence a universal tool for empowering everyone, not just a privilege for the few.</p>
-                    <a href="news.html?id=6" class="news-link">
-                        Read More <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>
+    <!-- Main countdown section -->
+    <section class="countdown-section" id="countdown">
+        <div class="countdown-container">
+            <div class="launch-header">
+                <div class="launch-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h1 class="launch-title">TyloAI Launch</h1>
+                <p class="launch-subtitle">The Future of AI is Almost Here</p>
+                <p class="launch-date">September 2nd, 2025 • 00:00 Eastern Time</p>
             </div>
 
-            <div class="news-cta">
-                <a href="news.html" class="view-all-news">
-                    <span>View All News</span>
-                    <i class="fas fa-arrow-right"></i>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span class="status-text">LAUNCHING SOON</span>
+            </div>
+
+            <!-- Countdown timer -->
+            <div class="countdown-timer" id="countdownTimer">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">--</div>
+                    <div class="countdown-label">Days</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">--</div>
+                    <div class="countdown-label">Hours</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">--</div>
+                    <div class="countdown-label">Minutes</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">--</div>
+                    <div class="countdown-label">Seconds</div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="action-buttons">
+                <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" target="_blank" class="trailer-button">
+                    <i class="fab fa-youtube"></i>
+                    Watch Exclusive Trailer
                 </a>
-            </div>
-        </div>
-    </section>
 
-    <!-- Trailer Section -->
-<section class="trailer-section" id="trailer">
-    <div class="trailer-container">
-        <div class="trailer-header">
-            <h2>Experience TyloAI</h2>
-            <p>Watch our exclusive trailer showcasing the future of intelligent AI interaction and discover what makes TyloAI extraordinary</p>
-        </div>
-        
-        <div class="trailer-player">
-            <div class="video-container">
-                <video class="video-player" controls preload="metadata" poster="">
-                    <source src="宣传片.mp4" type="video/mp4">
-                    Your browser does not support the video element.
-                </video>
-                <div class="play-overlay">
-                    <i class="fas fa-play"></i>
+                <div class="notification-signup">
+                    <input type="email" class="email-input" placeholder="Enter your email for launch notification" id="emailInput">
+                    <button class="notify-button" onclick="subscribeToNotifications()">
+                        <i class="fas fa-bell"></i>
+                        Notify Me
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <div class="trailer-info">
-            <div class="trailer-stat">
-                <i class="fas fa-magic trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Next-Gen AI</div>
-                <div class="trailer-stat-desc">Revolutionary intelligence that understands and adapts</div>
-            </div>
-            <div class="trailer-stat">
-                <i class="fas fa-bolt trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Lightning Fast</div>
-                <div class="trailer-stat-desc">Instant responses powered by advanced algorithms</div>
-            </div>
-            <div class="trailer-stat">
-                <i class="fas fa-shield-alt trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Secure & Private</div>
-                <div class="trailer-stat-desc">Your conversations protected with enterprise-grade security</div>
-            </div>
-            <div class="trailer-stat">
-                <i class="fas fa-globe trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Global Access</div>
-                <div class="trailer-stat-desc">Available worldwide with multi-language support</div>
-            </div>
-        </div>
-
-        <div class="trailer-cta">
-            <a href="login.html" class="trailer-button">
-                <i class="fas fa-rocket"></i>
-                Start Your Journey
-            </a>
-        </div>
-    </div>
-</section>
-    
-    <!-- Feature highlights -->
-    <section class="sections" id="features">
-        <div class="section">
-            <div class="section-header">
-                <h2>Powerful AI Capabilities</h2>
-                <p>Integrating cutting-edge AI technology to provide you with comprehensive intelligent service experience</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
+            <!-- Features preview -->
+            <div class="features-preview">
+                <h2 class="features-title">What's Coming</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-title">Advanced Intelligence</div>
+                        <div class="feature-desc">Next-generation AI with unparalleled understanding</div>
                     </div>
-                    <h3>Smart Conversation</h3>
-                    <p>Supports natural language understanding with fluid multi-turn conversations, enabling AI to truly understand your needs</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-brain"></i>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="feature-title">Lightning Speed</div>
+                        <div class="feature-desc">Instant responses powered by cutting-edge technology</div>
                     </div>
-                    <h3>AI Memory</h3>
-                    <p>Advanced memory capabilities that can accurately analyze your characteristics and personality for personalized responses</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-code"></i>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-title">Privacy First</div>
+                        <div class="feature-desc">Your data protected with enterprise-grade security</div>
                     </div>
-                    <h3>Code Assistant</h3>
-                    <p>Professional programming assistance supporting multiple programming languages, code explanation, and optimization suggestions</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <h3>Document Processing</h3>
-                    <p>Intelligent document analysis, content summarization, and format conversion to make document processing more efficient</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Data Analysis</h3>
-                    <p>Powerful data insight capabilities, chart generation, trend analysis, and decision-making support</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <h3>Multi-language Support</h3>
-                    <p>Supports multiple global languages with real-time translation for barrier-free cross-language communication</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Statistics -->
-    <section class="stats" id="stats">
-        <div class="section">
-            <div class="section-header">
-                <h2>Trusted by Millions</h2>
-                <p>Join the growing community of TyloAI users worldwide</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">1M+</div>
-                    <div class="stat-label">Active Users</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">99.9%</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Countries</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Support</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Call-to-action section -->
-    <section class="cta-section">
-        <div class="cta-container">
-            <h2>Ready to Experience TyloAI's Powerful Features?</h2>
-            <p>Register now to unlock more premium features and enjoy personalized AI service experience</p>
-            <div class="cta-buttons">
-                <a href="login.html" class="cta-button primary">Login Now</a>
-                <a href="chat-guest.html" class="cta-button secondary">Guest Mode</a>
-            </div>
-            <div class="cta-features">
-                <div class="cta-feature">
-                    <i class="fas fa-brain"></i>
-                    <span>AI Personalized Memory</span>
-                </div>
-                <div class="cta-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Advanced Model Access</span>
-                </div>
-                <div class="cta-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Priority Response Speed</span>
-                </div>
-                <div class="cta-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>History Preservation</span>
                 </div>
             </div>
         </div>
@@ -1468,321 +613,104 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>TyloAI</h3>
-                    <p style="color: #ccc; line-height: 1.6;">
-                        Committed to providing users with the most intelligent, secure, and convenient AI service experience. We believe AI will change the world and make life better.
-                    </p>
-                </div>
-                <div class="footer-section">
-                    <h3>Products</h3>
-                    <ul class="footer-links">
-                        <li><a href="login.html">AI Conversation</a></li>
-                        <li><a href="login.html">Image Understanding</a></li>
-                        <li><a href="login.html">Code Assistant</a></li>
-                        <li><a href="login.html">API Services</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Privacy & Terms</h3>
-                    <ul class="footer-links">
-                        <li><a href="privacypolicy.html">Privacy Policy</a></li>
-                        <li><a href="privacypolicy.html">Terms of Service</a></li>
-                        <li><a href="privacypolicy.html">Cookie Policy</a></li>
-                        <li><a href="privacypolicy.html">Memory Guide</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-links">
-                        <li><a href="mailto:info@tyloai.com">info@tyloai.com</a></li>
-                        <li><a href="#">Online Support</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Developer Community</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 TyloAI. All rights reserved.</p>
-            </div>
+        <div class="footer-content">
+            <div class="footer-logo">TyloAI</div>
+            <p class="footer-text">
+                Revolutionizing the future of artificial intelligence. 
+                Join us as we launch the next generation of AI technology.
+            </p>
+            <p class="footer-text" style="margin-top: 1rem; font-size: 0.875rem;">
+                &copy; 2025 TyloAI. All rights reserved.
+            </p>
         </div>
     </footer>
 
     <script>
-        // Chat functionality
-        class ChatInterface {
-            constructor() {
-                this.messages = [
-                    {
-                        role: 'system',
-                        content: 'You are TyloAI, an intelligent, friendly, and professional AI assistant. You have the following characteristics:\n1. Your name is TyloAI\n2. You support multimodal interaction and can understand text, images, etc.\n3. You have contextual memory capabilities and can remember conversation history\n4. You respond to user questions in a friendly and professional manner\n5. When users ask about your identity, please introduce yourself as TyloAI\n6. You are committed to providing users with the best AI service experience\nPlease always maintain a friendly and professional attitude, and mention that you are TyloAI when appropriate.'
-                    }
-                ];
-                this.isLoading = false;
-                this.apiKey = 'sk-e1ed90c2effc4415beeee85845f66d05';
-                this.apiUrl = 'https://api.deepseek.com/chat/completions';
-                this.init();
+        // Countdown functionality
+        function updateCountdown() {
+            // Target date: September 2nd, 2025 00:00 Eastern Time
+            const targetDate = new Date('2025-09-02T00:00:00-04:00'); // EDT (UTC-4)
+            const now = new Date();
+            const difference = targetDate.getTime() - now.getTime();
+
+            // Check if launch has happened
+            if (difference <= 0) {
+                showLaunchMessage();
+                return;
             }
 
-            init() {
-                this.chatInput = document.getElementById('chatInput');
-                this.sendButton = document.getElementById('sendButton');
-                this.chatMessages = document.getElementById('chatMessages');
-                this.hero = document.getElementById('hero');
+            // Calculate time units
+            const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-                this.chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        this.sendMessage();
-                    }
-                });
-
-                this.sendButton.addEventListener('click', () => {
-                    this.sendMessage();
-                });
-
-                // Auto-focus input box
-                this.chatInput.focus();
-            }
-
-            async sendMessage() {
-                const message = this.chatInput.value.trim();
-                if (!message || this.isLoading) return;
-
-                // Switch to chat mode
-                this.hero.classList.add('chat-mode');
-
-                // Add user message
-                this.addMessage('user', message);
-                this.messages.push({ role: 'user', content: message });
-                
-                this.chatInput.value = '';
-                this.setLoading(true);
-
-                try {
-                    // Call DeepSeek API
-                    await this.callDeepSeekAPI();
-                } catch (error) {
-                    this.addMessage('ai', 'Sorry, I encountered some technical issues. Please check your network connection or try again later.');
-                    console.error('DeepSeek API Error:', error);
-                } finally {
-                    this.setLoading(false);
-                }
-            }
-
-            async callDeepSeekAPI() {
-                try {
-                    const response = await fetch(this.apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: 'deepseek-chat',
-                            messages: this.messages,
-                            stream: true,
-                            max_tokens: 8192,
-                            temperature: 0.7,
-                            top_p: 0.9
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-                    }
-
-                    // Handle streaming response
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    
-                    // Create thinking animation container
-                    const thinkingDiv = document.createElement('div');
-                    thinkingDiv.className = 'message ai';
-                    thinkingDiv.innerHTML = '<div class="thinking-container"><div class="thinking-dot"></div></div>';
-                    this.chatMessages.appendChild(thinkingDiv);
-                    this.scrollToBottom();
-
-                    // Delay creating the actual message container
-                    await new Promise(resolve => setTimeout(resolve, 500));
-
-                    // Create AI message container
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ai';
-
-                    const bubbleDiv = document.createElement('div');
-                    bubbleDiv.className = 'message-bubble';
-
-                    messageDiv.appendChild(bubbleDiv);
-
-                    // Replace thinking animation with real message
-                    thinkingDiv.replaceWith(messageDiv);
-                    this.scrollToBottom();
-
-                    let aiResponse = '';
-                    let buffer = '';
-
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-
-                        buffer += decoder.decode(value, { stream: true });
-                        const lines = buffer.split('\n');
-                        buffer = lines.pop(); // Keep incomplete lines
-
-                        for (const line of lines) {
-                            if (line.trim() === '') continue;
-                            if (line.startsWith('data: ')) {
-                                const data = line.slice(6);
-                                if (data === '[DONE]') continue;
-                                
-                                try {
-                                    const json = JSON.parse(data);
-                                    const content = json.choices?.[0]?.delta?.content;
-                                    if (content) {
-                                        aiResponse += content;
-                                        bubbleDiv.textContent = aiResponse;
-                                        this.scrollToBottom();
-                                    }
-                                } catch (e) {
-                                    console.warn('JSON parsing failed:', e);
-                                }
-                            }
-                        }
-                    }
-
-                    // Remove typing indicator
-                    // Show completion animation
-                    const checkDiv = document.createElement('div');
-                    checkDiv.className = 'thinking-container';
-                    checkDiv.innerHTML = '<div class="complete-check"></div>';
-                    messageDiv.insertBefore(checkDiv, bubbleDiv);
-
-                    // Hide checkmark after 1 second
-                    setTimeout(() => {
-                        checkDiv.style.display = 'none';
-                    }, 1000);
-                    bubbleDiv.classList.remove('typing-indicator');
-                    
-                    // Process Markdown format
-                    if (aiResponse) {
-                        bubbleDiv.innerHTML = this.formatMarkdown(aiResponse);
-                        this.messages.push({ role: 'assistant', content: aiResponse });
-                    }
-
-                } catch (error) {
-                    console.error('DeepSeek API call failed:', error);
-                    throw error;
-                }
-            }
-
-            addMessage(sender, text) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                
-                const bubbleDiv = document.createElement('div');
-                bubbleDiv.className = 'message-bubble';
-                bubbleDiv.textContent = text;
-                
-                messageDiv.appendChild(bubbleDiv);
-                this.chatMessages.appendChild(messageDiv);
-                this.scrollToBottom();
-            }
-
-            setLoading(loading) {
-                this.isLoading = loading;
-                this.sendButton.disabled = loading;
-                
-                if (loading) {
-                    this.sendButton.innerHTML = '<div class="loading"></div>';
-                } else {
-                    this.sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-                }
-            }
-
-            scrollToBottom() {
-                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-            }
-
-            // Markdown formatting function
-            formatMarkdown(text) {
-                // Escape HTML
-                text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                
-                // Code block processing
-                text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-                    const language = lang || 'text';
-                    return `<pre><div class="code-header">${language}</div><code>${code.trim()}</code></pre>`;
-                });
-                
-                // Inline code
-                text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-                
-                // Headers
-                text = text.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-                text = text.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-                text = text.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-                
-                // Bold and italic
-                text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-                text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-                
-                // Horizontal rule
-                text = text.replace(/^---$/gm, '<hr>');
-                
-                // Blockquotes
-                text = text.replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>');
-                
-                // Unordered lists
-                text = text.replace(/^\* (.*)$/gm, '<li>$1</li>');
-                text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-                
-                // Ordered lists
-                text = text.replace(/^\d+\. (.*)$/gm, '<li>$1</li>');
-                
-                // Table processing (simple table format)
-                const tableRegex = /(\|[^|\n]+\|[^|\n]*\n)+/g;
-                text = text.replace(tableRegex, (match) => {
-                    const rows = match.trim().split('\n');
-                    let tableHTML = '<table>';
-                    
-                    rows.forEach((row, index) => {
-                        const cells = row.split('|').filter(cell => cell.trim());
-                        const tag = index === 0 ? 'th' : 'td';
-                        
-                        if (index === 1 && row.includes('---')) return; // Skip separator row
-                        
-                        tableHTML += '<tr>';
-                        cells.forEach(cell => {
-                            tableHTML += `<${tag}>${cell.trim()}</${tag}>`;
-                        });
-                        tableHTML += '</tr>';
-                    });
-                    
-                    tableHTML += '</table>';
-                    return tableHTML;
-                });
-                
-                // Paragraph processing
-                text = text.replace(/\n\n/g, '</p><p>');
-                text = '<p>' + text + '</p>';
-                
-                // Clean up empty paragraphs
-                text = text.replace(/<p><\/p>/g, '');
-                text = text.replace(/<p>\s*<\/p>/g, '');
-                
-                return text;
-            }
+            // Update display
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
         }
 
-        // Initialize chat interface
-        document.addEventListener('DOMContentLoaded', () => {
-            new ChatInterface();
-        });
+        function showLaunchMessage() {
+            document.body.classList.add('launch-mode');
+            document.querySelector('.status-text').textContent = 'LAUNCHED!';
+            document.querySelector('.status-dot').style.background = '#4CAF50';
+            
+            // Update countdown display
+            document.getElementById('days').textContent = '00';
+            document.getElementById('hours').textContent = '00';
+            document.getElementById('minutes').textContent = '00';
+            document.getElementById('seconds').textContent = '00';
 
-        // Navigation bar scroll effect
+            // Update button text
+            document.querySelector('.trailer-button').innerHTML = `
+                <i class="fas fa-rocket"></i>
+                Experience TyloAI Now
+            `;
+        }
+
+        // Email notification subscription
+        function subscribeToNotifications() {
+            const email = document.getElementById('emailInput').value.trim();
+            const button = document.querySelector('.notify-button');
+            
+            if (!email) {
+                alert('Please enter your email address');
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Simulate subscription (in real implementation, this would call an API)
+            button.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
+            button.style.background = '#4CAF50';
+            button.style.borderColor = '#4CAF50';
+            button.style.color = '#fff';
+            button.disabled = true;
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="fas fa-bell"></i> Notify Me';
+                button.style.background = '#fff';
+                button.style.borderColor = '#000';
+                button.style.color = '#000';
+                button.disabled = false;
+            }, 3000);
+        }
+
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Initialize countdown
+        updateCountdown();
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
+        // Navigation scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.querySelector('.navbar');
             if (window.scrollY > 100) {
@@ -1794,7 +722,7 @@
             }
         });
 
-        // Smooth scrolling
+        // Smooth scrolling for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1808,46 +736,31 @@
             });
         });
 
-        // Statistics number animation
-        const observerOptions = {
-            threshold: 0.5,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = entry.target.querySelectorAll('.stat-number');
-                    statNumbers.forEach(stat => {
-                        animateNumber(stat);
-                    });
-                }
+        // Add entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const countdownItems = document.querySelectorAll('.countdown-item');
+            countdownItems.forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.1}s`;
+                item.style.animation = 'fadeInUp 0.8s ease-out forwards';
             });
-        }, observerOptions);
 
-        const statsSection = document.querySelector('.stats');
-        if (statsSection) {
-            observer.observe(statsSection);
-        }
+            const featureItems = document.querySelectorAll('.feature-item');
+            featureItems.forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.15}s`;
+                item.style.animation = 'fadeInUp 0.8s ease-out forwards';
+            });
+        });
 
-        function animateNumber(element) {
-            const text = element.textContent;
-            const number = parseInt(text.replace(/[^\d]/g, ''));
-            const suffix = text.replace(/[\d]/g, '');
+        // Add interactive hover effects
+        document.querySelectorAll('.countdown-item').forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                item.querySelector('.countdown-number').style.transform = 'scale(1.1)';
+            });
             
-            if (isNaN(number)) return;
-            
-            let current = 0;
-            const increment = number / 100;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= number) {
-                    current = number;
-                    clearInterval(timer);
-                }
-                element.textContent = Math.floor(current) + suffix;
-            }, 20);
-        }
+            item.addEventListener('mouseleave', () => {
+                item.querySelector('.countdown-number').style.transform = 'scale(1)';
+            });
+        });
     </script>
 </body>
 </html>
