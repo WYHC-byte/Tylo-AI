@@ -22,6 +22,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Blockly 积木块编程库 -->
     <script src="https://unpkg.com/blockly/blockly.min.js"></script>
+    <!-- PWA配置 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="TyloAI">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS图标 -->
+    <link rel="apple-touch-icon" sizes="57x57" href="logo.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="logo.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="logo.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="logo.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="logo.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="logo.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="logo.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="logo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+
+    <!-- PWA启动屏幕 -->
+    <link rel="apple-touch-startup-image" href="logo.png">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
     <script>  
         // 禁用右键菜单
         document.addEventListener('contextmenu', function(e) {
@@ -40,6 +62,370 @@
     </script>
 </head>
 <body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex flex-col" style="background-color: #F9F9F9;">
+    <!-- PWA安装提示弹窗 -->
+    <div id="pwaInstallModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50 hidden">
+        <div class="bg-white dark:bg-gray-800 rounded-t-3xl w-full max-w-md mx-4 mb-0 p-6 transform transition-transform duration-300 translate-y-full" id="pwaModalContent">
+            <div class="w-12 h-1 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-6"></div>
+            
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-mobile-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2">Get Our App Experience</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">We're developing a native app! Want to try the app-like experience? Enable PWA for faster access and offline support.</p>
+            </div>
+            
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <i class="fas fa-check text-green-500 w-4 h-4 mr-3"></i>
+                    Faster loading and smoother experience
+                </div>
+                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <i class="fas fa-check text-green-500 w-4 h-4 mr-3"></i>
+                    Works offline with cached conversations
+                </div>
+                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <i class="fas fa-check text-green-500 w-4 h-4 mr-3"></i>
+                    Add to home screen like a native app
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 mb-6">
+                <div class="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                    <i class="fas fa-info-circle mr-2"></i>How to install on Safari:
+                </div>
+                <ol class="text-xs text-blue-700 dark:text-blue-300 space-y-1 ml-4">
+                    <li>1. Tap the share button <i class="fas fa-share text-xs"></i> at the bottom</li>
+                    <li>2. Scroll and tap "Add to Home Screen"</li>
+                    <li>3. Tap "Add" to install</li>
+                </ol>
+            </div>
+            
+            <div class="flex gap-3">
+                <button id="pwaLaterBtn" class="flex-1 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl font-medium">
+                    Maybe Later
+                </button>
+                <button id="pwaInstallBtn" class="flex-1 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium">
+                    Install Now
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // PWA安装提示管理
+class PWAInstallManager {
+    constructor() {
+        this.deferredPrompt = null;
+        this.isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        this.init();
+    }
+
+    init() {
+        // 检查是否已经是PWA模式或已经提示过
+        if (this.isStandalone || localStorage.getItem('pwaPromptShown') === 'true') {
+            return;
+        }
+
+        // 监听PWA安装事件
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            this.deferredPrompt = e;
+        });
+
+        // 检测Safari移动版
+        if (this.isSafariMobile()) {
+            this.showPWAModal();
+        }
+
+        this.bindEvents();
+    }
+
+    isSafariMobile() {
+        const ua = navigator.userAgent;
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+        const isSafari = /Safari/i.test(ua) && !/Chrome|CriOS|FxiOS/i.test(ua);
+        return isMobile && isSafari;
+    }
+
+    showPWAModal() {
+        const modal = document.getElementById('pwaInstallModal');
+        const content = document.getElementById('pwaModalContent');
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            content.classList.remove('translate-y-full');
+        }, 100);
+
+        // 标记已显示过
+        localStorage.setItem('pwaPromptShown', 'true');
+    }
+
+    hidePWAModal() {
+        const modal = document.getElementById('pwaInstallModal');
+        const content = document.getElementById('pwaModalContent');
+        
+        content.classList.add('translate-y-full');
+        setTimeout(() => {
+            modal.classList.add('hidden');
+        }, 300);
+    }
+
+    bindEvents() {
+        document.getElementById('pwaLaterBtn')?.addEventListener('click', () => {
+            this.hidePWAModal();
+        });
+
+        document.getElementById('pwaInstallBtn')?.addEventListener('click', async () => {
+            if (this.deferredPrompt) {
+                this.deferredPrompt.prompt();
+                const { outcome } = await this.deferredPrompt.userChoice;
+                this.deferredPrompt = null;
+            } else {
+                // Safari需要手动引导
+                alert('Please use Safari\'s "Add to Home Screen" feature to install the app.');
+            }
+            this.hidePWAModal();
+        });
+
+        // 点击背景关闭
+        document.getElementById('pwaInstallModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'pwaInstallModal') {
+                this.hidePWAModal();
+            }
+        });
+    }
+}
+
+// PWA手势管理
+class PWAGestureManager {
+    constructor() {
+        this.startX = 0;
+        this.startY = 0;
+        this.isSwipeActive = false;
+        this.isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        
+        if (this.isPWA && window.innerWidth <= 768) {
+            this.init();
+        }
+    }
+
+    init() {
+        document.addEventListener('touchstart', (e) => {
+            this.startX = e.touches[0].clientX;
+            this.startY = e.touches[0].clientY;
+            
+            // 只有从屏幕左侧1/3区域开始的滑动才激活
+            if (this.startX < window.innerWidth / 3) {
+                this.isSwipeActive = true;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!this.isSwipeActive) return;
+            
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const deltaX = currentX - this.startX;
+            const deltaY = currentY - this.startY;
+            
+            // 水平滑动距离大于垂直距离，且向右滑动超过50px
+            if (Math.abs(deltaX) > Math.abs(deltaY) && deltaX > 50) {
+                toggleSidebar(true);
+                this.isSwipeActive = false;
+            }
+        }, { passive: true });
+
+        document.addEventListener('touchend', () => {
+            this.isSwipeActive = false;
+        }, { passive: true });
+    }
+}
+
+// 移动端适配管理
+class MobileAdaptationManager {
+    constructor() {
+        this.isMobile = window.innerWidth <= 768;
+        this.isPWA = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        this.init();
+    }
+
+    init() {
+        if (this.isMobile) {
+            this.setupMobileInputAdaptation();
+            this.setupMobileViewportHandling();
+        }
+    }
+
+    setupMobileInputAdaptation() {
+        // 监听聊天界面的显示/隐藏
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.target.id === 'chatView' || mutation.target.id === 'bottomInputArea') {
+                    this.adaptInputPosition();
+                }
+            });
+        });
+
+        const chatView = document.getElementById('chatView');
+        const bottomInputArea = document.getElementById('bottomInputArea');
+        
+        if (chatView) observer.observe(chatView, { attributes: true, attributeFilter: ['class'] });
+        if (bottomInputArea) observer.observe(bottomInputArea, { attributes: true, attributeFilter: ['class'] });
+
+        // 输入框焦点处理
+        const inputs = ['userInput', 'replyInput'];
+        inputs.forEach(inputId => {
+            const input = document.getElementById(inputId);
+            if (input) {
+                input.addEventListener('focus', () => {
+                    setTimeout(() => this.handleInputFocus(input), 300);
+                });
+                
+                input.addEventListener('blur', () => {
+                    this.handleInputBlur();
+                });
+            }
+        });
+    }
+
+    adaptInputPosition() {
+        const bottomInputArea = document.getElementById('bottomInputArea');
+        const isInChat = !document.getElementById('chatView').classList.contains('hidden');
+        
+        if (bottomInputArea && isInChat && this.isMobile) {
+            // 添加移动端专用样式
+            bottomInputArea.classList.add('mobile-bottom-input');
+            
+            // 如果是PWA模式，添加额外的底部间距适配
+            if (this.isPWA) {
+                bottomInputArea.classList.add('pwa-bottom-safe');
+            }
+        }
+    }
+
+    handleInputFocus(input) {
+        if (this.isMobile) {
+            // 滚动到输入框
+            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 添加焦点状态样式
+            const parentContainer = input.closest('.bg-white');
+            if (parentContainer) {
+                parentContainer.classList.add('input-focused');
+            }
+        }
+    }
+
+    handleInputBlur() {
+        // 移除焦点状态样式
+        document.querySelectorAll('.input-focused').forEach(el => {
+            el.classList.remove('input-focused');
+        });
+    }
+
+    setupMobileViewportHandling() {
+        // 处理移动端视口变化（键盘弹出等）
+        let initialViewportHeight = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            const currentHeight = window.innerHeight;
+            const heightDifference = initialViewportHeight - currentHeight;
+            
+            // 键盘弹出检测（高度差超过150px）
+            if (heightDifference > 150) {
+                document.body.classList.add('keyboard-open');
+            } else {
+                document.body.classList.remove('keyboard-open');
+            }
+        });
+    }
+}
+
+// 初始化PWA相关功能
+document.addEventListener('DOMContentLoaded', () => {
+    new PWAInstallManager();
+    new PWAGestureManager();
+    new MobileAdaptationManager();
+});
+    </script>
+    <style>
+        /* PWA和移动端适配样式 */
+@media (max-width: 768px) {
+    /* 移动端底部输入框适配 */
+    .mobile-bottom-input {
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        border-top: 1px solid rgb(229 231 235);
+        background: white;
+        z-index: 40;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    
+    .dark .mobile-bottom-input {
+        border-top-color: rgb(55 65 81);
+        background: rgb(31 41 55);
+    }
+    
+    /* PWA模式下的安全区域适配 */
+    .pwa-bottom-safe {
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem) !important;
+    }
+    
+    /* 键盘弹出时的适配 */
+    .keyboard-open .mobile-bottom-input {
+        position: absolute !important;
+    }
+    
+    /* 输入框焦点状态 */
+    .input-focused {
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1) !important;
+        border-color: rgb(59 130 246) !important;
+    }
+    
+    .dark .input-focused {
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3) !important;
+    }
+    
+    /* 聊天容器适配，为底部输入框留出空间 */
+    #chatContainer {
+        padding-bottom: 120px !important;
+    }
+}
+
+/* PWA模式专用样式 */
+@media (display-mode: standalone) {
+    /* 状态栏适配 */
+    body {
+        padding-top: env(safe-area-inset-top, 0px);
+    }
+    
+    /* 顶部栏适配 */
+    .flex.items-center.justify-between.p-4.border-b {
+        padding-top: calc(env(safe-area-inset-top, 0px) + 1rem);
+    }
+}
+
+/* 手势滑动视觉反馈 */
+.swipe-indicator {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 4px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(93, 92, 222, 0.5), transparent);
+    border-radius: 0 4px 4px 0;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 30;
+}
+
+.swipe-active .swipe-indicator {
+    opacity: 1;
+}
+    </style>
     <!-- 侧边栏 -->
     <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-72 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-10">
         <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -127,7 +513,7 @@
                         <a href="#" id="upgradeLink" class="text-blue-500 hover:text-blue-600">Upgrade</a>
                     </div>
                     <div class="text-3xl font-semibold mb-8 flex items-center">
-                        <img src="logo.png" alt="JorkAI Logo" class="w-10 h-10 mr-3 rounded-full object-cover"> 
+                        <img src="logo.png" alt="Tylo Logo" class="w-10 h-10 mr-3 rounded-full object-cover"> 
                         <span id="timeGreeting">Tylo is ready</span>
                     </div>
                     <div class="w-full max-w-2xl">
@@ -475,9 +861,8 @@
                     </p>
                 </div>
 
-                <!-- 支付按钮 -->
-                <button id="payWithWechatBtn" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:opacity-90 transition-all text-lg shadow-lg">
-                    立即支付 <span id="finalPriceDisplay">¥39.9($5.9)</span>
+                <button id="payWithCardBtn" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-medium hover:opacity-90 transition-all text-lg shadow-lg">
+                    银行卡支付 <span id="finalPriceDisplay">$5.9</span>
                 </button>
 
                 <!-- 分隔线 -->
@@ -509,143 +894,45 @@
     </div>
 </div>
 
-<!-- Payment Form (Hidden) -->
-<form id="paymentForm" action="https://code.lfk.cc/submit.php" method="post" style="display: none;">
-    <input type="hidden" name="pid" value="1338">
-    <input type="hidden" name="type" value="wxpay">
-    <input type="hidden" name="out_trade_no" id="out_trade_no" value="">
-    <input type="hidden" name="notify_url" id="notify_url" value="">
-    <input type="hidden" name="return_url" id="return_url" value="">
-    <input type="hidden" name="name" value="TyloAI Pro Membership">
-    <input type="hidden" name="money" value="39.9">
-    <input type="hidden" name="sitename" value="TyloAI">
-    <input type="hidden" name="sign" id="sign" value="">
-    <input type="hidden" name="sign_type" value="MD5">
-</form>
-
-<!-- Payment Processing Modal -->
-<div id="paymentModal" class="modal-overlay hidden">
-    <div class="modal">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-medium">Redirecting to payment page...</h3>
-            <button id="closePaymentModalBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="text-center">
-            <div class="mb-4">
-                <i class="fas fa-spinner fa-spin text-4xl text-purple-600"></i>
-            </div>
-            <p class="text-gray-600 dark:text-gray-400 mb-4">Redirecting to secure payment page, please wait...</p>
-        </div>
-    </div>
-</div>
-
-
 <!-- 添加支付相关的JavaScript代码 -->
 <script>
-    // 在现有代码之前添加
-async function initializeSupabase() {
-    try {
-        // 确保客户端已初始化
-        if (!window.supabaseClient) {
-            if (!initializeSupabaseClients()) {
-                console.log('客户端初始化失败，跳转到登录页');
-                window.location.href = '/login.html';
-                return false;
-            }
-        }
+// 银行卡支付接口（待实现）
+const payWithCardBtn = document.getElementById('payWithCardBtn');
+if (payWithCardBtn) {
+    payWithCardBtn.addEventListener('click', async function() {
+        // TODO: 实现银行卡支付逻辑
+        alert('银行卡支付功能开发中，敬请期待！');
         
-        const { data: { session } } = await window.supabaseClient.auth.getSession();
-        if (!session) {
-            console.log('用户未登录，跳转到登录页');
-            window.location.href = '/login.html';
-            return false;
-        }
-        
-        // 设置全局变量
-        window.currentUser = session.user;
-        window.currentUserId = session.user.id;
-        currentUser = session.user;
-        currentUserId = session.user.id;
-        
-        console.log('用户已登录:', currentUserId);
-        return true;
-    } catch (error) {
-        console.error('Supabase初始化错误:', error);
-        return false;
-    }
+        // 预留支付接口调用
+        // const paymentResult = await processBankCardPayment({
+        //     amount: inviteSystem ? (inviteSystem.currentPrice || 5.9) : 5.9,
+        //     currency: 'USD',
+        //     orderId: 'TYLO' + Date.now()
+        // });
+    });
 }
 
-// 替换原有的 checkAuth 函数为这个修复版本
-async function checkAuth() {
-    console.log('执行checkAuth函数');
+// 银行卡支付处理函数（预留接口）
+async function processBankCardPayment(paymentData) {
+    // TODO: 实现具体的银行卡支付逻辑
+    // 这里可以集成 Stripe, PayPal 等支付网关
+    console.log('处理银行卡支付:', paymentData);
     
-    try {
-        // 确保客户端已初始化
-        if (!window.supabaseClient) {
-            if (!initializeSupabaseClients()) {
-                console.log('客户端初始化失败，跳转到登录页');
-                window.location.href = '/login.html';
-                return false;
-            }
-        }
-        
-        const { data: { session }, error } = await window.supabaseClient.auth.getSession();
-        
-        if (error) {
-            console.error('获取session失败:', error);
-            throw error;
-        }
-        
-        if (!session || !session.user || !session.user.id) {
-            console.log('用户未登录，跳转到登录页');
-            window.location.href = '/login.html';
-            return false;
-        }
-        
-        // 🔥 关键修复：强制确保用户ID是字符串类型，绝不能是"null"
-        const userId = String(session.user.id);
-        
-        // 验证用户ID有效性
-        if (userId === 'null' || userId === '' || !userId || userId === 'undefined') {
-            console.error('用户ID无效，强制重新登录');
-            window.location.href = '/login.html';
-            return false;
-        }
-        
-        // 多重设置确保全局可访问
-        window.currentUser = session.user;
-        window.currentUserId = userId;
-        currentUser = session.user;
-        currentUserId = userId;
-        
-        console.log('用户已登录, ID:', userId, '类型:', typeof userId);
-        
-        // 加载用户数据
-        await loadUserData();
-        
-        return true;
-        
-    } catch (error) {
-        console.error('认证错误:', error);
-        window.location.href = '/login.html';
-        return false;
-    }
+    // 示例接口调用结构
+    // try {
+    //     const response = await fetch('/api/payment/card', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify(paymentData)
+    //     });
+    //     return await response.json();
+    // } catch (error) {
+    //     console.error('支付失败:', error);
+    //     return { success: false, error: error.message };
+    // }
 }
-    // 主项目 Supabase
-const supabaseUrl = 'https://gjyycwhzldgkjpccutsd.supabase.co'
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqeXljd2h6bGRna2pwY2N1dHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2OTQzNjMsImV4cCI6MjA3MDI3MDM2M30.UgLuisEG0zRwUZqsa3IYqRbPie3OifPqY2qJuSq0s2g'
 
-// 插件市场 Supabase
-const marketSupabaseUrl = 'https://jzbhltbdxirrbikauiif.supabase.co'
-const marketSupabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp6YmhsdGJkeGlycmJpa2F1aWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MDEzNDQsImV4cCI6MjA3MDI3NzM0NH0.sAu9owXxTFMu_4mf0PME8rMusdMmQqq9VzPMpvAkqMY'
 
-// 声明全局变量
-let supabaseClient = null;
-let marketSupabaseClient = null;
-
-// 延迟初始化函数
 function initializeSupabaseClients() {
     if (typeof window.supabase === 'undefined') {
         console.error('Supabase not loaded yet');
@@ -663,14 +950,6 @@ function initializeSupabaseClients() {
     
     return true;
 }
-// 全局用户变量
-let currentUser = null;
-let currentUserId = null;
-
-// 确保window对象上也有这些变量
-window.currentUser = null;
-window.currentUserId = null;
-    
 // 会员系统
 function initMembershipSystem() {
     const membershipKey = 'jiorkMembershipStatus';
@@ -1071,256 +1350,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ===== 支付相关事件 =====
     
-    // 支付按钮事件
-    const payWithWechatBtn = document.getElementById('payWithWechatBtn');
-    if (payWithWechatBtn) {
-    payWithWechatBtn.addEventListener('click', async function() {
-        try {
-            // 记录成功邀请（如果使用了邀请码）
-            if (inviteSystem && inviteSystem.appliedInviteCode) {
-                await inviteSystem.recordSuccessfulInvite();
-            }
-            
-            // 生成订单号
-            const timestamp = new Date().getTime();
-            const orderNo = 'JORKPRO' + timestamp;
-            
-            // 获取当前价格
-            const price = inviteSystem ? (inviteSystem.currentPrice || 39.9) : 39.9;
-            
-            // 保存订单信息
-            localStorage.setItem('pendingOrder', JSON.stringify({
-                orderNo: orderNo,
-                amount: price.toFixed(1),
-                product: 'JorkAI Pro会员',
-                timestamp: timestamp
-            }));
-            
-            // 获取当前页面URL作为回调地址
-            const currentUrl = window.location.origin + window.location.pathname;
-            
-            // 准备支付参数
-            const params = {
-                pid: '1338',
-                type: 'wxpay',
-                out_trade_no: orderNo,
-                notify_url: currentUrl + '?payment=notify',
-                return_url: currentUrl + '?payment=return',
-                name: 'JorkAI Pro会员',
-                money: price.toFixed(1),
-                sitename: 'JorkAI'
-            };
-            
-            // 计算签名
-            const sortedKeys = Object.keys(params).sort();
-            let signStr = '';
-            sortedKeys.forEach(key => {
-                signStr += key + '=' + params[key] + '&';
-            });
-            signStr = signStr.substring(0, signStr.length - 1);
-            signStr += 'PEFevQkzd6B8ZW2FxYay07UcboFmwNFK';
-            
-            // 使用 MD5 计算签名
-            const sign = CryptoJS.MD5(signStr).toString();
-            params.sign = sign;
-            params.sign_type = 'MD5';
-            
-            // 显示支付弹窗
-            const paymentModal = document.getElementById('paymentModal');
-            if (paymentModal) {
-                paymentModal.classList.remove('hidden');
-            }
-            
-            // 填充表单数据
-            document.getElementById('out_trade_no').value = orderNo;
-            document.getElementById('notify_url').value = params.notify_url;
-            document.getElementById('return_url').value = params.return_url;
-            document.getElementById('sign').value = sign;
-            document.querySelector('input[name="money"]').value = price.toFixed(1);
 
-            // 直接提交表单到易支付
-            document.getElementById('paymentForm').submit();
-                        
-                    } catch (error) {
-                        console.error('支付错误:', error);
-                        alert('支付请求失败，请重试');
-                        const paymentModal = document.getElementById('paymentModal');
-                        if (paymentModal) {
-                            paymentModal.classList.add('hidden');
-                        }
-                    }
-                });
-            }
-    
-    // ===== 模态框控制事件 =====
-    
-    // 关闭会员模态框
-    const closeMembershipModalBtn = document.getElementById('closeMembershipModalBtn');
-    if (closeMembershipModalBtn) {
-        closeMembershipModalBtn.addEventListener('click', function() {
-            const membershipModal = document.getElementById('membershipModal');
-            if (membershipModal) {
-                membershipModal.classList.add('hidden');
-            }
-        });
-    }
-    
-    // 关闭支付模态框
-    const closePaymentModalBtn = document.getElementById('closePaymentModalBtn');
-    if (closePaymentModalBtn) {
-        closePaymentModalBtn.addEventListener('click', function() {
-            const paymentModal = document.getElementById('paymentModal');
-            if (paymentModal) {
-                paymentModal.classList.add('hidden');
-            }
-        });
-    }
-    
-    // 使用兑换码升级
-    const upgradeMembershipBtn = document.getElementById('upgradeMembershipBtn');
-    if (upgradeMembershipBtn) {
-        upgradeMembershipBtn.addEventListener('click', function() {
-            const codeInput = document.getElementById('membershipCodeInput');
-            const code = codeInput ? codeInput.value.trim() : '';
-            const resultEl = document.getElementById('membershipResult');
-            
-            if (!code) {
-                if (resultEl) {
-                    resultEl.textContent = "Please enter the membership redemption code.";
-                    resultEl.className = "mt-3 text-center text-red-500";
-                    resultEl.classList.remove('hidden');
-                }
-                return;
-            }
-            
-            const result = membershipSystem.activateMembership(code);
-            
-            if (resultEl) {
-                resultEl.textContent = result.message;
-                resultEl.className = `mt-3 text-center ${result.success ? 'text-green-500' : 'text-red-500'}`;
-                resultEl.classList.remove('hidden');
-            }
-            
-            if (result.success) {
-                setTimeout(() => {
-                    const membershipModal = document.getElementById('membershipModal');
-                    if (membershipModal) membershipModal.classList.add('hidden');
-                    if (resultEl) resultEl.classList.add('hidden');
-                    if (codeInput) codeInput.value = '';
-                    window.location.reload();
-                }, 2000);
-            }
-        });
-    }
 });
-
-
-
-// 初始化用户数据
-async function initializeUserData() {
-    try {
-        // 检查用户是否存在
-        const { data: userData, error } = await supabaseClient
-            .from('users')
-            .select('*')
-            .eq('id', currentUserId)
-            .single();
-        
-        if (error && error.code === 'PGRST116') {
-            // 用户不存在，创建新用户
-            await createNewUser();
-        } else if (userData) {
-            // 加载现有用户数据
-            await loadUserData();
-        }
-    } catch (error) {
-        console.error('Error initializing user data:', error);
-    }
-}
-
-// 创建新用户
-async function createNewUser() {
-    try {
-        // 创建用户记录
-        await supabaseClient
-            .from('users')
-            .insert({
-                id: currentUserId,
-                nickname: '新用户',
-                avatar_url: 'https://www.jorkai.cn/用户默认头像'
-            });
-        
-        // 创建用户统计
-        await supabaseClient
-            .from('user_stats')
-            .insert({
-                user_id: currentUserId
-            });
-        
-        // 加载数据
-        await loadUserData();
-    } catch (error) {
-        console.error('Error creating new user:', error);
-    }
-}
-
-// 检查支付状态
-function checkPaymentStatus() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentAction = urlParams.get('payment');
-    
-    if (paymentAction === 'return') {
-        activateProMembership();
-    } else {
-        alert('正在查询支付状态，请稍候...');
-    }
-}
-
-function activateProMembership() {
-        const tempProCode = 'TYLO-PRO-' + Date.now();
-        const result = membershipSystem.activateMembership(tempProCode);
-        
-        if (result.success) {
-            const paymentModal = document.getElementById('paymentModal');
-            const membershipModal = document.getElementById('membershipModal');
-            
-            if (paymentModal) paymentModal.classList.add('hidden');
-            if (membershipModal) membershipModal.classList.add('hidden');
-            
-            alert('Congratulations! You have successfully upgraded to TyloAI Pro!');
-            window.location.reload();
-        }
-    }
-    // 替换现有的支付回调代码
-function handlePaymentCallback() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const paymentAction = urlParams.get('payment');
-    const tradeNo = urlParams.get('trade_no');
-    const outTradeNo = urlParams.get('out_trade_no');
-    
-    console.log('支付回调参数:', { paymentAction, tradeNo, outTradeNo });
-    
-    if (paymentAction === 'return' && (tradeNo || outTradeNo)) {
-        try {
-            const pendingOrder = localStorage.getItem('pendingOrder');
-            console.log('待处理订单:', pendingOrder);
-            
-            if (pendingOrder) {
-                const orderData = JSON.parse(pendingOrder);
-                if (orderData.orderNo === outTradeNo || tradeNo) {
-                    activateProMembership();
-                    localStorage.removeItem('pendingOrder');
-                    
-                    // 清理URL参数
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                }
-            }
-        } catch (error) {
-            console.error('支付回调处理错误:', error);
-        }
-    }
-}
-
 // 页面加载时检查支付回调
 window.addEventListener('load', function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -2440,7 +2471,7 @@ class PluginManager {
                     .insert({
                         user_id: currentUserId,
                         real_name: localStorage.getItem('jiorkUserNickname') || 'Developer',
-                        email: currentUser?.email || 'developer@jorkai.cn',
+                        email: currentUser?.email || 'developer@tyloai.com',
                         description: 'Pro user/Paid maintenance fee, automatically approved',
                         status: 'approved',
                         approved_at: new Date().toISOString()
@@ -3599,7 +3630,7 @@ class JorkDebugSystem {
 // Help info
 Debug.help = function() {
     console.log(
-        '%c🛠️ JorkAI Debug Commands',
+        '%c🛠️  Debug Commands',
         'background: #2196f3; color: white; padding: 10px; border-radius: 5px; font-size: 14px; font-weight: bold;'
     );
     
@@ -4069,7 +4100,7 @@ setTimeout(() => {
     }
 }, 3000); // Increase delay time
 
-// =================== JorkAI Debug System Complete =========================
+// ===================  Debug System Complete =========================
 
         let messages = [];
         // Mount globally accessible functions to window
@@ -5079,85 +5110,6 @@ class ChatHistoryManager {
         }, 100);
     }
 
-    async loadChatHistory() {
-        try {
-            const { data: chats } = await supabaseClient
-                .from('chat_history')
-                .select(`
-                    *,
-                    chat_messages (*)
-                `)
-                .eq('user_id', validateAndGetUserId() || window.currentUserId)
-                .order('updated_at', { ascending: false });
-            
-            if (chats) {
-                this.chatHistory = chats.map(chat => ({
-                    id: chat.chat_id,
-                    title: chat.title,
-                    timestamp: chat.updated_at,
-                    messages: chat.chat_messages.map(msg => ({
-                        role: msg.role,
-                        content: msg.content,
-                        thinking: msg.thinking,
-                        searchSteps: msg.search_steps,
-                        isImage: msg.is_image,
-                        imageUrl: msg.image_url,
-                        isAudio: msg.is_audio,
-                        audioUrl: msg.audio_url,
-                        isPersonalityCard: msg.is_personality_card,
-                        cardData: msg.card_data,
-                        attachments: msg.attachments
-                    })),
-                    completed: chat.completed
-                }));
-                
-                this.updateChatHistorySidebar();
-            }
-        } catch (error) {
-            console.error('Error loading chat history:', error);
-        }
-    }
-
-    async syncChatToSupabase(chatId) {
-        const chat = this.chatHistory.find(c => c.id === chatId);
-        if (!chat) return;
-        
-        try {
-            // Save chat record
-            const { data: chatData, error: chatError } = await supabaseClient
-                .from('chat_history')
-                .upsert({
-                    user_id: currentUserId,
-                    chat_id: chatId,
-                    title: chat.title,
-                    completed: chat.completed
-                }, {
-                    onConflict: 'user_id,chat_id'
-                });
-            
-            // Save messages
-            for (const msg of chat.messages) {
-                await supabaseClient
-                    .from('chat_messages')
-                    .insert({
-                        chat_id: chatData[0].id,
-                        role: msg.role,
-                        content: msg.content,
-                        thinking: msg.thinking,
-                        search_steps: msg.searchSteps,
-                        is_image: msg.isImage,
-                        image_url: msg.imageUrl,
-                        is_audio: msg.isAudio,
-                        audio_url: msg.audioUrl,
-                        is_personality_card: msg.isPersonalityCard,
-                        card_data: msg.cardData,
-                        attachments: msg.attachments
-                    });
-            }
-        } catch (error) {
-            console.error('Error syncing chat:', error);
-        }
-    }
 
     saveChatHistory() {
         try {
@@ -5406,9 +5358,9 @@ class ChatHistoryManager {
                                 </div>
                                 
                                 <div class="export-watermark">
-                                    <div class="watermark-logo">JorkAI</div>
+                                    <div class="watermark-logo">TyloAI</div>
                                     <div class="watermark-slogan">The Future is Here</div>
-                                    <div class="watermark-url">www.jorkai.cn</div>
+                                    <div class="watermark-url">www.tyloai.com</div>
                                 </div>
                             </div>
                         </div>
@@ -5837,9 +5789,9 @@ class ChatHistoryManager {
                         </div>
                         
                         <div class="export-watermark">
-                            <div class="watermark-logo">JorkAI</div>
+                            <div class="watermark-logo">TyloAI</div>
                             <div class="watermark-slogan">未来已来</div>
-                            <div class="watermark-url">www.jorkai.cn</div>
+                            <div class="watermark-url">www.tyloai.com</div>
                         </div>
                     </div>
                 </div>
@@ -6058,7 +6010,7 @@ class ChatHistoryManager {
         
         const disclaimer = document.createElement('div');
         disclaimer.className = 'text-sm text-gray-500';
-        disclaimer.textContent = isImage ? 'Aria可能会犯错，请核实媒体内容。' : 'JorkAI可能会犯错，请核实回复内容。';
+        disclaimer.textContent = isImage ? 'Aria可能会犯错，请核实媒体内容。' : 'TyloAI可能会犯错，请核实回复内容。';
         
         const controlsContainer = document.createElement('div');
         controlsContainer.className = 'flex items-center space-x-2';
@@ -6194,7 +6146,78 @@ class ChatHistoryManager {
             }
         });
     }
+}  // ← processCanvasTags 方法结束
+
+createCanvasPreview(canvasContent, index) {
+    const canvasPreview = document.createElement('div');
+    canvasPreview.className = 'canvas-preview-container bg-gray-100 dark:bg-gray-800 rounded-lg p-4 my-4 border border-gray-200 dark:border-gray-700';
+    
+    canvasPreview.innerHTML = `
+        <div class="flex justify-between items-center mb-3">
+            <h4 class="font-medium text-gray-700 dark:text-gray-300">
+                <i class="fas fa-code mr-2"></i>可运行代码 #${index + 1}
+            </h4>
+            <div class="flex space-x-2">
+                <button class="canvas-view-btn bg-orange-200 text-orange-600 px-3 py-1 rounded text-sm hover:bg-orange-300 transition-colors">
+                    <i class="fas fa-eye mr-1"></i>预览效果
+                </button>
+                <button class="canvas-code-btn bg-blue-100 text-blue-600 px-3 py-1 rounded text-sm hover:bg-blue-200 transition-colors">
+                    <i class="fas fa-code mr-1"></i>查看源码
+                </button>
+                <button class="canvas-open-btn bg-green-100 text-green-600 px-3 py-1 rounded text-sm hover:bg-green-200 transition-colors">
+                    <i class="fas fa-external-link-alt mr-1"></i>在画布中打开
+                </button>
+            </div>
+        </div>
+        <div class="canvas-iframe-container hidden">
+            <iframe class="w-full h-96 border border-gray-300 dark:border-gray-600 rounded" 
+                    sandbox="allow-scripts allow-same-origin" 
+                    srcdoc="${canvasContent.replace(/"/g, '&quot;')}">
+            </iframe>
+        </div>
+        <div class="canvas-source-container">
+            <pre class="bg-gray-50 dark:bg-gray-900 p-3 rounded overflow-x-auto text-sm"><code>${canvasContent.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+        </div>
+    `;
+    
+    // 为按钮添加事件监听器
+    const viewBtn = canvasPreview.querySelector('.canvas-view-btn');
+    const codeBtn = canvasPreview.querySelector('.canvas-code-btn');
+    const openBtn = canvasPreview.querySelector('.canvas-open-btn');
+    const iframeContainer = canvasPreview.querySelector('.canvas-iframe-container');
+    const sourceContainer = canvasPreview.querySelector('.canvas-source-container');
+    
+    // 预览效果按钮
+    viewBtn.addEventListener('click', () => {
+        if (iframeContainer.classList.contains('hidden')) {
+            iframeContainer.classList.remove('hidden');
+            viewBtn.innerHTML = '<i class="fas fa-eye-slash mr-1"></i>隐藏预览';
+        } else {
+            iframeContainer.classList.add('hidden');
+            viewBtn.innerHTML = '<i class="fas fa-eye mr-1"></i>预览效果';
+        }
+    });
+    
+    // 查看源码按钮
+    codeBtn.addEventListener('click', () => {
+        if (sourceContainer.classList.contains('hidden')) {
+            sourceContainer.classList.remove('hidden');
+            codeBtn.innerHTML = '<i class="fas fa-code-slash mr-1"></i>隐藏源码';
+        } else {
+            sourceContainer.classList.add('hidden');
+            codeBtn.innerHTML = '<i class="fas fa-code mr-1"></i>查看源码';
+        }
+    });
+    
+    // 在画布中打开按钮
+    openBtn.addEventListener('click', () => {
+        this.openCodeInCanvas(canvasContent);
+    });
+    
+    return canvasPreview;
 }
+
+// 下一个方法继续...
 
     openCodeInCanvas(code) {
         const canvasContainer = document.getElementById('canvasContainer');
@@ -6301,7 +6324,7 @@ class GuideSystem {
         this.steps = [
             {
                 type: 'welcome',
-                title: 'Welcome to JorkAI!',
+                title: 'Welcome to TyloAI!',
                 content: 'I am your AI assistant, I can help you with writing, programming, learning, creating images, and more. Let me show you how to use it quickly!',
                 target: null
             },
@@ -9598,98 +9621,7 @@ function appendMusicGenerationProgress() {
                 }
             });
         }
-async function loadUserData() {
-try {
-        // 🔥 确保使用有效的用户ID
-        let userId = window.currentUserId || currentUserId;
-        
-        if (!userId || userId === 'null' || userId === '' || userId === 'undefined') {
-            console.error('loadUserData: 用户ID无效');
-            return false;
-        }
-        
-        console.log('开始加载用户数据，用户ID:', userId);
-        
-        // 加载用户基本信息 - 使用验证后的userId
-        const { data: userData, error: userError } = await supabaseClient
-            .from('users')
-            .select('*')
-            .eq('id', userId)
-            .single();
-        
-        if (userError && userError.code === 'PGRST116') {
-            // 用户记录不存在，创建新用户
-            await supabaseClient
-                .from('users')
-                .insert({
-                    id: userId,
-                    nickname: '新用户',
-                    avatar_url: 'https://www.jorkai.cn/用户默认头像'
-                });
-            
-            // 创建用户统计记录
-            await supabaseClient
-                .from('user_stats')
-                .insert({
-                    user_id: userId
-                });
-                
-            console.log('新用户记录已创建');
-        } else if (userData) {
-            // 更新本地存储和UI
-            localStorage.setItem('jiorkUserNickname', userData.nickname || '用户');
-            localStorage.setItem('jiorkUserAvatarUrl', userData.avatar_url || 'https://www.jorkai.cn/用户默认头像');
-            
-            // 更新UI元素
-            const nicknameEl = document.getElementById('userNickname');
-            if (nicknameEl) nicknameEl.textContent = userData.nickname || '用户';
-            
-            const nicknameInputEl = document.getElementById('nicknameInput');
-            if (nicknameInputEl) nicknameInputEl.value = userData.nickname || '';
-            
-            const avatarInputEl = document.getElementById('avatarUrlInput');
-            if (avatarInputEl) avatarInputEl.value = userData.avatar_url || '';
-        }
-        
-        // 加载用户统计数据
-        const { data: statsData } = await supabaseClient
-            .from('user_stats')
-            .select('*')
-            .eq('user_id', validateAndGetUserId() || window.currentUserId)
-            .single();
-        
-        if (statsData) {
-            // 更新等级系统
-            if (window.levelSystem) {
-                levelSystem.levelData = {
-                    level: statsData.level || 1,
-                    exp: statsData.exp || 0,
-                    totalExp: statsData.total_exp || 0,
-                    lastCheckin: statsData.last_checkin,
-                    streakDays: statsData.streak_days || 0
-                };
-                levelSystem.updateLevelUI();
-            }
-            
-            // 更新积分系统
-            if (window.pointsSystem) {
-                pointsSystem.initializeFromSupabase(statsData);
-            }
-        }
-        
-        // 加载聊天历史
-        await chatManager.loadChatHistory();
-        
-        // 加载AI记忆
-        await memoryManager.loadMemories();
-        
-        // 加载成就
-        await achievementSystem.loadAchievements();
-        
-    } catch (error) {
-        console.error('Error loading user data:', error);
-    }
-}
+
 
         // 更新用户头像
         function updateUserAvatar(url) {
@@ -9877,23 +9809,6 @@ document.getElementById('saveAvatarBtn').addEventListener('click', async functio
         });
 
         // 取消登录
-document.getElementById('logoutBtn').addEventListener('click', async function() {
-    if (confirm('Are you sure you want to log out?')) {
-        try {
-            const { error } = await supabaseClient.auth.signOut();
-            if (error) throw error;
-            
-            // 清除本地数据（可选）
-            // localStorage.clear();
-            
-            // 跳转到登录页面
-            window.location.href = '/login.html';
-        } catch (error) {
-            console.error('Error signing out:', error);
-            alert('Logout failed, please try again');
-        }
-    }
-});
 
         // 深色模式切换
         document.getElementById('darkModeToggle').addEventListener('click', function() {
