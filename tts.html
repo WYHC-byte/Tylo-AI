@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI 语音通话</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .voice-circle {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, transparent 70%);
+            backdrop-filter: blur(30px);
+            border: 3px solid rgba(255,255,255,0.2);
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 0 60px rgba(255,255,255,0.1),
+                inset 0 0 60px rgba(255,255,255,0.05);
+        }
+        
+        .voice-circle::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: rotate 4s linear infinite;
+            opacity: 0.6;
+        }
+        
+        .voice-circle.listening {
+            background: radial-gradient(circle, rgba(34,197,94,0.3) 0%, rgba(34,197,94,0.1) 50%, transparent 70%);
+            border-color: rgba(34,197,94,0.4);
+            box-shadow: 
+                0 0 80px rgba(34,197,94,0.3),
+                inset 0 0 60px rgba(34,197,94,0.1);
+        }
+        
+        .voice-circle.speaking {
+            background: radial-gradient(circle, rgba(59,130,246,0.3) 0%, rgba(59,130,246,0.1) 50%, transparent 70%);
+            border-color: rgba(59,130,246,0.4);
+            box-shadow: 
+                0 0 80px rgba(59,130,246,0.3),
+                inset 0 0 60px rgba(59,130,246,0.1);
+        }
+        
+        .voice-circle.processing {
+            background: radial-gradient(circle, rgba(251,191,36,0.3) 0%, rgba(251,191,36,0.1) 50%, transparent 70%);
+            border-color: rgba(251,191,36,0.4);
+            box-shadow: 
+                0 0 80px rgba(251,191,36,0.3),
+                inset 0 0 60px rgba(251,191,36,0.1);
+        }
+        
+        .voice-circle.muted {
+            background: radial-gradient(circle, rgba(107,114,128,0.3) 0%, rgba(107,114,128,0.1) 50%, transparent 70%);
+            border-color: rgba(107,114,128,0.4);
+            box-shadow: 
+                0 0 60px rgba(107,114,128,0.2),
+                inset 0 0 60px rgba(107,114,128,0.1);
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 0 60px rgba(255,255,255,0.1);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 100px rgba(255,255,255,0.2);
+            }
+        }
+        
+        .voice-circle.active {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        .status-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 28px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .control-btn:hover::before {
+            left: 100%;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.15) translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .mute-btn {
+            background: rgba(107, 114, 128, 0.8);
+            border: 2px solid rgba(107, 114, 128, 0.3);
+        }
+        
+        .mute-btn.muted {
+            background: rgba(239, 68, 68, 0.9);
+            border: 2px solid rgba(239, 68, 68, 0.5);
+            box-shadow: 0 8px 32px rgba(239, 68, 68, 0.3);
+        }
+        
+        .end-btn {
+            background: rgba(239, 68, 68, 0.9);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .permission-overlay {
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(20px);
+        }
+        
+        .permission-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .wave-bars {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            height: 50px;
+        }
+        
+        .wave-bar {
+            width: 5px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 3px;
+            animation: wave 1.2s infinite ease-in-out;
+        }
+        
+        .wave-bar:nth-child(1) { animation-delay: -1.1s; }
+        .wave-bar:nth-child(2) { animation-delay: -1.0s; }
+        .wave-bar:nth-child(3) { animation-delay: -0.9s; }
+        .wave-bar:nth-child(4) { animation-delay: -0.8s; }
+        .wave-bar:nth-child(5) { animation-delay: -0.7s; }
+        .wave-bar:nth-child(6) { animation-delay: -0.6s; }
+        .wave-bar:nth-child(7) { animation-delay: -0.5s; }
+        
+        @keyframes wave {
+            0%, 100% {
+                height: 8px;
+                opacity: 0.4;
+            }
+            50% {
+                height: 35px;
+                opacity: 1;
+            }
+        }
+        
+        .connection-status {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: blink 2s infinite;
+        }
+        
+        .status-dot.connected {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+        }
+        
+        .status-dot.connecting {
+            background: #f59e0b;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+        }
+        
+        .status-dot.disconnected {
+            background: #ef4444;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.4; }
+        }
+        
+        .conversation-display {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .notification-toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(239, 68, 68, 0.95);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+            transform: translateX(400px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            font-weight: 500;
+        }
+        
+        .notification-toast.show {
+            transform: translateX(0);
+        }
+        
+        .glass-button {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .glass-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 权限请求遮罩 -->
+    <div id="permissionOverlay" class="permission-overlay fixed inset-0 flex items-center justify-center z-50">
+        <div class="permission-card rounded-3xl p-8 max-w-md mx-4 text-center">
+            <div class="text-6xl mb-6">
+                <i class="fas fa-microphone text-white"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-white mb-4">需要麦克风权限</h2>
+            <p class="text-white text-opacity-80 mb-8 leading-relaxed">
+                为了与AI进行语音对话，我们需要访问您的麦克风权限。
+                <br><br>请在浏览器弹窗中点击"允许"。
+            </p>
+            <div class="flex gap-4 justify-center">
+                <button id="allowMic" class="glass-button bg-green-500 bg-opacity-80 hover:bg-opacity-100">
+                    <i class="fas fa-check mr-2"></i>请求权限
+                </button>
+                <button id="denyMic" class="glass-button">
+                    <i class="fas fa-times mr-2"></i>取消
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 通知提示 -->
+    <div id="notificationToast" class="notification-toast">
+        <i id="toastIcon" class="fas fa-exclamation-triangle mr-2"></i>
+        <span id="toastMessage">检测到声音但麦克风未开启</span>
+    </div>
+
+    <!-- 连接状态 -->
+    <div class="connection-status">
+        <span id="statusDot" class="status-dot connecting"></span>
+        <span id="statusText">正在连接...</span>
+    </div>
+
+    <!-- 主界面 -->
+    <div class="flex flex-col items-center justify-center min-h-screen px-4">
+        <!-- 语音圆圈 -->
+        <div class="relative mb-16">
+            <div id="voiceCircle" class="voice-circle">
+                <div class="status-content">
+                    <i id="statusIcon" class="status-icon fas fa-microphone-slash"></i>
+                    <div id="statusLabel" class="text-xl font-semibold">等待中...</div>
+                    <div id="waveContainer" class="wave-bars hidden mt-4">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控制按钮 -->
+        <div class="flex gap-12 mb-8">
+            <button id="muteBtn" class="control-btn mute-btn" title="静音/取消静音">
+                <i id="muteIcon" class="fas fa-microphone-slash"></i>
+            </button>
+            
+            <button id="endBtn" class="control-btn end-btn" title="结束通话">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+        </div>
+
+        <!-- 实时对话显示 -->
+        <div id="conversationDisplay" class="conversation-display hidden">
+            <div class="text-center text-white text-opacity-90 text-sm mb-3">实时对话</div>
+            <div id="userMessage" class="text-green-300 text-sm mb-2 min-h-[20px]"></div>
+            <div id="aiMessage" class="text-blue-300 text-sm min-h-[20px]"></div>
+        </div>
+
+        <!-- 状态提示 -->
+        <div class="mt-6 text-center text-white text-opacity-80 max-w-md">
+            <div id="realtimeStatus" class="text-base font-medium">请先允许麦克风权限</div>
+            <div class="text-sm mt-2 opacity-60">
+                空格键：快速静音/取消静音 | ESC：结束通话
+            </div>
+        </div>
+    </div>
+
+    <!-- 音频播放器 -->
+    <audio id="aiSpeaker" preload="auto"></audio>
+    
+    <script>
+        // API配置
+        const API_CONFIG = {
+            baseUrl: 'https://jeniya.cn',
+            apiKey: 'sk-9OiUODVwmax1pWQOu7tM40fYy2V2MKR7W2PxYNSPsKLStscK'
+        };
+
+        // 全局状态
+        let isPermissionGranted = false;
+        let mediaRecorder = null;
+        let audioContext = null;
+        let analyser = null;
+        let isMuted = true; // 默认静音状态
+        let isListening = false;
+        let isSpeaking = false;
+        let isProcessing = false;
+        let currentAudioChunks = [];
+        let conversationHistory = [];
+        let currentStream = null;
+        let lastSpeechTime = 0;
+        let speechTimeout = null;
+        let isConnected = false;
+        let audioLevel = 0;
+        let silenceThreshold = 40; // 静音检测阈值
+        let speechThreshold = 60; // 语音检测阈值
+
+        // DOM元素
+        const permissionOverlay = document.getElementById('permissionOverlay');
+        const allowMicBtn = document.getElementById('allowMic');
+        const denyMicBtn = document.getElementById('denyMic');
+        const voiceCircle = document.getElementById('voiceCircle');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusLabel = document.getElementById('statusLabel');
+        const waveContainer = document.getElementById('waveContainer');
+        const muteBtn = document.getElementById('muteBtn');
+        const muteIcon = document.getElementById('muteIcon');
+        const endBtn = document.getElementById('endBtn');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const realtimeStatus = document.getElementById('realtimeStatus');
+        const conversationDisplay = document.getElementById('conversationDisplay');
+        const userMessage = document.getElementById('userMessage');
+        const aiMessage = document.getElementById('aiMessage');
+        const aiSpeaker = document.getElementById('aiSpeaker');
+        const notificationToast = document.getElementById('notificationToast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastMessage = document.getElementById('toastMessage');
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            initializeSystem();
+        });
+
+        function setupEventListeners() {
+            allowMicBtn.addEventListener('click', requestPermission);
+            denyMicBtn.addEventListener('click', denyPermission);
+            muteBtn.addEventListener('click', toggleMute);
+            endBtn.addEventListener('click', endCall);
+            
+            // 键盘快捷键
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'Space' && !e.repeat) {
+                    e.preventDefault();
+                    toggleMute();
+                }
+                if (e.key === 'Escape') {
+                    endCall();
+                }
+            });
+
+            // 音频播放事件
+            aiSpeaker.addEventListener('loadstart', function() {
+                console.log('Audio loading started');
+            });
+
+            aiSpeaker.addEventListener('canplaythrough', function() {
+                console.log('Audio can play through');
+                
+                // 尝试播放，如果被阻止则等待用户交互
+                const playPromise = this.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        if (error.name === 'NotAllowedError') {
+                            console.log('自动播放被阻止，等待用户交互');
+                            showNotification('fas fa-volume-mute', '点击页面任意位置启用音频播放');
+                            
+                            // 添加一次性点击事件来启用音频
+                            const enableAudio = () => {
+                                this.play().then(() => {
+                                    console.log('用户交互后音频播放成功');
+                                }).catch(e => console.error('用户交互后仍播放失败:', e));
+                                document.removeEventListener('click', enableAudio);
+                            };
+                            document.addEventListener('click', enableAudio, { once: true });
+                        }
+                    });
+                }
+            });
+
+            aiSpeaker.addEventListener('play', function() {
+                console.log('Audio started playing');
+                isSpeaking = true;
+                updateStatus('speaking', 'fas fa-volume-up', 'AI正在回复');
+            });
+
+            aiSpeaker.addEventListener('ended', function() {
+                console.log('Audio playback ended');
+                isSpeaking = false;
+                if (!isMuted && isConnected) {
+                    setTimeout(() => startListening(), 500);
+                }
+            });
+
+            aiSpeaker.addEventListener('error', function(e) {
+                console.error('Audio playback error:', e);
+                isSpeaking = false;
+            });
+        }
+
+        async function initializeSystem() {
+            try {
+                updateConnectionStatus('connecting', '正在初始化...');
+                
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('浏览器不支持录音功能');
+                }
+                
+                updateConnectionStatus('connecting', '等待权限...');
+                
+            } catch (error) {
+                console.error('System initialization error:', error);
+                updateConnectionStatus('disconnected', '初始化失败');
+                showNotification('fas fa-exclamation-triangle', '系统初始化失败: ' + error.message);
+            }
+        }
+
+        async function requestPermission() {
+            try {
+                updateConnectionStatus('connecting', '请求权限中...');
+                
+                currentStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true,
+                        sampleRate: 16000
+                    }
+                });
+                
+                isPermissionGranted = true;
+                permissionOverlay.classList.add('hidden');
+                
+                await setupAudioContext();
+                await startVoiceChat();
+                
+            } catch (error) {
+                console.error('Permission request failed:', error);
+                updateConnectionStatus('disconnected', '权限被拒绝');
+                showNotification('fas fa-times-circle', '无法获取麦克风权限，请检查浏览器设置');
+            }
+        }
+
+        function denyPermission() {
+            updateConnectionStatus('disconnected', '权限被拒绝');
+            window.history.back();
+        }
+
+        async function setupAudioContext() {
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)({
+                    sampleRate: 16000
+                });
+                
+                const source = audioContext.createMediaStreamSource(currentStream);
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                analyser.smoothingTimeConstant = 0.3;
+                source.connect(analyser);
+                
+                startAudioVisualization();
+                
+            } catch (error) {
+                console.error('Audio context setup failed:', error);
+                throw error;
+            }
+        }
+
+        async function startVoiceChat() {
+            try {
+                updateConnectionStatus('connected', '已连接');
+                updateStatus('muted', 'fas fa-microphone-slash', '点击取消静音开始对话');
+                
+                // 检测支持的录音格式
+                let mimeType = '';
+                const possibleTypes = [
+                    'audio/webm;codecs=opus',
+                    'audio/webm',
+                    'audio/mp4',
+                    'audio/ogg;codecs=opus',
+                    'audio/wav'
+                ];
+
+                for (const type of possibleTypes) {
+                    if (MediaRecorder.isTypeSupported(type)) {
+                        mimeType = type;
+                        console.log('Using MIME type:', mimeType);
+                        break;
+                    }
+                }
+
+                if (!mimeType) {
+                    throw new Error('浏览器不支持音频录制');
+                }
+
+                mediaRecorder = new MediaRecorder(currentStream, { mimeType });
+                mediaRecorder.addEventListener('dataavailable', handleAudioData);
+                mediaRecorder.addEventListener('stop', processAudioChunk);
+                
+            } catch (error) {
+                console.error('Voice chat setup failed:', error);
+                updateConnectionStatus('disconnected', '连接失败');
+            }
+        }
+
+        function startAudioVisualization() {
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            
+            function animate() {
+                if (!isPermissionGranted || !analyser) return;
+                
+                analyser.getByteFrequencyData(dataArray);
+                const average = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+                audioLevel = average;
+                
+                // 音频可视化
+                const intensity = Math.min(average / 50, 2);
+                const scale = 1 + (intensity * 0.08);
+                voiceCircle.style.transform = `scale(${scale})`;
+                
+                // 检测语音活动
+                if (average > speechThreshold && !isMuted && isListening) {
+                    handleSpeechDetected();
+                } else if (average > speechThreshold && isMuted) {
+                    // 静音时检测到声音，显示通知
+                    showNotification('fas fa-microphone-slash', '检测到声音但麦克风已静音');
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        function startListening() {
+            if (isMuted || !isPermissionGranted || isListening) return;
+            
+            isListening = true;
+            currentAudioChunks = [];
+            
+            try {
+                mediaRecorder.start(1000); // 每秒一个数据块
+                updateStatus('listening', 'fas fa-ear-listen', '正在听...');
+                conversationDisplay.classList.remove('hidden');
+            } catch (error) {
+                console.error('Failed to start recording:', error);
+                isListening = false;
+            }
+        }
+
+        function handleSpeechDetected() {
+            lastSpeechTime = Date.now();
+            
+            if (speechTimeout) {
+                clearTimeout(speechTimeout);
+            }
+            
+            // 检测说话结束
+            speechTimeout = setTimeout(() => {
+                if (isListening && Date.now() - lastSpeechTime > 1500) {
+                    stopListening();
+                }
+            }, 1500);
+        }
+
+        function stopListening() {
+            if (!isListening) return;
+            
+            isListening = false;
+            try {
+                if (mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+                updateStatus('processing', 'fas fa-brain', '识别中...');
+            } catch (error) {
+                console.error('Failed to stop recording:', error);
+            }
+        }
+
+        function handleAudioData(event) {
+            if (event.data.size > 0) {
+                currentAudioChunks.push(event.data);
+            }
+        }
+
+        async function processAudioChunk() {
+            if (currentAudioChunks.length === 0) {
+                startListening();
+                return;
+            }
+            
+            try {
+                const audioBlob = new Blob(currentAudioChunks, { type: mediaRecorder.mimeType });
+                const extension = mediaRecorder.mimeType.includes('webm') ? 'webm' : 
+                                  mediaRecorder.mimeType.includes('mp4') ? 'm4a' : 
+                                  mediaRecorder.mimeType.includes('ogg') ? 'ogg' : 'wav';
+                
+                await recognizeSpeech(audioBlob, extension);
+                
+            } catch (error) {
+                console.error('Audio chunk processing failed:', error);
+                updateStatus('ready', 'fas fa-microphone', '识别失败，请重试');
+                setTimeout(startListening, 2000);
+            }
+        }
+
+        async function recognizeSpeech(audioBlob, extension) {
+            try {
+                const formData = new FormData();
+                formData.append('file', audioBlob, `audio.${extension}`);
+                formData.append('model', 'whisper-1');
+                formData.append('language', 'zh');
+                formData.append('response_format', 'json');
+                
+                const response = await fetch(`${API_CONFIG.baseUrl}/v1/audio/transcriptions`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                    },
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`语音识别失败: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                const userText = result.text.trim();
+                
+                if (userText.length < 2) {
+                    startListening();
+                    return;
+                }
+                
+                userMessage.textContent = `您: ${userText}`;
+                await generateAIResponse(userText);
+                
+            } catch (error) {
+                console.error('Speech recognition failed:', error);
+                showNotification('fas fa-exclamation-triangle', '语音识别失败: ' + error.message);
+                setTimeout(startListening, 2000);
+            }
+        }
+
+        async function generateAIResponse(userText) {
+            try {
+                updateStatus('processing', 'fas fa-robot', 'AI思考中...');
+                aiMessage.textContent = 'AI: 正在思考...';
+                
+                const messages = [
+                    {
+                        role: 'system',
+                        content: `你是TyloAI语音助手。请遵循以下规则:
+1. 用自然、口语化的方式回复
+2. 回复控制在30字以内
+3. 不要使用任何表情符号和emoji
+4. 语气友好亲切
+5. 回复要适合语音朗读`
+                    },
+                    ...conversationHistory.slice(-8),
+                    {
+                        role: 'user',
+                        content: userText
+                    }
+                ];
+                
+                const response = await fetch(`${API_CONFIG.baseUrl}/v1/chat/completions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-v3.1-n',
+                        messages: messages,
+                        temperature: 0.8,
+                        max_tokens: 100
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`AI回复生成失败: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const aiResponse = data.choices[0].message.content.trim();
+                
+                // 清理可能的表情符号
+                const cleanResponse = aiResponse.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+                
+                aiMessage.textContent = `AI: ${cleanResponse}`;
+                
+                // 保存对话历史
+                conversationHistory.push(
+                    { role: 'user', content: userText },
+                    { role: 'assistant', content: cleanResponse }
+                );
+                
+                await synthesizeSpeech(cleanResponse);
+                
+            } catch (error) {
+                console.error('AI response generation failed:', error);
+                showNotification('fas fa-exclamation-triangle', 'AI回复生成失败: ' + error.message);
+                setTimeout(startListening, 2000);
+            }
+        }
+
+        async function synthesizeSpeech(text) {
+    if (!text.trim()) {
+        startListening();
+        return;
+    }
+    
+    try {
+        updateStatus('processing', 'fas fa-comment-dots', '生成语音...');
+        
+        const response = await fetch(`${API_CONFIG.baseUrl}/v1/audio/speech`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_CONFIG.apiKey}`
+            },
+            body: JSON.stringify({
+                model: 'tts-1-1106',
+                input: text,
+                voice: 'nova',
+                speed: 1.1,
+                response_format: 'mp3'
+            })
+        });
+        
+        // 处理429错误
+        if (response.status === 429) {
+            const retryAfter = response.headers.get('Retry-After') || 60;
+            console.log(`API限频，${retryAfter}秒后重试`);
+            showNotification('fas fa-clock', `API请求过于频繁，${retryAfter}秒后重试`);
+            
+            setTimeout(() => {
+                synthesizeSpeech(text);
+            }, retryAfter * 1000);
+            return;
+        }
+        
+        if (!response.ok) {
+            throw new Error(`语音合成失败: ${response.status}`);
+        }
+        
+        // 其余代码保持不变...
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        aiSpeaker.src = audioUrl;
+        aiSpeaker.load();
+        
+        aiSpeaker.addEventListener('ended', () => {
+            URL.revokeObjectURL(audioUrl);
+        }, { once: true });
+        
+    } catch (error) {
+        console.error('Speech synthesis failed:', error);
+        showNotification('fas fa-exclamation-triangle', '语音合成失败: ' + error.message);
+        setTimeout(startListening, 2000);
+    }
+}
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            
+            if (isMuted) {
+                // 静音
+                muteIcon.className = 'fas fa-microphone-slash';
+                muteBtn.classList.add('muted');
+                
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+                
+                isListening = false;
+                updateStatus('muted', 'fas fa-microphone-slash', '已静音 - 点击开启麦克风');
+                
+            } else {
+                // 取消静音
+                muteIcon.className = 'fas fa-microphone';
+                muteBtn.classList.remove('muted');
+                
+                startListening();
+            }
+        }
+
+        function endCall() {
+            if (confirm('确定要结束语音通话吗？')) {
+                cleanup();
+                window.history.back();
+            }
+        }
+
+        function cleanup() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+            }
+            
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            
+            if (audioContext && audioContext.state !== 'closed') {
+                audioContext.close();
+            }
+            
+            if (aiSpeaker.src) {
+                aiSpeaker.pause();
+                aiSpeaker.src = '';
+            }
+            
+            isListening = false;
+            isSpeaking = false;
+            isProcessing = false;
+            isPermissionGranted = false;
+        }
+
+        function updateStatus(state, iconClass, label) {
+            statusIcon.className = `status-icon ${iconClass}`;
+            statusLabel.textContent = label;
+            realtimeStatus.textContent = label;
+            
+            voiceCircle.className = `voice-circle ${state}`;
+            
+            if (state === 'listening' || state === 'speaking') {
+                voiceCircle.classList.add('active');
+                waveContainer.classList.remove('hidden');
+            } else {
+                voiceCircle.classList.remove('active');
+                waveContainer.classList.add('hidden');
+            }
+        }
+
+        function updateConnectionStatus(status, text) {
+            statusDot.className = `status-dot ${status}`;
+            statusText.textContent = text;
+            isConnected = (status === 'connected');
+        }
+
+        function showNotification(iconClass, message) {
+            toastIcon.className = iconClass + ' mr-2';
+            toastMessage.textContent = message;
+            notificationToast.classList.add('show');
+            
+            setTimeout(() => {
+                notificationToast.classList.remove('show');
+            }, 3000);
+        }
+
+        window.addEventListener('beforeunload', cleanup);
+        
+        console.log('TyloAI Voice Chat initialized');
+    </script>
+</body>
+</html>
