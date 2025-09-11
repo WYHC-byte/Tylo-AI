@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TyloAI - Intelligent AI Assistant</title>
-    <meta name="description" content="TyloAI - Next-generation intelligent AI assistant supporting multimodal interaction and streaming conversations">
+    <title>TyloAI - Power, at your command</title>
+    <meta name="description" content="Command the future of work. TyloAI delivers powerful, intuitive AI that transforms your ideas into reality—all under your control.">
     
     <!-- External icon libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         * {
@@ -58,6 +58,24 @@
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        @keyframes textGlow {
+            0%, 100% { 
+                text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            }
         }
 
         /* Navigation bar */
@@ -114,34 +132,90 @@
             color: #000;
         }
 
-        /* Hero section - full screen */
+        /* Enhanced Hero section */
         .hero {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            background: #fff;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
+            color: white;
             transition: all 0.5s ease;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
         }
 
         .hero.chat-mode {
+            background: #fff;
+            color: #333;
             align-items: flex-start;
             padding-top: 120px;
         }
 
         .hero-content {
             width: 100%;
-            max-width: 800px;
+            max-width: 1000px;
             padding: 0 2rem;
             transition: all 0.5s ease;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #ccc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-tagline {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero.chat-mode .hero-title,
+        .hero.chat-mode .hero-subtitle,
+        .hero.chat-mode .hero-tagline {
+            display: none;
         }
 
         /* Input container */
         .input-container {
             position: relative;
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             transition: all 0.5s ease;
         }
@@ -158,16 +232,39 @@
         .chat-input {
             width: 100%;
             padding: 1.5rem 4rem 1.5rem 2rem;
-            border: 2px solid #eee;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             border-radius: 25px;
             font-size: 1.125rem;
             outline: none;
             transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .hero.chat-mode .chat-input {
             background: #fff;
+            color: #333;
+            border-color: #eee;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
+        .hero.chat-mode .chat-input::placeholder {
+            color: #999;
+        }
+
         .chat-input:focus {
+            border-color: #fff;
+            box-shadow: 0 20px 60px rgba(255, 255, 255, 0.2);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .hero.chat-mode .chat-input:focus {
             border-color: #000;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
         }
@@ -177,8 +274,8 @@
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: #000;
-            color: #fff;
+            background: #fff;
+            color: #000;
             border: none;
             border-radius: 50%;
             width: 48px;
@@ -189,10 +286,15 @@
             align-items: center;
             justify-content: center;
             font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero.chat-mode .send-button {
+            background: #000;
+            color: #fff;
         }
 
         .send-button:hover {
-            background: #333;
             transform: translateY(-50%) scale(1.1);
         }
 
@@ -775,6 +877,14 @@
                 display: none;
             }
 
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
             .chat-input {
                 padding: 1.25rem 3.5rem 1.25rem 1.5rem;
                 font-size: 1rem;
@@ -955,247 +1065,248 @@
                 max-width: 300px;
             }
         }
+
         /* Trailer Section - Video */
-.trailer-section {
-    padding: 6rem 2rem;
-    background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-    color: #fff;
-    position: relative;
-    overflow: hidden;
-}
+        .trailer-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
 
-.trailer-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -50%;
-    width: 200%;
-    height: 100%;
-    background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
-    pointer-events: none;
-}
+        .trailer-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -50%;
+            width: 200%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
 
-.trailer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-}
+        .trailer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
 
-.trailer-header {
-    text-align: center;
-    margin-bottom: 4rem;
-}
+        .trailer-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
 
-.trailer-header h2 {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-    background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+        .trailer-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-.trailer-header p {
-    font-size: 1.25rem;
-    color: #ccc;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-}
+        .trailer-header p {
+            font-size: 1.25rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
 
-.trailer-player {
-    max-width: 900px;
-    margin: 0 auto;
-    position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    padding: 1.5rem;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-}
+        .trailer-player {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
 
-.video-container {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    border-radius: 15px;
-    overflow: hidden;
-    background: #000;
-}
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+        }
 
-.video-player {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    outline: none;
-    border-radius: 15px;
-}
+        .video-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            border-radius: 15px;
+        }
 
-.video-player::-webkit-media-controls-panel {
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
-}
+        .video-player::-webkit-media-controls-panel {
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
+        }
 
-.video-player::-webkit-media-controls-play-button {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    margin-left: 10px;
-}
+        .video-player::-webkit-media-controls-play-button {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            margin-left: 10px;
+        }
 
-.video-player::-webkit-media-controls-current-time-display,
-.video-player::-webkit-media-controls-time-remaining-display {
-    color: #fff;
-    font-family: 'Inter', sans-serif;
-    font-weight: 500;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-}
+        .video-player::-webkit-media-controls-current-time-display,
+        .video-player::-webkit-media-controls-time-remaining-display {
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
 
-.play-overlay {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    opacity: 0;
-    pointer-events: none;
-}
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            pointer-events: none;
+        }
 
-.video-container:hover .play-overlay {
-    opacity: 1;
-}
+        .video-container:hover .play-overlay {
+            opacity: 1;
+        }
 
-.play-overlay:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translate(-50%, -50%) scale(1.1);
-}
+        .play-overlay:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
 
-.play-overlay i {
-    color: #fff;
-    font-size: 2rem;
-    margin-left: 4px;
-}
+        .play-overlay i {
+            color: #fff;
+            font-size: 2rem;
+            margin-left: 4px;
+        }
 
-.trailer-info {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-    text-align: center;
-}
+        .trailer-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
 
-.trailer-stat {
-    padding: 1.5rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
-}
+        .trailer-stat {
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
 
-.trailer-stat:hover {
-    transform: translateY(-3px);
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(255, 255, 255, 0.15);
-}
+        .trailer-stat:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
 
-.trailer-stat-icon {
-    font-size: 2rem;
-    color: #fff;
-    margin-bottom: 0.5rem;
-    display: block;
-}
+        .trailer-stat-icon {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
 
-.trailer-stat-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #fff;
-    margin-bottom: 0.25rem;
-}
+        .trailer-stat-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
 
-.trailer-stat-desc {
-    font-size: 0.9rem;
-    color: #aaa;
-    line-height: 1.4;
-}
+        .trailer-stat-desc {
+            font-size: 0.9rem;
+            color: #aaa;
+            line-height: 1.4;
+        }
 
-.trailer-cta {
-    text-align: center;
-    margin-top: 3rem;
-}
+        .trailer-cta {
+            text-align: center;
+            margin-top: 3rem;
+        }
 
-.trailer-button {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 1rem 2.5rem;
-    background: #fff;
-    color: #000;
-    text-decoration: none;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-}
+        .trailer-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2.5rem;
+            background: #fff;
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+        }
 
-.trailer-button:hover {
-    background: #f0f0f0;
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
-}
+        .trailer-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+        }
 
-.trailer-button i {
-    font-size: 1.2rem;
-}
+        .trailer-button i {
+            font-size: 1.2rem;
+        }
 
-/* Responsive design for trailer section */
-@media (max-width: 768px) {
-    .trailer-header h2 {
-        font-size: 2.2rem;
-    }
-    
-    .trailer-player {
-        padding: 1rem;
-        margin: 0 1rem;
-    }
-    
-    .trailer-info {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .trailer-button {
-        padding: 0.875rem 2rem;
-        font-size: 1rem;
-    }
-    
-    .play-overlay {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .play-overlay i {
-        font-size: 1.5rem;
-    }
-}
+        /* Responsive design for trailer section */
+        @media (max-width: 768px) {
+            .trailer-header h2 {
+                font-size: 2.2rem;
+            }
+            
+            .trailer-player {
+                padding: 1rem;
+                margin: 0 1rem;
+            }
+            
+            .trailer-info {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .trailer-button {
+                padding: 0.875rem 2rem;
+                font-size: 1rem;
+            }
+            
+            .play-overlay {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .play-overlay i {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -1221,6 +1332,10 @@
     <!-- Hero section -->
     <section class="hero" id="hero">
         <div class="hero-content">
+            <h1 class="hero-title">REVOLUTIONARY AI</h1>
+            <div class="hero-tagline">Power • Intelligence • Innovation</div>
+            <p class="hero-subtitle">The future of artificial intelligence is here. Experience unprecedented power and capability with TyloAI - where cutting-edge technology meets intuitive design.</p>
+            
             <!-- Chat messages area -->
             <div class="chat-messages" id="chatMessages"></div>
 
@@ -1243,53 +1358,53 @@
             </div>
             
             <div class="news-grid">
-                <article class="news-card" onclick="window.location.href='news.html?id=1'">
+                <article class="news-card" onclick="window.location.href='epist-5-flash.html'">
                     <div class="news-card-image">
-                        <img src="1.jpg" alt="Tylo-Epist-4.5 model demonstration showing interactive HTML playground">
+                        <img src="epist-5-flash.jpg" alt="Tylo-Epist-5-Flash model demonstration">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
                             <span class="news-category">Model Release</span>
-                            <span class="news-date">Aug 30, 2025</span>
+                            <span class="news-date">Sep 10, 2025</span>
                         </div>
-                        <h3>Tylo-Epist-4.5: The Ultimate Code-to-Experience AI</h3>
-                        <p class="news-excerpt">Revolutionary new model that transforms ideas into interactive experiences. Features live HTML playground, real-time code execution, and instant visual feedback.</p>
-                        <a href="news.html?id=1" class="news-link">
+                        <h3>Tylo-Epist-5-Flash: Low-Cost High-Response AI</h3>
+                        <p class="news-excerpt">Revolutionary new model offering unlimited free usage with lightning-fast responses. Experience premium AI capabilities without any cost barriers.</p>
+                        <a href="epist-5-flash.html" class="news-link">
                             Explore Model <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
 
-                <article class="news-card" onclick="window.location.href='news.html?id=2'">
+                <article class="news-card" onclick="window.location.href='tts-1.html'">
                     <div class="news-card-image">
-                        <img src="2.jpg" alt="TyloAI YouTube channel preview with cinematic trailer">
+                        <img src="tts-1.jpg" alt="Tylo-TTS-1 text-to-speech service">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
-                            <span class="news-category">Media Launch</span>
-                            <span class="news-date">Aug 29, 2025</span>
+                            <span class="news-category">TTS Service</span>
+                            <span class="news-date">Sep 8, 2025</span>
                         </div>
-                        <h3>TyloAI Official YouTube Channel Goes Live</h3>
-                        <p class="news-excerpt">Watch our cinematic trailer showcasing the future of AI interaction. Exclusive behind-the-scenes content and developer insights now streaming.</p>
-                        <a href="news.html?id=2" class="news-link">
-                            Watch Trailer <i class="fas fa-arrow-right"></i>
+                        <h3>Tylo-TTS-1: Lowest Cost Text-to-Speech</h3>
+                        <p class="news-excerpt">Industry-leading TTS service at just $1.30/1M input characters and $1.30/1M output characters. Premium voice quality at unbeatable prices.</p>
+                        <a href="tts-1.html" class="news-link">
+                            Try TTS Service <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
 
-                <article class="news-card" onclick="window.location.href='news.html?id=3'">
+                <article class="news-card" onclick="window.location.href='yt.html'">
                     <div class="news-card-image">
-                        <img src="3.jpg" alt="TyloAI Founders Week celebration banner with premium features">
+                        <img src="youtube.jpg" alt="TyloAI YouTube channel preview">
                     </div>
                     <div class="news-card-content">
                         <div class="news-card-header">
-                            <span class="news-category">Limited Event</span>
-                            <span class="news-date">Until Sep 10</span>
+                            <span class="news-category">Media Launch</span>
+                            <span class="news-date">Sep 5, 2025</span>
                         </div>
-                        <h3>Founders Week: Free 7-Day Premium Access</h3>
-                        <p class="news-excerpt">Celebrating TyloAI's journey with an exclusive week-long premium experience. Full access to advanced models, priority processing, and exclusive features.</p>
-                        <a href="news.html?id=3" class="news-link">
-                            Claim Access <i class="fas fa-arrow-right"></i>
+                        <h3>TyloAI Official YouTube Channel Goes Live</h3>
+                        <p class="news-excerpt">Watch our cinematic trailer showcasing the future of AI interaction. Exclusive behind-the-scenes content and developer insights now streaming.</p>
+                        <a href="yt.html" class="news-link">
+                            Watch Channel <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </article>
@@ -1423,7 +1538,7 @@
                     <div class="stat-label">Active Users</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">99.9%</div>
+                    <div class="stat-number">97.9%</div>
                     <div class="stat-label">Uptime</div>
                 </div>
                 <div class="stat-item">
@@ -1482,9 +1597,25 @@
                     <h3>Products</h3>
                     <ul class="footer-links">
                         <li><a href="login.html">AI Conversation</a></li>
-                        <li><a href="login.html">Image Understanding</a></li>
-                        <li><a href="login.html">Code Assistant</a></li>
-                        <li><a href="login.html">API Services</a></li>
+                        <li><a href="model.html">model</a></li>
+                        <li><a href="learn.html">Tylo Learn</a></li>
+                        <li><a href="#">API</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>More</h3>
+                    <ul class="footer-links">
+                        <li><a href="news.html">News</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="learn.html">Tylo-Learn</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Latest Advancements</h3>
+                    <ul class="footer-links">
+                        <li><a href="model.html">tylo-Epist-5</a></li>
+                        <li><a href="model.html">Tylo-Epist-5-Flash</a></li>
+                        <li><a href="model.html">Tylo-Research</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -1511,7 +1642,7 @@
             </div>
         </div>
     </footer>
-
+    
     <script>
         // Chat functionality
         class ChatInterface {
