@@ -4,1983 +4,1064 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TyloAI - Power, at your command</title>
-    <meta name="description" content="Command the future of work. TyloAI delivers powerful, intuitive AI that transforms your ideas into reality—all under your control.">
-    
-    <!-- External icon libraries -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: #fff;
-            overflow-x: hidden;
-        }
-
-        /* Animation definitions */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        @keyframes glow {
-            0%, 100% { 
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            }
-            50% { 
-                box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // 配置Tailwind
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#10b981',
+                        accent: '#f59e0b',
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.8s ease-in-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'slide-in': 'slideIn 0.6s ease-out'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(-20px)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' }
+                        }
+                    }
+                }
             }
         }
-
-        @keyframes textGlow {
-            0%, 100% { 
-                text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
             }
-            50% { 
-                text-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            .text-gradient {
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
             }
-        }
-
-        /* Navigation bar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 1rem 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #eee;
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #000;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover {
-            color: #000;
-        }
-
-        /* Enhanced Hero section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: linear-gradient(135deg, #000 0%, #1a1a1a 50%, #000 100%);
-            color: white;
-            transition: all 0.5s ease;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
-            animation: float 20s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .hero.chat-mode {
-            background: #fff;
-            color: #333;
-            align-items: flex-start;
-            padding-top: 120px;
-        }
-
-        .hero-content {
-            width: 100%;
-            max-width: 1000px;
-            padding: 0 2rem;
-            transition: all 0.5s ease;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero-title {
-            font-size: 4.5rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: textGlow 3s ease-in-out infinite;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            font-weight: 300;
-            margin-bottom: 2rem;
-            color: #ccc;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .hero-tagline {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .hero.chat-mode .hero-title,
-        .hero.chat-mode .hero-subtitle,
-        .hero.chat-mode .hero-tagline {
-            display: none;
-        }
-
-        /* Input container */
-        .input-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            margin: 0 auto;
-            transition: all 0.5s ease;
-        }
-
-        .hero.chat-mode .input-container {
-            position: fixed;
-            bottom: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 800px;
-            z-index: 100;
-        }
-
-        .chat-input {
-            width: 100%;
-            padding: 1.5rem 4rem 1.5rem 2rem;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 25px;
-            font-size: 1.125rem;
-            outline: none;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .chat-input::placeholder {
-            color: rgba(255, 255, 255, 0.7);
-        }
-
-        .hero.chat-mode .chat-input {
-            background: #fff;
-            color: #333;
-            border-color: #eee;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero.chat-mode .chat-input::placeholder {
-            color: #999;
-        }
-
-        .chat-input:focus {
-            border-color: #fff;
-            box-shadow: 0 20px 60px rgba(255, 255, 255, 0.2);
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        .hero.chat-mode .chat-input:focus {
-            border-color: #000;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        }
-
-        .send-button {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #fff;
-            color: #000;
-            border: none;
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .hero.chat-mode .send-button {
-            background: #000;
-            color: #fff;
-        }
-
-        .send-button:hover {
-            transform: translateY(-50%) scale(1.1);
-        }
-
-        .send-button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: translateY(-50%);
-        }
-
-        /* Chat messages area */
-        .chat-messages {
-            display: none;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            max-height: calc(100vh - 300px);
-            overflow-y: auto;
-        }
-
-        .hero.chat-mode .chat-messages {
-            display: block;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        .message {
-            margin-bottom: 2rem;
-            animation: fadeInUp 0.5s ease-out;
-        }
-
-        .message.user {
-            text-align: right;
-        }
-
-        .message.ai {
-            text-align: left;
-        }
-
-        .message-bubble {
-            display: inline-block;
-            max-width: 80%;
-            padding: 1.25rem 1.75rem;
-            border-radius: 20px;
-            word-wrap: break-word;
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        .message.user .message-bubble {
-            background: #000;
-            color: #fff;
-        }
-
-        .message.ai .message-bubble {
-            background: #f8f9fa;
-            color: #333;
-            border: 1px solid #eee;
-        }
-
-        /* AI message content formatting styles */
-        .message.ai .message-bubble h1,
-        .message.ai .message-bubble h2,
-        .message.ai .message-bubble h3,
-        .message.ai .message-bubble h4,
-        .message.ai .message-bubble h5,
-        .message.ai .message-bubble h6 {
-            color: #000;
-            margin: 1rem 0 0.5rem 0;
-            font-weight: 600;
-        }
-
-        .message.ai .message-bubble h1 { font-size: 1.5rem; }
-        .message.ai .message-bubble h2 { font-size: 1.3rem; }
-        .message.ai .message-bubble h3 { font-size: 1.1rem; }
-        
-        .message.ai .message-bubble p {
-            margin: 0.5rem 0;
-            line-height: 1.6;
-        }
-
-        .message.ai .message-bubble ul,
-        .message.ai .message-bubble ol {
-            margin: 0.5rem 0;
-            padding-left: 1.5rem;
-        }
-
-        .message.ai .message-bubble li {
-            margin: 0.25rem 0;
-        }
-
-        .message.ai .message-bubble blockquote {
-            border-left: 3px solid #000;
-            margin: 1rem 0;
-            padding-left: 1rem;
-            font-style: italic;
-            color: #666;
-        }
-
-        .message.ai .message-bubble code {
-            background: #f1f3f4;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 0.9rem;
-            color: #d73a49;
-        }
-
-        .message.ai .message-bubble pre {
-            background: #f8f9fa;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1rem 0;
-            overflow-x: auto;
-            position: relative;
-        }
-
-        .message.ai .message-bubble pre code {
-            background: none;
-            padding: 0;
-            color: #333;
-            font-size: 0.875rem;
-            line-height: 1.4;
-        }
-
-        .code-header {
-            background: #e1e4e8;
-            padding: 0.5rem 1rem;
-            border-radius: 8px 8px 0 0;
-            font-size: 0.8rem;
-            color: #666;
-            border-bottom: 1px solid #d1d5da;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            margin: -1rem -1rem 0.5rem -1rem;
-        }
-
-        .message.ai .message-bubble table {
-            border-collapse: collapse;
-            width: 100%;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-
-        .message.ai .message-bubble th,
-        .message.ai .message-bubble td {
-            border: 1px solid #e1e4e8;
-            padding: 0.5rem;
-            text-align: left;
-        }
-
-        .message.ai .message-bubble th {
-            background: #f6f8fa;
-            font-weight: 600;
-            color: #000;
-        }
-
-        .message.ai .message-bubble tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        .message.ai .message-bubble strong {
-            font-weight: 600;
-            color: #000;
-        }
-
-        .message.ai .message-bubble em {
-            font-style: italic;
-            color: #666;
-        }
-
-        .message.ai .message-bubble hr {
-            border: none;
-            border-top: 1px solid #e1e4e8;
-            margin: 1rem 0;
-        }
-
-        /* Loading animation */
-        .thinking-dot {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            background: #000;
-            border-radius: 50%;
-            animation: thinking-pulse 1.5s ease-in-out infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes thinking-pulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
+            .backdrop-blur {
+                backdrop-filter: blur(8px);
             }
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-        }
-
-        /* Completion animation - checkmark */
-        .complete-check {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            position: relative;
-            opacity: 0;
-            animation: fadeInScale 0.4s ease-out forwards;
-        }
-
-        .complete-check::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            font-weight: bold;
-            color: #000;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.5);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* Thinking container styles */
-        .thinking-container {
-            padding: 1rem;
-            text-align: center;
-            animation: fadeInUp 0.3s ease-out;
-        }
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #000;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Streaming output animation */
-        .typing-indicator::after {
-            content: '|';
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-
-        /* News Section - Professional Design */
-        .news-section {
-            padding: 6rem 2rem;
-            background: #fff;
-            border-top: 1px solid #eee;
-        }
-
-        .news-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .news-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .news-header h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-        }
-
-        .news-header p {
-            font-size: 1.125rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .news-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .news-card {
-            background: #fff;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            padding: 0;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .news-card-image {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .news-card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .news-card:hover .news-card-image img {
-            transform: scale(1.05);
-        }
-
-        .news-card-content {
-            padding: 2rem;
-        }
-
-        .news-card:hover {
-            border-color: #000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .news-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
-
-        .news-category {
-            background: #000;
-            color: #fff;
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .news-date {
-            color: #666;
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .news-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #000;
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-        }
-
-        .news-excerpt {
-            color: #666;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .news-link {
-            display: inline-flex;
-            align-items: center;
-            color: #000;
-            font-weight: 600;
-            font-size: 0.875rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .news-link i {
-            margin-left: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-
-        .news-link:hover i {
-            transform: translateX(3px);
-        }
-
-        .news-cta {
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .view-all-news {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            background: #000;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .view-all-news:hover {
-            background: #333;
-            transform: translateY(-1px);
-        }
-
-        /* Feature sections */
-        .sections {
-            padding: 4rem 2rem;
-            background: #fff;
-        }
-
-        .section {
-            max-width: 1200px;
-            margin: 0 auto 6rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #000;
-        }
-
-        .section p {
-            font-size: 1.125rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .feature-card {
-            padding: 2.5rem;
-            border: 1px solid #eee;
-            border-radius: 16px;
-            text-align: center;
-            transition: all 0.3s ease;
-            background: #fff;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            border-color: #000;
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: #000;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: #000;
-        }
-
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        /* Statistics */
-        .stats {
-            background: #f8f9fa;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .stats-grid {
-            max-width: 800px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-        }
-
-        .stat-item {
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Footer */
-        .footer {
-            background: #000;
-            color: #fff;
-            padding: 3rem 2rem 2rem;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-section h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links a {
-            color: #ccc;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: #fff;
-        }
-
-        .footer-bottom {
-            border-top: 1px solid #333;
-            padding-top: 2rem;
-            text-align: center;
-            color: #999;
-            font-size: 0.875rem;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .nav-links {
+            .scrollbar-hide::-webkit-scrollbar {
                 display: none;
             }
-
-            .hero-title {
-                font-size: 3rem;
+            .card-hover {
+                transition: all 0.3s ease;
             }
-
-            .hero-subtitle {
-                font-size: 1.2rem;
-            }
-
-            .chat-input {
-                padding: 1.25rem 3.5rem 1.25rem 1.5rem;
-                font-size: 1rem;
-            }
-
-            .send-button {
-                width: 40px;
-                height: 40px;
-                right: 6px;
-            }
-
-            .hero.chat-mode .input-container {
-                max-width: calc(100% - 2rem);
-                margin: 0 1rem;
-            }
-
-            .chat-messages {
-                padding: 0 1rem;
-            }
-
-            .section h2 {
-                font-size: 2rem;
-            }
-
-            .news-header h2 {
-                font-size: 2rem;
-            }
-
-            .news-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Scrollbar styles */
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #ccc;
-            border-radius: 3px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #999;
-        }
-
-        /* Call-to-action section */
-        .cta-section {
-            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
-            padding: 5rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%);
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .cta-container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #000;
-            margin-bottom: 1rem;
-        }
-
-        .cta-section p {
-            font-size: 1.25rem;
-            color: #666;
-            margin-bottom: 2.5rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 3rem;
-        }
-
-        .cta-button {
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.125rem;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        .cta-button.primary {
-            background: #000;
-            color: #fff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .cta-button.primary:hover {
-            background: #333;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .cta-button.secondary {
-            background: #fff;
-            color: #000;
-            border: 2px solid #000;
-        }
-
-        .cta-button.secondary:hover {
-            background: #000;
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .cta-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1.5rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .cta-feature {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #666;
-            font-size: 0.95rem;
-        }
-
-        .cta-feature i {
-            color: #4CAF50;
-            font-size: 1.2rem;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .cta-button {
-                width: 200px;
-            }
-            
-            .cta-features {
-                grid-template-columns: 1fr;
-                text-align: left;
-                max-width: 300px;
-            }
-        }
-
-        /* Trailer Section - Video */
-        .trailer-section {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
-            color: #fff;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .trailer-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -50%;
-            width: 200%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(255,255,255,0.05) 0%, transparent 50%);
-            animation: float 20s ease-in-out infinite;
-            pointer-events: none;
-        }
-
-        .trailer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .trailer-header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
-
-        .trailer-header h2 {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 1rem;
-            line-height: 1.2;
-            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .trailer-header p {
-            font-size: 1.25rem;
-            color: #ccc;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-        }
-
-        .trailer-player {
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            height: 0;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            border-radius: 15px;
-            overflow: hidden;
-            background: #000;
-        }
-
-        .video-player {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            outline: none;
-            border-radius: 15px;
-        }
-
-        .video-player::-webkit-media-controls-panel {
-            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%);
-        }
-
-        .video-player::-webkit-media-controls-play-button {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            margin-left: 10px;
-        }
-
-        .video-player::-webkit-media-controls-current-time-display,
-        .video-player::-webkit-media-controls-time-remaining-display {
-            color: #fff;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-        }
-
-        .play-overlay {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .video-container:hover .play-overlay {
-            opacity: 1;
-        }
-
-        .play-overlay:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translate(-50%, -50%) scale(1.1);
-        }
-
-        .play-overlay i {
-            color: #fff;
-            font-size: 2rem;
-            margin-left: 4px;
-        }
-
-        .trailer-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-            text-align: center;
-        }
-
-        .trailer-stat {
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .trailer-stat:hover {
-            transform: translateY(-3px);
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .trailer-stat-icon {
-            font-size: 2rem;
-            color: #fff;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .trailer-stat-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #fff;
-            margin-bottom: 0.25rem;
-        }
-
-        .trailer-stat-desc {
-            font-size: 0.9rem;
-            color: #aaa;
-            line-height: 1.4;
-        }
-
-        .trailer-cta {
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .trailer-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 2.5rem;
-            background: #fff;
-            color: #000;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
-        }
-
-        .trailer-button:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
-        }
-
-        .trailer-button i {
-            font-size: 1.2rem;
-        }
-
-        /* Responsive design for trailer section */
-        @media (max-width: 768px) {
-            .trailer-header h2 {
-                font-size: 2.2rem;
-            }
-            
-            .trailer-player {
-                padding: 1rem;
-                margin: 0 1rem;
-            }
-            
-            .trailer-info {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .trailer-button {
-                padding: 0.875rem 2rem;
-                font-size: 1rem;
-            }
-            
-            .play-overlay {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .play-overlay i {
-                font-size: 1.5rem;
+            .card-hover:hover {
+                transform: translateY(-5px);
             }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
 </head>
-
-<body>
-    <!-- Navigation bar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <img src="logo.png" alt="TyloAI Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                <i class="fas fa-ai" style="display: none;"></i>
-                TyloAI
-            </a>
-            <ul class="nav-links">
-                <li><a href="#trailer">Trailer</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#stats">Data</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero section -->
-    <section class="hero" id="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">REVOLUTIONARY AI</h1>
-            <div class="hero-tagline">Power • Intelligence • Innovation</div>
-            <p class="hero-subtitle">The future of artificial intelligence is here. Experience unprecedented power and capability with TyloAI - where cutting-edge technology meets intuitive design.</p>
+<body class="font-sans bg-light text-dark dark:bg-dark dark:text-light transition-colors duration-300">
+    <!-- 导航栏 -->
+    <header id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 py-4">
+        <div class="container mx-auto px-4 md:px-6 flex items-center justify-between">
+            <div class="flex items-center">
+                <a href="#" class="flex items-center">
+                    <img src="logo.png" alt="TyloAI Logo" class="h-10 w-auto mr-2 animate-fade-in">
+                    <span class="text-2xl font-display font-bold bg-gradient-to-r from-primary to-secondary text-gradient">TyloAI</span>
+                </a>
+                <span class="ml-2 text-sm text-gray-500 dark:text-gray-400 hidden md:inline-block">© 2025</span>
+            </div>
             
-            <!-- Chat messages area -->
-            <div class="chat-messages" id="chatMessages"></div>
-
-            <!-- Input box -->
-            <div class="input-container">
-                <input type="text" class="chat-input" id="chatInput" placeholder="Ask me anything..." maxlength="2000">
-                <button class="send-button" id="sendButton">
-                    <i class="fas fa-paper-plane"></i>
+            <!-- 语言选择器 -->
+            <div class="relative mr-4 group">
+                <button id="languageBtn" class="flex items-center px-3 py-2 rounded-full border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                    <span id="currentLanguage">English</span>
+                    <i class="fa fa-chevron-down ml-2 text-xs"></i>
                 </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest News Section -->
-    <section class="news-section" id="news">
-        <div class="news-container">
-            <div class="news-header">
-                <h2>Latest Updates</h2>
-                <p>Stay informed about TyloAI's latest developments and announcements</p>
+                <div id="languageDropdown" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform scale-95 opacity-0 pointer-events-none group-hover:scale-100 group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <li><a href="#" data-lang="en" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">English</a></li>
+                        <li><a href="#" data-lang="zh" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">中文</a></li>
+                        <li><a href="#" data-lang="es" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Español</a></li>
+                        <li><a href="#" data-lang="fr" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Français</a></li>
+                        <li><a href="#" data-lang="de" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Deutsch</a></li>
+                        <li><a href="#" data-lang="ja" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">日本語</a></li>
+                        <li><a href="#" data-lang="ko" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">한국어</a></li>
+                        <li><a href="#" data-lang="ru" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Русский</a></li>
+                        <li><a href="#" data-lang="pt" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Português</a></li>
+                        <li><a href="#" data-lang="it" class="language-option block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">Italiano</a></li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="news-grid">
-                <article class="news-card" onclick="window.location.href='epist-5-flash.html'">
-                    <div class="news-card-image">
-                        <img src="epist-5-flash.jpg" alt="Tylo-Epist-5-Flash model demonstration">
-                    </div>
-                    <div class="news-card-content">
-                        <div class="news-card-header">
-                            <span class="news-category">Model Release</span>
-                            <span class="news-date">Sep 10, 2025</span>
-                        </div>
-                        <h3>Tylo-Epist-5-Flash: Low-Cost High-Response AI</h3>
-                        <p class="news-excerpt">Revolutionary new model offering unlimited free usage with lightning-fast responses. Experience premium AI capabilities without any cost barriers.</p>
-                        <a href="epist-5-flash.html" class="news-link">
-                            Explore Model <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </article>
+            <!-- 主题切换 -->
+            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors mr-2">
+                <i class="fa fa-moon-o dark:hidden text-gray-600"></i>
+                <i class="fa fa-sun-o hidden dark:inline text-yellow-400"></i>
+            </button>
+            
+            <!-- 登录按钮 -->
+            <a href="login.html" class="px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-full font-medium transition-all shadow-lg hover:shadow-primary/30 hover:shadow-xl transform hover:-translate-y-0.5">
+                <span data-i18n="login">Login</span>
+            </a>
+        </div>
+    </header>
 
-                <article class="news-card" onclick="window.location.href='tts-1.html'">
-                    <div class="news-card-image">
-                        <img src="tts-1.jpg" alt="Tylo-TTS-1 text-to-speech service">
-                    </div>
-                    <div class="news-card-content">
-                        <div class="news-card-header">
-                            <span class="news-category">TTS Service</span>
-                            <span class="news-date">Sep 8, 2025</span>
-                        </div>
-                        <h3>Tylo-TTS-1: Lowest Cost Text-to-Speech</h3>
-                        <p class="news-excerpt">Industry-leading TTS service at just $1.30/1M input characters and $1.30/1M output characters. Premium voice quality at unbeatable prices.</p>
-                        <a href="tts-1.html" class="news-link">
-                            Try TTS Service <i class="fas fa-arrow-right"></i>
+    <main class="pt-24 pb-16">
+        <!-- 英雄区域 -->
+        <section class="container mx-auto px-4 md:px-6 mb-24">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0 animate-slide-in">
+                    <h1 class="text-[clamp(2.5rem,5vw,4rem)] font-display font-bold leading-tight mb-6">
+                        <span data-i18n="hero.title1">AI that</span> 
+                        <span class="bg-gradient-to-r from-primary to-secondary text-gradient">
+                            <span data-i18n="hero.title2">understands</span>
+                        </span>
+                        <span data-i18n="hero.title3"> deeply</span>
+                    </h1>
+                    <p class="text-[clamp(1.2rem,2vw,1.5rem)] text-gray-600 dark:text-gray-300 mb-8 max-w-xl" data-i18n="hero.subtitle">
+                        The most powerful AI assistant with advanced capabilities, now at your command.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="login.html" class="px-8 py-3 bg-primary hover:bg-primary/90 text-white rounded-full font-medium text-center transition-all shadow-lg hover:shadow-primary/30 hover:shadow-xl transform hover:-translate-y-0.5 text-lg">
+                            <span data-i18n="hero.getStarted">Get Started</span>
+                        </a>
+                        <a href="#features" class="px-8 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full font-medium text-center transition-all flex items-center justify-center gap-2 text-lg">
+                            <span data-i18n="hero.learnMore">Learn More</span>
+                            <i class="fa fa-arrow-down"></i>
                         </a>
                     </div>
-                </article>
+                    <div class="mt-10 flex items-center">
+                        <div class="flex -space-x-2">
+                            <img src="https://picsum.photos/id/1001/100" alt="User" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
+                            <img src="https://picsum.photos/id/1002/100" alt="User" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
+                            <img src="https://picsum.photos/id/1003/100" alt="User" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
+                            <img src="https://picsum.photos/id/1004/100" alt="User" class="w-10 h-10 rounded-full border-2 border-white dark:border-gray-800">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 border-2 border-white dark:border-gray-800 flex items-center justify-center text-xs font-medium">
+                                10k+
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <div class="flex items-center">
+                                <div class="flex">
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                    <i class="fa fa-star text-yellow-400"></i>
+                                </div>
+                                <span class="ml-2 font-medium" data-i18n="hero.rating">4.9/5</span>
+                            </div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="hero.userReviews">from 10,000+ happy users</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative animate-float">
+                    <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-full blur-3xl transform rotate-12"></div>
+                    <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <div class="p-4 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex items-center">
+                            <div class="flex space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            </div>
+                            <div class="mx-auto text-sm text-gray-500 dark:text-gray-400">TyloAI Agent Collaboration</div>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2" data-i18n="hero.sampleQuestion">Sample Question:</p>
+                                <p class="font-medium" data-i18n="hero.question">What is the solution to Fermat's Last Theorem?</p>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4">
+                                <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 text-xs font-bold">A</div>
+                                        <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">AI Model 1</span>
+                                    </div>
+                                    <p class="text-sm" data-i18n="hero.ai1Response">Fermat's Last Theorem states that no three positive integers...</p>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center text-green-600 dark:text-green-300 text-xs font-bold">B</div>
+                                        <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">AI Model 2</span>
+                                    </div>
+                                    <p class="text-sm" data-i18n="hero.ai2Response">The theorem was famously proven by Andrew Wiles in 1994...</p>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center mb-2">
+                                        <div class="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center text-purple-600 dark:text-purple-300 text-xs font-bold">C</div>
+                                        <span class="ml-2 text-xs text-gray-500 dark:text-gray-400">AI Model 3</span>
+                                    </div>
+                                    <p class="text-sm" data-i18n="hero.ai3Response">The proof builds upon modern algebraic geometry and modular forms...</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2" data-i18n="hero.consensus">Consensus Answer:</p>
+                                <div class="bg-primary/10 dark:bg-primary/20 p-3 rounded-lg border border-primary/20 dark:border-primary/30">
+                                    <p class="text-sm" data-i18n="hero.finalAnswer">Fermat's Last Theorem, proven by Andrew Wiles in 1994, states that no three positive integers a, b, and c satisfy the equation a^n + b^n = c^n for any integer value of n greater than 2.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-16 text-center">
+                <p class="text-gray-500 dark:text-gray-400 mb-6" data-i18n="hero.trustedBy">Trusted by leading organizations</p>
+                <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70">
+                    <div class="text-gray-400 dark:text-gray-500 text-xl font-bold" data-i18n="hero.company1">TechCorp</div>
+                    <div class="text-gray-400 dark:text-gray-500 text-xl font-bold" data-i18n="hero.company2">ResearchLab</div>
+                    <div class="text-gray-400 dark:text-gray-500 text-xl font-bold" data-i18n="hero.company3">GlobalEnterprise</div>
+                    <div class="text-gray-400 dark:text-gray-500 text-xl font-bold" data-i18n="hero.company4">InnovateCo</div>
+                </div>
+            </div>
+        </section>
 
-                <article class="news-card" onclick="window.location.href='yt.html'">
-                    <div class="news-card-image">
-                        <img src="youtube.jpg" alt="TyloAI YouTube channel preview">
-                    </div>
-                    <div class="news-card-content">
-                        <div class="news-card-header">
-                            <span class="news-category">Media Launch</span>
-                            <span class="news-date">Sep 5, 2025</span>
-                        </div>
-                        <h3>TyloAI Official YouTube Channel Goes Live</h3>
-                        <p class="news-excerpt">Watch our cinematic trailer showcasing the future of AI interaction. Exclusive behind-the-scenes content and developer insights now streaming.</p>
-                        <a href="yt.html" class="news-link">
-                            Watch Channel <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </article>
+        <!-- 核心功能 -->
+        <section id="features" class="container mx-auto px-4 md:px-6 mb-24">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display font-bold mb-6" data-i18n="features.title">Core AI Capabilities</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-300" data-i18n="features.subtitle">TyloAI offers a comprehensive suite of advanced AI tools to power your productivity and creativity.</p>
             </div>
 
-            <div class="news-cta">
-                <a href="news.html" class="view-all-news">
-                    <span>View All News</span>
-                    <i class="fas fa-arrow-right"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 多模型支持 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 card-hover">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fa fa-cubes text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" data-i18n="features.multiModel.title">Multi-Model Support</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.multiModel.deepSearch">Deep Search Analysis (Grok-3)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.multiModel.coding">Advanced Coding (1/140th cost of Claude-3.5)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.multiModel.reasoning">Deep Reasoning (DeepSeek-R1 level)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.multiModel.research">Advanced Research (Beta)</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Agent多模型协作 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 card-hover">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fa fa-users text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" data-i18n="features.agent.title">Agent Collaboration</h3>
+                    <p class="text-gray-600 dark:text-gray-300 mb-3" data-i18n="features.agent.description">Redefining AI with collaborative intelligence:</p>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.agent.threeAIs">3 AI models analyzing from different perspectives</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.agent.debate">Constructive debate leading to consensus</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.agent.accuracy">99% accuracy on standard questions</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.agent.math">95.7% accuracy on complex math problems</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 内容生成 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 card-hover">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fa fa-magic text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" data-i18n="features.generation.title">Content Generation</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.generation.images">Image Generation (Aria model)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.generation.styles">Supports国风, 写实, 二次元, 水彩 styles</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.generation.music">Music Generation (Aria-music via Suno)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.generation.streaming">Streaming conversations with real-time output</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 用户系统 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 card-hover">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fa fa-user-circle text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" data-i18n="features.userSystem.title">User System</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.userSystem.levels">Level system (10 levels) with experience points</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.userSystem.points">Daily 3000 points (50 points per conversation)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.userSystem.pro">Pro membership with unlimited points</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.userSystem.achievements">Achievement system with rewards</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 聊天功能 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 card-hover">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fa fa-comments text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" data-i18n="features.chat.title">Chat Features</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.chat.context">Multi-turn conversations with context memory</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.chat.upload">File uploads (images, documents, etc.)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.chat.voices">Multiple voice styles including "贴吧老哥"</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.chat.code">Code execution in Canvas with visualization</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- 商业功能 -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700 card-hover">
+                    <div class="w-12 h-12 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center mb-5">
+                        <i class="fa fa-briefcase text-primary text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3" data-i18n="features.business.title">Business Features</h3>
+                    <ul class="space-y-2 text-gray-600 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.business.payment">WeChat Pay + Stripe integration</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.business.invite">Invitation system with Pro rewards</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.business.codes">Redeemable codes for points and membership</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-secondary mt-1 mr-2"></i>
+                            <span data-i18n="features.business.marketplace">Plugin marketplace for developers</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <a href="login.html" class="inline-flex items-center text-primary hover:text-primary/80 font-medium transition-colors">
+                    <span data-i18n="features.seeAll">See all 30+ features</span>
+                    <i class="fa fa-arrow-right ml-2"></i>
                 </a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Trailer Section -->
-<section class="trailer-section" id="trailer">
-    <div class="trailer-container">
-        <div class="trailer-header">
-            <h2>Experience TyloAI</h2>
-            <p>Watch our exclusive trailer showcasing the future of intelligent AI interaction and discover what makes TyloAI extraordinary</p>
-        </div>
-        
-        <div class="trailer-player">
-            <div class="video-container">
-                <video class="video-player" controls preload="metadata" poster="">
-                    <source src="宣传片.mp4" type="video/mp4">
-                    Your browser does not support the video element.
-                </video>
-                <div class="play-overlay">
-                    <i class="fas fa-play"></i>
+        <!-- 技术特性 -->
+        <section class="bg-gray-50 dark:bg-gray-900/50 py-20 mb-24">
+            <div class="container mx-auto px-4 md:px-6">
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display font-bold mb-6" data-i18n="tech.title">Technical Excellence</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300" data-i18n="tech.subtitle">Built with cutting-edge technology to deliver a seamless experience across all devices.</p>
                 </div>
-            </div>
-        </div>
 
-        <div class="trailer-info">
-            <div class="trailer-stat">
-                <i class="fas fa-magic trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Next-Gen AI</div>
-                <div class="trailer-stat-desc">Revolutionary intelligence that understands and adapts</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl text-center shadow-md border border-gray-200 dark:border-gray-700 card-hover">
+                        <div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-mobile text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold mb-2" data-i18n="tech.responsive">Responsive Design</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="tech.responsiveDesc">Perfect on all devices</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl text-center shadow-md border border-gray-200 dark:border-gray-700 card-hover">
+                        <div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-moon-o text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold mb-2" data-i18n="tech.darkMode">Dark Mode</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="tech.darkModeDesc">Easy theme switching</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl text-center shadow-md border border-gray-200 dark:border-gray-700 card-hover">
+                        <div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-sync text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold mb-2" data-i18n="tech.sync">Real-time Sync</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="tech.syncDesc">Powered by Supabase</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-xl text-center shadow-md border border-gray-200 dark:border-gray-700 card-hover">
+                        <div class="w-14 h-14 bg-primary/10 dark:bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-shield text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="font-bold mb-2" data-i18n="tech.security">Data Security</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400" data-i18n="tech.securityDesc">Regional storage</p>
+                    </div>
+                </div>
             </div>
-            <div class="trailer-stat">
-                <i class="fas fa-bolt trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Lightning Fast</div>
-                <div class="trailer-stat-desc">Instant responses powered by advanced algorithms</div>
-            </div>
-            <div class="trailer-stat">
-                <i class="fas fa-shield-alt trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Secure & Private</div>
-                <div class="trailer-stat-desc">Your conversations protected with enterprise-grade security</div>
-            </div>
-            <div class="trailer-stat">
-                <i class="fas fa-globe trailer-stat-icon"></i>
-                <div class="trailer-stat-title">Global Access</div>
-                <div class="trailer-stat-desc">Available worldwide with multi-language support</div>
-            </div>
-        </div>
+        </section>
 
-        <div class="trailer-cta">
-            <a href="login.html" class="trailer-button">
-                <i class="fas fa-rocket"></i>
-                Start Your Journey
-            </a>
-        </div>
-    </div>
-</section>
-    
-    <!-- Feature highlights -->
-    <section class="sections" id="features">
-        <div class="section">
-            <div class="section-header">
-                <h2>Powerful AI Capabilities</h2>
-                <p>Integrating cutting-edge AI technology to provide you with comprehensive intelligent service experience</p>
-            </div>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
+        <!-- 宣传片播放版块 -->
+        <section class="container mx-auto px-4 md:px-6 mb-24">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display font-bold mb-6" data-i18n="video.title">See TyloAI in Action</h2>
+                    <p class="text-lg text-gray-600 dark:text-gray-300 mb-8" data-i18n="video.subtitle">Watch our promotional videos to discover the power of TyloAI's capabilities.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-flask text-secondary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1" data-i18n="video.researchTitle">Research Capabilities</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-3" data-i18n="video.researchDesc">Explore how TyloAI transforms research with advanced analysis and insights.</p>
+                                <button class="video-selector px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors" data-video="research">
+                                    <i class="fa fa-play-circle mr-2"></i>
+                                    <span data-i18n="video.watchResearch">Watch Research Video</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-secondary/10 dark:bg-secondary/20 rounded-lg flex items-center justify-center mr-4 mt-1 flex-shrink-0">
+                                <i class="fa fa-rocket text-secondary"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg mb-1" data-i18n="video.overviewTitle">Complete Overview</h3>
+                                <p class="text-gray-600 dark:text-gray-300 mb-3" data-i18n="video.overviewDesc">Get a comprehensive look at all TyloAI features and capabilities.</p>
+                                <button class="video-selector px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg transition-colors" data-video="overview">
+                                    <i class="fa fa-play-circle mr-2"></i>
+                                    <span data-i18n="video.watchOverview">Watch Overview Video</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <h3>Smart Conversation</h3>
-                    <p>Supports natural language understanding with fluid multi-turn conversations, enabling AI to truly understand your needs</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-brain"></i>
+                
+                <div class="lg:w-1/2 relative w-full">
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-primary/10 dark:bg-primary/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-secondary/10 dark:bg-secondary/20 rounded-full blur-3xl"></div>
+                    <div class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <div class="aspect-video w-full">
+                            <video id="researchVideo" class="w-full h-full object-cover" controls poster="research-poster.jpg">
+                                <source src="research.mp4" type="video/mp4">
+                                <data-i18n="video.unsupported">Your browser does not support the video tag.</data-i18n>
+                            </video>
+                            <iframe id="overviewVideo" class="w-full h-full object-cover hidden" src="https://www.youtube.com/embed/rNYJhGg93F8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
                     </div>
-                    <h3>AI Memory</h3>
-                    <p>Advanced memory capabilities that can accurately analyze your characteristics and personality for personalized responses</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3>Code Assistant</h3>
-                    <p>Professional programming assistance supporting multiple programming languages, code explanation, and optimization suggestions</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-file-alt"></i>
-                    </div>
-                    <h3>Document Processing</h3>
-                    <p>Intelligent document analysis, content summarization, and format conversion to make document processing more efficient</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-chart-line"></i>
-                    </div>
-                    <h3>Data Analysis</h3>
-                    <p>Powerful data insight capabilities, chart generation, trend analysis, and decision-making support</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-language"></i>
-                    </div>
-                    <h3>Multi-language Support</h3>
-                    <p>Supports multiple global languages with real-time translation for barrier-free cross-language communication</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Statistics -->
-    <section class="stats" id="stats">
-        <div class="section">
-            <div class="section-header">
-                <h2>Trusted by Millions</h2>
-                <p>Join the growing community of TyloAI users worldwide</p>
-            </div>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <div class="stat-number">1M+</div>
-                    <div class="stat-label">Active Users</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">97.9%</div>
-                    <div class="stat-label">Uptime</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Countries</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">Support</div>
-                </div>
-            </div>
-        </div>
-    </section>
+        <script>
+        // 视频切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoSelectors = document.querySelectorAll('.video-selector');
+            const researchVideo = document.getElementById('researchVideo');
+            const overviewVideo = document.getElementById('overviewVideo');
+            
+            videoSelectors.forEach(selector => {
+                selector.addEventListener('click', function() {
+                    // 更新按钮样式
+                    videoSelectors.forEach(btn => {
+                        btn.classList.remove('bg-primary/10', 'hover:bg-primary/20', 'text-primary');
+                        btn.classList.add('bg-gray-200', 'dark:bg-gray-700', 'hover:bg-gray-300', 'dark:hover:bg-gray-600');
+                    });
+                    
+                    this.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'hover:bg-gray-300', 'dark:hover:bg-gray-600');
+                    this.classList.add('bg-primary/10', 'hover:bg-primary/20', 'text-primary');
+                    
+                    // 切换视频
+                    const videoType = this.getAttribute('data-video');
+                    if (videoType === 'research') {
+                        researchVideo.classList.remove('hidden');
+                        overviewVideo.classList.add('hidden');
+                        // 尝试播放研究视频
+                        researchVideo.play().catch(e => console.log('Auto-play prevented:', e));
+                    } else {
+                        researchVideo.classList.add('hidden');
+                        overviewVideo.classList.remove('hidden');
+                    }
+                });
+            });
+        });
+        </script>
 
-    <!-- Call-to-action section -->
-    <section class="cta-section">
-        <div class="cta-container">
-            <h2>Ready to Experience TyloAI's Powerful Features?</h2>
-            <p>Register now to unlock more premium features and enjoy personalized AI service experience</p>
-            <div class="cta-buttons">
-                <a href="login.html" class="cta-button primary">Login Now</a>
-                <a href="chat-guest.html" class="cta-button secondary">Guest Mode</a>
-            </div>
-            <div class="cta-features">
-                <div class="cta-feature">
-                    <i class="fas fa-brain"></i>
-                    <span>AI Personalized Memory</span>
+        <!-- 行动召唤 -->
+        <section class="container mx-auto px-4 md:px-6 mb-24">
+            <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary to-secondary">
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute top-0 left-0 w-full h-full bg-[url('https://picsum.photos/id/1/1200/600')] bg-cover bg-center"></div>
                 </div>
-                <div class="cta-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Advanced Model Access</span>
-                </div>
-                <div class="cta-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Priority Response Speed</span>
-                </div>
-                <div class="cta-feature">
-                    <i class="fas fa-check-circle"></i>
-                    <span>History Preservation</span>
+                <div class="relative p-8 md:p-12 lg:p-16 text-center text-white">
+                    <h2 class="text-[clamp(1.8rem,3vw,2.5rem)] font-display font-bold mb-6" data-i18n="cta.title">Ready to experience the future of AI?</h2>
+                    <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90" data-i18n="cta.subtitle">Join thousands of users who have transformed their productivity with TyloAI.</p>
+                    <a href="login.html" class="inline-block px-10 py-4 bg-white text-primary hover:bg-gray-100 rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        <span data-i18n="cta.getStarted">Get Started for Free</span>
+                    </a>
+                    <p class="mt-6 text-sm opacity-80" data-i18n="cta.noCreditCard">No credit card required. Start with 3000 free points.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>TyloAI</h3>
-                    <p style="color: #ccc; line-height: 1.6;">
-                        Committed to providing users with the most intelligent, secure, and convenient AI service experience. We believe AI will change the world and make life better.
-                    </p>
+    <!-- 页脚 -->
+    <footer class="bg-gray-50 dark:bg-gray-900/50 py-12">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center mb-6">
+                        <img src="logo.png" alt="TyloAI Logo" class="h-8 w-auto mr-2">
+                        <span class="text-xl font-display font-bold bg-gradient-to-r from-primary to-secondary text-gradient">TyloAI</span>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6" data-i18n="footer.tagline">Power, at your command</p>
+                    <div class="flex space-x-4">
+                        <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white transition-colors">
+                            <i class="fa fa-youtube"></i>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="footer-section">
-                    <h3>Products</h3>
-                    <ul class="footer-links">
-                        <li><a href="login.html">AI Conversation</a></li>
-                        <li><a href="model.html">model</a></li>
-                        <li><a href="learn.html">Tylo Learn</a></li>
-                        <li><a href="#">API</a></li>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-6" data-i18n="footer.product">Product</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.features">Features</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.pricing">Pricing</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.pro">Pro Membership</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.plugins">Plugins</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.updates">Updates</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
-                    <h3>More</h3>
-                    <ul class="footer-links">
-                        <li><a href="news.html">News</a></li>
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="learn.html">Tylo-Learn</a></li>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-6" data-i18n="footer.company">Company</h3>
+                    <ul class="space-y-3">
+                        <li><a href="about.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.about">About Us</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.blog">Blog</a></li>
+                        <li><a href="#" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.careers">Careers</a></li>
+                        <li><a href="mailto:info@tyloai.com" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.contact">Contact</a></li>
                     </ul>
                 </div>
-                <div class="footer-section">
-                    <h3>Latest Advancements</h3>
-                    <ul class="footer-links">
-                        <li><a href="model.html">tylo-Epist-5</a></li>
-                        <li><a href="model.html">Tylo-Epist-5-Flash</a></li>
-                        <li><a href="model.html">Tylo-Research</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Privacy & Terms</h3>
-                    <ul class="footer-links">
-                        <li><a href="privacypolicy.html">Privacy Policy</a></li>
-                        <li><a href="privacypolicy.html">Terms of Service</a></li>
-                        <li><a href="privacypolicy.html">Cookie Policy</a></li>
-                        <li><a href="privacypolicy.html">Memory Guide</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-links">
-                        <li><a href="mailto:info@tyloai.com">info@tyloai.com</a></li>
-                        <li><a href="#">Online Support</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">Developer Community</a></li>
+                
+                <div>
+                    <h3 class="font-bold text-lg mb-6" data-i18n="footer.legal">Legal</h3>
+                    <ul class="space-y-3">
+                        <li><a href="privacypolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.privacy">Privacy Policy</a></li>
+                        <li><a href="privacypolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.terms">Terms of Service</a></li>
+                        <li><a href="privacypolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.cookies">Cookie Policy</a></li>
+                        <li><a href="privacypolicy.html" class="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors" data-i18n="footer.compliance">Compliance</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 TyloAI. All rights reserved.</p>
+            
+            <div class="pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 dark:text-gray-400 text-sm mb-4 md:mb-0" data-i18n="footer.copyright">© 2025 TyloAI. All rights reserved.</p>
+                <div class="flex items-center">
+                    <button id="footerThemeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors mr-4">
+                        <i class="fa fa-moon-o dark:hidden text-gray-600"></i>
+                        <i class="fa fa-sun-o hidden dark:inline text-yellow-400"></i>
+                    </button>
+                    <select id="footerLanguageSelect" class="bg-gray-200 dark:bg-gray-800 border-0 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary">
+                        <option value="en">English</option>
+                        <option value="zh">中文</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="ja">日本語</option>
+                        <option value="ko">한국어</option>
+                        <option value="ru">Русский</option>
+                        <option value="pt">Português</option>
+                        <option value="it">Italiano</option>
+                    </select>
+                </div>
             </div>
         </div>
     </footer>
-    
+
+    <!-- 多语言支持脚本 -->
     <script>
-        // Chat functionality
-        class ChatInterface {
-            constructor() {
-                this.messages = [
-                    {
-                        role: 'system',
-                        content: 'You are TyloAI, an intelligent, friendly, and professional AI assistant. You have the following characteristics:\n1. Your name is TyloAI\n2. You support multimodal interaction and can understand text, images, etc.\n3. You have contextual memory capabilities and can remember conversation history\n4. You respond to user questions in a friendly and professional manner\n5. When users ask about your identity, please introduce yourself as TyloAI\n6. You are committed to providing users with the best AI service experience\nPlease always maintain a friendly and professional attitude, and mention that you are TyloAI when appropriate.'
-                    }
-                ];
-                this.isLoading = false;
-                this.apiKey = 'sk-7feb428e748440de8414d71f045e4dcd';
-                this.apiUrl = 'https://api.deepseek.com/chat/completions';
-                this.init();
-            }
-
-            init() {
-                this.chatInput = document.getElementById('chatInput');
-                this.sendButton = document.getElementById('sendButton');
-                this.chatMessages = document.getElementById('chatMessages');
-                this.hero = document.getElementById('hero');
-
-                this.chatInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        this.sendMessage();
-                    }
-                });
-
-                this.sendButton.addEventListener('click', () => {
-                    this.sendMessage();
-                });
-
-                // Auto-focus input box
-                this.chatInput.focus();
-            }
-
-            async sendMessage() {
-                const message = this.chatInput.value.trim();
-                if (!message || this.isLoading) return;
-
-                // Switch to chat mode
-                this.hero.classList.add('chat-mode');
-
-                // Add user message
-                this.addMessage('user', message);
-                this.messages.push({ role: 'user', content: message });
-                
-                this.chatInput.value = '';
-                this.setLoading(true);
-
-                try {
-                    // Call DeepSeek API
-                    await this.callDeepSeekAPI();
-                } catch (error) {
-                    this.addMessage('ai', 'Sorry, I encountered some technical issues. Please check your network connection or try again later.');
-                    console.error('DeepSeek API Error:', error);
-                } finally {
-                    this.setLoading(false);
+        // 语言数据
+        const translations = {
+            en: {
+                login: "Login",
+                hero: {
+                    title1: "AI that",
+                    title2: "understands",
+                    title3: " deeply",
+                    subtitle: "The most powerful AI assistant with advanced capabilities, now at your command.",
+                    getStarted: "Get Started",
+                    learnMore: "Learn More",
+                    rating: "4.9/5",
+                    userReviews: "from 10,000+ happy users",
+                    sampleQuestion: "Sample Question:",
+                    question: "What is the solution to Fermat's Last Theorem?",
+                    ai1Response: "Fermat's Last Theorem states that no three positive integers...",
+                    ai2Response: "The theorem was famously proven by Andrew Wiles in 1994...",
+                    ai3Response: "The proof builds upon modern algebraic geometry and modular forms...",
+                    consensus: "Consensus Answer:",
+                    finalAnswer: "Fermat's Last Theorem, proven by Andrew Wiles in 1994, states that no three positive integers a, b, and c satisfy the equation a^n + b^n = c^n for any integer value of n greater than 2.",
+                    trustedBy: "Built with technologies from industry leaders",
+                    company1: "Microsoft",
+                    company2: "Amazon Web Services (AWS)",
+                    company3: "Google Cloud Platform",
+                    company4: "NVIDIA"
+                },
+                features: {
+                    title: "Core AI Capabilities",
+                    subtitle: "TyloAI offers a comprehensive suite of advanced AI tools to power your productivity and creativity.",
+                    multiModel: {
+                        title: "Multi-Model Support",
+                        deepSearch: "Deep Search Analysis (Grok-3)",
+                        coding: "Advanced Coding (1/140th cost of Claude-3.5)",
+                        reasoning: "Deep Reasoning (DeepSeek-R1 level)",
+                        research: "Advanced Research (Beta)"
+                    },
+                    agent: {
+                        title: "Agent Collaboration",
+                        description: "Redefining AI with collaborative intelligence:",
+                        threeAIs: "3 AI models analyzing from different perspectives",
+                        debate: "Constructive debate leading to consensus",
+                        accuracy: "99% accuracy on standard questions",
+                        math: "95.7% accuracy on complex math problems"
+                    },
+                    generation: {
+                        title: "Content Generation",
+                        images: "Image Generation (Aria model)",
+                        styles: "Style Support: Traditional Chinese • Realism • Anime • Watercolor",
+                        music: "Music Generation (Aria-music via Suno)",
+                        streaming: "Streaming conversations with real-time output"
+                    },
+                    userSystem: {
+                        title: "User System",
+                        levels: "Level system (10 levels) with experience points",
+                        points: "Daily 3000 points (50 points per conversation)",
+                        pro: "Pro membership with unlimited points",
+                        achievements: "Achievement system with rewards"
+                    },
+                    chat: {
+                        title: "Chat Features",
+                        context: "Multi-turn conversations with context memory",
+                        upload: "File uploads (images, documents, etc.)",
+                        voices: "Multiple voice styles",
+                        code: "Code execution in Canvas with visualization"
+                    },
+                    business: {
+                        title: "Business Features",
+                        payment: "WeChat Pay + Stripe integration",
+                        invite: "Invitation system with Pro rewards",
+                        codes: "Redeemable codes for points and membership",
+                        marketplace: "Plugin marketplace for developers"
+                    },
+                    seeAll: "See all 30+ features"
+                },
+                tech: {
+                    title: "Technical Excellence",
+                    subtitle: "Built with cutting-edge technology to deliver a seamless experience across all devices.",
+                    responsive: "Responsive Design",
+                    responsiveDesc: "Perfect on all devices",
+                    darkMode: "Dark Mode",
+                    darkModeDesc: "Easy theme switching",
+                    sync: "Real-time Sync",
+                    syncDesc: "Powered by Supabase",
+                    security: "Data Security",
+                    securityDesc: "Regional storage"
+                },
+                data: {
+                    title: "Smart Data Management",
+                    subtitle: "Your data is always protected, accessible, and under your control.",
+                    storage: "Regional Storage",
+                    storageDesc: "Domestic data stored in Beijing servers, overseas data in Google infrastructure.",
+                    backup: "Dual Backup",
+                    backupDesc: "Chat history stored both locally and in the cloud for maximum reliability.",
+                    export: "Data Export",
+                    exportDesc: "Export your personality cards and preferences with a single click.",
+                    dashboard: "Your Data Dashboard",
+                    storageUsage: "Storage Usage",
+                    recentActivity: "Recent Activity",
+                    documentExported: "Document exported",
+                    imageGenerated: "Image generated",
+                    dataSynced: "Data synced to cloud",
+                    savedItems: "Saved Items",
+                    chatHistory: "Chat History"
+                },
+                cta: {
+                    title: "Ready to experience the future of AI?",
+                    subtitle: "Join thousands of users who have transformed their productivity with TyloAI.",
+                    getStarted: "Get Started for Free",
+                    noCreditCard: "No credit card required. Start with 3000 free points."
+                },
+                footer: {
+                    tagline: "Power, at your command",
+                    product: "Product",
+                    features: "Features",
+                    pricing: "Pricing",
+                    pro: "Pro Membership",
+                    plugins: "Plugins",
+                    updates: "Updates",
+                    company: "Company",
+                    about: "About Us",
+                    blog: "Blog",
+                    careers: "Careers",
+                    contact: "Contact",
+                    legal: "Legal",
+                    privacy: "Privacy Policy",
+                    terms: "Terms of Service",
+                    cookies: "Cookie Policy",
+                    compliance: "Compliance",
+                    copyright: "© 2025 TyloAI. All rights reserved."
+                },
+                video: {
+                    title: "See TyloAI in Action",
+                    subtitle: "Watch our promotional videos to discover the power of TyloAI's capabilities.",
+                    researchTitle: "Research Capabilities",
+                    researchDesc: "Explore how TyloAI transforms research with advanced analysis and insights.",
+                    watchResearch: "Watch Research Video",
+                    overviewTitle: "Complete Overview",
+                    overviewDesc: "Get a comprehensive look at all TyloAI features and capabilities.",
+                    watchOverview: "Watch Overview Video",
+                    unsupported: "Your browser does not support the video tag."
+                }
+            },
+            zh: {
+                login: "登录",
+                hero: {
+                    title1: "真正的",
+                    title2: "智能AI",
+                    title3: "体验",
+                    subtitle: "最强大的AI助手，拥有先进功能，尽在您的掌控之中。",
+                    getStarted: "立即开始",
+                    learnMore: "了解更多",
+                    rating: "4.9/5",
+                    userReviews: "来自10,000+满意用户",
+                    sampleQuestion: "示例问题：",
+                    question: "费马大定理的解决方案是什么？",
+                    ai1Response: "费马大定理指出，没有三个正整数...",
+                    ai2Response: "这个定理由安德鲁·怀尔斯在1994年著名地证明...",
+                    ai3Response: "证明建立在现代代数几何和模形式之上...",
+                    consensus: "共识答案：",
+                    finalAnswer: "费马大定理由安德鲁·怀尔斯于1994年证明，指出对于任何大于2的整数n，不存在三个正整数a、b和c满足方程a^n + b^n = c^n。",
+                    trustedBy: "使用技术来自",
+                    company1: "Microsoft",
+                    company2: "NVIDIA",
+                    company3: "Google Cloud Platform",
+                    company4: "Amazon Web Services (AWS)"
+                },
+                features: {
+                    title: "核心AI功能",
+                    subtitle: "TyloAI提供全面的先进AI工具套件，提升您的生产力和创造力。",
+                    multiModel: {
+                        title: "多模型支持",
+                        deepSearch: "深度搜索剖析（Grok-3）",
+                        coding: "高级编程（Claude-3.5成本的1/140）",
+                        reasoning: "深度推理（DeepSeek-R1级别）",
+                        research: "高级研究（测试版）"
+                    },
+                    agent: {
+                        title: "智能体协作",
+                        description: "以协作智能重新定义AI：",
+                        threeAIs: "3个AI模型从不同角度分析",
+                        debate: "建设性辩论达成共识",
+                        accuracy: "标准问题99%准确率",
+                        math: "复杂数学问题95.7%准确率"
+                    },
+                    generation: {
+                        title: "内容生成",
+                        images: "图像生成（Aria模型）",
+                        styles: "支持国风、写实、二次元、水彩风格",
+                        music: "音乐生成（Aria-music基于Suno）",
+                        streaming: "流式对话实时输出"
+                    },
+                    userSystem: {
+                        title: "用户系统",
+                        levels: "等级系统（10级）与经验值",
+                        points: "每日3000积分（每次对话消耗50积分）",
+                        pro: "Pro会员享有无限积分",
+                        achievements: "成就系统与奖励"
+                    },
+                    chat: {
+                        title: "聊天功能",
+                        context: "多轮对话与上下文记忆",
+                        upload: "文件上传（图片、文档等）",
+                        voices: "多种语音风格，包括\"贴吧老哥\"",
+                        code: "Canvas标签内代码可视化运行"
+                    },
+                    business: {
+                        title: "商业功能",
+                        payment: "微信支付 + Stripe集成",
+                        invite: "邀请系统与Pro奖励",
+                        codes: "积分和会员兑换码",
+                        marketplace: "开发者插件市场"
+                    },
+                    seeAll: "查看全部30+功能"
+                },
+                tech: {
+                    title: "技术优势",
+                    subtitle: "采用尖端技术构建，在所有设备上提供无缝体验。",
+                    responsive: "响应式设计",
+                    responsiveDesc: "完美适配所有设备",
+                    darkMode: "深色模式",
+                    darkModeDesc: "轻松切换主题",
+                    sync: "实时同步",
+                    syncDesc: "由Supabase提供支持",
+                    security: "数据安全",
+                    securityDesc: "区域化存储"
+                },
+                data: {
+                    title: "智能数据管理",
+                    subtitle: "您的数据始终受到保护、可访问且由您控制。",
+                    storage: "区域存储",
+                    storageDesc: "国内数据存储在北京服务器，海外数据存储在谷歌基础设施。",
+                    backup: "双重备份",
+                    backupDesc: "聊天记录同时存储在本地和云端，确保最大可靠性。",
+                    export: "数据导出",
+                    exportDesc: "一键导出您的人格卡片和偏好设置。",
+                    dashboard: "您的数据仪表板",
+                    storageUsage: "存储使用情况",
+                    recentActivity: "最近活动",
+                    documentExported: "文档已导出",
+                    imageGenerated: "图像已生成",
+                    dataSynced: "数据已同步到云端",
+                    savedItems: "已保存项目",
+                    chatHistory: "聊天历史"
+                },
+                cta: {
+                    title: "准备好体验AI的未来了吗？",
+                    subtitle: "加入成千上万通过TyloAI改变生产力的用户行列。",
+                    getStarted: "免费开始使用",
+                    noCreditCard: "无需信用卡。初始赠送3000积分。"
+                },
+                footer: {
+                    tagline: "尽在掌控，赋能无限",
+                    product: "产品",
+                    features: "功能",
+                    pricing: "价格",
+                    pro: "Pro会员",
+                    plugins: "插件",
+                    updates: "更新",
+                    company: "公司",
+                    about: "关于我们",
+                    blog: "博客",
+                    careers: "招聘",
+                    contact: "联系我们",
+                    legal: "法律",
+                    privacy: "隐私政策",
+                    terms: "服务条款",
+                    cookies: "Cookie政策",
+                    compliance: "合规性",
+                    copyright: "© 2025 TyloAI. 保留所有权利。"
+                },
+                // 在现有的国际化配置对象中添加
+                video: {
+                    title: "亲眼见证 TyloAI 的强大",
+                    subtitle: "观看我们的宣传视频，了解 TyloAI 的强大功能。",
+                    researchTitle: "研究能力",
+                    researchDesc: "探索 TyloAI 如何通过高级分析和洞察改变研究方式。",
+                    watchResearch: "观看研究视频",
+                    overviewTitle: "完整功能概述",
+                    overviewDesc: "全面了解 TyloAI 的所有功能和能力。",
+                    watchOverview: "观看概述视频",
+                    unsupported: "您的浏览器不支持视频播放。"
                 }
             }
-
-            async callDeepSeekAPI() {
-                try {
-                    const response = await fetch(this.apiUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${this.apiKey}`
-                        },
-                        body: JSON.stringify({
-                            model: 'deepseek-chat',
-                            messages: this.messages,
-                            stream: true,
-                            max_tokens: 8192,
-                            temperature: 0.7,
-                            top_p: 0.9
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
-                    }
-
-                    // Handle streaming response
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    
-                    // Create thinking animation container
-                    const thinkingDiv = document.createElement('div');
-                    thinkingDiv.className = 'message ai';
-                    thinkingDiv.innerHTML = '<div class="thinking-container"><div class="thinking-dot"></div></div>';
-                    this.chatMessages.appendChild(thinkingDiv);
-                    this.scrollToBottom();
-
-                    // Delay creating the actual message container
-                    await new Promise(resolve => setTimeout(resolve, 500));
-
-                    // Create AI message container
-                    const messageDiv = document.createElement('div');
-                    messageDiv.className = 'message ai';
-
-                    const bubbleDiv = document.createElement('div');
-                    bubbleDiv.className = 'message-bubble';
-
-                    messageDiv.appendChild(bubbleDiv);
-
-                    // Replace thinking animation with real message
-                    thinkingDiv.replaceWith(messageDiv);
-                    this.scrollToBottom();
-
-                    let aiResponse = '';
-                    let buffer = '';
-
-                    while (true) {
-                        const { done, value } = await reader.read();
-                        if (done) break;
-
-                        buffer += decoder.decode(value, { stream: true });
-                        const lines = buffer.split('\n');
-                        buffer = lines.pop(); // Keep incomplete lines
-
-                        for (const line of lines) {
-                            if (line.trim() === '') continue;
-                            if (line.startsWith('data: ')) {
-                                const data = line.slice(6);
-                                if (data === '[DONE]') continue;
-                                
-                                try {
-                                    const json = JSON.parse(data);
-                                    const content = json.choices?.[0]?.delta?.content;
-                                    if (content) {
-                                        aiResponse += content;
-                                        bubbleDiv.textContent = aiResponse;
-                                        this.scrollToBottom();
-                                    }
-                                } catch (e) {
-                                    console.warn('JSON parsing failed:', e);
-                                }
-                            }
-                        }
-                    }
-
-                    // Remove typing indicator
-                    // Show completion animation
-                    const checkDiv = document.createElement('div');
-                    checkDiv.className = 'thinking-container';
-                    checkDiv.innerHTML = '<div class="complete-check"></div>';
-                    messageDiv.insertBefore(checkDiv, bubbleDiv);
-
-                    // Hide checkmark after 1 second
-                    setTimeout(() => {
-                        checkDiv.style.display = 'none';
-                    }, 1000);
-                    bubbleDiv.classList.remove('typing-indicator');
-                    
-                    // Process Markdown format
-                    if (aiResponse) {
-                        bubbleDiv.innerHTML = this.formatMarkdown(aiResponse);
-                        this.messages.push({ role: 'assistant', content: aiResponse });
-                    }
-
-                } catch (error) {
-                    console.error('DeepSeek API call failed:', error);
-                    throw error;
-                }
-            }
-
-            addMessage(sender, text) {
-                const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${sender}`;
-                
-                const bubbleDiv = document.createElement('div');
-                bubbleDiv.className = 'message-bubble';
-                bubbleDiv.textContent = text;
-                
-                messageDiv.appendChild(bubbleDiv);
-                this.chatMessages.appendChild(messageDiv);
-                this.scrollToBottom();
-            }
-
-            setLoading(loading) {
-                this.isLoading = loading;
-                this.sendButton.disabled = loading;
-                
-                if (loading) {
-                    this.sendButton.innerHTML = '<div class="loading"></div>';
-                } else {
-                    this.sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
-                }
-            }
-
-            scrollToBottom() {
-                this.chatMessages.scrollTop = this.chatMessages.scrollHeight;
-            }
-
-            // Markdown formatting function
-            formatMarkdown(text) {
-                // Escape HTML
-                text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-                
-                // Code block processing
-                text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-                    const language = lang || 'text';
-                    return `<pre><div class="code-header">${language}</div><code>${code.trim()}</code></pre>`;
-                });
-                
-                // Inline code
-                text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-                
-                // Headers
-                text = text.replace(/^### (.*$)/gm, '<h3>$1</h3>');
-                text = text.replace(/^## (.*$)/gm, '<h2>$1</h2>');
-                text = text.replace(/^# (.*$)/gm, '<h1>$1</h1>');
-                
-                // Bold and italic
-                text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-                text = text.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-                
-                // Horizontal rule
-                text = text.replace(/^---$/gm, '<hr>');
-                
-                // Blockquotes
-                text = text.replace(/^> (.*)$/gm, '<blockquote>$1</blockquote>');
-                
-                // Unordered lists
-                text = text.replace(/^\* (.*)$/gm, '<li>$1</li>');
-                text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-                
-                // Ordered lists
-                text = text.replace(/^\d+\. (.*)$/gm, '<li>$1</li>');
-                
-                // Table processing (simple table format)
-                const tableRegex = /(\|[^|\n]+\|[^|\n]*\n)+/g;
-                text = text.replace(tableRegex, (match) => {
-                    const rows = match.trim().split('\n');
-                    let tableHTML = '<table>';
-                    
-                    rows.forEach((row, index) => {
-                        const cells = row.split('|').filter(cell => cell.trim());
-                        const tag = index === 0 ? 'th' : 'td';
-                        
-                        if (index === 1 && row.includes('---')) return; // Skip separator row
-                        
-                        tableHTML += '<tr>';
-                        cells.forEach(cell => {
-                            tableHTML += `<${tag}>${cell.trim()}</${tag}>`;
-                        });
-                        tableHTML += '</tr>';
-                    });
-                    
-                    tableHTML += '</table>';
-                    return tableHTML;
-                });
-                
-                // Paragraph processing
-                text = text.replace(/\n\n/g, '</p><p>');
-                text = '<p>' + text + '</p>';
-                
-                // Clean up empty paragraphs
-                text = text.replace(/<p><\/p>/g, '');
-                text = text.replace(/<p>\s*<\/p>/g, '');
-                
-                return text;
-            }
-        }
-
-        // Initialize chat interface
-        document.addEventListener('DOMContentLoaded', () => {
-            new ChatInterface();
-        });
-
-        // Navigation bar scroll effect
-        window.addEventListener('scroll', () => {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 100) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = 'none';
-            }
-        });
-
-        // Smooth scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Statistics number animation
-        const observerOptions = {
-            threshold: 0.5,
-            rootMargin: '0px 0px -100px 0px'
+            // 可以继续添加其他8种语言的翻译
         };
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const statNumbers = entry.target.querySelectorAll('.stat-number');
-                    statNumbers.forEach(stat => {
-                        animateNumber(stat);
-                    });
+        // 初始化语言
+        function initLanguage() {
+            const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+            setLanguage(savedLang);
+            
+            // 设置下拉菜单选中状态
+            document.querySelectorAll('.language-option').forEach(option => {
+                if (option.getAttribute('data-lang') === savedLang) {
+                    document.getElementById('currentLanguage').textContent = option.textContent;
+                    document.getElementById('footerLanguageSelect').value = savedLang;
                 }
             });
-        }, observerOptions);
-
-        const statsSection = document.querySelector('.stats');
-        if (statsSection) {
-            observer.observe(statsSection);
         }
 
-        function animateNumber(element) {
-            const text = element.textContent;
-            const number = parseInt(text.replace(/[^\d]/g, ''));
-            const suffix = text.replace(/[\d]/g, '');
+        // 设置语言
+        function setLanguage(lang) {
+            if (!translations[lang]) return;
             
-            if (isNaN(number)) return;
-            
-            let current = 0;
-            const increment = number / 100;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= number) {
-                    current = number;
-                    clearInterval(timer);
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(element => {
+                const keys = element.getAttribute('data-i18n').split('.');
+                let value = translations[lang];
+                
+                for (const key of keys) {
+                    if (value[key] === undefined) {
+                        value = null;
+                        break;
+                    }
+                    value = value[key];
                 }
-                element.textContent = Math.floor(current) + suffix;
-            }, 20);
+                
+                if (value !== null) {
+                    element.textContent = value;
+                }
+            });
+            
+            localStorage.setItem('selectedLanguage', lang);
+            document.getElementById('currentLanguage').textContent = 
+                document.querySelector(`.language-option[data-lang="${lang}"]`).textContent;
+            document.getElementById('footerLanguageSelect').value = lang;
         }
+
+        // 主题切换
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            setTheme(savedTheme);
+        }
+
+        function setTheme(theme) {
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.setItem('theme', theme);
+        }
+
+        // 导航栏滚动效果
+        function handleNavbarScroll() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur', 'shadow-md');
+                navbar.classList.remove('py-4');
+                navbar.classList.add('py-2');
+            } else {
+                navbar.classList.remove('bg-white/90', 'dark:bg-gray-900/90', 'backdrop-blur', 'shadow-md');
+                navbar.classList.remove('py-2');
+                navbar.classList.add('py-4');
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            // 初始化语言和主题
+            initLanguage();
+            initTheme();
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', handleNavbarScroll);
+            handleNavbarScroll(); // 初始检查
+            
+            // 语言切换事件
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const lang = option.getAttribute('data-lang');
+                    setLanguage(lang);
+                });
+            });
+            
+            document.getElementById('footerLanguageSelect').addEventListener('change', (e) => {
+                setLanguage(e.target.value);
+            });
+            
+            // 主题切换事件
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                setTheme(currentTheme === 'light' ? 'dark' : 'light');
+            });
+            
+            document.getElementById('footerThemeToggle').addEventListener('click', () => {
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                setTheme(currentTheme === 'light' ? 'dark' : 'light');
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 添加元素动画
+            const animateOnScroll = () => {
+                const elements = document.querySelectorAll('.card-hover');
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('animate-fade-in');
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // 初始检查
+        });
     </script>
 </body>
 </html>

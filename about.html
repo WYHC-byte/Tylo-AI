@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us | TyloAI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2A4365',
+            secondary: '#EDF2F7',
+            accent: '#90CDF4',
+            dark: '#1A202C',
+            light: '#FFFFFF'
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: 
+          linear-gradient(to right, rgba(42, 67, 101, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(42, 67, 101, 0.05) 1px, transparent 1px);
+      }
+    }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-inter bg-light text-dark antialiased">
+  <!-- Header/Navigation -->
+  <header class="fixed w-full top-0 z-50 transition-all duration-300" id="navbar">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <a href="#" class="text-2xl font-semibold tracking-tight flex items-center">
+          <span class="text-primary">Tylo</span><span class="text-accent">AI</span>
+        </a>
+        <nav class="hidden md:flex space-x-8">
+          <a href="#" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Home</a>
+          <a href="#" class="text-sm uppercase tracking-widest text-primary font-medium">About</a>
+          <a href="#" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Services</a>
+          <a href="#" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Work</a>
+          <a href="#" class="text-sm uppercase tracking-widest hover:text-primary transition-colors">Contact</a>
+        </nav>
+        <button class="md:hidden text-xl" id="menu-toggle">
+          <i class="fa fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div class="md:hidden hidden bg-white border-t border-gray-100 shadow-lg" id="mobile-menu">
+      <div class="container mx-auto px-4 py-4 space-y-4">
+        <a href="#" class="block text-sm uppercase tracking-widest hover:text-primary transition-colors">Home</a>
+        <a href="#" class="block text-sm uppercase tracking-widest text-primary font-medium">About</a>
+        <a href="#" class="block text-sm uppercase tracking-widest hover:text-primary transition-colors">Services</a>
+        <a href="#" class="block text-sm uppercase tracking-widest hover:text-primary transition-colors">Work</a>
+        <a href="#" class="block text-sm uppercase tracking-widest hover:text-primary transition-colors">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 md:pt-40 md:pb-32 bg-grid">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-light leading-tight mb-8">
+            Redefining Possibilities <br class="hidden sm:block">with Artificial Intelligence
+          </h1>
+          <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-600 leading-relaxed mb-12 max-w-2xl mx-auto">
+            Founded in 2025, we're a team of AI specialists, engineers, and designers creating intelligent solutions that transform businesses.
+          </p>
+          <a href="#story" class="inline-block bg-primary text-white px-8 py-3 text-sm uppercase tracking-widest hover:bg-primary/90 transition-colors">
+            Our Story
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section id="story" class="py-20">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div class="order-2 md:order-1">
+            <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-light mb-6">Our Story</h2>
+            <p class="text-gray-700 mb-6 leading-relaxed">
+              TyloAI was founded in 2025 by a group of AI researchers and engineers with a shared vision: to make artificial intelligence accessible, ethical, and transformative for businesses of all sizes.
+            </p>
+            <p class="text-gray-700 mb-6 leading-relaxed">
+              We recognized that while AI technology was advancing rapidly, many organizations struggled to implement it effectively. Our mission became to bridge this gap by providing tailored AI solutions that solve real business problems.
+            </p>
+            <p class="text-gray-700 leading-relaxed">
+              From our humble beginnings in a small tech incubator, we've grown into a diverse team of specialists united by our passion for AI innovation and our commitment to delivering measurable results for our clients.
+            </p>
+          </div>
+          <div class="order-1 md:order-2 relative">
+            <div class="relative z-10 rounded-lg overflow-hidden shadow-xl transform hover:scale-[1.02] transition-transform duration-500">
+              <img src="https://picsum.photos/id/1/800/1000" alt="TyloAI team collaborating" class="w-full h-auto">
+            </div>
+            <div class="absolute top-8 -right-8 w-64 h-64 bg-accent/20 rounded-full -z-10"></div>
+            <div class="absolute -bottom-8 -left-8 w-48 h-48 bg-primary/10 rounded-full -z-10"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="py-20 bg-secondary">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <!-- Mission -->
+          <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+              <i class="fa fa-compass text-primary text-xl"></i>
+            </div>
+            <h3 class="text-2xl font-light mb-4">Our Mission</h3>
+            <p class="text-gray-700 leading-relaxed">
+              To empower organizations through responsible AI innovation, delivering solutions that enhance efficiency, drive growth, and create new possibilities for the future.
+            </p>
+          </div>
+          
+          <!-- Vision -->
+          <div class="bg-white p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-6">
+              <i class="fa fa-lightbulb-o text-primary text-xl"></i>
+            </div>
+            <h3 class="text-2xl font-light mb-4">Our Vision</h3>
+            <p class="text-gray-700 leading-relaxed">
+              To be at the forefront of AI advancement, shaping a future where artificial intelligence augments human potential and creates sustainable, equitable technological progress.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values -->
+    <section class="py-20">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-light mb-4">Our Core Values</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">The principles that guide everything we do at TyloAI.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Value 1 -->
+          <div class="text-center group">
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+              <i class="fa fa-code text-primary text-2xl group-hover:text-white transition-colors"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Innovation</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Constantly pushing boundaries to develop cutting-edge AI solutions.
+            </p>
+          </div>
+          
+          <!-- Value 2 -->
+          <div class="text-center group">
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+              <i class="fa fa-balance-scale text-primary text-2xl group-hover:text-white transition-colors"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Ethics</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Prioritizing responsible AI development and usage in all our work.
+            </p>
+          </div>
+          
+          <!-- Value 3 -->
+          <div class="text-center group">
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+              <i class="fa fa-users text-primary text-2xl group-hover:text-white transition-colors"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Collaboration</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Working closely with clients to understand needs and deliver solutions.
+            </p>
+          </div>
+          
+          <!-- Value 4 -->
+          <div class="text-center group">
+            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+              <i class="fa fa-check-circle text-primary text-2xl group-hover:text-white transition-colors"></i>
+            </div>
+            <h3 class="text-xl font-medium mb-3">Excellence</h3>
+            <p class="text-gray-600 leading-relaxed">
+              Striving for the highest quality in every project and interaction.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="py-20 bg-secondary">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-light mb-4">Our Team</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">Meet the talented individuals behind TyloAI's innovative solutions.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Team Member 1 -->
+          <div class="bg-white rounded-lg overflow-hidden shadow-sm group">
+            <div class="relative overflow-hidden">
+              <img src="https://picsum.photos/id/1005/400/500" alt="Alex Morgan, CEO & Founder" class="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-twitter"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-github"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-medium mb-1">Alex Morgan</h3>
+              <p class="text-primary text-sm mb-3">CEO & Founder</p>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Former AI researcher with 10+ years experience in machine learning and neural networks.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Team Member 2 -->
+          <div class="bg-white rounded-lg overflow-hidden shadow-sm group">
+            <div class="relative overflow-hidden">
+              <img src="https://picsum.photos/id/1011/400/500" alt="Sarah Chen, CTO" class="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-twitter"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-github"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-medium mb-1">Sarah Chen</h3>
+              <p class="text-primary text-sm mb-3">CTO</p>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Software architect specializing in scalable AI systems and cloud infrastructure.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Team Member 3 -->
+          <div class="bg-white rounded-lg overflow-hidden shadow-sm group">
+            <div class="relative overflow-hidden">
+              <img src="https://picsum.photos/id/1012/400/500" alt="David Rodriguez, Lead Data Scientist" class="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-twitter"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-github"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-medium mb-1">David Rodriguez</h3>
+              <p class="text-primary text-sm mb-3">Lead Data Scientist</p>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Expert in natural language processing and predictive analytics models.
+              </p>
+            </div>
+          </div>
+          
+          <!-- Team Member 4 -->
+          <div class="bg-white rounded-lg overflow-hidden shadow-sm group">
+            <div class="relative overflow-hidden">
+              <img src="https://picsum.photos/id/1027/400/500" alt="Maya Johnson, UX/AI Designer" class="w-full h-80 object-cover object-center group-hover:scale-105 transition-transform duration-500">
+              <div class="absolute inset-0 bg-primary/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4">
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-linkedin"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-twitter"></i>
+                </a>
+                <a href="#" class="text-white hover:text-accent transition-colors">
+                  <i class="fa fa-dribbble"></i>
+                </a>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-medium mb-1">Maya Johnson</h3>
+              <p class="text-primary text-sm mb-3">UX/AI Designer</p>
+              <p class="text-gray-600 text-sm leading-relaxed">
+                Specializes in creating intuitive interfaces for complex AI systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Technologies -->
+    <section class="py-20">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-light mb-4">Our Expertise</h2>
+          <p class="text-gray-600 max-w-2xl mx-auto">The technologies and domains where we excel.</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+          <div class="bg-secondary rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+            <i class="fa fa-brain text-primary text-3xl mb-4"></i>
+            <h3 class="text-sm font-medium">Machine Learning</h3>
+          </div>
+          <div class="bg-secondary rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+            <i class="fa fa-comments text-primary text-3xl mb-4"></i>
+            <h3 class="text-sm font-medium">NLP</h3>
+          </div>
+          <div class="bg-secondary rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+            <i class="fa fa-eye text-primary text-3xl mb-4"></i>
+            <h3 class="text-sm font-medium">Computer Vision</h3>
+          </div>
+          <div class="bg-secondary rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+            <i class="fa fa-robot text-primary text-3xl mb-4"></i>
+            <h3 class="text-sm font-medium">Robotics</h3>
+          </div>
+          <div class="bg-secondary rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+            <i class="fa fa-chart-line text-primary text-3xl mb-4"></i>
+            <h3 class="text-sm font-medium">Predictive Analytics</h3>
+          </div>
+          <div class="bg-secondary rounded-lg p-6 text-center hover:shadow-md transition-shadow">
+            <i class="fa fa-shield text-primary text-3xl mb-4"></i>
+            <h3 class="text-sm font-medium">AI Ethics</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-20 bg-primary text-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-[clamp(1.5rem,3vw,2.5rem)] font-light mb-6">Ready to Transform Your Business with AI?</h2>
+        <p class="max-w-2xl mx-auto mb-10 text-white/80 leading-relaxed">
+          Let's discuss how TyloAI can help you leverage artificial intelligence to drive growth, enhance efficiency, and create new opportunities.
+        </p>
+        <a href="#" class="inline-block bg-white text-primary px-8 py-3 text-sm uppercase tracking-widest hover:bg-accent hover:text-primary transition-colors">
+          Get in Touch
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-12 bg-dark text-white/80">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div class="md:col-span-1">
+          <a href="#" class="text-2xl font-semibold tracking-tight flex items-center mb-4">
+            <span class="text-white">Tylo</span><span class="text-accent">AI</span>
+          </a>
+          <p class="text-sm mb-6">
+            Empowering businesses through responsible AI innovation since 2025.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" class="text-white/60 hover:text-accent transition-colors">
+              <i class="fa fa-twitter"></i>
+            </a>
+            <a href="#" class="text-white/60 hover:text-accent transition-colors">
+              <i class="fa fa-linkedin"></i>
+            </a>
+            <a href="#" class="text-white/60 hover:text-accent transition-colors">
+              <i class="fa fa-github"></i>
+            </a>
+            <a href="#" class="text-white/60 hover:text-accent transition-colors">
+              <i class="fa fa-medium"></i>
+            </a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="text-white text-sm uppercase tracking-wider mb-4">Company</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-accent transition-colors">About Us</a></li>
+            <li><a href="#" class="hover:text-accent transition-colors">Team</a></li>
+            <li><a href="#" class="hover:text-accent transition-colors">Careers</a></li>
+            <li><a href="#" class="hover:text-accent transition-colors">Blog</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-white text-sm uppercase tracking-wider mb-4">Services</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a href="#" class="hover:text-accent transition-colors">AI Consulting</a></li>
+            <li><a href="#" class="hover:text-accent transition-colors">Custom Solutions</a></li>
+            <li><a href="#" class="hover:text-accent transition-colors">Implementation</a></li>
+            <li><a href="#" class="hover:text-accent transition-colors">Training</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="text-white text-sm uppercase tracking-wider mb-4">Contact</h4>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-start">
+              <i class="fa fa-map-marker mt-1 mr-3 text-accent"></i>
+              <span>123 Innovation Way, San Francisco, CA 94103</span>
+            </li>
+            <li class="flex items-center">
+              <i class="fa fa-envelope mr-3 text-accent"></i>
+              <a href="mailto:hello@tyloai.com" class="hover:text-accent transition-colors">hello@tyloai.com</a>
+            </li>
+            <li class="flex items-center">
+              <i class="fa fa-phone mr-3 text-accent"></i>
+              <a href="tel:+15551234567" class="hover:text-accent transition-colors">+1 (555) 123-4567</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-white/10 mt-12 pt-8 text-sm text-center">
+        <p>&copy; 2025 TyloAI. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) {
+        navbar.classList.add('bg-white', 'shadow-md');
+      } else {
+        navbar.classList.remove('bg-white', 'shadow-md');
+      }
+    });
+
+    // Mobile menu toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      menuToggle.innerHTML = mobileMenu.classList.contains('hidden') 
+        ? '<i class="fa fa-bars"></i>' 
+        : '<i class="fa fa-times"></i>';
+    });
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            menuToggle.innerHTML = '<i class="fa fa-bars"></i>';
+          }
+        }
+      });
+    });
+
+    // Reveal animations on scroll
+    const revealElements = document.querySelectorAll('section > div > div');
+    
+    const revealOnScroll = function() {
+      for (let i = 0; i < revealElements.length; i++) {
+        const windowHeight = window.innerHeight;
+        const elementTop = revealElements[i].getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          revealElements[i].classList.add('opacity-100', 'translate-y-0');
+          revealElements[i].classList.remove('opacity-0', 'translate-y-10');
+        }
+      }
+    };
+    
+    // Set initial state
+    revealElements.forEach(el => {
+      el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+    });
+    
+    window.addEventListener('scroll', revealOnScroll);
+    revealOnScroll(); // Check on page load
+  </script>
+</body>
+</html>
+    
