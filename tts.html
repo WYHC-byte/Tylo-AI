@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI - Voice Assistant</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8f8f8;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Settings Icon */
+        .settings-icon {
+            position: absolute;
+            top: 40px;
+            right: 40px;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .settings-icon:hover {
+            color: #666;
+            transform: rotate(90deg);
+        }
+
+        /* Main Container */
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Voice Circle */
+        .voice-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #e6f3ff 0%, #4da6ff 40%, #0066cc 100%);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 20px 60px rgba(77, 166, 255, 0.3),
+                0 8px 20px rgba(77, 166, 255, 0.2);
+            margin-bottom: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-circle:hover {
+            transform: scale(1.02);
+        }
+
+        .voice-circle.idle {
+            background: radial-gradient(circle at 30% 30%, #e6f3ff 0%, #4da6ff 40%, #0066cc 100%);
+        }
+
+        .voice-circle.listening {
+            background: radial-gradient(circle at 30% 30%, #ffe6f0 0%, #ff66b3 40%, #cc0066 100%);
+            animation: listening-pulse 0.8s ease-in-out infinite;
+        }
+
+        .voice-circle.speaking {
+            background: radial-gradient(circle at 30% 30%, #e6ffe6 0%, #66ff66 40%, #00cc00 100%);
+            animation: speaking-wave 0.6s ease-in-out infinite;
+        }
+
+        .voice-circle.thinking {
+            background: radial-gradient(circle at 30% 30%, #fff0e6 0%, #ffaa66 40%, #cc6600 100%);
+            animation: thinking-spin 1s linear infinite;
+        }
+
+        /* Circle Icon */
+        .circle-icon {
+            font-size: 80px;
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        /* Push to Talk Button */
+        .ptt-button {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #ff4757;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            transition: all 0.2s ease;
+            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.3);
+            user-select: none;
+        }
+
+        .ptt-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 71, 87, 0.4);
+        }
+
+        .ptt-button:active,
+        .ptt-button.active {
+            background: #ff3838;
+            transform: scale(0.95);
+            box-shadow: 0 5px 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .ptt-text {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #666;
+            white-space: nowrap;
+        }
+
+        @keyframes listening-pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 
+                    0 20px 60px rgba(255, 102, 179, 0.4),
+                    0 8px 20px rgba(255, 102, 179, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 
+                    0 30px 90px rgba(255, 102, 179, 0.6),
+                    0 15px 40px rgba(255, 102, 179, 0.5);
+            }
+        }
+
+        @keyframes speaking-wave {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes thinking-spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Control Buttons Container */
+        .controls {
+            display: flex;
+            gap: 60px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Control Button Base */
+        .control-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .control-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        /* Mute Button */
+        .mute-btn {
+            background: #ffe6e6;
+            color: #ff4d4d;
+            box-shadow: 
+                0 8px 25px rgba(255, 77, 77, 0.2),
+                0 3px 10px rgba(255, 77, 77, 0.1);
+        }
+
+        .mute-btn:hover {
+            background: #ffcccc;
+            box-shadow: 
+                0 15px 40px rgba(255, 77, 77, 0.3),
+                0 8px 20px rgba(255, 77, 77, 0.2);
+        }
+
+        .mute-btn.muted {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        /* Cancel Button */
+        .cancel-btn {
+            background: #f0f0f0;
+            color: #666;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .cancel-btn:hover {
+            background: #e6e6e6;
+            color: #333;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.15),
+                0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Status Display */
+        .status-display {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .status-text {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            font-size: 16px;
+            color: #333;
+            line-height: 1.5;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #f0f0f0;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-text.active {
+            border-color: #4da6ff;
+            box-shadow: 0 15px 40px rgba(77, 166, 255, 0.2);
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            z-index: 10;
+        }
+
+        .language-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #e0e0e0;
+            color: #666;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            border-color: #4da6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(77, 166, 255, 0.2);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 8px;
+            display: none;
+            min-width: 160px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .language-dropdown.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .language-option {
+            padding: 12px 16px;
+            color: #666;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .language-option:hover {
+            background: #f8f9fa;
+            color: #4da6ff;
+        }
+
+        .language-option.active {
+            background: #4da6ff;
+            color: white;
+        }
+
+        /* Audio Visualizer */
+        .audio-visualizer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .audio-visualizer.show {
+            display: flex;
+        }
+
+        .audio-bar {
+            width: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+            animation: audioWave 0.6s ease-in-out infinite;
+        }
+
+        .audio-bar:nth-child(1) { height: 20px; animation-delay: 0s; }
+        .audio-bar:nth-child(2) { height: 35px; animation-delay: 0.1s; }
+        .audio-bar:nth-child(3) { height: 25px; animation-delay: 0.2s; }
+        .audio-bar:nth-child(4) { height: 40px; animation-delay: 0.3s; }
+        .audio-bar:nth-child(5) { height: 30px; animation-delay: 0.4s; }
+
+        @keyframes audioWave {
+            0%, 100% {
+                transform: scaleY(0.3);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scaleY(1.5);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .voice-circle {
+                width: 250px;
+                height: 250px;
+                margin-bottom: 60px;
+            }
+
+            .circle-icon {
+                font-size: 60px;
+            }
+
+            .control-btn {
+                width: 70px;
+                height: 70px;
+                font-size: 28px;
+            }
+
+            .controls {
+                gap: 40px;
+            }
+
+            .ptt-button {
+                width: 100px;
+                height: 100px;
+                font-size: 35px;
+            }
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-icon" id="settingsIcon">
+        <i class="fas fa-cog"></i>
+    </div>
+
+    <div class="language-selector">
+        <button class="language-btn" id="languageBtn">
+            <i class="fas fa-globe"></i>
+            <span id="currentLang">中文</span>
+            <i class="fas fa-chevron-down"></i>
+        </button>
+        <div class="language-dropdown" id="languageDropdown">
+            <div class="language-option active" data-lang="zh-CN" data-name="中文">
+                <i class="fas fa-flag"></i> 中文
+            </div>
+            <div class="language-option" data-lang="en-US" data-name="English">
+                <i class="fas fa-flag-usa"></i> English
+            </div>
+            <div class="language-option" data-lang="ja-JP" data-name="日本語">
+                <i class="fas fa-flag"></i> 日本語
+            </div>
+            <div class="language-option" data-lang="ko-KR" data-name="한국어">
+                <i class="fas fa-flag"></i> 한국어
+            </div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="voice-circle idle" id="voiceCircle">
+            <i class="fas fa-comments circle-icon" id="circleIcon"></i>
+            <div class="audio-visualizer" id="audioVisualizer">
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+                <div class="audio-bar"></div>
+            </div>
+            
+            <!-- Push to Talk Button -->
+            <div class="ptt-button" id="pttButton">
+                <i class="fas fa-microphone"></i>
+                <div class="ptt-text">按住说话</div>
+            </div>
+        </div>
+        
+        <div class="status-display">
+            <div class="status-text" id="statusText">按住红色按钮开始说话</div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn mute-btn" id="muteBtn" title="静音">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="control-btn cancel-btn" id="cancelBtn" title="结束通话">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="instructions">
+        按住红色按钮说话，松开发送 • 像对讲机一样简单
+    </div>
+
+    <script>
+        class UltraFastTyloAI {
+            constructor() {
+                this.isActive = false;
+                this.isMuted = false;
+                this.isListening = false;
+                this.isSpeaking = false;
+                this.isThinking = false;
+                this.currentLanguage = 'zh-CN';
+                this.recognition = null;
+                this.synthesis = window.speechSynthesis;
+                this.conversationHistory = [];
+                this.isPressed = false;
+                this.audioContext = null;
+                this.mediaRecorder = null;
+                this.audioChunks = [];
+                
+                // API Configuration - 使用更快的模型
+                this.apiKey = 'sk-7feb428e748440de8414d71f045e4dcd';
+                this.apiUrl = 'https://api.deepseek.com/v1/chat/completions';
+                
+                this.languages = {
+                    'zh-CN': {
+                        greeting: "你好！我是TyloAI",
+                        ready: "按住红色按钮开始说话",
+                        listening: "正在聆听...",
+                        thinking: "思考中...",
+                        speaking: "回复中...",
+                        release: "松开发送",
+                        systemPrompt: "你是TyloAI助手。用20字以内简洁回答，语调自然友好。"
+                    },
+                    'en-US': {
+                        greeting: "Hi! I'm TyloAI",
+                        ready: "Hold red button to speak",
+                        listening: "Listening...",
+                        thinking: "Thinking...",
+                        speaking: "Responding...",
+                        release: "Release to send",
+                        systemPrompt: "You are TyloAI. Reply concisely in under 20 words, natural tone."
+                    },
+                    'ja-JP': {
+                        greeting: "こんにちは！TyloAIです",
+                        ready: "赤いボタンを押して話してください",
+                        listening: "聞いています...",
+                        thinking: "考え中...",
+                        speaking: "返答中...",
+                        release: "離して送信",
+                        systemPrompt: "TyloAIです。20文字以内で簡潔に、自然な口調で返答してください。"
+                    },
+                    'ko-KR': {
+                        greeting: "안녕하세요! TyloAI입니다",
+                        ready: "빨간 버튼을 눌러 말하세요",
+                        listening: "듣고 있습니다...",
+                        thinking: "생각 중...",
+                        speaking: "답변 중...",
+                        release: "놓으면 전송",
+                        systemPrompt: "TyloAI입니다. 20자 이내로 간결하고 자연스럽게 답변하세요."
+                    }
+                };
+                
+                this.initElements();
+                this.initSpeechRecognition();
+                this.bindEvents();
+                this.updateUI();
+                this.preloadVoices();
+            }
+
+            initElements() {
+                this.voiceCircle = document.getElementById('voiceCircle');
+                this.circleIcon = document.getElementById('circleIcon');
+                this.statusText = document.getElementById('statusText');
+                this.muteBtn = document.getElementById('muteBtn');
+                this.cancelBtn = document.getElementById('cancelBtn');
+                this.audioVisualizer = document.getElementById('audioVisualizer');
+                this.languageBtn = document.getElementById('languageBtn');
+                this.languageDropdown = document.getElementById('languageDropdown');
+                this.currentLangSpan = document.getElementById('currentLang');
+                this.settingsIcon = document.getElementById('settingsIcon');
+                this.pttButton = document.getElementById('pttButton');
+            }
+
+            preloadVoices() {
+                // 预加载语音引擎
+                if (this.synthesis) {
+                    this.synthesis.getVoices();
+                    // 创建一个静音的utterance来初始化引擎
+                    const utterance = new SpeechSynthesisUtterance('');
+                    utterance.volume = 0;
+                    this.synthesis.speak(utterance);
+                }
+            }
+
+            initSpeechRecognition() {
+                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    this.recognition = new SpeechRecognition();
+                    this.recognition.lang = this.currentLanguage;
+                    this.recognition.continuous = false; // 不连续，只在按下时启动
+                    this.recognition.interimResults = true;
+                    this.recognition.maxAlternatives = 1;
+
+                    this.recognition.onstart = () => {
+                        this.isListening = true;
+                        this.updateUI();
+                    };
+
+                    this.recognition.onresult = (event) => {
+                        let transcript = '';
+                        for (let i = 0; i < event.results.length; i++) {
+                            transcript += event.results[i][0].transcript;
+                        }
+                        
+                        this.statusText.textContent = transcript;
+                        
+                        // 如果是最终结果且用户已松开按钮
+                        if (event.results[event.results.length - 1].isFinal || !this.isPressed) {
+                            if (transcript.trim()) {
+                                this.handleUserInput(transcript.trim());
+                            }
+                        }
+                    };
+
+                    this.recognition.onend = () => {
+                        this.isListening = false;
+                        this.updateUI();
+                    };
+
+                    this.recognition.onerror = (event) => {
+                        console.error('Speech recognition error:', event.error);
+                        this.isListening = false;
+                        this.updateUI();
+                    };
+                }
+            }
+
+            bindEvents() {
+                // Push to Talk 事件
+                this.pttButton.addEventListener('mousedown', (e) => this.startListening(e));
+                this.pttButton.addEventListener('mouseup', (e) => this.stopListening(e));
+                this.pttButton.addEventListener('mouseleave', (e) => this.stopListening(e));
+                
+                // 触摸事件支持
+                this.pttButton.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    this.startListening(e);
+                });
+                this.pttButton.addEventListener('touchend', (e) => {
+                    e.preventDefault();
+                    this.stopListening(e);
+                });
+
+                // 键盘事件（空格键按住说话）
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' && !this.isPressed) {
+                        e.preventDefault();
+                        this.startListening(e);
+                    }
+                });
+                document.addEventListener('keyup', (e) => {
+                    if (e.code === 'Space' && this.isPressed) {
+                        e.preventDefault();
+                        this.stopListening(e);
+                    }
+                });
+
+                this.muteBtn.addEventListener('click', () => this.toggleMute());
+                this.cancelBtn.addEventListener('click', () => this.endCall());
+                this.languageBtn.addEventListener('click', () => this.toggleLanguageDropdown());
+                this.settingsIcon.addEventListener('click', () => this.openSettings());
+                
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        this.changeLanguage(e.currentTarget.dataset.lang, e.currentTarget.dataset.name);
+                    });
+                });
+                
+                document.addEventListener('click', (e) => {
+                    if (!this.languageBtn.contains(e.target) && !this.languageDropdown.contains(e.target)) {
+                        this.languageDropdown.classList.remove('show');
+                    }
+                });
+            }
+
+            startListening(e) {
+                if (this.isPressed || this.isSpeaking || this.isThinking) return;
+                
+                this.isPressed = true;
+                this.pttButton.classList.add('active');
+                this.voiceCircle.className = 'voice-circle listening';
+                this.audioVisualizer.classList.add('show');
+                
+                const lang = this.languages[this.currentLanguage];
+                this.statusText.textContent = lang.listening;
+                this.pttButton.querySelector('.ptt-text').textContent = lang.release;
+                
+                // 立即启动语音识别
+                if (this.recognition && !this.isMuted) {
+                    this.recognition.start();
+                }
+            }
+
+            stopListening(e) {
+                if (!this.isPressed) return;
+                
+                this.isPressed = false;
+                this.pttButton.classList.remove('active');
+                this.audioVisualizer.classList.remove('show');
+                
+                const lang = this.languages[this.currentLanguage];
+                this.pttButton.querySelector('.ptt-text').textContent = lang.ready.split('按住')[1] || 'Hold to speak';
+                
+                // 停止语音识别
+                if (this.recognition && this.isListening) {
+                    this.recognition.stop();
+                }
+            }
+
+            async handleUserInput(text) {
+                if (!text.trim()) return;
+                
+                this.isThinking = true;
+                this.voiceCircle.className = 'voice-circle thinking';
+                this.statusText.textContent = `"${text}"`;
+                this.conversationHistory.push({ role: 'user', content: text });
+                this.updateUI();
+                
+                try {
+                    // 超快速API调用
+                    const response = await this.ultraFastAPICall(text);
+                    await this.handleAIResponse(response);
+                } catch (error) {
+                    console.error('API Error:', error);
+                    await this.speak("抱歉，出现了问题。");
+                }
+                
+                this.isThinking = false;
+                this.updateUI();
+            }
+
+            async ultraFastAPICall(userInput) {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+                
+                try {
+                    const messages = [
+                        { 
+                            role: 'system', 
+                            content: this.languages[this.currentLanguage].systemPrompt
+                        },
+                        { role: 'user', content: userInput }
+                    ];
+
+                    const response = await fetch(this.apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${this.apiKey}`
+                        },
+                        body: JSON.stringify({
+                            model: 'deepseek-chat',
+                            messages: messages,
+                            stream: false,
+                            temperature: 0.3, // 降低随机性以提高一致性和速度
+                            max_tokens: 50,   // 限制更少的token
+                            top_p: 0.8
+                        }),
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    return data.choices[0].message.content.trim();
+                } catch (error) {
+                    clearTimeout(timeoutId);
+                    throw error;
+                }
+            }
+
+            async handleAIResponse(responseText) {
+                this.conversationHistory.push({ role: 'assistant', content: responseText });
+                this.statusText.textContent = responseText;
+                
+                // 立即开始语音播放
+                await this.ultraFastSpeak(responseText);
+            }
+
+            async ultraFastSpeak(text) {
+                return new Promise((resolve) => {
+                    if (!this.synthesis || this.isMuted) {
+                        resolve();
+                        return;
+                    }
+
+                    this.synthesis.cancel(); // 立即取消之前的语音
+                    this.isSpeaking = true;
+                    this.voiceCircle.className = 'voice-circle speaking';
+                    this.audioVisualizer.classList.add('show');
+                    this.updateUI();
+
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = this.currentLanguage;
+                    utterance.rate = 1.3; // 更快语速
+                    utterance.pitch = 1.0;
+                    utterance.volume = 1.0;
+
+                    // 选择最快的本地语音
+                    const voices = this.synthesis.getVoices();
+                    const localVoice = voices.find(v => 
+                        v.lang.startsWith(this.currentLanguage.split('-')[0]) && 
+                        v.localService
+                    );
+                    const anyVoice = voices.find(v => 
+                        v.lang.startsWith(this.currentLanguage.split('-')[0])
+                    );
+                    
+                    utterance.voice = localVoice || anyVoice || voices[0];
+
+                    utterance.onend = () => {
+                        this.isSpeaking = false;
+                        this.voiceCircle.className = 'voice-circle idle';
+                        this.audioVisualizer.classList.remove('show');
+                        this.statusText.textContent = this.languages[this.currentLanguage].ready;
+                        this.updateUI();
+                        resolve();
+                    };
+
+                    utterance.onerror = () => {
+                        this.isSpeaking = false;
+                        this.voiceCircle.className = 'voice-circle idle';
+                        this.audioVisualizer.classList.remove('show');
+                        this.updateUI();
+                        resolve();
+                    };
+
+                    // 立即播放
+                    this.synthesis.speak(utterance);
+                });
+            }
+
+            updateUI() {
+                const lang = this.languages[this.currentLanguage];
+                
+                if (!this.isPressed && !this.isThinking && !this.isSpeaking) {
+                    this.statusText.textContent = lang.ready;
+                    this.voiceCircle.className = 'voice-circle idle';
+                }
+            }
+
+            toggleMute() {
+                this.isMuted = !this.isMuted;
+                const icon = this.muteBtn.querySelector('i');
+                
+                if (this.isMuted) {
+                    icon.className = 'fas fa-volume-mute';
+                    this.muteBtn.classList.add('muted');
+                } else {
+                    icon.className = 'fas fa-volume-up';
+                    this.muteBtn.classList.remove('muted');
+                }
+            }
+
+            endCall() {
+                if (this.recognition) {
+                    this.recognition.stop();
+                }
+                if (this.synthesis) {
+                    this.synthesis.cancel();
+                }
+                
+                setTimeout(() => {
+                    window.location.href = 'chat.html';
+                }, 300);
+            }
+
+            openSettings() {
+                alert('设置功能开发中...');
+            }
+
+            toggleLanguageDropdown() {
+                this.languageDropdown.classList.toggle('show');
+            }
+
+            changeLanguage(lang, name) {
+                this.currentLanguage = lang;
+                this.currentLangSpan.textContent = name;
+                
+                if (this.recognition) {
+                    this.recognition.lang = lang;
+                }
+                
+                // 更新按钮文本
+                const langData = this.languages[lang];
+                this.statusText.textContent = langData.ready;
+                this.pttButton.querySelector('.ptt-text').textContent = langData.ready.split('按住')[1] || langData.ready.split('Hold')[1] || 'to speak';
+                
+                // 更新说明文字
+                const instructions = document.querySelector('.instructions');
+                if (lang === 'zh-CN') {
+                    instructions.textContent = '按住红色按钮说话，松开发送 • 像对讲机一样简单';
+                } else if (lang === 'en-US') {
+                    instructions.textContent = 'Hold red button to speak, release to send • Simple as walkie-talkie';
+                } else if (lang === 'ja-JP') {
+                    instructions.textContent = '赤いボタンを押して話し、離して送信 • トランシーバーのように簡単';
+                } else if (lang === 'ko-KR') {
+                    instructions.textContent = '빨간 버튼을 눌러 말하고, 놓으면 전송 • 무전기처럼 간단';
+                }
+                
+                document.querySelectorAll('.language-option').forEach(option => {
+                    option.classList.remove('active');
+                    if (option.dataset.lang === lang) {
+                        option.classList.add('active');
+                    }
+                });
+                
+                this.languageDropdown.classList.remove('show');
+            }
+        }
+
+        // 立即初始化，不等待语音加载
+        const app = new UltraFastTyloAI();
+        
+        // 预热API连接
+        setTimeout(() => {
+            fetch('https://api.deepseek.com/v1/models', {
+                headers: {
+                    'Authorization': `Bearer ${app.apiKey}`
+                }
+            }).catch(() => {}); // 静默预热，忽略错误
+        }, 1000);
+    </script>
+</body>
+</html>

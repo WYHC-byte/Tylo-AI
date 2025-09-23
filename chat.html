@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI</title>
+    <link rel="icon" href="logo.png" type="image/png">
+	<meta name="description" content="Talk with TyloAI, Power, at your command"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <link rel="stylesheet" href="main-style.css">
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-white min-h-screen flex flex-col">
+<div id="root">
+    <!-- Debug Overlay (Ctrl+Shift+D) -->
+    <div id="debugOverlay" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden overflow-auto">
+        <div class="p-6 text-green-400 font-mono text-sm">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl">Debug Console</h2>
+                <button id="closeDebug" class="text-white hover:text-red-400">x</button>
+            </div>
+            <div id="debugContent" class="whitespace-pre-wrap"></div>
+        </div>
+    </div>
+    <!-- YouTube Announcement Popup -->
+    <div id="youtubePopup" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md mx-4 transform transition-all duration-500 scale-95 hover:scale-100 shadow-2xl">
+            <div class="text-center">
+                <div class="mb-4">
+                    <i class="fab fa-youtube text-6xl text-red-600"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-3">TyloAI YouTube Channel is Live!</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-6">
+                    Join our official YouTube channel for tutorials, updates, and exciting AI content!
+                </p>
+                <div class="flex flex-col space-y-3">
+                    <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" target="_blank" 
+                    class="bg-red-600 text-white py-3 px-6 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center">
+                        <i class="fab fa-youtube mr-2"></i>
+                        Visit Our Channel
+                    </a>
+                    <button id="dontShowToday" class="bg-gray-200 dark:bg-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                        Don't show today
+                    </button>
+                    <button id="closeYoutubePopup" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Overlay -->
+    <div id="tutorialOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4" data-translate="welcome_tutorial">Welcome to TyloAI!</h3>
+            <div id="tutorialContent">
+                <div id="tutorialStep1" class="tutorial-step">
+                    <p class="mb-4" data-translate="tutorial_step1">Let's start with a quick tour. This is your AI assistant that can help with various tasks.</p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="nextTutorialStep()" data-translate="next">Next</button>
+                </div>
+                <div id="tutorialStep2" class="tutorial-step hidden">
+                    <p class="mb-4" data-translate="tutorial_step2">You can choose different AI models and conversation styles using the dropdown menus.</p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600" onclick="nextTutorialStep()" data-translate="next">Next</button>
+                </div>
+                <div id="tutorialStep3" class="tutorial-step hidden">
+                    <p class="mb-4" data-translate="tutorial_step3">Your progress is tracked with levels and achievements. Complete the tutorial to earn 100 XP!</p>
+                    <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" onclick="completeTutorial()" data-translate="complete_tutorial">Complete Tutorial</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Overlay -->
+    <div id="canvasOverlay" class="canvas-overlay hidden">
+        <div class="canvas-container">
+            <div class="canvas-header">
+                <div class="flex items-center">
+                    <h3 id="canvasTitle" class="font-bold text-lg">Artifact Canvas</h3>
+                    <span id="canvasLanguage" class="ml-3 px-2 py-1 bg-blue-500 text-white text-xs rounded">JavaScript</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="refreshCanvas" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded">
+                        <i class="fas fa-refresh"></i>
+                    </button>
+                    <button id="copyCanvasCode" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button id="closeCanvas" class="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="canvas-tabs">
+                <div class="canvas-tab active" data-tab="preview">
+                    <i class="fas fa-eye mr-2"></i>Preview
+                </div>
+                <div class="canvas-tab" data-tab="code">
+                    <i class="fas fa-code mr-2"></i>Code
+                </div>
+            </div>
+            <div class="canvas-content">
+                <div class="canvas-main">
+                    <div id="canvasPreview" class="canvas-view">
+                        <iframe id="canvasIframe" class="canvas-iframe" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+                    </div>
+                    <div id="canvasCode" class="canvas-view hidden">
+                        <textarea id="codeEditor" class="code-editor" placeholder="Code will appear here..."></textarea>
+                    </div>
+                    <div class="canvas-console">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-400">Console</span>
+                            <button id="clearConsole" class="text-xs text-gray-400 hover:text-white">Clear</button>
+                        </div>
+                        <div id="consoleContent"></div>
+                        <div id="fixWithAI" class="hidden mt-2">
+                            <button class="bg-red-500 text-white px-3 py-1 text-xs rounded hover:bg-red-600">
+                                <i class="fas fa-magic mr-1"></i>Fix with TyloAI
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Agent View -->
+    <div id="agentView" class="agent-view hidden">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 id="agentTitle" class="text-xl font-bold">Project Title</h2>
+                    <p id="agentObjective" class="text-gray-600 dark:text-gray-400 mt-1">Project objective...</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button id="viewDebateHistory" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        <i class="fas fa-history mr-2"></i>View History
+                    </button>
+                    <button id="closeAgent" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="flex-1 p-4">
+            <div class="agent-columns">
+                <div class="agent-column">
+                    <h3 data-translate="agent_analysis">Analysis</h3>
+                    <div id="agentColumn1" class="agent-content"></div>
+                </div>
+                <div class="agent-column">
+                    <h3 data-translate="agent_synthesis">Synthesis</h3>
+                    <div id="agentColumn2" class="agent-content"></div>
+                </div>
+                <div class="agent-column">
+                    <h3 data-translate="agent_conclusion">Conclusion</h3>
+                    <div id="agentColumn3" class="agent-content"></div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                    <textarea id="agentInput" placeholder="Ask your question..." class="w-full p-2 focus:outline-none bg-transparent text-base resize-none" rows="1"></textarea>
+                    <div class="flex justify-end mt-2">
+                        <button id="agentSendButton" class="bg-black text-white dark:bg-white dark:text-black p-2 rounded-md hover:opacity-80 transition-colors">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar" class="sidebar fixed left-0 top-0 h-full w-72 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-30">
+        <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+            <h2 class="text-lg font-semibold" data-translate="chat_history">Chat History</h2>
+            <button id="closeBtn" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <button id="newChatBtn" class="w-full py-2 px-4 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center mb-4">
+                <i class="fas fa-plus mr-2"></i><span data-translate="new_chat">New Chat</span>
+            </button>
+            <button id="projectBtn" class="w-full py-2 px-4 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors flex items-center justify-center mb-4">
+                <i class="fas fa-project-diagram mr-2"></i><span data-translate="project">Project</span>
+            </button>
+            <!-- Search Box -->
+            <div class="relative mb-4">
+                <input id="searchInput" type="text" placeholder="Search chats..." data-translate-placeholder="search_chats" class="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-sm">
+                <i class="fas fa-search absolute right-3 top-2.5 text-gray-400"></i>
+            </div>
+        </div>
+        <div id="chatHistory" class="p-4 overflow-y-auto custom-scrollbar" style="max-height: calc(100vh - 300px);">
+            <div class="space-y-2">
+                <p class="text-gray-500 dark:text-gray-400 text-sm" data-translate="no_chat_history">No chat history yet</p>
+            </div>
+        </div>
+        <!-- User Panel -->
+        <div id="userPanel" class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center mr-3 relative">
+                    <img id="userAvatar" src="https://via.placeholder.com/40" alt="User" class="w-full h-full rounded-full object-cover">
+                    <div id="levelBadge" class="level-badge absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold text-white">1</div>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center">
+                        <span id="userNickname" class="font-medium">User</span>
+                        <span id="membershipStatus" class="ml-2 px-2 py-0.5 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full" data-translate="free_plan">Free Plan</span>
+                    </div>
+                    <div class="flex items-center mt-1">
+                        <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-1 mr-2">
+                            <div id="xpProgress" class="progress-bar h-1 rounded-full" style="width: 0%"></div>
+                        </div>
+                        <span id="xpText" class="text-xs text-gray-500">0/100 XP</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        <i class="fas fa-coins mr-1"></i>
+                        <span id="pointsDisplay">3000</span> <span data-translate="points">points</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-col h-screen" id="mainContent">
+        <!-- Header -->
+        <div class="flex items-center justify-between p-4">
+            <div class="flex items-center">
+                <button id="sidebarToggle" class="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md mr-2">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button id="darkModeToggle" class="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md mr-4">
+                    <i class="fas fa-moon dark:hidden"></i>
+                    <i class="fas fa-sun hidden dark:block"></i>
+                </button>
+                <div id="currentChatTitle" class="font-medium hidden"></div>
+            </div>
+            <div class="flex items-center space-x-2">
+                <!-- Points Container -->
+                <div id="pointsContainer" class="flex items-center bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-3 py-1 rounded-full shadow-lg animate-pulse">
+                    <i class="fas fa-coins mr-2"></i>
+                    <span id="headerPointsDisplay" class="font-bold">3000</span>
+                    <button id="addPointsBtn" class="ml-2 bg-white/20 hover:bg-white/30 rounded-full w-6 h-6 flex items-center justify-center transition-all transform hover:scale-110">
+                        <i class="fas fa-plus text-sm"></i>
+                    </button>
+                </div>
+                <!-- Settings Button -->
+                <button id="settingsBtn" class="text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 p-2 rounded-md">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div id="chatContainer" class="flex-grow overflow-auto p-4 custom-scrollbar">
+            <div class="max-w-4xl mx-auto">
+                <!-- Initial View -->
+                <div id="initialView" class="flex flex-col items-center justify-center" style="margin-top: 12vh;">
+                    <!-- Plan Status -->
+                    <div id="planStatus" class="mb-4 cursor-pointer" onclick="openUpgradeModal()">
+                        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                            <span id="planText" data-translate="free_plan">Free Plan</span>
+                            <span class="ml-2 text-blue-500 hover:text-blue-600" data-translate="upgrade">Upgrade</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Greeting -->
+                    <div class="text-3xl font-semibold mb-8 flex items-center text-center">
+                        <img src="logo.png" alt="TyloAI Logo" class="w-10 h-10 mr-3 rounded-full"> 
+                        <span id="timeGreeting">TyloAI is ready</span>
+                    </div>
+                    
+                    <!-- Input Area -->
+                    <div class="w-full max-w-2xl">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-4">
+                            <textarea id="userInput" placeholder="Ask TyloAI anything..." data-translate-placeholder="ask_anything" class="w-full p-2 focus:outline-none bg-transparent text-base resize-none" rows="1"></textarea>
+                            
+                            <!-- File Previews -->
+                            <div id="filePreviewContainer" class="hidden mt-3 max-h-32 overflow-y-auto">
+                            </div>
+                            
+                            <!-- AI Suggestions -->
+                            <div id="aiSuggestions" class="hidden mt-2 text-sm text-gray-500 suggestion-fade">
+                                <i class="fas fa-lightbulb mr-1"></i>
+                                <span id="suggestionText">Try asking about: "Explain quantum computing" or "Help me write an email"</span>
+                            </div>
+                            
+                            
+                            
+                            <!-- Media Generation Options -->
+                            <div id="mediaOptions" class="hidden mt-4 space-y-4">
+                                <!-- Image Options -->
+                                <div id="imageOptions" class="hidden space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2" data-translate="art_style">Art Style</label>
+                                        <div class="art-style-grid">
+                                            <div class="art-style-option selected p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="photorealistic">
+                                                <i class="fas fa-camera text-lg mb-1"></i>
+                                                <div class="text-xs">Photo</div>
+                                            </div>
+                                            <div class="art-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="digital_art">
+                                                <i class="fas fa-palette text-lg mb-1"></i>
+                                                <div class="text-xs">Digital</div>
+                                            </div>
+                                            <div class="art-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="oil_painting">
+                                                <i class="fas fa-paint-brush text-lg mb-1"></i>
+                                                <div class="text-xs">Oil Paint</div>
+                                            </div>
+                                            <div class="art-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="watercolor">
+                                                <i class="fas fa-tint text-lg mb-1"></i>
+                                                <div class="text-xs">Watercolor</div>
+                                            </div>
+                                            <div class="art-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="anime">
+                                                <i class="fas fa-star text-lg mb-1"></i>
+                                                <div class="text-xs">Anime</div>
+                                            </div>
+                                            <div class="art-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="sketch">
+                                                <i class="fas fa-pencil-alt text-lg mb-1"></i>
+                                                <div class="text-xs">Sketch</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2" data-translate="number_of_images">Number of Images</label>
+                                        <div class="flex space-x-2">
+                                            <button id="imageCount1" class="flex-1 py-2 px-3 bg-blue-500 text-white rounded-md text-sm">1 Image</button>
+                                            <button id="imageCount2" class="flex-1 py-2 px-3 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md text-sm">2 Images</button>
+                                        </div>
+                                        <div id="imageCountInfo" class="text-xs text-gray-500 mt-1" data-translate="image_limit_info">Free users: 1 generation of 2 images per day, then 1 image per generation</div>
+                                    </div>
+                                </div>
+
+                                <!-- Music Options -->
+                                <div id="musicOptions" class="hidden space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium mb-2" data-translate="music_style">Music Style</label>
+                                        <div class="art-style-grid">
+                                            <div class="music-style-option selected p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="pop">
+                                                <i class="fas fa-music text-lg mb-1"></i>
+                                                <div class="text-xs">Pop</div>
+                                            </div>
+                                            <div class="music-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="rock">
+                                                <i class="fas fa-guitar text-lg mb-1"></i>
+                                                <div class="text-xs">Rock</div>
+                                            </div>
+                                            <div class="music-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="jazz">
+                                                <i class="fas fa-saxophone text-lg mb-1"></i>
+                                                <div class="text-xs">Jazz</div>
+                                            </div>
+                                            <div class="music-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="classical">
+                                                <i class="fas fa-violin text-lg mb-1"></i>
+                                                <div class="text-xs">Classical</div>
+                                            </div>
+                                            <div class="music-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="electronic">
+                                                <i class="fas fa-headphones text-lg mb-1"></i>
+                                                <div class="text-xs">Electronic</div>
+                                            </div>
+                                            <div class="music-style-option p-3 bg-gray-50 dark:bg-gray-700 rounded-lg cursor-pointer text-center" data-style="acoustic">
+                                                <i class="fas fa-guitar text-lg mb-1"></i>
+                                                <div class="text-xs">Acoustic</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center mt-2">
+                                <div class="flex items-center space-x-2">
+                                <!-- File Upload Button -->
+                                <button id="uploadBtn" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <input type="file" id="fileInput" class="hidden" multiple accept=".txt,.pdf,.docx,.png,.jpg,.jpeg">
+                                
+                                <!-- Research Button -->
+                                <button id="researchToggle" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                    <i class="fas fa-chart-line"></i>
+                                </button>
+                                
+                                <!-- Advanced Options Button Container -->
+                                <div class="relative">
+                                    <button id="advancedOptionsBtn" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                        <i class="fas fa-ellipsis-h"></i>
+                                    </button>
+                                    <!-- å°†advancedOptionsMenuç§»åˆ°è¿™é‡Œä½œä¸ºæŒ‰é’®çš„å…„å¼Ÿå…ƒç´  -->
+                                    <div id="advancedOptionsMenu" class="dropdown-options absolute bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-2 w-48" style="top: 40px; left: 0; z-index: 1000;">
+                                        <div id="deepThinkingOption" class="dropdown-option aria-parent relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded">
+                                            <div class="flex items-center justify-between">
+                                                <span><i class="fas fa-brain mr-2"></i>Deep Thinking</span>
+                                                <i class="fas fa-chevron-right text-xs ml-2"></i>
+                                            </div>
+                                            <div class="aria-submenu" style="left: 100%; top: 0;">
+                                                <div id="normalThinkingOption" class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded">
+                                                    <i class="fas fa-lightbulb mr-2"></i>Normal Thinking (+100 pts)
+                                                </div>
+                                                <div id="postThinkingOption" class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded">
+                                                    <i class="fas fa-brain mr-2"></i>Post Thinking (5/month)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="webSearchOption" class="dropdown-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded">
+                                            <i class="fas fa-search mr-2"></i>Web Search (+100 pts)
+                                        </div>
+                                        <div class="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+                                        <div id="styleSelector" class="relative aria-parent">
+                                            <div class="dropdown-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded flex items-center justify-between">
+                                                <span><i class="fas fa-feather mr-2"></i>Style: <span id="currentStyle">Normal</span></span>
+                                                <i class="fas fa-chevron-right text-xs ml-2"></i>
+                                            </div>
+                                            <div class="aria-submenu" style="left: 100%; top: 0;">
+                                                <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-style="normal">
+                                                    Normal
+                                                </div>
+                                                <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-style="concise">
+                                                    Concise
+                                                </div>
+                                                <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-style="formal">
+                                                    Formal
+                                                </div>
+                                                <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-style="explanatory">
+                                                    Explanatory
+                                                </div>
+                                                <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-style="casual">
+                                                    Casual/Forum Style
+                                                </div>
+                                                <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-style="artistic">
+                                                    Artistic Style
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Thinking Indicators -->
+                                <div id="normalThinkingIndicator" class="hidden p-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-red-500" onclick="cancelNormalThinking()">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div id="postThinkingIndicator" class="hidden p-2 bg-purple-500 text-white rounded cursor-pointer hover:bg-red-500" onclick="cancelPostThinking()">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <!-- Style Indicator -->
+                                <div id="styleIndicator" class="hidden p-2 bg-gray-500 text-white rounded text-xs">
+                                    <span id="styleIndicatorText">Normal</span>
+                                </div>
+                                
+                                <!-- Search Indicator -->
+                                <div id="searchIndicator" class="hidden p-2 bg-green-500 text-white rounded">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                            </div>
+                                <div class="flex items-center">
+                                    <!-- Model Selector -->
+                                    <div id="modelSelector" class="relative mr-2">
+                                        <div class="dropdown-selected cursor-pointer p-2 border border-gray-300 dark:border-gray-600 rounded-lg">
+                                            <span id="modelDisplayName">Ode-6-Flash</span>
+                                            <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                        </div>
+                                        <div id="modelOptions" class="dropdown-options absolute top-full right-0 mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-2 w-56" style="z-index: 100;">
+                                            <div class="dropdown-option selected p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-value="ode-6-flash" data-cost="0">
+                                                Ode-6-Flash <span class="text-xs text-green-500">Free (Unlimited)</span>
+                                            </div>
+                                            <div class="dropdown-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-value="ode-6" data-cost="300">
+                                                Ode-6 <span class="text-xs text-blue-500">300 pts</span>
+                                            </div>
+                                            <div class="dropdown-option aria-parent relative p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded flex items-center justify-between">
+                                                <span>Aria Series <i class="fas fa-chevron-right text-xs ml-2"></i></span>
+                                                <div class="aria-submenu">
+                                                    <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-value="tylo-aria-image" data-cost="1000">
+                                                        <i class="fas fa-image mr-2"></i>Tylo-Aria-Image
+                                                        <div class="text-xs text-purple-500 mt-1">Visual (1000pts)</div>
+                                                    </div>
+                                                    <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-value="tylo-aria-video" data-cost="3000">
+                                                        <i class="fas fa-video mr-2"></i>Tylo-Aria-Video
+                                                        <div class="text-xs text-red-500 mt-1">Video (3000pts)</div>
+                                                    </div>
+                                                    <div class="dropdown-option p-3 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded" data-value="tylo-aria-music" data-cost="3000">
+                                                        <i class="fas fa-music mr-2"></i>Tylo-Aria-Music
+                                                        <div class="text-xs text-pink-500 mt-1">Music (3000pts)</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button id="sendButton" class="bg-black text-white dark:bg-white dark:text-black p-2 rounded-md hover:opacity-80 transition-colors relative">
+                                        <i id="sendIcon" class="fas fa-arrow-up"></i>
+                                        <i id="stopIcon" class="fas fa-stop hidden"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Quick Actions Section -->
+                        <div class="mt-4">
+                            <div class="flex space-x-2 mb-3">
+                                <button id="agentBtn" class="quick-action-button px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:border-blue-500 hover:text-blue-500 transition-colors relative">
+                                    Agent - Multimodal Collaboration
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs px-1 rounded">New</span>
+                                </button>
+                                <button id="programmingBtn" class="quick-action-button px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:border-blue-500 hover:text-blue-500 transition-colors">
+                                    <i class="fas fa-code mr-1"></i>Programming
+                                </button>
+                                <button id="writingBtn" class="quick-action-button px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:border-blue-500 hover:text-blue-500 transition-colors">
+                                    <i class="fas fa-pen mr-1"></i>Writing
+                                </button>
+                                <button id="analysisBtn" class="quick-action-button px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:border-blue-500 hover:text-blue-500 transition-colors">
+                                    <i class="fas fa-analysis mr-1"></i>Analysis
+                                </button>
+                                <button id="callBtn" class="quick-action-button px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm hover:border-blue-500 hover:text-blue-500 transition-colors">
+                                    <i class="fas fa-phone mr-1"></i>Call
+                                </button>
+                            </div>
+                            
+                            <!-- Content Cards for Agent/Programming -->
+                            <div id="quickActionContent" class="hidden">
+                                <!-- Programming Cards -->
+                                <div id="programmingCards" class="hidden grid grid-cols-3 gap-3">
+                                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-3 cursor-pointer hover:shadow-lg transition-shadow" onclick="window.open('tucao.html', '_blank')">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/image_generation/b4c1d9839348c28d36ca4b760374875d_1756985490247598204.png~tplv-a9rns2rl98-image.png?rk3s=25bff839&x-expires=2072345490&x-signature=N32OOWsbBzWLz9sVXkCV%2BvmIJpU%3D" alt="Feedback" class="w-full h-32 object-cover rounded mb-2">
+                                        <p class="text-sm text-center" title="Join Now">Share Your Thoughts</p>
+                                    </div>
+                                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-3 cursor-pointer hover:shadow-lg transition-shadow" onclick="sendPresetMessage('Help me program a Gomoku game')">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/image_generation/c93ed2820063b71db01b7726a88de808_1752461681262187757.png~tplv-a9rns2rl98-image.png?rk3s=25bff839&x-expires=1783997681&x-signature=ZEv5AhMUosurpCs5Uw9uIgtAepI%3D" alt="Gomoku" class="w-full h-32 object-cover rounded mb-2">
+                                        <p class="text-sm text-center">Gomoku Game</p>
+                                    </div>
+                                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-3 cursor-pointer hover:shadow-lg transition-shadow" onclick="sendPresetMessage('Help me create a SaaS website')">
+                                        <img src="https://p9-flow-imagex-sign.byteimg.com/ocean-cloud-tos/image_generation/0df90499a96a18a0257fdd81adb902b7_1751944995022103460.png~tplv-a9rns2rl98-image.png?rk3s=25bff839&x-expires=1783480995&x-signature=BXvpnA%2BlO0QpMRE%2Fqa%2FErdIUWas%3D" alt="SaaS" class="w-full h-32 object-cover rounded mb-2">
+                                        <p class="text-sm text-center">SaaS Website</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Writing Options -->
+                                <div id="writingOptions" class="hidden space-y-2">
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Help me write a clear and well-structured email')">
+                                        <i class="fas fa-envelope mr-2"></i>Write a clear email
+                                    </div>
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Help me write a letter to my teacher about my absence today')">
+                                        <i class="fas fa-edit mr-2"></i>Write an absence letter
+                                    </div>
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Help me write a deep and insightful review of Avatar 2')">
+                                        <i class="fas fa-film mr-2"></i>Write a movie review
+                                    </div>
+                                </div>
+                                
+                                <!-- Analysis Options -->
+                                <div id="analysisOptions" class="hidden space-y-2">
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Analyze this data and provide insights')">
+                                        <i class="fas fa-chart-bar mr-2"></i>Data Analysis
+                                    </div>
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Help me analyze market trends')">
+                                        <i class="fas fa-chart-line mr-2"></i>Market Trends
+                                    </div>
+                                </div>
+                                
+                                <!-- Learning Options -->
+                                <div id="learningOptions" class="hidden space-y-2">
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Explain quantum computing in simple terms')">
+                                        <i class="fas fa-atom mr-2"></i>Learn Quantum Computing
+                                    </div>
+                                    <div class="p-2 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" onclick="sendPresetMessage('Teach me Python programming basics')">
+                                        <i class="fas fa-code mr-2"></i>Learn Python
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat View -->
+                <div id="chatView" class="hidden">
+                    <!-- Messages will be added here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom Input Area -->
+        <div id="bottomInputArea" class="hidden p-4">
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                    <textarea id="replyInput" placeholder="Reply to TyloAI..." data-translate-placeholder="reply_to" class="w-full p-2 focus:outline-none bg-transparent text-base resize-none" rows="1"></textarea>
+                    
+                    <!-- File Previews for Reply -->
+                    <div id="replyFilePreviewContainer" class="hidden mt-3 max-h-32 overflow-y-auto">
+                    </div>
+                    
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="flex items-center space-x-2">
+                            <button id="replyUploadBtn" class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="file" id="replyFileInput" class="hidden" multiple accept=".txt,.pdf,.docx,.png,.jpg,.jpeg">
+                            <button class="p-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                                <i class="fas fa-feather"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="relative mr-2">
+                                <div class="dropdown-selected cursor-pointer p-2 border border-gray-300 dark:border-gray-600 rounded-lg">
+                                    <span id="replyModelName">Ode-6-Flash</span>
+                                    <i class="fas fa-chevron-down ml-2 text-xs"></i>
+                                </div>
+                            </div>
+                            <button id="replySendButton" class="bg-black text-white dark:bg-white dark:text-black p-2 rounded-md hover:opacity-80 transition-colors">
+                                <i class="fas fa-arrow-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedbackModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4" data-translate="feedback_title">Help us improve</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4" data-translate="feedback_description">What wasn't helpful about this response?</p>
+            
+            <div class="space-y-2 mb-4">
+                <label class="flex items-center">
+                    <input type="radio" name="feedbackType" value="harmful" class="mr-2">
+                    <span data-translate="feedback_harmful">Harmful or inappropriate content</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="feedbackType" value="false" class="mr-2">
+                    <span data-translate="feedback_false">False or misleading information</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="feedbackType" value="unhelpful" class="mr-2">
+                    <span data-translate="feedback_unhelpful">Not helpful</span>
+                </label>
+                <label class="flex items-center">
+                    <input type="radio" name="feedbackType" value="other" class="mr-2">
+                    <span data-translate="feedback_other">Other</span>
+                </label>
+            </div>
+            
+            <textarea id="feedbackText" class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" rows="3" placeholder="Additional details (optional)" data-translate-placeholder="feedback_details"></textarea>
+            
+            <div class="flex space-x-2 mt-4">
+                <button id="submitFeedback" class="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" data-translate="submit">Submit</button>
+                <button id="closeFeedbackModal" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-700" data-translate="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Creation Modal -->
+    <div id="projectModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4" data-translate="create_project">Create New Project</h3>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2" data-translate="project_title">Project Title</label>
+                <input id="projectTitle" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" placeholder="Enter project title" data-translate-placeholder="enter_project_title">
+            </div>
+            
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2" data-translate="project_objective">Project Objective</label>
+                <textarea id="projectObjective" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" rows="3" placeholder="Describe the main goal and objective of this project" data-translate-placeholder="enter_project_objective"></textarea>
+            </div>
+            
+            <div class="flex space-x-2">
+                <button id="createProject" class="flex-1 bg-purple-500 text-white py-2 rounded-md hover:bg-purple-600" data-translate="create">Create</button>
+                <button id="closeProjectModal" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-700" data-translate="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Plan Modal -->
+    <div id="studentModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4">
+            <h3 class="text-xl font-bold mb-4" data-translate="student_plan">Student Plan Verification</h3>
+            
+            <div class="mb-4">
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-3" data-translate="student_requirements">Requirements: Must be 18+ student from China (Guizhou, Yunnan, Tibet), USA, UK, Japan, Brazil, or Indonesia with valid .edu email</p>
+                <label class="block text-sm font-medium mb-2" data-translate="edu_email">Educational Email (.edu)</label>
+                <input id="studentEmail" type="email" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" placeholder="your.email@university.edu" data-translate-placeholder="enter_edu_email">
+                <p id="emailError" class="text-red-500 text-xs mt-1 hidden" data-translate="email_error">Must be a valid .edu email address</p>
+            </div>
+            
+            <div class="flex space-x-2">
+                <button id="verifyStudent" class="flex-1 bg-green-500 text-white py-2 rounded-md hover:bg-green-600" data-translate="verify">Verify</button>
+                <button id="closeStudentModal" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-700" data-translate="cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Points Redemption Modal -->
+    <div id="pointsModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm mx-4 transform transition-all duration-300 scale-95 hover:scale-100">
+            <h3 class="text-xl font-bold mb-4 flex items-center">
+                <i class="fas fa-coins text-yellow-500 mr-2"></i>
+                <span id="pointsModalTitle" data-translate="redeem_points">Redeem Points</span>
+            </h3>
+            <div class="mb-4">
+                <label class="block text-sm font-medium mb-2" data-translate="redemption_code">Enter Redemption Code</label>
+                <input id="pointsCodeInput" type="text" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" placeholder="Please enter redemption code" data-translate-placeholder="enter_redemption_code">
+            </div>
+            <div class="flex space-x-2">
+                <button id="redeemPointsBtn" class="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 rounded-md hover:from-green-600 hover:to-emerald-600 transition-all transform hover:scale-105">
+                    <i class="fas fa-check mr-2"></i><span data-translate="redeem">Redeem</span>
+                </button>
+                <button id="closePointsModal" class="px-4 py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-700" data-translate="cancel">Cancel</button>
+            </div>
+            <div id="pointsMessage" class="mt-3 text-sm hidden"></div>
+        </div>
+    </div>
+
+    <!-- Upgrade Modal -->
+    <div id="upgradeModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-4xl mx-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2" data-translate="choose_plan">Choose Your Plan</h2>
+                <p class="text-gray-600 dark:text-gray-400" data-translate="plan_description">Select the plan that works best for you</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <!-- Free Plan -->
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+                    <h3 class="text-xl font-bold mb-2" data-translate="free_plan">Free Plan</h3>
+                    <div class="text-3xl font-bold mb-4">$0<span class="text-lg text-gray-500">/month</span></div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="free_ode_flash">Unlimited Ode-6-Flash</span></li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="free_ode_monthly">Ode-6: 5/month</span></li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="free_points">3000 points daily</span></li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="free_agent">Agent: 5/month</span></li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="free_research">Research: 10/month</span></li>
+                    </ul>
+                    <button class="w-full bg-gray-300 text-gray-700 py-2 rounded-md" disabled data-translate="current_plan">Current Plan</button>
+                </div>
+                
+                <!-- Student Plan -->
+                <div class="border border-green-200 dark:border-green-700 rounded-xl p-6 bg-green-50 dark:bg-green-900">
+                    <h3 class="text-xl font-bold mb-2" data-translate="student_plan">Student Plan</h3>
+                    <div class="text-3xl font-bold mb-4">$0<span class="text-lg text-gray-500">/year</span></div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="unlimited_everything">Unlimited everything</span></li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="priority_support">Priority support</span></li>
+                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i><span data-translate="early_access">Early access to new models</span></li>
+                        <li class="flex items-center"><i class="fas fa-graduation-cap text-green-500 mr-2"></i><span data-translate="student_only">Students only</span></li>
+                    </ul>
+                    <button id="studentPlanBtn" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600" data-translate="verify_student">Verify Student Status</button>
+                </div>
+                
+                <!-- Pro Plan -->
+                <div class="border border-blue-200 dark:border-blue-700 rounded-xl p-6 bg-blue-50 dark:bg-blue-900">
+                    <h3 class="text-xl font-bold mb-2" data-translate="pro_plan">Pro Plan</h3>
+                    <div class="text-3xl font-bold mb-4">$9.99<span class="text-lg text-gray-500">/month</span></div>
+                    <ul class="space-y-2 mb-6">
+                        <li class="flex items-center"><i class="fas fa-infinity text-blue-500 mr-2"></i><span data-translate="unlimited_usage">Unlimited usage</span></li>
+                        <li class="flex items-center"><i class="fas fa-images text-purple-500 mr-2"></i><span data-translate="unlimited_media">Unlimited media generation</span></li>
+                        <li class="flex items-center"><i class="fas fa-star text-yellow-500 mr-2"></i><span data-translate="priority_support">Priority support</span></li>
+                        <li class="flex items-center"><i class="fas fa-rocket text-blue-500 mr-2"></i><span data-translate="early_access">Early access to new models</span></li>
+                    </ul>
+                    <button id="proUpgradeBtn" class="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600" data-translate="upgrade_pro">Upgrade to Pro</button>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <div class="text-sm text-gray-500 mb-2" data-translate="or">or</div>
+                <div class="flex justify-center space-x-2">
+                    <input id="codeInput" type="text" placeholder="Enter redemption code" data-translate-placeholder="enter_redemption_code" class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700">
+                    <button id="redeemBtn" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600" data-translate="redeem_code">Redeem Code</button>
+                </div>
+            </div>
+            
+            <button id="closeUpgradeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <!-- Payment Method Modal -->
+        <div id="paymentMethodModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md mx-4">
+                <h3 class="text-xl font-bold mb-4">Choose Payment Method</h3>
+                <div class="space-y-3">
+                    <button id="cardPaymentBtn" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all flex items-center justify-center space-x-3">
+                        <i class="fas fa-credit-card text-2xl"></i>
+                        <span>Pay with Card</span>
+                    </button>
+                    <button id="wechatPaymentBtn" class="w-full p-4 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-all flex items-center justify-center space-x-3">
+                        <i class="fab fa-weixin text-2xl text-green-500"></i>
+                        <span>Pay with WeChat</span>
+                    </button>
+                </div>
+                <button id="closePaymentMethodModal" class="mt-4 w-full py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-700">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Card Payment Modal -->
+        <div id="cardPaymentModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-900 rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-2xl font-bold">Payment Details</h3>
+                    <div class="flex space-x-2">
+                        <i class="fab fa-cc-visa text-3xl text-gray-400"></i>
+                        <i class="fab fa-cc-mastercard text-3xl text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white p-4 rounded-lg">
+                        <div class="text-sm opacity-75">Amount to pay</div>
+                        <div class="text-3xl font-bold">$9.99</div>
+                    </div>
+                </div>
+                
+                <form id="stripePaymentForm">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Expiry Date</label>
+                            <input id="cardExpiry" type="text" placeholder="MM/YY" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none" maxlength="5">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">CVC</label>
+                            <input id="cardCvc" type="text" placeholder="123" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none" maxlength="3">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium mb-2">Cardholder Name</label>
+                        <input id="cardholderName" type="text" placeholder="John Doe" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
+                        <span id="payButtonText">Complete Payment</span>
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center text-sm text-gray-500">
+                    <i class="fas fa-lock mr-1"></i>Secure payment powered by Stripe
+                </div>
+                
+                <button id="closeCardPaymentModal" class="mt-4 w-full py-2 bg-gray-300 dark:bg-gray-600 rounded-md hover:bg-gray-400 dark:hover:bg-gray-700">Cancel</button>
+            </div>
+        </div>
+
+        <!-- WeChat Payment Form (Hidden) -->
+        <form id="wechatPaymentForm" action="https://code.lfk.cc/submit.php" method="POST" style="display: none;">
+            <input type="hidden" name="pid" value="1480">
+            <input type="hidden" name="type" value="wxpay">
+            <input type="hidden" name="out_trade_no" id="wechat_out_trade_no">
+            <input type="hidden" name="notify_url" id="wechat_notify_url">
+            <input type="hidden" name="return_url" id="wechat_return_url">
+            <input type="hidden" name="name" value="TyloAI Pro Plan">
+            <input type="hidden" name="money" value="0.01">
+            <input type="hidden" name="sitename" value="TyloAI">
+            <input type="hidden" name="sign" id="wechat_sign">
+            <input type="hidden" name="sign_type" value="MD5">
+        </form>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-6xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold" data-translate="settings">Settings</h2>
+                <button id="closeSettingsModal" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Column 1: Profile & Language -->
+                <div class="space-y-6">
+                    <!-- User Profile -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="user_profile">Profile</h3>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-translate="nickname">Nickname</label>
+                            <input id="nicknameInput" type="text" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" placeholder="Enter nickname" data-translate-placeholder="enter_nickname">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-translate="avatar_url">Avatar URL</label>
+                            <input id="avatarUrlInput" type="text" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" placeholder="Enter avatar URL" data-translate-placeholder="enter_avatar_url">
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="text-sm">
+                                <div class="font-medium"><span data-translate="level">Level</span> <span id="settingsLevel">1</span></div>
+                                <div class="text-gray-500"><span id="settingsXP">0</span> / <span id="settingsMaxXP">100</span> XP</div>
+                            </div>
+                            <div class="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                <div id="settingsXPBar" class="progress-bar h-2 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Language Selection -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="language">Language</h3>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-translate="select_language">Select Language</label>
+                            <div class="relative">
+                                <button id="languageDropdown" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-left flex justify-between items-center">
+                                    <span id="languageDisplay">English</span>
+                                    <i class="fas fa-chevron-down"></i>
+                                </button>
+                                <div id="languageOptions" class="hidden absolute top-full left-0 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg z-20">
+                                    <div class="language-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" data-lang="en">English</div>
+                                    <div class="language-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" data-lang="zh-cn">ä¸­æ–‡ (ç®€ä½“)</div>
+                                    <div class="language-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" data-lang="zh-tw">ä¸­æ–‡ (ç¹é«”)</div>
+                                    <div class="language-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" data-lang="ja">æ—¥æœ¬èªž</div>
+                                    <div class="language-option p-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer" data-lang="ko">í•œêµ­ì–´</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Customization -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="customization">Customization</h3>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-translate="font_family">Font Family</label>
+                            <select id="fontSelector" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700">
+                                <option value="sans" data-translate="font_sans">Sans Serif</option>
+                                <option value="serif" data-translate="font_serif">Serif</option>
+                                <option value="mono" data-translate="font_mono">Monospace</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-translate="chat_background">Chat Background</label>
+                            <select id="backgroundSelector" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 mb-2">
+                                <option value="default" data-translate="bg_default">Default (White)</option>
+                                <option value="coffee" data-translate="bg_coffee">Coffee Theme</option>
+                                <option value="custom" data-translate="bg_custom">Custom URL</option>
+                            </select>
+                            <input id="customBgUrl" type="url" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 hidden" placeholder="Enter background image URL" data-translate-placeholder="enter_bg_url">
+                            <p id="bgUrlError" class="text-red-500 text-xs mt-1 hidden" data-translate="url_invalid">URL is invalid or image failed to load</p>
+                        </div>
+                    </div>
+
+                    <!-- Usage Stats -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="usage_stats">Usage Stats</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span data-translate="ode5_usage">Ode-6 this month:</span>
+                                <span id="odeUsage">0/5</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span data-translate="agent_usage">Agent projects:</span>
+                                <span id="agentUsage">0/5</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span data-translate="research_usage">Research usage:</span>
+                                <span id="researchUsage">0/10</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span data-translate="images_today">Images generated today:</span>
+                                <span id="imageUsage">0/2</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span data-translate="videos_generated">Videos generated:</span>
+                                <span id="videoUsage">0/1</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span data-translate="total_conversations">Total conversations:</span>
+                                <span id="totalChats">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 2: Memory & Achievements -->
+                <div class="space-y-6">
+                    <!-- AI Memory -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="ai_memory">AI Memory</h3>
+                        <div id="memoryList" class="space-y-2 max-h-40 overflow-y-auto custom-scrollbar">
+                            <p class="text-gray-500 text-sm" data-translate="no_memories">No memories stored yet</p>
+                        </div>
+                        <button id="clearMemoryBtn" class="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600" data-translate="clear_memories">Clear All Memories</button>
+                    </div>
+
+                    <!-- Achievements -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="achievements">Achievements</h3>
+                        <div id="achievementsList" class="space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                            <!-- Achievements will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="social_media">Follow Us</h3>
+                        <div class="flex space-x-2">
+                            <a href="https://www.youtube.com/channel/UCHYEPXnBtHmaLF3pOIGhwUw" target="_blank" class="flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors">
+                                <i class="fab fa-youtube mr-2"></i>
+                                <span data-translate="youtube">YouTube</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Column 3: Preferences & Tasks -->
+                <div class="space-y-6">
+                    <!-- Preferences -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="preferences">Preferences</h3>
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-translate="personal_preferences">Personal Preferences</label>
+                            <textarea id="preferencesInput" class="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700" rows="3" placeholder="What should TyloAI consider in responses?" data-translate-placeholder="preferences_placeholder"></textarea>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <input type="checkbox" id="tutorialReset" class="rounded">
+                            <label for="tutorialReset" class="text-sm" data-translate="reset_tutorial">Reset tutorial (restart guide)</label>
+                        </div>
+                    </div>
+
+                    <!-- Daily Tasks -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="daily_tasks">Daily Tasks</h3>
+                        <div id="dailyTasksList" class="space-y-2">
+                            <!-- Daily tasks will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Data Management -->
+                    <div class="space-y-4">
+                        <h3 class="text-lg font-semibold border-b border-gray-200 dark:border-gray-700 pb-2" data-translate="data_management">Data Management</h3>
+                        <div class="flex space-x-2">
+                            <button id="exportDataBtn" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                                <i class="fas fa-download mr-2"></i><span data-translate="export_data">Export Data</span>
+                            </button>
+                            <button id="importDataBtn" class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+                                <i class="fas fa-upload mr-2"></i><span data-translate="import_data">Import Data</span>
+                            </button>
+                        </div>
+                        <input type="file" id="importFileInput" class="hidden" accept=".json">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-2 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button id="cancelSettings" class="px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md" data-translate="cancel">Cancel</button>
+                <button id="saveSettings" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" data-translate="save_changes">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm mx-4 text-center">
+            <i class="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2" id="successTitle">Success!</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4" id="successMessage">Operation completed successfully</p>
+            <button id="closeSuccessModal" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600" data-translate="ok">OK</button>
+        </div>
+    </div>
+
+    <!-- Achievement Popup -->
+    <div id="achievementPopup" class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 hidden achievement-popup">
+        <div class="flex items-center">
+            <i class="fas fa-trophy mr-2"></i>
+            <div>
+                <div class="font-bold" data-translate="achievement_unlocked">Achievement Unlocked!</div>
+                <div id="achievementText" class="text-sm"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Check-in Modal -->
+    <div id="checkinModal" class="fixed inset-0 bg-black bg-opacity-50 modal-overlay hidden items-center justify-center z-50">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-sm mx-4 text-center">
+            <i class="fas fa-calendar-check text-4xl text-green-500 mb-4"></i>
+            <h3 class="text-xl font-bold mb-2" data-translate="daily_checkin">Daily Check-in</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-4" data-translate="welcome_back">Welcome back! Here's your daily bonus:</p>
+            <div class="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-4">
+                <div class="text-2xl font-bold text-green-500">+<span id="checkinBonus">3000</span></div>
+                <div class="text-sm text-gray-500" data-translate="points">Points</div>
+                <div class="text-xs text-gray-400 mt-1">Day <span id="checkinStreak">1</span> streak</div>
+            </div>
+            <button id="claimCheckin" onclick="claimDailyCheckin()" class="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600" data-translate="claim_reward">Claim Reward</button>
+        </div>
+    </div>
+</div>
+    <script src="main.js"></script>
+    <script src="app.obfuscated.js"></script> 
+</body>
+</html>

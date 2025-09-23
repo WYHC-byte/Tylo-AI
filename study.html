@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TyloAI Study Platform - AI Professional Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .lesson-completed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        .lesson-locked {
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+        .lesson-current {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+        }
+        .quiz-indicator {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        .progress-ring-circle {
+            transition: stroke-dashoffset 0.35s;
+            transform-origin: 50% 50%;
+        }
+        .anti-cheat-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .code-editor {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #e5e5e5;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 200px;
+            resize: vertical;
+        }
+        .certificate {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            border: 5px solid #d4af37;
+            position: relative;
+            overflow: hidden;
+        }
+        .certificate::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23ffffff" opacity="0.1"/></svg>') repeat;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .typing-indicator {
+            display: inline-block;
+        }
+        .typing-indicator::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Anti-cheat Detection Overlay -->
+    <div id="antiCheatOverlay" class="anti-cheat-overlay">
+        <div class="text-center">
+            <i class="fas fa-shield-alt text-6xl mb-4 text-red-500"></i>
+            <h2 class="text-2xl mb-4">Academic Integrity Violation Detected</h2>
+            <p>Please return to the study platform to continue your course.</p>
+            <button onclick="location.reload()" class="mt-4 bg-red-500 text-white px-6 py-3 rounded-lg">Return to Course</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="gradient-bg text-white p-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold flex items-center">
+                        <img src="logo.png" alt="TyloAI Logo" class="w-10 h-10 mr-3 rounded-full">
+                        TyloAI Professional AI Course
+                    </h1>
+                    <p class="mt-2 opacity-90">Master Artificial Intelligence - From Theory to Production</p>
+                </div>
+                <div class="text-right">
+                    <div class="text-lg font-semibold">Progress: <span id="overallProgress">0%</span></div>
+                    <div class="text-sm opacity-75">Completed: <span id="completedLessons">0</span>/17 Modules</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Course Navigation -->
+    <div class="max-w-6xl mx-auto p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-lg p-6 sticky top-6">
+                    <h3 class="text-xl font-bold mb-4">Course Modules</h3>
+                    <div id="lessonList" class="space-y-2">
+                        <!-- Lessons will be populated here -->
+                    </div>
+                    
+                    <!-- Progress Circle -->
+                    <div class="mt-6 flex justify-center">
+                        <div class="relative w-24 h-24">
+                            <svg class="progress-ring w-24 h-24">
+                                <circle class="progress-ring-circle" stroke="#e5e7eb" stroke-width="4" fill="transparent" r="36" cx="48" cy="48"/>
+                                <circle id="progressCircle" class="progress-ring-circle" stroke="#3b82f6" stroke-width="4" fill="transparent" r="36" cx="48" cy="48" 
+                                        stroke-dasharray="226.19" stroke-dashoffset="226.19"/>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <span id="progressPercent" class="text-lg font-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="lg:col-span-3">
+                <div id="contentArea" class="bg-white rounded-lg shadow-lg p-8">
+                    <!-- Welcome Screen -->
+                    <div id="welcomeScreen">
+                        <div class="text-center">
+                            <i class="fas fa-robot text-6xl text-blue-500 mb-6"></i>
+                            <h2 class="text-3xl font-bold mb-4">Welcome to the AI Professional Course</h2>
+                            <p class="text-lg text-gray-600 mb-8">This intensive course will prepare you for a career in Artificial Intelligence. You'll learn everything from fundamentals to advanced implementation.</p>
+                            
+                            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                                <div class="flex">
+                                    <div class="flex-shrink-0">
+                                        <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm text-yellow-700">
+                                            <strong>Academic Integrity Policy:</strong> This course employs advanced anti-cheat measures. Any attempt to cheat will result in immediate course termination.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                                <div class="p-4 border rounded-lg">
+                                    <i class="fas fa-book text-2xl text-blue-500 mb-2"></i>
+                                    <h4 class="font-semibold">15 Chapters</h4>
+                                    <p class="text-sm text-gray-600">Comprehensive curriculum</p>
+                                </div>
+                                <div class="p-4 border rounded-lg">
+                                    <i class="fas fa-clipboard-check text-2xl text-green-500 mb-2"></i>
+                                    <h4 class="font-semibold">4 Assessments</h4>
+                                    <p class="text-sm text-gray-600">Rigorous evaluation</p>
+                                </div>
+                                <div class="p-4 border rounded-lg">
+                                    <i class="fas fa-certificate text-2xl text-yellow-500 mb-2"></i>
+                                    <h4 class="font-semibold">Professional Certificate</h4>
+                                    <p class="text-sm text-gray-600">Industry recognized</p>
+                                </div>
+                            </div>
+
+                            <button onclick="startCourse()" class="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-600 transition-colors">
+                                Begin Your Journey
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Lesson Content -->
+                    <div id="lessonContent" class="hidden">
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h2 id="lessonTitle" class="text-2xl font-bold">Lesson Title</h2>
+                                    <p id="lessonSubtitle" class="text-gray-600">Lesson description</p>
+                                </div>
+                                <div id="lessonTimer" class="text-right">
+                                    <div class="text-sm text-gray-500">Time Spent</div>
+                                    <div id="timerDisplay" class="text-lg font-mono">00:00:00</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="lessonBody" class="prose max-w-none">
+                            <!-- Lesson content will be loaded here -->
+                        </div>
+
+                        <div class="mt-8 flex justify-between">
+                            <button id="prevButton" onclick="previousLesson()" class="bg-gray-500 text-white px-6 py-2 rounded-lg disabled:opacity-50" disabled>
+                                <i class="fas fa-arrow-left mr-2"></i>Previous
+                            </button>
+                            <button id="nextButton" onclick="nextLesson()" class="bg-blue-500 text-white px-6 py-2 rounded-lg">
+                                Next<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Content -->
+                    <div id="quizContent" class="hidden">
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between">
+                                <h2 id="quizTitle" class="text-2xl font-bold">Assessment</h2>
+                                <div id="quizTimer" class="text-lg font-mono bg-red-100 px-3 py-1 rounded">
+                                    <i class="fas fa-clock mr-1"></i><span id="quizTimeDisplay">30:00</span>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <div class="bg-gray-200 rounded-full h-2">
+                                    <div id="quizProgress" class="bg-blue-500 h-2 rounded-full" style="width: 0%"></div>
+                                </div>
+                                <p class="text-sm text-gray-600 mt-1">Question <span id="currentQuestion">1</span> of <span id="totalQuestions">10</span></p>
+                            </div>
+                        </div>
+
+                        <div id="questionContainer">
+                            <!-- Questions will be loaded here -->
+                        </div>
+
+                        <div class="mt-6 flex justify-between">
+                            <button id="quizPrevButton" onclick="previousQuestion()" class="bg-gray-500 text-white px-6 py-2 rounded-lg disabled:opacity-50" disabled>
+                                <i class="fas fa-arrow-left mr-2"></i>Previous
+                            </button>
+                            <button id="quizNextButton" onclick="nextQuestion()" class="bg-blue-500 text-white px-6 py-2 rounded-lg">
+                                Next<i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                            <button id="submitQuizButton" onclick="submitQuiz()" class="bg-green-500 text-white px-6 py-2 rounded-lg hidden">
+                                Submit Assessment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Final Project -->
+                    <div id="finalProject" class="hidden">
+                        <h2 class="text-2xl font-bold mb-6">Final Project: AI Chatbot Implementation</h2>
+                        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                            <p><strong>Project Requirements:</strong> Build a functional AI chatbot using the concepts learned throughout the course. Your implementation will be tested for functionality, code quality, and AI integration.</p>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-xl font-semibold mb-3">Code Implementation</h3>
+                            <textarea id="projectCode" class="code-editor w-full" placeholder="// Implement your AI chatbot here...
+// Requirements:
+// 1. Natural language processing
+// 2. Context understanding
+// 3. Response generation
+// 4. Error handling
+// 5. User interface
+
+class AIChatbot {
+    constructor() {
+        // Your implementation here
+    }
+    
+    processMessage(message) {
+        // Your implementation here
+    }
+    
+    generateResponse(processedMessage) {
+        // Your implementation here
+    }
+}"></textarea>
+                        </div>
+
+                        <div class="mb-6">
+                            <h3 class="text-xl font-semibold mb-3">Test Your Implementation</h3>
+                            <div class="bg-gray-100 p-4 rounded-lg">
+                                <input type="text" id="testInput" placeholder="Test your chatbot..." class="w-full p-2 border rounded mb-2">
+                                <button onclick="testChatbot()" class="bg-blue-500 text-white px-4 py-2 rounded">Test</button>
+                                <div id="testOutput" class="mt-4 p-3 bg-white rounded border min-h-[100px]"></div>
+                            </div>
+                        </div>
+
+                        <button onclick="submitFinalProject()" class="bg-green-500 text-white px-8 py-3 rounded-lg text-lg font-semibold">
+                            Submit Final Project
+                        </button>
+                    </div>
+
+                    <!-- Certificate -->
+                    <div id="certificateDisplay" class="hidden">
+                        <div class="text-center">
+                            <div class="certificate p-8 rounded-lg text-center max-w-2xl mx-auto">
+                                <h1 class="text-4xl font-bold text-gray-800 mb-4">Certificate of Completion</h1>
+                                <div class="text-lg text-gray-700 mb-6">
+                                    This is to certify that
+                                </div>
+                                <div class="text-3xl font-bold text-gray-800 mb-6" id="certificateName">Student Name</div>
+                                <div class="text-lg text-gray-700 mb-6">
+                                    has successfully completed the
+                                </div>
+                                <div class="text-2xl font-bold text-gray-800 mb-6">
+                                    TyloAI Professional AI Development Course
+                                </div>
+                                <div class="text-sm text-gray-600 mb-6">
+                                    Completed on <span id="completionDate"></span><br>
+                                    Final Score: <span id="finalScore">95%</span>
+                                </div>
+                                <div class="flex justify-center space-x-8 mt-8">
+                                    <div class="text-center">
+                                        <div class="border-t border-gray-400 w-32 mb-2"></div>
+                                        <div class="text-sm">TyloAI Studio</div>
+                                    </div>
+                                    <div class="text-center">
+                                        <div class="border-t border-gray-400 w-32 mb-2"></div>
+                                        <div class="text-sm">Course Director</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8">
+                                <button onclick="downloadCertificate()" class="bg-blue-500 text-white px-6 py-3 rounded-lg mr-4">
+                                    <i class="fas fa-download mr-2"></i>Download Certificate
+                                </button>
+                                <button onclick="activateStudentPlan()" class="bg-green-500 text-white px-6 py-3 rounded-lg">
+                                    <i class="fas fa-graduation-cap mr-2"></i>Activate Student Plan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Course Data
+        const courseData = {
+            lessons: [
+                { id: 1, title: "Introduction to AI", type: "lesson", duration: 45, content: "AI fundamentals and history" },
+                { id: 2, title: "Machine Learning Basics", type: "lesson", duration: 60, content: "Core ML concepts" },
+                { id: 3, title: "Neural Networks", type: "lesson", duration: 75, content: "Deep learning foundations" },
+                { id: 4, title: "Quiz 1: Fundamentals", type: "quiz", questions: 10, timeLimit: 30 },
+                { id: 5, title: "Natural Language Processing", type: "lesson", duration: 90, content: "NLP techniques" },
+                { id: 6, title: "Computer Vision", type: "lesson", duration: 85, content: "Image processing with AI" },
+                { id: 7, title: "Reinforcement Learning", type: "lesson", duration: 70, content: "RL algorithms" },
+                { id: 8, title: "AI Ethics", type: "lesson", duration: 50, content: "Responsible AI development" },
+                { id: 9, title: "Quiz 2: Applications", type: "quiz", questions: 15, timeLimit: 45 },
+                { id: 10, title: "Midterm Examination", type: "exam", questions: 25, timeLimit: 90 },
+                { id: 11, title: "Advanced Architectures", type: "lesson", duration: 95, content: "Transformers and beyond" },
+                { id: 12, title: "AI in Production", type: "lesson", duration: 80, content: "Deployment strategies" },
+                { id: 13, title: "Model Optimization", type: "lesson", duration: 75, content: "Performance tuning" },
+                { id: 14, title: "AI Security", type: "lesson", duration: 65, content: "Adversarial attacks and defense" },
+                { id: 15, title: "Industry Applications", type: "lesson", duration: 70, content: "Real-world case studies" },
+                { id: 16, title: "Final Project", type: "project", description: "Build an AI application" },
+                { id: 17, title: "Final Examination", type: "final", questions: 50, timeLimit: 120 }
+            ]
+        };
+
+        // State Management
+        let currentLesson = 0;
+        let completedLessons = new Set();
+        let quizScores = {};
+        let startTime = null;
+        let lessonStartTime = null;
+        let currentQuizData = null;
+        let currentQuestionIndex = 0;
+        let quizAnswers = {};
+        let quizTimeLeft = 0;
+        let quizTimer = null;
+        let lessonTimer = null;
+        let tabSwitchCount = 0;
+        let lastActiveTime = Date.now();
+
+        // Anti-cheat measures
+        let antiCheatViolations = 0;
+        const MAX_VIOLATIONS = 3;
+
+        // Initialize course
+        function initializeCourse() {
+            loadProgress();
+            renderLessonList();
+            updateProgress();
+            setupAntiCheat();
+            
+            // Check if already completed
+            if (localStorage.getItem('tyloai_course_completed')) {
+                showCertificate();
+                return;
+            }
+        }
+
+        function setupAntiCheat() {
+            // Disable right-click
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            
+            // Disable F12, Ctrl+Shift+I, etc.
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                    (e.ctrlKey && e.shiftKey && e.key === 'J') ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    antiCheatViolation('Developer tools detected');
+                }
+            });
+
+            // Tab visibility change detection
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    tabSwitchCount++;
+                    if (tabSwitchCount > 5) {
+                        antiCheatViolation('Excessive tab switching');
+                    }
+                }
+            });
+
+            // Window focus detection
+            window.addEventListener('blur', function() {
+                if (isQuizActive()) {
+                    antiCheatViolation('Window lost focus during assessment');
+                }
+            });
+
+            // Prevent copy/paste in quizzes
+            document.addEventListener('copy', function(e) {
+                if (isQuizActive()) {
+                    e.preventDefault();
+                    antiCheatViolation('Copy attempt during assessment');
+                }
+            });
+
+            // Mouse leave detection during quiz
+            document.addEventListener('mouseleave', function() {
+                if (isQuizActive()) {
+                    antiCheatViolation('Mouse left window during assessment');
+                }
+            });
+        }
+
+        function antiCheatViolation(reason) {
+            antiCheatViolations++;
+            console.warn(`Anti-cheat violation: ${reason} (${antiCheatViolations}/${MAX_VIOLATIONS})`);
+            
+            if (antiCheatViolations >= MAX_VIOLATIONS) {
+                document.getElementById('antiCheatOverlay').style.display = 'flex';
+                localStorage.setItem('tyloai_course_banned', 'true');
+                alert('Course access terminated due to academic integrity violations.');
+            }
+        }
+
+        function isQuizActive() {
+            return !document.getElementById('quizContent').classList.contains('hidden');
+        }
+
+        function startCourse() {
+            if (localStorage.getItem('tyloai_course_banned')) {
+                alert('Course access has been terminated due to academic integrity violations.');
+                return;
+            }
+            
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            startTime = Date.now();
+            currentLesson = 0;
+            showLesson(0);
+        }
+
+        function renderLessonList() {
+            const container = document.getElementById('lessonList');
+            container.innerHTML = '';
+
+            courseData.lessons.forEach((lesson, index) => {
+                const div = document.createElement('div');
+                div.className = `lesson-item p-3 rounded-lg cursor-pointer transition-all relative ${getLessonClass(index)}`;
+                
+                let icon = 'fa-book';
+                if (lesson.type === 'quiz') icon = 'fa-clipboard-check';
+                else if (lesson.type === 'exam') icon = 'fa-graduation-cap';
+                else if (lesson.type === 'project') icon = 'fa-code';
+                else if (lesson.type === 'final') icon = 'fa-trophy';
+
+                div.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas ${icon} mr-3"></i>
+                        <div class="flex-1">
+                            <div class="font-medium text-sm">${lesson.title}</div>
+                            ${lesson.type === 'quiz' || lesson.type === 'exam' || lesson.type === 'final' ? 
+                                `<div class="text-xs opacity-75">${lesson.questions} questions • ${lesson.timeLimit}min</div>` :
+                                lesson.duration ? `<div class="text-xs opacity-75">${lesson.duration} minutes</div>` : ''
+                            }
+                        </div>
+                        ${completedLessons.has(index) ? '<i class="fas fa-check text-green-500"></i>' : ''}
+                    </div>
+                    ${(lesson.type === 'quiz' || lesson.type === 'exam') && !completedLessons.has(index) ? 
+                        '<div class="quiz-indicator">!</div>' : ''
+                    }
+                `;
+
+                if (index <= Math.max(...Array.from(completedLessons)) + 1 || completedLessons.has(index)) {
+                    div.onclick = () => showLesson(index);
+                }
+
+                container.appendChild(div);
+            });
+        }
+
+        function getLessonClass(index) {
+            if (completedLessons.has(index)) return 'lesson-completed';
+            if (index === currentLesson) return 'lesson-current';
+            if (index > Math.max(...Array.from(completedLessons)) + 1) return 'lesson-locked';
+            return 'bg-white border hover:shadow-md';
+        }
+
+        function showLesson(index) {
+            const lesson = courseData.lessons[index];
+            currentLesson = index;
+
+            // Hide all content areas
+            ['welcomeScreen', 'lessonContent', 'quizContent', 'finalProject', 'certificateDisplay'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+
+            if (lesson.type === 'lesson') {
+                showLessonContent(lesson, index);
+            } else if (lesson.type === 'quiz' || lesson.type === 'exam' || lesson.type === 'final') {
+                showQuiz(lesson, index);
+            } else if (lesson.type === 'project') {
+                showFinalProject();
+            }
+
+            renderLessonList();
+            updateNavigation();
+        }
+
+        function showLessonContent(lesson, index) {
+            document.getElementById('lessonContent').classList.remove('hidden');
+            document.getElementById('lessonTitle').textContent = lesson.title;
+            document.getElementById('lessonSubtitle').textContent = lesson.content;
+            
+            // Start lesson timer
+            lessonStartTime = Date.now();
+            startLessonTimer();
+
+            // Generate lesson content based on topic
+            const content = generateLessonContent(lesson, index);
+            document.getElementById('lessonBody').innerHTML = content;
+        }
+
+        function generateLessonContent(lesson, index) {
+            const contents = {
+                0: `
+                    <h3>What is Artificial Intelligence?</h3>
+                    <p>Artificial Intelligence (AI) is the simulation of human intelligence in machines that are programmed to think and learn. It encompasses various subfields including machine learning, natural language processing, computer vision, and robotics.</p>
+                    
+                    <h4>Key Concepts:</h4>
+                    <ul>
+                        <li><strong>Narrow AI:</strong> AI designed for specific tasks (e.g., image recognition, chess)</li>
+                        <li><strong>General AI:</strong> Human-level intelligence across all domains (not yet achieved)</li>
+                        <li><strong>Machine Learning:</strong> Systems that improve through experience</li>
+                        <li><strong>Deep Learning:</strong> Neural networks with multiple layers</li>
+                    </ul>
+                    
+                    <h4>Historical Timeline:</h4>
+                    <ul>
+                        <li>1950: Turing Test proposed by Alan Turing</li>
+                        <li>1956: Term "Artificial Intelligence" coined at Dartmouth Conference</li>
+                        <li>1997: IBM Deep Blue defeats world chess champion</li>
+                        <li>2012: Deep learning breakthrough in image recognition</li>
+                        <li>2016: AlphaGo defeats world Go champion</li>
+                        <li>2020s: Large language models transform NLP</li>
+                    </ul>
+                    
+                    <p><strong>Study Time:</strong> Please spend at least 30 minutes reviewing this material before proceeding to the next lesson.</p>
+                `,
+                1: `
+                    <h3>Machine Learning Fundamentals</h3>
+                    <p>Machine Learning is a subset of AI that enables computers to learn and improve from experience without being explicitly programmed for every task.</p>
+                    
+                    <h4>Types of Machine Learning:</h4>
+                    <ol>
+                        <li><strong>Supervised Learning:</strong> Learning with labeled examples
+                            <ul>
+                                <li>Classification: Predicting categories (spam/not spam)</li>
+                                <li>Regression: Predicting continuous values (house prices)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Unsupervised Learning:</strong> Finding patterns in unlabeled data
+                            <ul>
+                                <li>Clustering: Grouping similar data points</li>
+                                <li>Dimensionality Reduction: Simplifying data while preserving information</li>
+                            </ul>
+                        </li>
+                        <li><strong>Reinforcement Learning:</strong> Learning through trial and error with rewards</li>
+                    </ol>
+                    
+                    <h4>Key Algorithms:</h4>
+                    <ul>
+                        <li>Linear Regression</li>
+                        <li>Decision Trees</li>
+                        <li>Support Vector Machines</li>
+                        <li>Random Forest</li>
+                        <li>Neural Networks</li>
+                    </ul>
+                    
+                    <div class="bg-blue-50 p-4 rounded-lg mt-4">
+                        <h5>Practical Exercise:</h5>
+                        <p>Consider a problem: predicting whether an email is spam. What type of ML would you use and why?</p>
+                    </div>
+                `,
+                2: `
+                    <h3>Neural Networks and Deep Learning</h3>
+                    <p>Neural networks are computing systems inspired by biological neural networks. They consist of interconnected nodes (neurons) that process information.</p>
+                    
+                    <h4>Basic Structure:</h4>
+                    <ul>
+                        <li><strong>Input Layer:</strong> Receives data</li>
+                        <li><strong>Hidden Layers:</strong> Process information</li>
+                        <li><strong>Output Layer:</strong> Produces results</li>
+                        <li><strong>Weights and Biases:</strong> Parameters that determine network behavior</li>
+                    </ul>
+                    
+                    <h4>Activation Functions:</h4>
+                    <ul>
+                        <li>ReLU (Rectified Linear Unit): Most common in hidden layers</li>
+                        <li>Sigmoid: Outputs values between 0 and 1</li>
+                        <li>Softmax: Used for multi-class classification</li>
+                    </ul>
+                    
+                    <h4>Training Process:</h4>
+                    <ol>
+                        <li>Forward Propagation: Data flows through network</li>
+                        <li>Loss Calculation: Measure prediction error</li>
+                        <li>Backpropagation: Update weights to reduce error</li>
+                        <li>Repeat until convergence</li>
+                    </ol>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg mt-4">
+                        <h5>Deep Learning:</h5>
+                        <p>Networks with many hidden layers (typically 3+ layers). Capable of learning complex patterns and representations automatically.</p>
+                    </div>
+                `,
+                4: `
+                    <h3>Natural Language Processing</h3>
+                    <p>NLP enables computers to understand, interpret, and generate human language in a meaningful way.</p>
+                    
+                    <h4>Core Tasks:</h4>
+                    <ul>
+                        <li><strong>Tokenization:</strong> Breaking text into words/tokens</li>
+                        <li><strong>Part-of-Speech Tagging:</strong> Identifying grammatical roles</li>
+                        <li><strong>Named Entity Recognition:</strong> Identifying people, places, organizations</li>
+                        <li><strong>Sentiment Analysis:</strong> Determining emotional tone</li>
+                        <li><strong>Machine Translation:</strong> Converting between languages</li>
+                    </ul>
+                    
+                    <h4>Key Techniques:</h4>
+                    <ul>
+                        <li>Bag of Words</li>
+                        <li>TF-IDF (Term Frequency-Inverse Document Frequency)</li>
+                        <li>Word Embeddings (Word2Vec, GloVe)</li>
+                        <li>Transformers and Attention Mechanisms</li>
+                    </ul>
+                    
+                    <h4>Modern Developments:</h4>
+                    <ul>
+                        <li>BERT: Bidirectional understanding</li>
+                        <li>GPT: Generative pre-trained transformers</li>
+                        <li>T5: Text-to-text transfer transformer</li>
+                    </ul>
+                `,
+                5: `
+                    <h3>Computer Vision</h3>
+                    <p>Computer Vision enables machines to interpret and understand visual information from the world.</p>
+                    
+                    <h4>Core Tasks:</h4>
+                    <ul>
+                        <li><strong>Image Classification:</strong> Categorizing entire images</li>
+                        <li><strong>Object Detection:</strong> Locating objects within images</li>
+                        <li><strong>Image Segmentation:</strong> Pixel-level classification</li>
+                        <li><strong>Facial Recognition:</strong> Identifying individuals</li>
+                        <li><strong>Optical Character Recognition:</strong> Reading text in images</li>
+                    </ul>
+                    
+                    <h4>Convolutional Neural Networks (CNNs):</h4>
+                    <ul>
+                        <li>Convolutional Layers: Feature detection</li>
+                        <li>Pooling Layers: Dimensionality reduction</li>
+                        <li>Fully Connected Layers: Classification</li>
+                    </ul>
+                    
+                    <h4>Advanced Architectures:</h4>
+                    <ul>
+                        <li>ResNet: Skip connections for deeper networks</li>
+                        <li>VGG: Very deep networks</li>
+                        <li>YOLO: Real-time object detection</li>
+                        <li>Vision Transformers: Attention-based vision</li>
+                    </ul>
+                `,
+                6: `
+                    <h3>Reinforcement Learning</h3>
+                    <p>RL is about learning optimal actions through interaction with an environment to maximize cumulative reward.</p>
+                    
+                    <h4>Key Components:</h4>
+                    <ul>
+                        <li><strong>Agent:</strong> The learner/decision maker</li>
+                        <li><strong>Environment:</strong> The world the agent operates in</li>
+                        <li><strong>Actions:</strong> What the agent can do</li>
+                        <li><strong>States:</strong> Current situation of the agent</li>
+                        <li><strong>Rewards:</strong> Feedback for actions</li>
+                    </ul>
+                    
+                    <h4>Core Algorithms:</h4>
+                    <ul>
+                        <li>Q-Learning: Learning action values</li>
+                        <li>Deep Q-Networks (DQN): Neural network Q-learning</li>
+                        <li>Policy Gradient: Directly optimizing policies</li>
+                        <li>Actor-Critic: Combining value and policy methods</li>
+                    </ul>
+                    
+                    <h4>Applications:</h4>
+                    <ul>
+                        <li>Game Playing (Chess, Go, Poker)</li>
+                        <li>Robotics Control</li>
+                        <li>Autonomous Vehicles</li>
+                        <li>Resource Allocation</li>
+                    </ul>
+                `,
+                7: `
+                    <h3>AI Ethics and Responsible Development</h3>
+                    <p>As AI becomes more powerful, ensuring ethical development and deployment is crucial for society's benefit.</p>
+                    
+                    <h4>Key Ethical Concerns:</h4>
+                    <ul>
+                        <li><strong>Bias and Fairness:</strong> Ensuring AI doesn't discriminate</li>
+                        <li><strong>Privacy:</strong> Protecting personal data</li>
+                        <li><strong>Transparency:</strong> Making AI decisions explainable</li>
+                        <li><strong>Accountability:</strong> Determining responsibility for AI actions</li>
+                        <li><strong>Safety:</strong> Preventing harmful AI behavior</li>
+                    </ul>
+                    
+                    <h4>Bias Mitigation:</h4>
+                    <ul>
+                        <li>Diverse training data</li>
+                        <li>Algorithmic auditing</li>
+                        <li>Fairness metrics</li>
+                        <li>Human oversight</li>
+                    </ul>
+                    
+                    <h4>Explainable AI (XAI):</h4>
+                    <ul>
+                        <li>Model interpretability</li>
+                        <li>Feature importance</li>
+                        <li>Decision trees for transparency</li>
+                        <li>LIME and SHAP explanations</li>
+                    </ul>
+                    
+                    <div class="bg-red-50 p-4 rounded-lg mt-4">
+                        <h5>Critical Thinking:</h5>
+                        <p>How might AI bias affect hiring decisions? What steps would you take to ensure fairness?</p>
+                    </div>
+                `,
+                10: `
+                    <h3>Advanced Neural Architectures</h3>
+                    <p>Modern AI relies on sophisticated architectures that have revolutionized machine learning capabilities.</p>
+                    
+                    <h4>Transformer Architecture:</h4>
+                    <ul>
+                        <li><strong>Self-Attention:</strong> Relating different positions in a sequence</li>
+                        <li><strong>Multi-Head Attention:</strong> Attending to different aspects simultaneously</li>
+                        <li><strong>Positional Encoding:</strong> Understanding sequence order</li>
+                        <li><strong>Feed-Forward Networks:</strong> Processing attention outputs</li>
+                    </ul>
+                    
+                    <h4>Large Language Models:</h4>
+                    <ul>
+                        <li>GPT Series: Generative capabilities</li>
+                        <li>BERT: Bidirectional understanding</li>
+                        <li>T5: Text-to-text framework</li>
+                        <li>Scaling laws and emergent abilities</li>
+                    </ul>
+                    
+                    <h4>Vision-Language Models:</h4>
+                    <ul>
+                        <li>CLIP: Connecting images and text</li>
+                        <li>DALL-E: Text-to-image generation</li>
+                        <li>Multi-modal understanding</li>
+                    </ul>
+                `,
+                11: `
+                    <h3>AI in Production</h3>
+                    <p>Deploying AI systems in real-world environments requires careful consideration of scalability, reliability, and maintenance.</p>
+                    
+                    <h4>Deployment Strategies:</h4>
+                    <ul>
+                        <li><strong>Cloud Deployment:</strong> AWS, Google Cloud, Azure</li>
+                        <li><strong>Edge Computing:</strong> On-device inference</li>
+                        <li><strong>Model Serving:</strong> APIs and microservices</li>
+                        <li><strong>Containerization:</strong> Docker and Kubernetes</li>
+                    </ul>
+                    
+                    <h4>MLOps (Machine Learning Operations):</h4>
+                    <ul>
+                        <li>Continuous Integration/Continuous Deployment</li>
+                        <li>Model versioning and tracking</li>
+                        <li>Automated testing and validation</li>
+                        <li>Monitoring and alerting</li>
+                    </ul>
+                    
+                    <h4>Production Challenges:</h4>
+                    <ul>
+                        <li>Data drift and model degradation</li>
+                        <li>Latency requirements</li>
+                        <li>Scalability and load balancing</li>
+                        <li>A/B testing for model updates</li>
+                    </ul>
+                `,
+                12: `
+                    <h3>Model Optimization and Performance</h3>
+                    <p>Optimizing AI models for efficiency, speed, and resource usage is crucial for practical deployment.</p>
+                    
+                    <h4>Optimization Techniques:</h4>
+                    <ul>
+                        <li><strong>Quantization:</strong> Reducing numerical precision</li>
+                        <li><strong>Pruning:</strong> Removing unnecessary connections</li>
+                        <li><strong>Knowledge Distillation:</strong> Training smaller models from larger ones</li>
+                        <li><strong>Model Compression:</strong> Reducing model size</li>
+                    </ul>
+                    
+                    <h4>Hardware Acceleration:</h4>
+                    <ul>
+                        <li>GPUs for parallel processing</li>
+                        <li>TPUs for AI workloads</li>
+                        <li>FPGAs for custom acceleration</li>
+                        <li>Specialized AI chips</li>
+                    </ul>
+                    
+                    <h4>Performance Metrics:</h4>
+                    <ul>
+                        <li>Inference latency</li>
+                        <li>Throughput (requests per second)</li>
+                        <li>Memory usage</li>
+                        <li>Energy consumption</li>
+                    </ul>
+                `,
+                13: `
+                    <h3>AI Security and Adversarial Attacks</h3>
+                    <p>Understanding and defending against security threats is essential for robust AI systems.</p>
+                    
+                    <h4>Types of Attacks:</h4>
+                    <ul>
+                        <li><strong>Adversarial Examples:</strong> Imperceptible input perturbations</li>
+                        <li><strong>Data Poisoning:</strong> Corrupting training data</li>
+                        <li><strong>Model Inversion:</strong> Extracting training data</li>
+                        <li><strong>Membership Inference:</strong> Determining if data was used in training</li>
+                    </ul>
+                    
+                    <h4>Defense Mechanisms:</h4>
+                    <ul>
+                        <li>Adversarial training</li>
+                        <li>Input validation and sanitization</li>
+                        <li>Differential privacy</li>
+                        <li>Robust model architectures</li>
+                    </ul>
+                    
+                    <h4>Security Best Practices:</h4>
+                    <ul>
+                        <li>Regular security audits</li>
+                        <li>Access control and authentication</li>
+                        <li>Secure model storage</li>
+                        <li>Monitoring for unusual behavior</li>
+                    </ul>
+                `,
+                14: `
+                    <h3>Industry Applications and Case Studies</h3>
+                    <p>Real-world applications demonstrate the transformative power of AI across various industries.</p>
+                    
+                    <h4>Healthcare:</h4>
+                    <ul>
+                        <li>Medical image diagnosis</li>
+                        <li>Drug discovery and development</li>
+                        <li>Personalized treatment plans</li>
+                        <li>Epidemic prediction and response</li>
+                    </ul>
+                    
+                    <h4>Finance:</h4>
+                    <ul>
+                        <li>Fraud detection and prevention</li>
+                        <li>Algorithmic trading</li>
+                        <li>Credit scoring and risk assessment</li>
+                        <li>Robo-advisors for investment</li>
+                    </ul>
+                    
+                    <h4>Transportation:</h4>
+                    <ul>
+                        <li>Autonomous vehicles</li>
+                        <li>Traffic optimization</li>
+                        <li>Predictive maintenance</li>
+                        <li>Route planning and logistics</li>
+                    </ul>
+                    
+                    <h4>Case Study Analysis:</h4>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p>Analyze how Tesla uses AI for autonomous driving: computer vision for object detection, reinforcement learning for decision-making, and neural networks for path planning.</p>
+                    </div>
+                `
+            };
+            
+            return contents[index] || `<p>Lesson content for ${lesson.title} will be available here.</p>`;
+        }
+
+        function showQuiz(lesson, index) {
+            document.getElementById('quizContent').classList.remove('hidden');
+            document.getElementById('quizTitle').textContent = lesson.title;
+            
+            currentQuizData = generateQuizData(lesson, index);
+            currentQuestionIndex = 0;
+            quizAnswers = {};
+            quizTimeLeft = lesson.timeLimit * 60; // Convert to seconds
+            
+            document.getElementById('totalQuestions').textContent = currentQuizData.questions.length;
+            
+            startQuizTimer();
+            showQuestion();
+        }
+
+        function generateQuizData(lesson, index) {
+            const quizzes = {
+                3: { // Quiz 1: Fundamentals
+                    questions: [
+                        {
+                            question: "What does 'AI' stand for?",
+                            type: "multiple",
+                            options: ["Automated Intelligence", "Artificial Intelligence", "Advanced Integration", "Algorithmic Implementation"],
+                            correct: 1
+                        },
+                        {
+                            question: "Which type of machine learning uses labeled data?",
+                            type: "multiple",
+                            options: ["Unsupervised Learning", "Reinforcement Learning", "Supervised Learning", "Semi-supervised Learning"],
+                            correct: 2
+                        },
+                        {
+                            question: "What is the primary function of an activation function in neural networks?",
+                            type: "multiple",
+                            options: ["Store weights", "Introduce non-linearity", "Reduce overfitting", "Normalize inputs"],
+                            correct: 1
+                        },
+                        {
+                            question: "Explain the difference between narrow AI and general AI.",
+                            type: "essay",
+                            points: 10
+                        },
+                        {
+                            question: "Backpropagation is used to:",
+                            type: "multiple",
+                            options: ["Forward pass data", "Update network weights", "Initialize parameters", "Evaluate model performance"],
+                            correct: 1
+                        },
+                        {
+                            question: "What is overfitting in machine learning?",
+                            type: "multiple",
+                            options: ["Model performs well on all data", "Model memorizes training data", "Model is too simple", "Model has too few parameters"],
+                            correct: 1
+                        },
+                        {
+                            question: "Which algorithm is commonly used for classification tasks?",
+                            type: "multiple",
+                            options: ["Linear Regression", "K-means Clustering", "Decision Trees", "PCA"],
+                            correct: 2
+                        },
+                        {
+                            question: "What is the purpose of cross-validation?",
+                            type: "multiple",
+                            options: ["Increase training speed", "Evaluate model performance", "Reduce model complexity", "Generate more data"],
+                            correct: 1
+                        },
+                        {
+                            question: "Describe the role of hidden layers in neural networks.",
+                            type: "essay",
+                            points: 10
+                        },
+                        {
+                            question: "What is the Turing Test?",
+                            type: "multiple",
+                            options: ["Hardware performance test", "AI consciousness test", "Programming language test", "Network security test"],
+                            correct: 1
+                        }
+                    ]
+                },
+                8: { // Quiz 2: Applications
+                    questions: [
+                        {
+                            question: "What does NLP stand for?",
+                            type: "multiple",
+                            options: ["Natural Language Processing", "Neural Learning Protocol", "Network Layer Protection", "Numerical Linear Programming"],
+                            correct: 0
+                        },
+                        {
+                            question: "Which technique is used for image recognition?",
+                            type: "multiple",
+                            options: ["Recurrent Neural Networks", "Convolutional Neural Networks", "Long Short-Term Memory", "Support Vector Machines"],
+                            correct: 1
+                        },
+                        {
+                            question: "In reinforcement learning, what guides the agent's behavior?",
+                            type: "multiple",
+                            options: ["Labeled examples", "Reward signals", "Feature extraction", "Data preprocessing"],
+                            correct: 1
+                        },
+                        {
+                            question: "What is a key ethical concern in AI development?",
+                            type: "multiple",
+                            options: ["Processing speed", "Algorithm bias", "Hardware costs", "Software licensing"],
+                            correct: 1
+                        },
+                        {
+                            question: "Explain how bias can affect AI systems and propose mitigation strategies.",
+                            type: "essay",
+                            points: 15
+                        },
+                        {
+                            question: "What is transfer learning?",
+                            type: "multiple",
+                            options: ["Moving data between servers", "Using pre-trained models for new tasks", "Converting file formats", "Transferring model ownership"],
+                            correct: 1
+                        },
+                        {
+                            question: "Which attention mechanism is key to transformer architectures?",
+                            type: "multiple",
+                            options: ["Global attention", "Local attention", "Self-attention", "Cross-attention"],
+                            correct: 2
+                        },
+                        {
+                            question: "What is the purpose of regularization in machine learning?",
+                            type: "multiple",
+                            options: ["Increase model complexity", "Prevent overfitting", "Speed up training", "Reduce data requirements"],
+                            correct: 1
+                        },
+                        {
+                            question: "Describe the architecture and applications of Convolutional Neural Networks.",
+                            type: "essay",
+                            points: 15
+                        },
+                        {
+                            question: "What is few-shot learning?",
+                            type: "multiple",
+                            options: ["Learning with limited examples", "Learning multiple tasks", "Learning very quickly", "Learning without supervision"],
+                            correct: 0
+                        },
+                        {
+                            question: "Which technique is used to make AI decisions more interpretable?",
+                            type: "multiple",
+                            options: ["Model compression", "Explainable AI", "Data augmentation", "Ensemble methods"],
+                            correct: 1
+                        },
+                        {
+                            question: "What is the vanishing gradient problem?",
+                            type: "multiple",
+                            options: ["Gradients become too large", "Gradients become too small", "Gradients become unstable", "Gradients become negative"],
+                            correct: 1
+                        },
+                        {
+                            question: "Analyze the implications of AI in healthcare, including benefits and risks.",
+                            type: "essay",
+                            points: 20
+                        },
+                        {
+                            question: "What is generative adversarial network (GAN)?",
+                            type: "multiple",
+                            options: ["Two networks competing", "Single generator network", "Discriminator only", "Encoder-decoder pair"],
+                            correct: 0
+                        },
+                        {
+                            question: "Which metric is commonly used for classification evaluation?",
+                            type: "multiple",
+                            options: ["Mean Squared Error", "R-squared", "F1-score", "Mean Absolute Error"],
+                            correct: 2
+                        }
+                    ]
+                },
+                9: { // Midterm Examination
+                    questions: [
+                        {
+                            question: "Compare and contrast supervised, unsupervised, and reinforcement learning paradigms.",
+                            type: "essay",
+                            points: 20
+                        },
+                        {
+                            question: "What is the difference between precision and recall?",
+                            type: "multiple",
+                            options: ["No difference", "Precision: TP/(TP+FP), Recall: TP/(TP+FN)", "Opposite definitions", "Same calculation"],
+                            correct: 1
+                        },
+                        // ... Additional 23 questions for comprehensive midterm
+                        {
+                            question: "Explain the complete process of training a neural network from initialization to convergence.",
+                            type: "essay",
+                            points: 25
+                        }
+                    ]
+                },
+                16: { // Final Examination
+                    questions: [
+                        {
+                            question: "Design a complete AI system for fraud detection in financial transactions. Include architecture, algorithms, evaluation metrics, and ethical considerations.",
+                            type: "essay",
+                            points: 30
+                        },
+                        {
+                            question: "What is the primary advantage of transformer architectures over RNNs?",
+                            type: "multiple",
+                            options: ["Lower memory usage", "Parallel processing capability", "Simpler architecture", "Better for small datasets"],
+                            correct: 1
+                        },
+                        // ... Additional 48 questions for comprehensive final
+                        {
+                            question: "Critically evaluate the current state of AI and predict future developments in the next 10 years.",
+                            type: "essay",
+                            points: 35
+                        }
+                    ]
+                }
+            };
+            
+            return quizzes[index] || { questions: [] };
+        }
+
+        function showQuestion() {
+            const question = currentQuizData.questions[currentQuestionIndex];
+            const container = document.getElementById('questionContainer');
+            
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            
+            let html = `<div class="question-block">
+                <h4 class="text-lg font-semibold mb-4">Question ${currentQuestionIndex + 1}</h4>
+                <p class="mb-4">${question.question}</p>`;
+            
+            if (question.type === 'multiple') {
+                html += '<div class="space-y-3">';
+                question.options.forEach((option, index) => {
+                    const isSelected = quizAnswers[currentQuestionIndex] === index;
+                    html += `
+                        <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50 ${isSelected ? 'bg-blue-50 border-blue-300' : ''}">
+                            <input type="radio" name="q${currentQuestionIndex}" value="${index}" 
+                                   onchange="recordAnswer(${currentQuestionIndex}, ${index})" ${isSelected ? 'checked' : ''}>
+                            <span class="ml-3">${option}</span>
+                        </label>`;
+                });
+                html += '</div>';
+            } else if (question.type === 'essay') {
+                const savedAnswer = quizAnswers[currentQuestionIndex] || '';
+                html += `
+                    <textarea class="w-full h-40 p-3 border rounded-lg" 
+                              placeholder="Write your answer here..." 
+                              onchange="recordAnswer(${currentQuestionIndex}, this.value)">${savedAnswer}</textarea>
+                    <p class="text-sm text-gray-600 mt-2">Points: ${question.points}</p>`;
+            }
+            
+            html += '</div>';
+            container.innerHTML = html;
+            
+            updateQuizNavigation();
+        }
+
+        function recordAnswer(questionIndex, answer) {
+            quizAnswers[questionIndex] = answer;
+            updateQuizProgress();
+        }
+
+        function updateQuizProgress() {
+            const answered = Object.keys(quizAnswers).length;
+            const total = currentQuizData.questions.length;
+            const percent = (answered / total) * 100;
+            
+            document.getElementById('quizProgress').style.width = percent + '%';
+        }
+
+        function updateQuizNavigation() {
+            const prevBtn = document.getElementById('quizPrevButton');
+            const nextBtn = document.getElementById('quizNextButton');
+            const submitBtn = document.getElementById('submitQuizButton');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === currentQuizData.questions.length - 1) {
+                nextBtn.classList.add('hidden');
+                submitBtn.classList.remove('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+                submitBtn.classList.add('hidden');
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < currentQuizData.questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function startQuizTimer() {
+            quizTimer = setInterval(() => {
+                quizTimeLeft--;
+                const minutes = Math.floor(quizTimeLeft / 60);
+                const seconds = quizTimeLeft % 60;
+                document.getElementById('quizTimeDisplay').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (quizTimeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    autoSubmitQuiz();
+                }
+            }, 1000);
+        }
+
+        function autoSubmitQuiz() {
+            alert('Time expired! Quiz will be automatically submitted.');
+            submitQuiz();
+        }
+
+        function submitQuiz() {
+            clearInterval(quizTimer);
+            
+            // Calculate score
+            let correctAnswers = 0;
+            let totalPoints = 0;
+            let earnedPoints = 0;
+            
+            currentQuizData.questions.forEach((question, index) => {
+                if (question.type === 'multiple') {
+                    totalPoints += 5; // 5 points per multiple choice
+                    if (quizAnswers[index] === question.correct) {
+                        correctAnswers++;
+                        earnedPoints += 5;
+                    }
+                } else if (question.type === 'essay') {
+                    totalPoints += question.points;
+                    // Simulate essay grading (in real system, this would be manual)
+                    if (quizAnswers[index] && quizAnswers[index].length > 50) {
+                        earnedPoints += Math.floor(question.points * 0.8); // Give 80% for substantial answers
+                    }
+                }
+            });
+            
+            const score = Math.round((earnedPoints / totalPoints) * 100);
+            quizScores[currentLesson] = score;
+            
+            // Check passing grade
+            const passingGrade = courseData.lessons[currentLesson].type === 'final' ? 80 : 70;
+            
+            if (score >= passingGrade) {
+                completedLessons.add(currentLesson);
+                saveProgress();
+                
+                if (courseData.lessons[currentLesson].type === 'final') {
+                    // Course completed!
+                    completeCourse(score);
+                } else {
+                    alert(`Congratulations! You passed with ${score}%. You can now proceed to the next lesson.`);
+                    renderLessonList();
+                    updateProgress();
+                }
+            } else {
+                alert(`You scored ${score}%. The passing grade is ${passingGrade}%. Please review the material and retake the assessment.`);
+                // Reset quiz state to allow retake
+                currentQuizData = null;
+                quizAnswers = {};
+            }
+        }
+
+        function showFinalProject() {
+            document.getElementById('finalProject').classList.remove('hidden');
+            
+            // Load any saved code
+            const savedCode = localStorage.getItem('tyloai_final_project_code');
+            if (savedCode) {
+                document.getElementById('projectCode').value = savedCode;
+            }
+            
+            // Auto-save code as user types
+            document.getElementById('projectCode').addEventListener('input', function() {
+                localStorage.setItem('tyloai_final_project_code', this.value);
+            });
+        }
+
+        function testChatbot() {
+            const code = document.getElementById('projectCode').value;
+            const testInput = document.getElementById('testInput').value;
+            const output = document.getElementById('testOutput');
+            
+            if (!code.trim()) {
+                output.innerHTML = '<p class="text-red-500">Please implement your chatbot first.</p>';
+                return;
+            }
+            
+            if (!testInput.trim()) {
+                output.innerHTML = '<p class="text-yellow-500">Please enter a test message.</p>';
+                return;
+            }
+            
+            try {
+                // Create a sandboxed environment to test the code
+                const testFunction = new Function('testInput', `
+                    ${code}
+                    
+                    try {
+                        const chatbot = new AIChatbot();
+                        const processed = chatbot.processMessage(testInput);
+                        const response = chatbot.generateResponse(processed);
+                        return { success: true, response: response };
+                    } catch (error) {
+                        return { success: false, error: error.message };
+                    }
+                `);
+                
+                const result = testFunction(testInput);
+                
+                if (result.success) {
+                    output.innerHTML = `
+                        <div class="bg-green-50 p-3 rounded border-l-4 border-green-400">
+                            <strong>Bot Response:</strong> ${result.response}
+                        </div>
+                    `;
+                } else {
+                    output.innerHTML = `
+                        <div class="bg-red-50 p-3 rounded border-l-4 border-red-400">
+                            <strong>Error:</strong> ${result.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                output.innerHTML = `
+                    <div class="bg-red-50 p-3 rounded border-l-4 border-red-400">
+                        <strong>Execution Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function submitFinalProject() {
+            const code = document.getElementById('projectCode').value;
+            
+            if (!code.trim()) {
+                alert('Please implement your chatbot before submitting.');
+                return;
+            }
+            
+            // Basic validation checks
+            const requiredMethods = ['AIChatbot', 'processMessage', 'generateResponse'];
+            const hasAllMethods = requiredMethods.every(method => code.includes(method));
+            
+            if (!hasAllMethods) {
+                alert('Your implementation is missing required methods. Please ensure you have AIChatbot class with processMessage and generateResponse methods.');
+                return;
+            }
+            
+            // Test with sample inputs
+            const testCases = [
+                'Hello, how are you?',
+                'What is machine learning?',
+                'Tell me a joke',
+                'What is the weather like?',
+                'Goodbye'
+            ];
+            
+            let passedTests = 0;
+            
+            try {
+                const testFunction = new Function(`
+                    ${code}
+                    
+                    const chatbot = new AIChatbot();
+                    const results = [];
+                    
+                    const testCases = ${JSON.stringify(testCases)};
+                    
+                    for (const testCase of testCases) {
+                        try {
+                            const processed = chatbot.processMessage(testCase);
+                            const response = chatbot.generateResponse(processed);
+                            if (response && typeof response === 'string' && response.length > 0) {
+                                results.push({ success: true, input: testCase, output: response });
+                            } else {
+                                results.push({ success: false, input: testCase, error: 'Invalid response' });
+                            }
+                        } catch (error) {
+                            results.push({ success: false, input: testCase, error: error.message });
+                        }
+                    }
+                    
+                    return results;
+                `);
+                
+                const results = testFunction();
+                passedTests = results.filter(r => r.success).length;
+                
+                const score = Math.round((passedTests / testCases.length) * 100);
+                
+                if (score >= 80) {
+                    completedLessons.add(currentLesson);
+                    saveProgress();
+                    alert(`Excellent! Your chatbot passed ${passedTests}/${testCases.length} tests (${score}%). Moving to final examination.`);
+                    showLesson(16); // Move to final exam
+                } else {
+                    alert(`Your chatbot passed ${passedTests}/${testCases.length} tests (${score}%). You need at least 80% to proceed. Please improve your implementation.`);
+                }
+                
+            } catch (error) {
+                alert(`Code execution error: ${error.message}. Please fix your implementation.`);
+            }
+        }
+
+        function completeCourse(finalScore) {
+            // Calculate overall score
+            const scores = Object.values(quizScores);
+            const averageScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+            
+            // Mark course as completed
+            localStorage.setItem('tyloai_course_completed', 'true');
+            localStorage.setItem('tyloai_course_final_score', averageScore);
+            localStorage.setItem('tyloai_course_completion_date', new Date().toISOString());
+            
+            showCertificate(averageScore);
+        }
+
+        function showCertificate(score = null) {
+            document.getElementById('certificateDisplay').classList.remove('hidden');
+            ['welcomeScreen', 'lessonContent', 'quizContent', 'finalProject'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            
+            // Fill certificate details
+            document.getElementById('certificateName').textContent = 'AI Professional';
+            document.getElementById('completionDate').textContent = new Date().toLocaleDateString();
+            document.getElementById('finalScore').textContent = score ? `${score}%` : '95%';
+        }
+
+        function downloadCertificate() {
+            // Create certificate data
+            const certificateData = {
+                studentName: 'AI Professional',
+                courseName: 'TyloAI Professional AI Development Course',
+                completionDate: new Date().toLocaleDateString(),
+                finalScore: document.getElementById('finalScore').textContent,
+                certificateId: 'TYLO-' + Date.now(),
+                issuer: 'TyloAI Studio'
+            };
+            
+            // Save certificate
+            localStorage.setItem('tyloai_course_certificate', JSON.stringify(certificateData));
+            
+            // Create downloadable certificate
+            const certificateHtml = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>TyloAI Certificate</title>
+                    <style>
+                        body { font-family: serif; text-align: center; padding: 50px; background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%); }
+                        .certificate { border: 5px solid #d4af37; padding: 40px; background: white; max-width: 800px; margin: 0 auto; }
+                        h1 { font-size: 36px; color: #2c3e50; margin-bottom: 20px; }
+                        .student-name { font-size: 28px; font-weight: bold; color: #8b4513; margin: 20px 0; }
+                        .course-name { font-size: 24px; color: #2c3e50; margin: 20px 0; }
+                        .details { margin: 30px 0; font-size: 16px; color: #555; }
+                        .signatures { display: flex; justify-content: space-around; margin-top: 40px; }
+                        .signature { border-top: 1px solid #333; width: 200px; padding-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="certificate">
+                        <h1>Certificate of Completion</h1>
+                        <div>This is to certify that</div>
+                        <div class="student-name">${certificateData.studentName}</div>
+                        <div>has successfully completed the</div>
+                        <div class="course-name">${certificateData.courseName}</div>
+                        <div class="details">
+                            Completed on ${certificateData.completionDate}<br>
+                            Final Score: ${certificateData.finalScore}<br>
+                            Certificate ID: ${certificateData.certificateId}
+                        </div>
+                        <div class="signatures">
+                            <div class="signature">TyloAI Studio</div>
+                            <div class="signature">Course Director</div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `;
+            
+            const blob = new Blob([certificateHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'TyloAI_Certificate.html';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function activateStudentPlan() {
+            // Send message to parent window (chat.html)
+            const certificateData = JSON.parse(localStorage.getItem('tyloai_course_certificate') || '{}');
+            
+            if (window.opener) {
+                window.opener.postMessage({
+                    type: 'course_completed',
+                    certificate: certificateData
+                }, '*');
+                
+                alert('Student Plan activated! You can now close this window and return to TyloAI.');
+                window.close();
+            } else {
+                alert('Student Plan activation complete! Please return to the main TyloAI interface.');
+            }
+        }
+
+        function startLessonTimer() {
+            let seconds = 0;
+            lessonTimer = setInterval(() => {
+                seconds++;
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                
+                document.getElementById('timerDisplay').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function updateProgress() {
+            const completed = completedLessons.size;
+            const total = courseData.lessons.length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('overallProgress').textContent = percentage + '%';
+            document.getElementById('completedLessons').textContent = completed;
+            document.getElementById('progressPercent').textContent = percentage + '%';
+            
+            // Update progress circle
+            const circumference = 2 * Math.PI * 36; // radius = 36
+            const offset = circumference - (percentage / 100) * circumference;
+            document.getElementById('progressCircle').style.strokeDashoffset = offset;
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevButton');
+            const nextBtn = document.getElementById('nextButton');
+            
+            prevBtn.disabled = currentLesson === 0;
+            
+            // Check if current lesson is completed or if it's accessible
+            const canProceed = completedLessons.has(currentLesson) || 
+                              currentLesson <= Math.max(...Array.from(completedLessons)) + 1;
+            
+            if (currentLesson === courseData.lessons.length - 1) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                nextBtn.disabled = !canProceed;
+            }
+        }
+
+        function nextLesson() {
+            if (currentLesson < courseData.lessons.length - 1) {
+                // Check if current lesson is completed
+                if (completedLessons.has(currentLesson)) {
+                    showLesson(currentLesson + 1);
+                } else {
+                    alert('Please complete the current lesson before proceeding.');
+                }
+            }
+        }
+
+        function previousLesson() {
+            if (currentLesson > 0) {
+                showLesson(currentLesson - 1);
+            }
+        }
+
+        function markLessonComplete() {
+            if (courseData.lessons[currentLesson].type === 'lesson') {
+                // Require minimum time spent on lesson
+                const timeSpent = (Date.now() - lessonStartTime) / 1000; // seconds
+                const requiredTime = courseData.lessons[currentLesson].duration * 60 * 0.1; // 10% of lesson duration
+                
+                if (timeSpent < requiredTime) {
+                    alert(`Please spend at least ${Math.ceil(requiredTime / 60)} minutes on this lesson.`);
+                    return;
+                }
+                
+                completedLessons.add(currentLesson);
+                saveProgress();
+                renderLessonList();
+                updateProgress();
+                
+                if (currentLesson < courseData.lessons.length - 1) {
+                    showLesson(currentLesson + 1);
+                }
+            }
+        }
+
+        function saveProgress() {
+            const progressData = {
+                completedLessons: Array.from(completedLessons),
+                quizScores: quizScores,
+                currentLesson: currentLesson,
+                lastAccess: new Date().toISOString()
+            };
+            
+            localStorage.setItem('tyloai_course_progress', JSON.stringify(progressData));
+        }
+
+        function loadProgress() {
+            const saved = localStorage.getItem('tyloai_course_progress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                completedLessons = new Set(data.completedLessons || []);
+                quizScores = data.quizScores || {};
+                currentLesson = data.currentLesson || 0;
+            }
+        }
+
+        // Add complete lesson button to lesson content
+        function addCompleteButton() {
+            const nextBtn = document.getElementById('nextButton');
+            if (courseData.lessons[currentLesson].type === 'lesson' && !completedLessons.has(currentLesson)) {
+                nextBtn.onclick = markLessonComplete;
+                nextBtn.innerHTML = 'Complete Lesson<i class="fas fa-check ml-2"></i>';
+            } else {
+                nextBtn.onclick = nextLesson;
+                nextBtn.innerHTML = 'Next<i class="fas fa-arrow-right ml-2"></i>';
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            if (localStorage.getItem('tyloai_course_banned')) {
+                document.body.innerHTML = `
+                    <div class="min-h-screen flex items-center justify-center bg-red-50">
+                        <div class="text-center p-8">
+                            <i class="fas fa-ban text-6xl text-red-500 mb-4"></i>
+                            <h1 class="text-2xl font-bold text-red-700 mb-4">Course Access Terminated</h1>
+                            <p class="text-red-600">Your access to this course has been terminated due to academic integrity violations.</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            initializeCourse();
+        });
+
+        // Prevent cheating attempts
+        setInterval(() => {
+            // Check if user is active
+            if (Date.now() - lastActiveTime > 300000) { // 5 minutes inactive
+                lastActiveTime = Date.now();
+            }
+        }, 60000);
+
+        document.addEventListener('mousemove', () => {
+            lastActiveTime = Date.now();
+        });
+
+        document.addEventListener('keypress', () => {
+            lastActiveTime = Date.now();
+        });
+
+        // Override console to prevent cheating via browser console
+        if (typeof console !== 'undefined') {
+            ['log', 'warn', 'error', 'info', 'debug'].forEach(method => {
+                const original = console[method];
+                console[method] = function() {
+                    if (isQuizActive()) {
+                        antiCheatViolation('Console usage during assessment');
+                    }
+                    return original.apply(console, arguments);
+                };
+            });
+        }
+    </script>
+</body>
+</html>
